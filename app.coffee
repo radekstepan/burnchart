@@ -33,15 +33,15 @@ app.configure 'production', ->
     app.use express.errorHandler()
 
 # Routes
-app.get '/', (req, res) ->
+app.get '/issues', (req, res) ->
     https.request(options, (response) ->
         if response.statusCode is 200
-            str = ""
-            response.on "data", (chunk) -> str += chunk
+            json = ""
+            response.on "data", (chunk) -> json += chunk
             
             response.on "end", ->
-                res.render 'index',
-                    'issues': str
+                res.render 'issues',
+                    'issues': JSON.parse json
                 , (html) -> res.send html, 'Content-Type': 'text/html', 200
     ).end()
 
