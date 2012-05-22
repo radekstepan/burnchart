@@ -22,7 +22,13 @@ http.createServer((req, res) ->
     # Callback url from GitHub login.
     else if uri.pathname is "/auth"
         github.auth.login qs.parse(uri.query).code, (err, token) ->
-            console.log token
+
+            console.log github.client()
+
+            # Build client from access token provided.
+            #client = github.client token
+            #client.get "/user", (err, status, body) ->
+            #    console.log body
 
         res.writeHead 200,
             "Content-Type": "text/plain"
