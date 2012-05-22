@@ -1,0 +1,9 @@
+{
+  "name": "github-burndown-chart"
+  , "version": "0.0.0"
+  , "private": true
+  , "dependencies": {
+    "coffee-script": "latest"
+    , "js-yaml":     "latest"
+  }
+}
