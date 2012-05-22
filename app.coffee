@@ -8,6 +8,15 @@ options =
     path: "/repos/intermine/InterMine/issues"
     method: "GET"
 
+getIssues = (callback) ->
+    https.request(options, (response) ->
+        if response.statusCode is 200
+            json = ""
+            response.on "data", (chunk) -> json += chunk
+            
+            response.on "end", -> callback JSON.parse json
+    ).end()
+
 app = express.createServer()
 
 app.configure ->
@@ -34,16 +43,10 @@ app.configure 'production', ->
 
 # Routes
 app.get '/issues', (req, res) ->
-    https.request(options, (response) ->
-        if response.statusCode is 200
-            json = ""
-            response.on "data", (chunk) -> json += chunk
-            
-            response.on "end", ->
-                res.render 'issues',
-                    'issues': JSON.parse json
-                , (html) -> res.send html, 'Content-Type': 'text/html', 200
-    ).end()
+    getIssues (issues) ->
+        res.render 'issues',
+            'issues': issues
+        , (html) -> res.send html, 'Content-Type': 'text/html', 200
 
 app.listen 3000
 console.log "Express server listening to port 3000"
