@@ -1,45 +1,49 @@
-http =   require("http")
-url =    require("url")
-qs =     require("querystring")
-github = require("octonode")
+express = require 'express'
+eco     = require 'eco'
+https =   require 'https'
+fs =      require "fs"
 
-auth_url = github.auth.config(
-    client_id:     "3ed6804c6a7159eefd96"
-    client_secret: "4e3cb5f3fa90d8d3e6ec1e1db4f5749c14b055b4"
-).login([ "intermine", "InterMine" ])
+options =
+    host: "api.github.com"
+    path: "/repos/intermine/InterMine/issues"
+    method: "GET"
 
-http.createServer((req, res) ->
-    uri = url.parse(req.url)
+app = express.createServer()
 
-    # Redirect to github login.
-    if uri.pathname is "/"
-        res.writeHead 301,
-            "Content-Type": "text/plain"
-            Location: auth_url
+app.configure ->
+    app.use express.logger()
+    app.use express.bodyParser()
 
-        res.end "Redirecting to " + auth_url
-    
-    # Callback url from GitHub login.
-    else if uri.pathname is "/auth"
-        github.auth.login qs.parse(uri.query).code, (err, token) ->
+    app.set 'view engine', 'eco'
+    app.set 'views', './templates'
 
-            console.log github.client()
+    # Register a custom .eco compiler.
+    app.engine 'eco', (path, options, callback) ->
+        fs.readFile "./#{path}", "utf8", (err, str) ->
+            callback eco.render str, options
 
-            # Build client from access token provided.
-            #client = github.client token
-            #client.get "/user", (err, status, body) ->
-            #    console.log body
+    app.use express.static('./public')
 
-        res.writeHead 200,
-            "Content-Type": "text/plain"
+app.configure 'development', ->
+    app.use express.errorHandler
+        dumpExceptions: true
+        showStack:      true
 
-        res.end ""
-    
-    else
-        res.writeHead 200,
-            "Content-Type": "text/plain"
+app.configure 'production', ->
+    app.use express.errorHandler()
 
-        res.end ""
-).listen 3000
+# Routes
+app.get '/', (req, res) ->
+    https.request(options, (response) ->
+        if response.statusCode is 200
+            str = ""
+            response.on "data", (chunk) -> str += chunk
+            
+            response.on "end", ->
+                res.render 'index',
+                    'issues': str
+                , (html) -> res.send html, 'Content-Type': 'text/html', 200
+    ).end()
 
-console.log "Server started on 3000"
+app.listen 3000
+console.log "Express server listening to port 3000"
