@@ -3,20 +3,22 @@ eco     = require 'eco'
 https =   require 'https'
 fs =      require "fs"
 
-options =
-    host: "api.github.com"
-    path: "/repos/intermine/InterMine/issues"
-    method: "GET"
+# Make HTTPS GET to GitHub API v3.
+apiGet = (path, type, callback) ->
+    options =
+        host:   "api.github.com"
+        method: "GET"
+        path:   path
 
-getIssues = (callback) ->
     https.request(options, (response) ->
         if response.statusCode is 200
             json = ""
             response.on "data", (chunk) -> json += chunk
             
-            response.on "end", -> callback JSON.parse json
+            response.on "end", -> callback JSON.parse(json), type
     ).end()
 
+# Express.
 app = express.createServer()
 
 app.configure ->
@@ -41,9 +43,39 @@ app.configure 'development', ->
 app.configure 'production', ->
     app.use express.errorHandler()
 
-# Routes
+# Show burndown chart.
+app.get '/burndown', (req, res) ->
+    resources = 3 ; store = { 'issues': [], 'milestones': [] }
+    done = (data, type) ->
+        # One less to do.
+        resources--
+
+        switch type
+            when 'issues' then store.issues = store.issues.concat data
+            when 'milestones' then store.milestones = store.milestones.concat data
+
+        # Are we done?
+        if resources is 0
+            # Determine the 'current' milestone
+            now = new Date().getTime() ; current = { 'data': {}, 'diff': +Infinity }
+            for milestone in store.milestones
+                due = milestone['due_on']
+                # JS expects more accuracy.
+                due = new Date(due[0...due.length - 1] + '.000' + due.charAt due.length-1).getTime()
+                # Is this the 'current' one?
+                diff = due - now
+                if diff > 0 and diff < current.diff
+                    current.data = milestone ; current.diff = diff
+
+    # Get Milestones, Opened and Closed Tickets.
+    apiGet "/repos/intermine/InterMine/milestones", 'milestones', done
+    apiGet "/repos/intermine/InterMine/issues?state=open", 'issues', done
+    apiGet "/repos/intermine/InterMine/issues?state=closed", 'issues', done
+
+# Show open issues.
 app.get '/issues', (req, res) ->
-    getIssues (issues) ->
+    apiGet "/repos/intermine/InterMine/issues?state=open", 'issues', (issues) ->
+        # Vanilla render.
         res.render 'issues',
             'issues': issues
         , (html) -> res.send html, 'Content-Type': 'text/html', 200
