@@ -1,0 +1,1 @@
+cat app.coffee | coffee -sc | node
