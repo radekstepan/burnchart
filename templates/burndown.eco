@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+
+    <title>Burndown App</title>
+    
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+</head>
+<body>
+    <header class="navbar blue blue2 navbar-fixed-top">
+        <div class="navbar-inner">
+            <div class="container-fluid">
+                <ul class="nav pull-left">
+                    <li><a><i class="icon-white icon-fire"></i> Burndown App</a></li>
+                </ul>
+                <ul class="nav pull-right">
+                    <li><a><i class="icon-white icon-book"></i> Core InterMine Project</a></li>
+                </ul>
+            </div>
+        </div>
+    </header>
+    
+    <section class="container-fluid pad40"> 
+        <section class="row-fluid">
+            <div class="span2 sideBar">
+                <br>
+                <ul>
+                    <li class="active">
+                        <figure>
+                            <i class="icon-signal"></i> Burndown Chart &nbsp;&nbsp;<span class="badge badge-warning">0.7</span>
+                        </figure>
+                    </li>
+                    <li>
+                        <figure>
+                            <i class="icon-tasks"></i> Issues &nbsp;&nbsp;<span class="badge badge-info">?</span>
+                        </figure>
+                    </li>
+                </ul>
+            </div>
+
+            <section class="span10 content borBox">
+                <div class="row-fluid">
+                    <div class="page-header">
+                        <h1>Burndown chart <small>showing actual vs. ideal velocity on each day</small></h1>
+                    </div>
+                </div>
+                <br>
+
+                <div class="row-fluid">
+                    <div class="span12">
+                        dd
+                    </div>
+                </div>
+            </section>
+        </section>
+    </section>
+</body>
+</html>

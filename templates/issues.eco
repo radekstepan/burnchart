@@ -8,9 +8,6 @@
     
     <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="css/style.css">
-    
-    <script src="js/jquery-1.7.2.min.js"></script>
-    <script src="js/burndown.js"></script>
 </head>
 <body>
     <header class="navbar blue blue2 navbar-fixed-top">
