@@ -18,7 +18,7 @@ npm install -d
 The app is configured by pointing to a public GitHub user/project. Do so in `config.yml`:
 
 ```yaml
-github_user:    ̈́'intermine'
+github_user:    'intermine'
 github_project: 'InterMine'
 project_name:   'Core InterMine Project'
 ```
