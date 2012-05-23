@@ -63,6 +63,9 @@ app.configure 'development', ->
 app.configure 'production', ->
     app.use express.errorHandler()
 
+# Redirect to chart from index.
+app.get '/', (req, res) -> res.redirect '/burndown'
+
 # Show burndown chart.
 app.get '/burndown', (req, res) ->
     resources = 3 ; store = { 'issues': [], 'milestones': [] }
