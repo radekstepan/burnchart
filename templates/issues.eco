@@ -30,12 +30,12 @@
                 <ul>
                     <li>
                         <figure>
-                            <i class="icon-signal"></i> Burndown Chart &nbsp;&nbsp;<span class="badge badge-warning">0.7</span>
+                            <a href="/burndown"><i class="icon-signal"></i> Burndown Chart</a>
                         </figure>
                     </li>
                     <li class="active">
                         <figure>
-                            <i class="icon-tasks"></i> Issues &nbsp;&nbsp;<span class="badge badge-info"><%= @issues.length %></span>
+                            <a href="/issues"><i class="icon-tasks"></i> Issues</a>
                         </figure>
                     </li>
                 </ul>
@@ -51,7 +51,7 @@
 
                 <div class="row-fluid">
                     <div class="span12">
-                        <table class="table table-bordered">
+                        <table class="table table-striped">
                             <thead>
                                 <tr>
                                     <th>#</th>
@@ -67,7 +67,7 @@
                                 <% for issue in @issues: %>
                                     <tr>
                                         <td><%= issue.number %></td>
-                                        <td><%= issue.title %></td>
+                                        <td><strong><%= issue.title %></strong></td>
                                         <td><%= issue.created_at %></td>
                                         <td><%= issue.updated_at %></td>
                                         <td><%= issue.user.login %></td>
