@@ -3,7 +3,8 @@
   , "version": "0.0.0"
   , "private": true
   , "dependencies": {
-    "express":     ">= 3.0",
-    "eco":         "latest"
+    "express": ">= 3.0",
+    "eco":     "latest",
+    "js-yaml": "latest"
   }
 }

@@ -22,7 +22,7 @@
                     <li><a><i class="icon-white icon-fire"></i> Burndown App</a></li>
                 </ul>
                 <ul class="nav pull-right">
-                    <li><a><i class="icon-white icon-book"></i> Core InterMine Project</a></li>
+                    <li><a><i class="icon-white icon-book"></i> <%= @project %></a></li>
                 </ul>
             </div>
         </div>
