@@ -23,6 +23,8 @@ github_project: 'InterMine'
 project_name:   'Core InterMine Project'
 ```
 
+Then, assign tickets to milestones and add labels to them in the format **size n**.
+
 ## Use:
 
 1. Start a node server using `.webserver.sh`.
