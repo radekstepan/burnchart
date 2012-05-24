@@ -71,6 +71,10 @@
 .rickshaw_graph .detail .dot.active {
 	display: block;
 }
+.rickshaw_graph .detail ul {
+	list-style-type: none;
+	margin: 0 5px;
+}
 
 /* graph */
 

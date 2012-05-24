@@ -65,10 +65,19 @@
 
 <script>
 (function() {
-    var ideal = [], actual = [], i = 0;
+    var ideal = [], actual = [], issues = {}, i = 0;
     <% for day, data of @days: %>
         ideal.push({ 'x': <%= day / 1000 %>, 'y': <%= data['ideal'] %> });
         actual.push({ 'x': <%= day / 1000 %>, 'y': <%= data['actual'] %> });
+
+        // Fill up issues object.
+        <% if data['issues'].length > 0: %>
+            issues[<%= day %>] = [];
+            <% for issue in data['issues']: %>
+                issues[<%= day %>].push('<%= issue['title'] %>');
+            <% end %>
+        <% end %>
+
         i++;
     <% end %>
 
@@ -94,14 +103,41 @@
     var hoverDetail = new Rickshaw.Graph.HoverDetail({
         graph:      graph,
         xFormatter: function(d) { return new Date(d * 1000).toUTCString() },
-        yFormatter: function(y) { return Math.round(y) + " points left" }
+        formatter:  function(series, stamp, points) {
+            if (series.name == 'Ideal') {
+                return '<p>Ideally ' + Math.round(points) + ' points left</p>'
+            } else {
+                var left = '<p>' + Math.round(points) + ' points left</p>';
+                // Have we closed any issues today?
+                var iss = issues[stamp * 1000];
+                if (iss) {
+                    var string = '<ul>';
+                    for (var i = 0; i < iss.length; i++) {
+                        string += '<li><span class="icon-ok icon-white"></span>&nbsp;&nbsp;' + unescape(iss[i]) + '</li>';
+                    }
+                    string += '</ul>';
+                    return left + string;
+                } else {
+                    return left;
+                }
+            }
+        }
     });
 
     // Axes.
-    var axes = new Rickshaw.Graph.Axis.Time({
-        graph:    graph
+    var xAxis = new Rickshaw.Graph.Axis.Time({
+        graph:          graph,
+        ticksTreatment: 'glow'
     });
-    axes.render();
+
+    var yAxis = new Rickshaw.Graph.Axis.Y({
+        graph:          graph,
+        tickFormat:     Rickshaw.Fixtures.Number.formatKMBT,
+        ticksTreatment: 'glow'
+    });
+
+    xAxis.render();
+    yAxis.render();
 })();
 </script>
 

@@ -99,7 +99,7 @@ app.get '/burndown', (req, res) ->
                 day = Issues.dateToTime current.milestone.created_at # TODO: shift this to the start of the day and deal with time shifts.
                 while day < current.due
                     # Save the day.
-                    days[day] = { 'issue': {}, 'actual': 0, 'ideal': 0 }
+                    days[day] = { 'issues': [], 'actual': 0, 'ideal': 0 }
                     # Shift by a day.
                     day += 1000 * 60 * 60 * 24
                     # Increase the total count.
@@ -128,20 +128,21 @@ app.get '/burndown', (req, res) ->
                                             if closed < day then return day
 
                                     # Save it.
-                                    if day? then days[day]['issue'] = issue
+                                    if day? then days[day]['issues'].push issue
 
                 # Calculate the predicted daily velocity.
                 dailyIdeal = current['size'] / totalDays ; ideal = current['size']
 
                 # Go through the days and save the number of outstanding issues size.
                 for day, d of days
-                    # Does this day have an issue closed? Reduce the total for this milestone.
-                    if d['issue'].size? then current['size'] -= d['issue'].size
+                    # Does this day have any closed issues? Reduce the total for this milestone.
+                    for issue in d['issues']
+                        current['size'] -= issue.size
                     # Save the oustanding count for that day.
                     days[day].actual = current['size']
                     # Save the predicted velocity for that day.
                     ideal -= dailyIdeal
-                    days[day].ideal = ideal
+                    days[day].ideal = ideal # preserve the accurateness so we get a straight line
 
                 # Finally send to client.
                 res.render 'burndown',
