@@ -42,47 +42,55 @@
             </div>
 
             <section class="span10 content borBox">
-                <div class="row-fluid">
-                    <div class="page-header">
-                        <h1>List of outstanding issues</h1>
+                <% if @issues.length > 0: %>                
+                    <div class="row-fluid">
+                        <div class="page-header">
+                            <h1>List of outstanding issues</h1>
+                        </div>
                     </div>
-                </div>
-                <br>
+                    <br>
 
-                <div class="row-fluid">
-                    <div class="span12">
-                        <table class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Title</th>
-                                    <th>Opened</th>
-                                    <th>Updated</th>
-                                    <th>Opened By</th>
-                                    <th>Assigned To</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <% for issue in @issues: %>
+                    <div class="row-fluid">
+                        <div class="span12">
+                            <table class="table table-striped">
+                                <thead>
                                     <tr>
-                                        <td><%= issue.number %></td>
-                                        <td><strong><%= issue.title %></strong></td>
-                                        <td><%= issue.created_at %></td>
-                                        <td><%= issue.updated_at %></td>
-                                        <td><%= issue.user.login %></td>
-                                        <td><%= issue.assignee?.login %></td>
-                                        <td>
-                                            <a target="_new" href="<%= issue.html_url %>">
-                                                <button class="btn btn-mini btn-success"><i class="icon-white icon-eye-open"></i></button>
-                                            </a>
-                                        </td>
+                                        <th>#</th>
+                                        <th>Title</th>
+                                        <th>Opened</th>
+                                        <th>Updated</th>
+                                        <th>Opened By</th>
+                                        <th>Assigned To</th>
+                                        <th>Actions</th>
                                     </tr>
-                                <% end %>
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                    <% for issue in @issues: %>
+                                        <tr>
+                                            <td><%= issue.number %></td>
+                                            <td><strong><%= issue.title %></strong></td>
+                                            <td><%= issue.created_at %></td>
+                                            <td><%= issue.updated_at %></td>
+                                            <td><%= issue.user.login %></td>
+                                            <td><%= issue.assignee?.login %></td>
+                                            <td>
+                                                <a target="_new" href="<%= issue.html_url %>">
+                                                    <button class="btn btn-mini btn-success"><i class="icon-white icon-eye-open"></i></button>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    <% end %>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
-                </div>
+                <% else: %>
+                    <div class="row-fluid">
+                        <div class="page-header">
+                            <h1>All issues are closed</h1>
+                        </div>
+                    </div>
+                <% end %>
             </section>
         </section>
     </section>
