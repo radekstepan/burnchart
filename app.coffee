@@ -78,75 +78,82 @@ app.get '/burndown', (req, res) ->
             when 'milestones' then store.milestones = store.milestones.concat data
 
         # Are we done?
-        if resources is 0            
-            # Store the current milestone and its size.
-            current = { 'milestone': {}, 'diff': +Infinity, 'size': 0 }
+        if resources is 0
+            # Do we actually have an open milestone?
+            if store.milestones.length > 0
+                # Store the current milestone and its size.
+                current = { 'milestone': {}, 'diff': +Infinity, 'size': 0 }
 
-            # Determine the 'current' milestone
-            now = new Date().getTime()
-            for milestone in store.milestones
-                due = milestone['due_on']
-                # JS expects more accuracy.
-                due = Issues.dateToTime due
-                # Is this the 'current' one?
-                diff = due - now
-                if diff > 0 and diff < current.diff
-                    current.milestone = milestone ; current.diff = diff ; current.due = due
+                # Determine the 'current' milestone
+                now = new Date().getTime()
+                for milestone in store.milestones
+                    # JS expects more accuracy.
+                    due = Issues.dateToTime milestone['due_on']
+                    # Is this the 'current' one?
+                    diff = due - now
+                    if diff > 0 and diff < current.diff
+                        current.milestone = milestone ; current.diff = diff ; current.due = due
 
-            # Create n dict with all dates in the milestone span.
-            days = {} ; totalDays = 0
-            day = Issues.dateToTime current.milestone.created_at # TODO: shift this to the start of the day and deal with time shifts.
-            while day < current.due
-                # Save the day.
-                days[day] = { 'issue': {}, 'actual': 0, 'ideal': 0 }
-                # Shift by a day.
-                day += 1000 * 60 * 60 * 24
-                # Increase the total count.
-                totalDays += 1
+                # Create n dict with all dates in the milestone span.
+                days = {} ; totalDays = 0
+                day = Issues.dateToTime current.milestone.created_at # TODO: shift this to the start of the day and deal with time shifts.
+                while day < current.due
+                    # Save the day.
+                    days[day] = { 'issue': {}, 'actual': 0, 'ideal': 0 }
+                    # Shift by a day.
+                    day += 1000 * 60 * 60 * 24
+                    # Increase the total count.
+                    totalDays += 1
 
-            # Now go through the issues and place them to the appropriate days.
-            for issue in store.issues
-                # This milestone?
-                if issue.milestone?.number is current.milestone.number
-                    # Has a size label?
-                    if issue.labels?
-                        issue.size = do (issue) ->
-                            for label in issue.labels
-                                if label.name.indexOf("size ") is 0
-                                    return parseInt label.name[5...]
+                # Now go through the issues and place them to the appropriate days.
+                for issue in store.issues
+                    # This milestone?
+                    if issue.milestone?.number is current.milestone.number
+                        # Has a size label?
+                        if issue.labels?
+                            issue.size = do (issue) ->
+                                for label in issue.labels
+                                    if label.name.indexOf("size ") is 0
+                                        return parseInt label.name[5...]
 
-                        if issue.size?
-                            # Increase the total size of the milestone.
-                            current.size += issue.size
-                            # Is it closed?
-                            if issue.closed_at?
-                                closed = Issues.dateToTime issue.closed_at
-                                # Find when was it closed (will be made faster)
-                                day = do () ->
-                                    for day, x of days
-                                        if closed < day then return day
+                            if issue.size?
+                                # Increase the total size of the milestone.
+                                current.size += issue.size
+                                # Is it closed?
+                                if issue.closed_at?
+                                    closed = Issues.dateToTime issue.closed_at
+                                    # Find when was it closed (will be made faster)
+                                    day = do () ->
+                                        for day, x of days
+                                            if closed < day then return day
 
-                                # Save it.
-                                if day? then days[day]['issue'] = issue
+                                    # Save it.
+                                    if day? then days[day]['issue'] = issue
 
-            # Calculate the predicted daily velocity.
-            dailyIdeal = current['size'] / totalDays ; ideal = current['size']
+                # Calculate the predicted daily velocity.
+                dailyIdeal = current['size'] / totalDays ; ideal = current['size']
 
-            # Go through the days and save the number of outstanding issues size.
-            for day, d of days
-                # Does this day have an issue closed? Reduce the total for this milestone.
-                if d['issue'].size? then current['size'] -= d['issue'].size
-                # Save the oustanding count for that day.
-                days[day].actual = current['size']
-                # Save the predicted velocity for that day.
-                ideal -= dailyIdeal
-                days[day].ideal = ideal
+                # Go through the days and save the number of outstanding issues size.
+                for day, d of days
+                    # Does this day have an issue closed? Reduce the total for this milestone.
+                    if d['issue'].size? then current['size'] -= d['issue'].size
+                    # Save the oustanding count for that day.
+                    days[day].actual = current['size']
+                    # Save the predicted velocity for that day.
+                    ideal -= dailyIdeal
+                    days[day].ideal = ideal
 
-            # Finally send to client.
-            res.render 'burndown',
-                'days':    days
-                'project': Issues.config.project_name
-            , (html) -> res.send html, 'Content-Type': 'text/html', 200
+                # Finally send to client.
+                res.render 'burndown',
+                    'days':    days
+                    'project': Issues.config.project_name
+                , (html) -> res.send html, 'Content-Type': 'text/html', 200
+
+            else
+                # No current milestone.
+                res.render 'empty',
+                    'project': Issues.config.project_name
+                , (html) -> res.send html, 'Content-Type': 'text/html', 200            
 
 
     # Get Milestones, Opened and Closed Tickets.
