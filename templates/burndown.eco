@@ -57,6 +57,7 @@
                 <div class="row-fluid">
                     <div class="span12">
                         <div id="chart"></div>
+                        <div id="timeline"></div>
                     </div>
                 </div>
             </section>
@@ -138,6 +139,15 @@
 
     xAxis.render();
     yAxis.render();
+
+    // Annotations.
+    var annotator = new Rickshaw.Graph.Annotate({
+        graph:   graph,
+        element: document.getElementById('timeline')
+    });
+
+    annotator.add(new Date().getTime() / 1000, 'Now');
+    annotator.update();
 })();
 </script>
 
