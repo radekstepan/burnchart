@@ -27,7 +27,7 @@ Then, assign tickets to milestones and add labels to them in the format **size n
 
 ## Use:
 
-1. Start a node server using `.webserver.sh`.
+1. Start a node server using `.webserver.sh`
 2. Visit [http://0.0.0.0:3000/](http://0.0.0.0:3000/)
 
 ## Example:

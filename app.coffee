@@ -101,11 +101,19 @@ app.get '/burndown', (req, res) ->
                         current.milestone = milestone ; current.diff = diff ; current.due = due
 
                 # Create n dict with all dates in the milestone span.
-                days = {} ; totalDays = 0
+                days = {} ; totalDays = 0 ; totalNonWorkingDays = 0
                 day = Issues.dateToTime current.milestone.created_at
                 while day < current.due
-                    # Save the day.
-                    days[day] = { 'issues': [], 'actual': 0, 'ideal': 0 }
+                    # Is this a weekend?
+                    dayOfWeek = new Date(day).getDay()
+                    if dayOfWeek is 6 or dayOfWeek is 0
+                        totalNonWorkingDays += 1                 
+                        # Save the day.
+                        days[day] = { 'issues': [], 'actual': 0, 'ideal': 0, 'weekend': true  }
+                    else
+                        # Save the day.
+                        days[day] = { 'issues': [], 'actual': 0, 'ideal': 0, 'weekend': false  }
+                    
                     # Shift by a day.
                     day += 1000 * 60 * 60 * 24
                     # Increase the total count.
@@ -131,7 +139,7 @@ app.get '/burndown', (req, res) ->
                                     days[Issues.dateToTime issue.closed_at]['issues'].push issue
 
                 # Calculate the predicted daily velocity.
-                dailyIdeal = current['size'] / totalDays ; ideal = current['size']
+                dailyIdeal = current['size'] / (totalDays - totalNonWorkingDays) ; ideal = current['size']
 
                 # Go through the days and save the number of outstanding issues size.
                 for day, d of days
@@ -140,9 +148,10 @@ app.get '/burndown', (req, res) ->
                         current['size'] -= issue.size
                     # Save the oustanding count for that day.
                     days[day].actual = current['size']
-                    # Save the predicted velocity for that day.
-                    ideal -= dailyIdeal
-                    days[day].ideal = ideal # preserve the accurateness so we get a straight line
+                    
+                    # Save the predicted velocity for that day if it is not a non-working day.
+                    ideal -= dailyIdeal unless days[day].weekend
+                    days[day].ideal = ideal
 
                 # Finally send to client.
                 res.render 'burndown',

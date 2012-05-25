@@ -66,6 +66,8 @@
 
 <script>
 (function() {
+    var now = new Date().getTime();
+
     var ideal = [], actual = [], issues = {}, i = 0;
     <% for day, data of @days: %>
         ideal.push({ 'x': <%= day / 1000 %>, 'y': <%= data['ideal'] %> });
@@ -146,7 +148,7 @@
         element: document.getElementById('timeline')
     });
 
-    annotator.add(new Date().getTime() / 1000, 'Now');
+    annotator.add(now / 1000, 'Now');
     annotator.update();
 })();
 </script>
