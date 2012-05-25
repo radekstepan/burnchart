@@ -102,7 +102,7 @@
     // Onhover.
     var hoverDetail = new Rickshaw.Graph.HoverDetail({
         graph:      graph,
-        xFormatter: function(d) { return new Date(d * 1000).toUTCString() },
+        xFormatter: function(d) { return new Date(d * 1000).toUTCString().substring(0, 11) },
         formatter:  function(series, stamp, points) {
             if (series.name == 'Ideal') {
                 return '<p>Ideally ' + Math.round(points) + ' points left</p>'

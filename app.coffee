@@ -27,8 +27,14 @@ Issues =
     getClosedIssues: (callback) -> Issues.get "/repos/#{Issues.config.github_user}/#{Issues.config.github_project}/issues?state=closed", 'issues', callback
     getMilestones:   (callback) -> Issues.get "/repos/#{Issues.config.github_user}/#{Issues.config.github_project}/milestones", 'milestones', callback
 
-    # Convert GitHub ISO to JS ISO date  and then time
-    dateToTime: (date) -> new Date(date[0...date.length - 1] + '.000' + date.charAt date.length-1).getTime()
+    # Convert GitHub ISO 8601 to JS timestamp at the beginning of UTC day!'
+    dateToTime: (date) ->
+        # Add miliseconds and create `Date`.
+        date = new Date(date[0...date.length - 1] + '.000' + date.charAt date.length-1)
+        # Move to the beginning of the day (at 9am BST, 8am GMT, so we do not worry about time shifts).
+        date = new Date date.getFullYear(), date.getMonth(), date.getDate(), 9
+        # Return timestamp.
+        date.getTime();
 
     # Format issues for display in a listing.
     format: (issue) ->
@@ -96,7 +102,7 @@ app.get '/burndown', (req, res) ->
 
                 # Create n dict with all dates in the milestone span.
                 days = {} ; totalDays = 0
-                day = Issues.dateToTime current.milestone.created_at # TODO: shift this to the start of the day and deal with time shifts.
+                day = Issues.dateToTime current.milestone.created_at
                 while day < current.due
                     # Save the day.
                     days[day] = { 'issues': [], 'actual': 0, 'ideal': 0 }
@@ -121,14 +127,8 @@ app.get '/burndown', (req, res) ->
                                 current.size += issue.size
                                 # Is it closed?
                                 if issue.closed_at?
-                                    closed = Issues.dateToTime issue.closed_at
-                                    # Find when was it closed (will be made faster)
-                                    day = do () ->
-                                        for day, x of days
-                                            if closed < day then return day
-
                                     # Save it.
-                                    if day? then days[day]['issues'].push issue
+                                    days[Issues.dateToTime issue.closed_at]['issues'].push issue
 
                 # Calculate the predicted daily velocity.
                 dailyIdeal = current['size'] / totalDays ; ideal = current['size']
