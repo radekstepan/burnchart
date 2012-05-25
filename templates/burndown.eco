@@ -15,7 +15,7 @@
     <script src="js/rickshaw.min.js"></script>
 </head>
 <body>
-    <header class="navbar blue blue2 navbar-fixed-top">
+    <header class="navbar blue navbar-fixed-top">
         <div class="navbar-inner">
             <div class="container-fluid">
                 <ul class="nav pull-left">

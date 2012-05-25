@@ -10,7 +10,7 @@
     <link rel="stylesheet" type="text/css" href="css/style.css">
 </head>
 <body>
-    <header class="navbar blue blue2 navbar-fixed-top">
+    <header class="navbar blue navbar-fixed-top">
         <div class="navbar-inner">
             <div class="container-fluid">
                 <ul class="nav pull-left">
