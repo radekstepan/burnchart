@@ -1,1 +1,1 @@
-cat app.coffee | coffee -sc | node
+coffee -c app.coffee ; node app.js
