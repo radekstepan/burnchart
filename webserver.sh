@@ -1,1 +1,1 @@
-node -e "require('coffee-script');require('./app');"
+coffee app.coffee
