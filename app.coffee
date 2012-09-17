@@ -45,7 +45,7 @@ Issues =
         issue
 
 # Express.
-app = express.createServer()
+app = express()
 
 app.configure ->
     app.use express.logger()
