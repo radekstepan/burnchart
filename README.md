@@ -1,4 +1,8 @@
-Server for connect to GitHub Issues API and displaying a burndown chart for a current milestone.
+# GitHub Burndown App
+
+An app that displays a burndown chart for your GitHub Issues.
+
+![image](https://raw.github.com/radekstepan/github-burndown-chart/master/example.png)
 
 ## Requirements:
 
@@ -52,7 +56,3 @@ The **blue line** - this represents the dropping size of the outstanding Issues 
 There is nothing to save in a database so each refresh of the page fetches all of the latest information from GitHub.
 
 Enjoy!
-
-## Example:
-
-![image](https://raw.github.com/radekstepan/github-burndown-chart/master/example.png)
