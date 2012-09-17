@@ -45,6 +45,10 @@ $ npm start
 
 Then visit [http://127.0.0.1:3000/](http://127.0.0.1:3000/).
 
+The **orange line** - this represents you closing the Issues as you go through them. When you hover over it you will see, for each day, what the closed Issues were and how many points are left.
+
+The **blue line** - this represents the dropping size of the outstanding Issues planned for the iteration/Milestone.
+
 There is nothing to save in a database so each refresh of the page fetches all of the latest information from GitHub.
 
 Enjoy!
