@@ -187,5 +187,5 @@ app.get '/issues', (req, res) ->
 fs.readFile "config.yml", "utf8", (err, data) ->
     Issues.config = yaml.load data
 
-    app.listen 3000
-    console.log "Express server listening to port 3000"
+    app.listen process.env.OPENSHIFT_INTERNAL_PORT or 3000, process.env.OPENSHIFT_INTERNAL_IP, ->
+        console.log "Express server listening to port #{process.env.OPENSHIFT_INTERNAL_PORT or 3000}"

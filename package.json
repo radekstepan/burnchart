@@ -1,9 +1,9 @@
 {
     "name": "github-burndown-chart"
-    , "version": "0.1.0"
+    , "version": "0.1.1"
     , "private": true
     , "dependencies": {
-        "coffee-script": "latest",
+        "coffee-script": "1.3.3",
         "express": ">= 3.0",
         "eco": "latest",
         "js-yaml": "latest"
