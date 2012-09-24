@@ -1,3 +1,4 @@
 github_user:    'intermine'
 github_project: 'intermine'
-project_name:   'current InterMine milestone'
+project_name:   'Core InterMine Project'
+weekend:        [ 6, 7 ]

@@ -104,12 +104,20 @@ app.get '/burndown', (req, res) ->
                 days = {} ; totalDays = 0 ; totalNonWorkingDays = 0
                 day = Issues.dateToTime current.milestone.created_at
                 while day < current.due
-                    # Is this a weekend?
-                    dayOfWeek = new Date(day).getDay()
-                    if dayOfWeek is 6 or dayOfWeek is 0
-                        totalNonWorkingDays += 1                 
-                        # Save the day.
-                        days[day] = { 'issues': [], 'actual': 0, 'ideal': 0, 'weekend': true  }
+                    # Do we have weekends configured?
+                    if Issues.config.weekend? and Issues.config.weekend instanceof Array
+                        dayOfWeek = new Date(day).getDay()
+                        # Fix stupid Abrahamic tradition.
+                        if dayOfWeek is 0 then dayOfWeek = 7
+
+                        # Does this day fall on a weekend?
+                        if dayOfWeek in Issues.config.weekend
+                            totalNonWorkingDays += 1                 
+                            # Save the day.
+                            days[day] = { 'issues': [], 'actual': 0, 'ideal': 0, 'weekend': true  }
+                        else
+                            # Save the day.
+                            days[day] = { 'issues': [], 'actual': 0, 'ideal': 0, 'weekend': false  }
                     else
                         # Save the day.
                         days[day] = { 'issues': [], 'actual': 0, 'ideal': 0, 'weekend': false  }

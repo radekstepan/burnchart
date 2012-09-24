@@ -41,6 +41,14 @@ Then assign a few labels to tickets in this Milestone. These labels will represe
 size 5
 ```
 
+### Weekends
+
+If you have days when you do not work on a project, edit the `config.yml` file with a list of days of the week when you are off. The numbers are 1 indexed and follow the international standard of starting a week on Monday, so for a Saturday and Sunday weekend do this:
+
+```yaml
+weekend: [ 6, 7 ]
+```
+
 ## Use:
 
 ```bash
