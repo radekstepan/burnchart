@@ -29,12 +29,14 @@ Issues =
 
     # Convert GitHub ISO 8601 to JS timestamp at the beginning of UTC day!'
     dateToTime: (date) ->
+        # Some milestones do not have due dates.
+        return 0 unless date?
         # Add miliseconds and create `Date`.
         date = new Date(date[0...date.length - 1] + '.000' + date.charAt date.length-1)
         # Move to the beginning of the day (at 9am BST, 8am GMT, so we do not worry about time shifts).
         date = new Date date.getFullYear(), date.getMonth(), date.getDate(), 9
         # Return timestamp.
-        date.getTime();
+        date.getTime()
 
     # Format issues for display in a listing.
     format: (issue) ->
