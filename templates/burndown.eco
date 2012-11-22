@@ -84,6 +84,9 @@
         i++;
     <% end %>
 
+    // Early exit to avoid Rickshaw error.
+    if (actual.length == 0) return;
+
     // The line graph.
     var graph = new Rickshaw.Graph({
         element: document.querySelector("#chart"),
