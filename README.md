@@ -49,13 +49,17 @@ If you have days when you do not work on a project, edit the `config.yml` file w
 weekend: [ 6, 7 ]
 ```
 
+### Base URL to app
+
+If the app does not live in the root path of your server, edit the `base_url` property in the config file.
+
 ## Use:
 
 ```bash
-$ npm start
+$ node start.js
 ```
 
-Then visit [http://127.0.0.1:3000/](http://127.0.0.1:3000/).
+Then visit [http://127.0.0.1:3000/](http://127.0.0.1:3000/) or whichever port was configured in `process.env.PORT`.
 
 The **orange line** - this represents you closing the Issues as you go through them. When you hover over it you will see, for each day, what the closed Issues were and how many points are left.
 
@@ -64,43 +68,3 @@ The **blue line** - this represents the dropping size of the outstanding Issues 
 There is nothing to save in a database so each refresh of the page fetches all of the latest information from GitHub.
 
 Enjoy!
-
-## Redhat OpenShift:
-
-Create an account at [http://openshift.redhat.com](http://openshift.redhat.com) specifying a Node.js 0.6 "Web Cartridge" specifying the url for the app.
-
-Install the OpenShift [client tools](https://openshift.redhat.com/app/getting_started).
-
-Add your public key from `~/.ssh/id_rsa.pub` to your account. You can use xclip to copy the key to the clipboard:
-
-```bash
-$ xclip -sel clip < ~/.ssh/id_rsa.pub
-```
-
-Add the remote repository, like:
-
-```bash
-$ git remote add openshift ssh://[username_hash]@burndown-intermine.rhcloud.com/~/git/burndown.git/
-```
-
-Push your changes:
-
-```bash
-$ git push -u openshift master
-```
-
-### Debugging
-
-In case of trouble, use the OpenShift client tools to debug:
-
-```bash
-$ /var/lib/gems/1.8/bin/rhc domain status
-```
-
-To determine the status of the app, run:
-
-```bash
-$ /var/lib/gems/1.8/bin/rhc-app status -a burndown
-```
-
-You can also SFTP into your instance on port `22` [sftp://burndown-intermine.rhcloud.com](sftp://burndown-intermine.rhcloud.com) or SSH to it.

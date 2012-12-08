@@ -1,8 +1,9 @@
-express = require 'express'
-eco     = require 'eco'
-https =   require 'https'
-fs =      require "fs"
-yaml =    require "js-yaml"
+flatiron = require 'flatiron'
+connect  = require 'connect'
+https    = require 'https'
+fs       = require "fs"
+yaml     = require "js-yaml"
+eco      = require 'eco'
 
 # Helper object for GitHub Issues.
 Issues =
@@ -46,38 +47,33 @@ Issues =
 
         issue
 
-# Express.
-app = express()
+# Config filters.
+app = flatiron.app
+app.use flatiron.plugins.http,
+    'before': [
+        connect.favicon()
+        connect.static __dirname + '/public'
+    ]
 
-app.configure ->
-    app.use express.logger()
-    app.use express.bodyParser()
-
-    app.set 'view engine', 'eco'
-    app.set 'views', './templates'
-
-    # Register a custom .eco compiler.
-    app.engine 'eco', (path, options, callback) ->
-        fs.readFile "./#{path}", "utf8", (err, str) ->
-            callback eco.render str, options
-
-    app.use express.static('./public')
-
-app.configure 'development', ->
-    app.use express.errorHandler
-        dumpExceptions: true
-        showStack:      true
-
-app.configure 'production', ->
-    app.use express.errorHandler()
-
-# Redirect to chart from index.
-app.get '/', (req, res) -> res.redirect '/burndown'
+# Eco templating.
+app.use
+    name: "eco-templating"
+    attach: (options) ->
+        app.eco = (path, data, cb) ->
+            fs.readFile "./templates/#{path}.eco", "utf8", (err, template) ->
+                if err then cb err, null
+                else
+                    try
+                        cb null, eco.render template, data
+                    catch e
+                        cb e, null
 
 # Show burndown chart.
-app.get '/burndown', (req, res) ->
+getBurndown = ->
+    console.log 'Get burndown chart'
+
     resources = 3 ; store = { 'issues': [], 'milestones': [] }
-    done = (data, type) ->
+    done = (data, type) =>
         # One less to do.
         resources--
 
@@ -164,17 +160,26 @@ app.get '/burndown', (req, res) ->
                     days[day].ideal = ideal
 
                 # Finally send to client.
-                res.render 'burndown',
+                app.eco 'burndown',
                     'days':    days
                     'project': Issues.config.project_name
-                , (html) -> res.send html, 'Content-Type': 'text/html', 200
+                    'base_url': Issues.config.base_url
+                , (err, html) =>
+                    throw err if err
+                    @res.writeHead 200, "content-type": "text/html"
+                    @res.write html
+                    @res.end()
 
             else
                 # No current milestone.
-                res.render 'empty',
+                app.eco 'empty',
                     'project': Issues.config.project_name
-                , (html) -> res.send html, 'Content-Type': 'text/html', 200            
-
+                    'base_url': Issues.config.base_url
+                , (err, html) =>
+                    throw err if err
+                    @res.writeHead 200, "content-type": "text/html"
+                    @res.write html
+                    @res.end()
 
     # Get Milestones, Opened and Closed Tickets.
     Issues.getMilestones done
@@ -182,20 +187,38 @@ app.get '/burndown', (req, res) ->
     Issues.getClosedIssues done
 
 # Show open issues.
-app.get '/issues', (req, res) ->
-    Issues.getOpenIssues (issues) ->
+getIssues = ->
+    console.log 'Get open issues'
+
+    Issues.getOpenIssues (issues) =>
 
         # Replace the dates in issues with nice dates.
         issues = ( Issues.format(issue) for issue in issues  )
 
-        res.render 'issues',
+        app.eco 'issues',
             'issues':  issues
             'project': Issues.config.project_name
-        , (html) -> res.send html, 'Content-Type': 'text/html', 200
+            'base_url': Issues.config.base_url
+        , (err, html) =>
+            throw err if err
+            @res.writeHead 200, "content-type": "text/html"
+            @res.write html
+            @res.end()
+
+# Routes
+app.router.path '/', ->
+    @get getBurndown
+
+app.router.path '/burndown', ->
+    @get getBurndown
+
+app.router.path '/issues', ->
+    @get getIssues
 
 # Fetch config and start server.
 fs.readFile "config.yml", "utf8", (err, data) ->
     Issues.config = yaml.load data
 
-    app.listen process.env.OPENSHIFT_INTERNAL_PORT or 3000, process.env.OPENSHIFT_INTERNAL_IP, ->
-        console.log "Express server listening to port #{process.env.OPENSHIFT_INTERNAL_PORT or 3000}"
+    app.start process.env.PORT, (err) ->
+        throw err if err
+        console.log "Listening on port #{app.server.address().port}"

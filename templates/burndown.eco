@@ -6,6 +6,8 @@
 
     <title>Burndown App</title>
     
+    <base href="<%= @base_url %>"/>
+
     <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="css/rickshaw.css">
     <link rel="stylesheet" type="text/css" href="css/style.css">
@@ -35,12 +37,12 @@
                 <ul>
                     <li class="active">
                         <figure>
-                            <a href="/burndown"><i class="icon-signal"></i> Burndown Chart</a>
+                            <a href="burndown"><i class="icon-signal"></i> Burndown Chart</a>
                         </figure>
                     </li>
                     <li>
                         <figure>
-                            <a href="/issues"><i class="icon-tasks"></i> Issues</a>
+                            <a href="issues"><i class="icon-tasks"></i> Issues</a>
                         </figure>
                     </li>
                 </ul>
