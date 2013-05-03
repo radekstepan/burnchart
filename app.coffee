@@ -14,6 +14,8 @@ Issues =
             host:   "api.github.com"
             method: "GET"
             path:   path
+            headers:
+                'User-Agent': 'Scrum Burndown (1)'
 
         https.request(options, (response) ->
             if response.statusCode is 200
