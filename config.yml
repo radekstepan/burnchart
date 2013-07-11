@@ -3,3 +3,4 @@ github_project: 'intermine'
 project_name:   'Core InterMine Project'
 weekend:        [ 6, 7 ]
 base_url:       'github-burndown-chart'
+api_token:      false

@@ -19,7 +19,7 @@ $ npm install -d
 
 ## Configure:
 
-The app is configured by pointing to a public GitHub user/project. Do so in `config.yml`:
+The app is configured by pointing to a GitHub user/project. Do so in `config.yml`:
 
 ```yaml
 github_user:    'intermine'
@@ -28,6 +28,14 @@ project_name:   'Core InterMine Project'
 ```
 
 The `project_name` key-value pair represents the title of the burndown chart that you will see in the top right corner of the page.
+
+To configure the app for a private GitHub project, you must additionally set the `api_token` key-value pair in `config.yml`:
+
+```yaml
+api_token:      '5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8'
+```
+
+To generate an access token, see your [GitHub Application Settings](https://github.com/settings/applications).
 
 ### Milestones
 

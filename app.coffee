@@ -17,6 +17,9 @@ Issues =
             headers:
                 'User-Agent': 'Scrum Burndown (1)'
 
+        if Issues.config.api_token
+            options.headers.Authorization = 'token '+Issues.config.api_token
+
         https.request(options, (response) ->
             if response.statusCode is 200
                 json = ""
