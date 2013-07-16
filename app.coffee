@@ -26,6 +26,8 @@ Issues =
                 response.on "data", (chunk) -> json += chunk
                 
                 response.on "end", -> callback JSON.parse(json), type
+            else
+                throw response.statusCode
         ).end()
 
     # URLs to API.
