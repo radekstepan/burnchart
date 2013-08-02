@@ -1,14 +1,13 @@
 {
     "name": "github-burndown-chart",
-    "version": "0.2.0",
-    "private": true,
+    "version": "0.2.1",
     "dependencies": {
-        "coffee-script": "1.3.3",
-        "flatiron": "0.2.5",
-        "union": "0.3.4",
-        "connect": "2.4.3",
-        "eco": "1.1.0-rc-3",
-        "js-yaml": "1.0.3"
+        "coffee-script": "~1.6.3",
+        "flatiron": "~0.3.8",
+        "union": "~0.3.7",
+        "connect": "~2.8.4",
+        "eco": "~1.1.0-rc-3",
+        "js-yaml": "~2.1.0"
     },
     "scripts": {
         "start": "start.js"

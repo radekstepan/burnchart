@@ -68,7 +68,7 @@
 
 <script>
 (function() {
-    var now = new Date().getTime();
+    var now = + new Date;
 
     var ideal = [], actual = [], issues = {}, i = 0;
     <% for day, data of @days: %>
@@ -79,7 +79,7 @@
         <% if data['issues'].length > 0: %>
             issues[<%= day %>] = [];
             <% for issue in data['issues']: %>
-                issues[<%= day %>].push('<%= issue['title'] %>');
+                issues[<%= day %>].push('<%= escape issue['title'] %>');
             <% end %>
         <% end %>
 
