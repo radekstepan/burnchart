@@ -1,78 +1,41 @@
-# GitHub Burndown App
+#GitHub Burndown Chart
+##Rework in Progress
 
-An app that displays a burndown chart for your GitHub Issues.
+##Project Charter
 
-![image](https://raw.github.com/radekstepan/github-burndown-chart/master/example.png)
+The app is to display a burndown chart from a set of GitHub issues in a milestone.
 
-## Requirements:
+If we can, do all processing and storage on the client which makes the app run for "free" on `gh-pages` etc.
 
-You can install all the following dependencies by running:
+Show:
 
-```bash
-$ npm install -d
-```
+* Upcoming issues by size.
+* Issues closed today.
+* For each issue show other tags and assignee (avatar).
+* Number of working days left.
 
-- [CoffeeScript](http://coffeescript.org/)
-- [express](http://expressjs.com/)
-- [eco](https://github.com/sstephenson/eco)
-- [js-yaml](https://github.com/visionmedia/js-yaml)
+Allow:
 
-## Configure:
+* Toggle non working days.
+* Have a print view.
+* Customization of the theme (own logo/colors etc.).
 
-The app is configured by pointing to a GitHub user/project. Do so in `config.yml`:
+Configure:
 
-```yaml
-github_user:    'intermine'
-github_project: 'InterMine'
-project_name:   'Core InterMine Project'
-```
+* Repos for users/orgs.
+* Private api keys.
+* Non working days.
+* Label pattern to determine size (?).
+* How often to poll for updates (limited by GH API).
 
-The `project_name` key-value pair represents the title of the burndown chart that you will see in the top right corner of the page.
+Be:
 
-To configure the app for a private GitHub project, you must additionally set the `api_token` key-value pair in `config.yml`:
+* Responsive.
+* As lightweight as possible (do we need Backbone/jQuery?).
+* Well documented and modularized.
 
-```yaml
-api_token:      '5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8'
-```
+Usage envisaged in these three scenarios:
 
-To generate an access token, see your [GitHub Application Settings](https://github.com/settings/applications).
-
-### Milestones
-
-Then visit your GitHub project's Issues page and create a new milestone with a date due in the future. This will represent your iteration. This app will pick the Milestone with the **closest due date in the future** as the *current* one.
-
-### Sizes
-
-Then assign a few labels to tickets in this Milestone. These labels will represent your perceived size of the task. The label takes a form of *size [number]* so to say that an Issue is as big as *5* points I would create and assign this label (don't worry about the colors...):
-
-```
-size 5
-```
-
-### Weekends
-
-If you have days when you do not work on a project, edit the `config.yml` file with a list of days of the week when you are off. The numbers are 1 indexed and follow the international standard of starting a week on Monday, so for a Saturday and Sunday weekend do this:
-
-```yaml
-weekend: [ 6, 7 ]
-```
-
-### Base URL to app
-
-If the app does not live in the root path of your server, edit the `base_url` property in the config file.
-
-## Use:
-
-```bash
-$ node start.js
-```
-
-Then visit [http://127.0.0.1:3000/](http://127.0.0.1:3000/) or whichever port was configured in `process.env.PORT`.
-
-The **orange line** - this represents you closing the Issues as you go through them. When you hover over it you will see, for each day, what the closed Issues were and how many points are left.
-
-The **blue line** - this represents the dropping size of the outstanding Issues planned for the iteration/Milestone.
-
-There is nothing to save in a database so each refresh of the page fetches all of the latest information from GitHub.
-
-Enjoy!
+1. Use the `gh-pages` branch of this repo to connect and visualize a public repo.
+1. Deploy the app on a static server elsewhere with custom `config`.
+1. Proxy requests through a service to not disclose private api keys publicly.
