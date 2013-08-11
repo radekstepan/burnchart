@@ -34,12 +34,20 @@ Be:
 * Responsive.
 * As lightweight as possible (do we need Backbone/jQuery?).
 * Well documented and modularized.
+* Handling upstream API downtimes.
+* Testing the algo by way of using the proxy service to fake responses.
+* Handling daylight savings et al.
 
 Usage envisaged in these three scenarios:
 
 1. Use the `gh-pages` branch of this repo to connect and visualize a public repo.
+    * App requesting a static JSON config file, merging with LocalStorage.
 1. Deploy the app on a static server elsewhere with custom `config`.
+    * App requesting a static JSON config file, merging with LocalStorage.
 1. Proxy requests through a service to not disclose private api keys publicly.
+    * Proxy app wrapping a request with API credentials. When requesting the config file we get the file dynamically stating which URL to use to make requests. API keys are scrubbed from the JSON file. When someone makes a request to us, wrap their request (only GET requests to specific endpoints!) and pipe the response back.
+    * All this works as a Connect Middleware.
+    * Also, make this cache responses for a given amount of time (poll time). This way people concerned with a big amount of requests can share the same resource.
 
 ##Design
 
