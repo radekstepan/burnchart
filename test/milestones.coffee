@@ -20,7 +20,7 @@ module.exports =
                 }
             ]
 
-        milestones.get_current null, null, (err, milestone) ->
+        milestones.get_current null, null, (err, warn, milestone) ->
             assert.ifError err
             assert.equal milestone.number, 1
             done.call null
@@ -45,7 +45,7 @@ module.exports =
                 }
             ]
 
-        milestones.get_current null, null, (err, milestone) ->
+        milestones.get_current null, null, (err, warn, milestone) ->
             assert.ifError err
             assert.equal milestone.number, 2
             done.call null
@@ -54,14 +54,32 @@ module.exports =
         req.milestones = (user, repo, cb) ->
             cb null, []
 
-        milestones.get_current null, null, (err, milestone) ->
-            assert.equal err, 'No open milestones for a repo'
+        milestones.get_current null, null, (err, warn, milestone) ->
+            assert.ifError err
+            assert.equal warn, 'No open milestones for repo'
             done.call null
 
     'get current when not found': (done) ->
         req.milestones = (user, repo, cb) ->
             cb null, { 'message': 'Not Found' }
 
-        milestones.get_current null, null, (err, milestone) ->
+        milestones.get_current null, null, (err, warn, milestone) ->
             assert.equal err, 'Not Found'
+            done.call null
+
+    'get current when no issues': (done) ->
+        req.milestones = (user, repo, cb) ->
+            cb null, [
+                {
+                    'number': 1
+                    'created_at': '2013-01-01T00:00:00Z'
+                    'due_on': '2013-02-01T00:00:00Z',
+                    'open_issues': 0,
+                    'closed_issues': 0
+                }
+            ]
+
+        milestones.get_current null, null, (err, warn, milestone) ->
+            assert.ifError err
+            assert.equal warn, 'No issues for milestone'
             done.call null
