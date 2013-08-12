@@ -1,6 +1,8 @@
 #GitHub Burndown Chart
 ##Rework in Progress
 
+[ ![Codeship Status for radekstepan/github-burndown-chart](https://www.codeship.io/projects/d69f4420-e5b0-0130-bbae-1632ddfb80f8/status?branch=rework)](https://www.codeship.io/projects/5855)
+
 ##Next ->
 
 [ ] Write tests to fetch open/closed issues (and save ourselves the trouble when milestone has 0 issues count)
