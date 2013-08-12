@@ -1,6 +1,10 @@
 #GitHub Burndown Chart
 ##Rework in Progress
 
+##Next ->
+
+[ ] Write tests to fetch open/closed issues (and save ourselves the trouble when milestone has 0 issues count)
+
 ##Project Charter
 
 The app is to display a burndown chart from a set of GitHub issues in a milestone.
