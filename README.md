@@ -14,6 +14,10 @@ Show:
 * For each issue show other tags and assignee (avatar).
 * Number of working days left.
 * To whom open issues still belong.
+* Projected ship date (project running late/not).
+* For each user/avatar what is their % progress and number of open/closed issues.
+* Heat: if we are struck/very productive for a period of time, colorize the chart line.
+* For milestones with no due date, show an estimate as to when it will probably be finished.
 
 Allow:
 

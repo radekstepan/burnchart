@@ -1,0 +1,14 @@
+{
+    "name": "app",
+    "main": "app.js",
+    "version": "1.0.0-alpha",
+    "dependencies": {
+        "component/map": "*",
+        "segmentio/extend": "*",
+        "component/object": "*",
+        "manuelstofer/foreach": "*",
+        "component/dom": "*"
+    },
+    "scripts": [ ],
+    "styles": [ ]
+}

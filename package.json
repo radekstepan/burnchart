@@ -1,0 +1,34 @@
+{
+    "name": "github-burndown-chart",
+    "version": "1.0.0-alpha",
+    "description": "Shows a burndown chart for GitHub Issues",
+    "directories": {
+        "test": "test"
+    },
+    "dependencies": {
+        "async": "~0.2.9",
+        "proxyquire": "~0.4.1"
+    },
+    "devDependencies": {
+        "mocha": "~1.12.0"
+    },
+    "scripts": {
+        "test": "make test"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/radekstepan/github-burndown-chart.git"
+    },
+    "keywords": [
+        "github",
+        "issues",
+        "burndown",
+        "chart",
+        "scrum"
+    ],
+    "author": "Radek <dev@radekstepan.com>",
+    "license": "BSD",
+    "bugs": {
+        "url": "https://github.com/radekstepan/github-burndown-chart/issues"
+    }
+}
