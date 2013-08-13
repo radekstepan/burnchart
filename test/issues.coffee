@@ -182,3 +182,20 @@ module.exports =
             assert.equal warn.length, 1
             assert.equal data.length, 1
             done.call null
+
+    'organize issues into days': (done) ->
+        issues.into_days [
+            { number: 1, closed_at: '2013-05-09T10:04:53Z' }
+            { number: 2, closed_at: '2013-05-09T09:04:53Z' }
+            { number: 3, closed_at: '2013-05-10T09:04:53Z' }
+        ], (err, data) ->
+            assert.ifError err
+            assert.deepEqual data,
+                '2013-05-09': [
+                    { number: 1, closed_at: '2013-05-09T10:04:53Z' }
+                    { number: 2, closed_at: '2013-05-09T09:04:53Z' }
+                ]
+                '2013-05-10': [
+                    { number: 3, closed_at: '2013-05-10T09:04:53Z' }
+                ]
+            done.call null
