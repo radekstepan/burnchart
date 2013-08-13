@@ -1,7 +1,9 @@
 #!/usr/bin/env coffee
 { _ } = require 'lodash'
 async = require 'async'
+
 req   = require './request'
+reg   = require './regex'
 
 module.exports =
     # Used on an initial fetch of issues for a repo.
@@ -66,7 +68,7 @@ module.exports =
             { state, number, closed_at } = issue
             number ?= '?'
             return "Issue ##{number} does not have a `closed_at` parameter" unless closed_at
-            unless matches = closed_at.match /^(\d{4}-\d{2}-\d{2})T(.*)/
+            unless matches = closed_at.match reg.datetime
                 return "Issue ##{number} does not match the `closed_at` pattern"
             
             # Explode the matches.

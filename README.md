@@ -5,7 +5,7 @@
 
 ##Next
 
-Create a range of days between two dates.
+Map closed tasks to a range of dates while maintaining the points remaining stats.
 
 ##Project Charter
 
