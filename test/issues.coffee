@@ -191,8 +191,7 @@ module.exports =
         
         issues.into_days [ a, b, c ], /size (\d+)$/, (err, data) ->
             assert.ifError err
-            assert.deepEqual data, [
-                { date: '2013-05-09', issues: [ a, b ] }
-                { date: '2013-05-10', issues: [ c ] }
-            ]
+            assert.deepEqual data,
+                '2013-05-09': [ a, b ]
+                '2013-05-10': [ c ]
             done.call null
