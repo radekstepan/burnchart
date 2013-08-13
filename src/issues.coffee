@@ -34,16 +34,20 @@ module.exports =
             _.partial one_status, 'closed'
         ], cb
 
-    # Filter an array of incoming issues based on a regex.
+    # Filter an array of incoming issues based on a regex & save size on them.
     'filter': (collection, regex, cb) ->
         warnings = null
         try
-            filtered = _.filter collection, ({ labels, number }) ->
+            filtered = _.filter collection, (issue) ->
+                { labels, number } = issue
                 number ?= '?'
                 return false unless labels
                 switch ( {} for { name } in labels when name and regex.test(name) ).length
                     when 0 then false
-                    when 1 then true
+                    when 1
+                        # Provide the size attribute on the issue.
+                        issue.size = parseInt name.match(regex)[1]
+                        true
                     else
                         warnings ?= []
                         warnings.push "Issue ##{number} has multiple matching size labels"
@@ -54,20 +58,26 @@ module.exports =
         catch err
             return cb err, warnings
 
-    # Map a collection of closed issues into days (does not assume coll to be sorted).
-    'into_days': (collection, cb) ->
-        days = {}
+    # Map a collection of closed issues into days and determine the velocity for the range of all days.
+    # Assumes collection has been `filter`ed and is ordered.
+    'into_days': (collection, regex, cb) ->
+        days = [] ; current = [ -1, null ]
         for issue in collection
             { state, number, closed_at } = issue
             number ?= '?'
             return "Issue ##{number} does not have a `closed_at` parameter" unless closed_at
             unless matches = closed_at.match /^(\d{4}-\d{2}-\d{2})T(.*)/
                 return "Issue ##{number} does not match the `closed_at` pattern"
+            
             # Explode the matches.
             [ date, time ] = matches[1...]
-            # Init the date?
-            days[date] ?= []
-            # Insert into an already sorted array.
-            days[date].splice _.sortedIndex(days[date], issue, 'closed_at'), 0, issue
+            # Move the index?
+            if current[1] isnt date
+                current[0] += 1
+                current[1] = date
+                # Init the array position.
+                days[current[0]] = { 'date': date, 'issues': [] }
+            # Save it assuming coll is in order.
+            days[current[0]].issues.push issue
 
         cb null, days

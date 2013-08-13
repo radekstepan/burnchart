@@ -144,16 +144,17 @@ module.exports =
             done.call null
 
     'filter on existing label regex': (done) ->
-        issues.filter [ { labels: [ { name: 'size 5' } ] } ]
-        , /size (\d)+$/, (err, warn, data) ->
+        issues.filter [ { labels: [ { name: 'size 15' } ] } ]
+        , /size (\d+)$/, (err, warn, data) ->
             assert.ifError err
             assert.ifError warn
             assert.equal data.length, 1
+            assert.equal data[0].size, 15
             done.call null
 
     'filter when no labels': (done) ->
         issues.filter [ { } ]
-        , /size (\d)+$/, (err, warn, data) ->
+        , /size (\d+)$/, (err, warn, data) ->
             assert.ifError err
             assert.ifError warn
             assert.equal data.length, 0
@@ -161,7 +162,7 @@ module.exports =
 
     'filter when empty labels': (done) ->
         issues.filter [ { labels: [] } ]
-        , /size (\d)+$/, (err, warn, data) ->
+        , /size (\d+)$/, (err, warn, data) ->
             assert.ifError err
             assert.ifError warn
             assert.equal data.length, 0
@@ -169,7 +170,7 @@ module.exports =
 
     'filter when not matching regex': (done) ->
         issues.filter [ { labels: [ { name: 'size 1A' } ] } ]
-        , /size (\d)+$/, (err, warn, data) ->
+        , /size (\d+)$/, (err, warn, data) ->
             assert.ifError err
             assert.ifError warn
             assert.equal data.length, 0
@@ -177,25 +178,21 @@ module.exports =
 
     'filter when multiple match the regex': (done) ->
         issues.filter [ { labels: [ { name: 'size 1' }, { name: 'size 6' } ] } ]
-        , /size (\d)+$/, (err, warn, data) ->
+        , /size (\d+)$/, (err, warn, data) ->
             assert.ifError err
             assert.equal warn.length, 1
             assert.equal data.length, 1
             done.call null
 
     'organize issues into days': (done) ->
-        issues.into_days [
-            { number: 1, closed_at: '2013-05-09T10:04:53Z' }
-            { number: 2, closed_at: '2013-05-09T09:04:53Z' }
-            { number: 3, closed_at: '2013-05-10T09:04:53Z' }
-        ], (err, data) ->
+        a = { number: 2, closed_at: '2013-05-09T09:04:53Z', size: 6 }
+        b = { number: 1, closed_at: '2013-05-09T10:04:53Z', size: 4 }
+        c = { number: 3, closed_at: '2013-05-10T09:04:53Z', size: 2 }
+        
+        issues.into_days [ a, b, c ], /size (\d+)$/, (err, data) ->
             assert.ifError err
-            assert.deepEqual data,
-                '2013-05-09': [
-                    { number: 2, closed_at: '2013-05-09T09:04:53Z' }
-                    { number: 1, closed_at: '2013-05-09T10:04:53Z' }
-                ]
-                '2013-05-10': [
-                    { number: 3, closed_at: '2013-05-10T09:04:53Z' }
-                ]
+            assert.deepEqual data, [
+                { date: '2013-05-09', issues: [ a, b ] }
+                { date: '2013-05-10', issues: [ c ] }
+            ]
             done.call null
