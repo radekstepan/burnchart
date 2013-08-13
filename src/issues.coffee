@@ -54,7 +54,7 @@ module.exports =
         catch err
             return cb err, warnings
 
-    # Map a collection of closed issues into days.
+    # Map a collection of closed issues into days (does not assume coll to be sorted).
     'into_days': (collection, cb) ->
         days = {}
         for issue in collection
@@ -63,8 +63,11 @@ module.exports =
             return "Issue ##{number} does not have a `closed_at` parameter" unless closed_at
             unless matches = closed_at.match /^(\d{4}-\d{2}-\d{2})T(.*)/
                 return "Issue ##{number} does not match the `closed_at` pattern"
+            # Explode the matches.
             [ date, time ] = matches[1...]
+            # Init the date?
             days[date] ?= []
-            days[date].push issue
+            # Insert into an already sorted array.
+            days[date].splice _.sortedIndex(days[date], issue, 'closed_at'), 0, issue
 
         cb null, days

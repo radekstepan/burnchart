@@ -192,8 +192,8 @@ module.exports =
             assert.ifError err
             assert.deepEqual data,
                 '2013-05-09': [
-                    { number: 1, closed_at: '2013-05-09T10:04:53Z' }
                     { number: 2, closed_at: '2013-05-09T09:04:53Z' }
+                    { number: 1, closed_at: '2013-05-09T10:04:53Z' }
                 ]
                 '2013-05-10': [
                     { number: 3, closed_at: '2013-05-10T09:04:53Z' }
