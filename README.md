@@ -5,7 +5,7 @@
 
 ##Next
 
-Map all issues matching a given regex label to their ids (for later update) and to individual days in the duration of a milestone.
+Create a range of days between two dates.
 
 ##Project Charter
 

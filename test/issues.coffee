@@ -1,6 +1,5 @@
 #!/usr/bin/env coffee
 assert = require 'assert'
-async  = require 'async'
 path   = require 'path'
 proxy  = require 'proxyquire'
 
