@@ -74,7 +74,7 @@ Usage envisaged in these three scenarios:
 
 ###Poll
 
-An issue can be re-opened so we need to keep track of changes to individual tickets. Assume that polls happen quite frequently in the day and not say once a week or something.
+Assuming it is quicker to get issue events and update existing data than it is to get all the issue over again.
 
-1. Get both open & closed tickets sorted by their `created` and `updated` in a descending order. Do not need to get all pages back to UNIX time...
-1. If we have a mismatch between our previous arrays of open/closed issue ids then determine if we need to move an issue (change of state) from one group to another.
+1. Get [changes](http://developer.github.com/v3/activity/events/#list-issue-events-for-a-repository) to tickets doing pagination if need be up to the last check time.
+1. If events are closed/opened ones that ref an issue in our milestone & matching pattern then update/add to our collections.

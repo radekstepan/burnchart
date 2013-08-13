@@ -2,8 +2,8 @@
 req = require './request'
 
 module.exports =
-    'get_current': (user, repo, cb) ->
-        req.milestones user, repo, (err, data) ->
+    'get_current': (opts, cb) ->
+        req.all_milestones opts, (err, data) ->
             # Request errors.
             return cb err if err
             # GitHub errors.

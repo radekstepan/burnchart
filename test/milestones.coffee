@@ -11,7 +11,7 @@ milestones = proxy path.resolve(__dirname, '../src/milestones.coffee'),
 
 module.exports =  
     'get current from 1': (done) ->
-        req.milestones = (user, repo, cb) ->
+        req.all_milestones = (opts, cb) ->
             cb null, [
                 {
                     'number': 1
@@ -20,13 +20,13 @@ module.exports =
                 }
             ]
 
-        milestones.get_current null, null, (err, warn, milestone) ->
+        milestones.get_current {}, (err, warn, milestone) ->
             assert.ifError err
             assert.equal milestone.number, 1
             done.call null
 
     'get current from > 1': (done) ->
-        req.milestones = (user, repo, cb) ->
+        req.all_milestones = (opts, cb) ->
             cb null, [
                 {
                     'number': 1
@@ -45,30 +45,30 @@ module.exports =
                 }
             ]
 
-        milestones.get_current null, null, (err, warn, milestone) ->
+        milestones.get_current {}, (err, warn, milestone) ->
             assert.ifError err
             assert.equal milestone.number, 2
             done.call null
 
     'get current when empty': (done) ->
-        req.milestones = (user, repo, cb) ->
+        req.all_milestones = (opts, cb) ->
             cb null, []
 
-        milestones.get_current null, null, (err, warn, milestone) ->
+        milestones.get_current {}, (err, warn, milestone) ->
             assert.ifError err
             assert.equal warn, 'No open milestones for repo'
             done.call null
 
     'get current when not found': (done) ->
-        req.milestones = (user, repo, cb) ->
+        req.all_milestones = (opts, cb) ->
             cb null, { 'message': 'Not Found' }
 
-        milestones.get_current null, null, (err, warn, milestone) ->
+        milestones.get_current {}, (err, warn, milestone) ->
             assert.equal err, 'Not Found'
             done.call null
 
     'get current when no issues': (done) ->
-        req.milestones = (user, repo, cb) ->
+        req.all_milestones = (opts, cb) ->
             cb null, [
                 {
                     'number': 1
@@ -79,7 +79,7 @@ module.exports =
                 }
             ]
 
-        milestones.get_current null, null, (err, warn, milestone) ->
+        milestones.get_current {}, (err, warn, milestone) ->
             assert.ifError err
             assert.equal warn, 'No issues for milestone'
             done.call null
