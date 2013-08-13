@@ -33,3 +33,23 @@ module.exports =
             _.partial one_status, 'open'
             _.partial one_status, 'closed'
         ], cb
+
+    # Filter an array of incoming issues based on a regex.
+    'filter': (collection, regex, cb) ->
+        warnings = null
+        try
+            filtered = _.filter collection, ({ labels, number }) ->
+                number ?= '?'
+                return false unless labels
+                switch ( {} for { name } in labels when name and regex.test(name) ).length
+                    when 0 then false
+                    when 1 then true
+                    else
+                        warnings ?= []
+                        warnings.push "Issue ##{number} has multiple matching size labels"
+                        true
+            
+            cb null, warnings, filtered
+        
+        catch err
+            return cb err, warnings

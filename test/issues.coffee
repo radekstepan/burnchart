@@ -142,3 +142,43 @@ module.exports =
             assert.equal err, 'Not Found'
             assert.equal called, 1
             done.call null
+
+    'filter on existing label regex': (done) ->
+        issues.filter [ { labels: [ { name: 'size 5' } ] } ]
+        , /size (\d)+$/, (err, warn, data) ->
+            assert.ifError err
+            assert.ifError warn
+            assert.equal data.length, 1
+            done.call null
+
+    'filter when no labels': (done) ->
+        issues.filter [ { } ]
+        , /size (\d)+$/, (err, warn, data) ->
+            assert.ifError err
+            assert.ifError warn
+            assert.equal data.length, 0
+            done.call null
+
+    'filter when empty labels': (done) ->
+        issues.filter [ { labels: [] } ]
+        , /size (\d)+$/, (err, warn, data) ->
+            assert.ifError err
+            assert.ifError warn
+            assert.equal data.length, 0
+            done.call null
+
+    'filter when not matching regex': (done) ->
+        issues.filter [ { labels: [ { name: 'size 1A' } ] } ]
+        , /size (\d)+$/, (err, warn, data) ->
+            assert.ifError err
+            assert.ifError warn
+            assert.equal data.length, 0
+            done.call null
+
+    'filter when multiple match the regex': (done) ->
+        issues.filter [ { labels: [ { name: 'size 1' }, { name: 'size 6' } ] } ]
+        , /size (\d)+$/, (err, warn, data) ->
+            assert.ifError err
+            assert.equal warn.length, 1
+            assert.equal data.length, 1
+            done.call null
