@@ -2,6 +2,7 @@
 req = require './request'
 
 module.exports =
+    # Used at initialization stage.
     'get_current': (opts, cb) ->
         req.all_milestones opts, (err, data) ->
             # Request errors.
