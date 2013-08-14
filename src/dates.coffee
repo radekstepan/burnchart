@@ -14,7 +14,8 @@ module.exports =
 
         days = []
         do add = (i = 0) ->
-            days.push c = new Date(year, month - 1, day + i).toJSON().match(reg.datetime)[1]
+            # Use 12 hours to handle daylight saving.
+            days.push c = new Date(year, month - 1, day + i, 12).toJSON().match(reg.datetime)[1]
             add(i + 1) unless c is b
-        
+
         cb null, days

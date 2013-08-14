@@ -15,6 +15,8 @@ tests =
         [ '2012-12-12T00:00:00Z', '2013-01-05T00:00:00Z' ]
     'range on the same day':
         [ '2012-12-12T00:00:00Z', '2013-12-12T00:00:00Z' ]
+    'daylight saving':
+        [ '2013-05-09T09:04:53Z', '2013-05-12T09:04:53Z' ]
 
 for key, value of tests then do (key, value) ->
     exports[key] = (done) ->
