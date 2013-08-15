@@ -3,10 +3,6 @@
 
 [ ![Codeship Status for radekstepan/github-burndown-chart](https://www.codeship.io/projects/d69f4420-e5b0-0130-bbae-1632ddfb80f8/status?branch=rework)](https://www.codeship.io/projects/5855)
 
-##Next
-
-Map closed tasks to a range of dates while maintaining the points remaining stats.
-
 ##Project Charter
 
 The app is to display a burndown chart from a set of GitHub issues in a milestone.

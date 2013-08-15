@@ -8,7 +8,7 @@ req = {}
 issues = proxy path.resolve(__dirname, '../src/issues.coffee'),
     './request': req
 
-module.exports =  
+module.exports =
     'all empty': (done) ->
         called = 0
         req.all_issues = (opts, cb) ->
