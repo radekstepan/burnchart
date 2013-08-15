@@ -11,9 +11,8 @@ module.exports =
             return cb data.message if data.message
             # Empty warning.
             return cb null, 'No open milestones for repo' unless data.length
-            # Find the one due on soonest (string comparison).
-            max = { 'due_on': 'A' }
-            ( max = ms for ms in data when ms.due_on < max.due_on )
+            # The first milestone should be ending soonest.
+            m = data[0]
             # Empty milestone?
-            return cb null, 'No issues for milestone' if max.open_issues + max.closed_issues is 0
-            cb null, null, max
+            return cb null, 'No issues for milestone' if m.open_issues + m.closed_issues is 0
+            cb null, null, m

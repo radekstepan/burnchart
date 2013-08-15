@@ -5,12 +5,12 @@
     "dependencies": {
         "bestiejs/lodash": "*",
         "caolan/async": "*",
-        "cristiandouce/rickshaw": "*"
+        "cristiandouce/rickshaw": "*",
+        "visionmedia/superagent": "*"
     },
     "scripts": [
         "app.coffee",
         "modules/graph.coffee",
-        "modules/dates.coffee",
         "modules/issues.coffee",
         "modules/milestones.coffee",
         "modules/regex.coffee",

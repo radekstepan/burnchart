@@ -24,18 +24,19 @@ module.exports =
             assert.equal milestone.number, 1
             done.call null
 
+    # We always take from head because of request params.
     'get current from > 1': (done) ->
         req.all_milestones = (opts, cb) ->
             cb null, [
                 {
-                    'number': 1
-                    'created_at': '2013-01-01T00:00:00Z'
-                    'due_on': '2013-02-01T00:00:00Z'
-                }
-                {
                     'number': 2
                     'created_at': '2013-01-01T00:00:00Z'
                     'due_on': '2013-01-15T00:00:00Z'
+                }
+                {
+                    'number': 1
+                    'created_at': '2013-01-01T00:00:00Z'
+                    'due_on': '2013-02-01T00:00:00Z'
                 }
                 {
                     'number': 3

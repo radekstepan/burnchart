@@ -7,16 +7,20 @@ reg   = require './regex'
 
 module.exports =
     # Used on an initial fetch of issues for a repo.
-    'get_all': (opts, cb) ->
-        done = no
-
-        # For each status...
-        one_status = (status, cb) ->
+    'get_all': ({ user, repo, milestone }, cb) ->
+        # For each state...
+        one_status = (state, cb) ->
             # Concat them here.
             results = []
             # One pageful fetch (next pages in series).
             do fetch_page = (page = 1) ->
-                req.all_issues { status: status, page: page }, (err, data) ->
+                req.all_issues {
+                    user
+                    repo
+                    milestone
+                    state: state
+                    page: page
+                }, (err, data) ->
                     # Request errors.
                     return cb err if err
                     # GitHub errors.
