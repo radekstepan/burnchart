@@ -3,12 +3,22 @@
     "main": "app.js",
     "version": "1.0.0-alpha",
     "dependencies": {
-        "component/map": "*",
-        "segmentio/extend": "*",
-        "component/object": "*",
-        "manuelstofer/foreach": "*",
-        "component/dom": "*"
+        "bestiejs/lodash": "*",
+        "caolan/async": "*",
+        "cristiandouce/rickshaw": "*"
     },
-    "scripts": [ ],
-    "styles": [ ]
+    "scripts": [
+        "app.coffee",
+        "modules/graph.coffee",
+        "modules/dates.coffee",
+        "modules/issues.coffee",
+        "modules/milestones.coffee",
+        "modules/regex.coffee",
+        "modules/request.coffee",
+        "templates/body.eco",
+        "templates/label.eco"
+    ],
+    "styles": [
+        "styles/app.styl"
+    ]
 }

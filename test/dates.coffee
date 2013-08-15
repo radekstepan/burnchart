@@ -4,7 +4,7 @@ path   = require 'path'
 { _ }  = require 'lodash'
 moment = require 'moment'
 
-dates = require path.resolve __dirname, '../src/dates.coffee'
+dates = require path.resolve __dirname, '../src/modules/dates.coffee'
 
 tests =
     'range between two dates':

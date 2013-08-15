@@ -5,7 +5,7 @@ proxy  = require 'proxyquire'
 
 req = {}
 
-issues = proxy path.resolve(__dirname, '../src/issues.coffee'),
+issues = proxy path.resolve(__dirname, '../src/modules/issues.coffee'),
     './request': req
 
 module.exports =

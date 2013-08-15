@@ -4,7 +4,6 @@ async = require 'async'
 
 req   = require './request'
 reg   = require './regex'
-dates = require './dates'
 
 module.exports =
     # Used on an initial fetch of issues for a repo.
