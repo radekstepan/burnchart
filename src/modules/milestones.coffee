@@ -3,8 +3,8 @@ req = require './request'
 
 module.exports =
     # Used at initialization stage.
-    'get_current': (opts, cb) ->
-        req.all_milestones opts, (err, data) ->
+    'get_current': (repo, cb) ->
+        req.all_milestones repo, (err, data) ->
             # Request errors.
             return cb err if err
             # GitHub errors.

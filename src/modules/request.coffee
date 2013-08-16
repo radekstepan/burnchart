@@ -1,27 +1,39 @@
 #!/usr/bin/env coffee
+sa    = require 'superagent'
 { _ } = require 'lodash'
 
-protocol = 'https'
-domain   = 'api.github.com'
-token    = ''
-
 module.exports =
-    'all_milestones': ({ user, repo }, cb) ->
-        opts = { state: 'open', sort: 'due_date', direction: 'asc' }
-        request { user, repo, opts, path: 'milestones' }, cb
+    # Get all milestones.
+    'all_milestones': (repo, cb) ->
+        query = { state: 'open', sort: 'due_date', direction: 'asc' }
+        request repo, query, 'milestones', cb
     
-    'all_issues': ({ user, repo }, cb) ->
-        opts = _.extend {}, arguments[0], { per_page: '100', direction: 'asc' }
-        request { user, repo, opts, path: 'issues' }, cb
+    # Get all issues for a state.
+    'all_issues': (repo, query, cb) ->
+        _.extend query, { per_page: '100' }
+        request repo, query, 'issues', cb
+
+    # Get config from our domain always.
+    'config': (cb) ->
+        sa
+        .get("http://#{window.location.host}/config.json")
+        .set('Content-Type', 'application/json')
+        .end (err, data) ->
+            cb err, data?.body
 
 # Make a request using SuperAgent.
-request = ({ user, repo, path, opts }, cb) ->
-    opts = ( "#{k}=#{v}" for k, v of opts when k not in [ 'user', 'repo' ] ).join('&')
+request = ({ domain, token, user, repo }, query, path, cb) ->
+    # Make the query params.
+    q = ( "#{k}=#{v}" for k, v of query ).join('&')
 
-    (require 'superagent')
-    .get("#{protocol}://#{domain}/repos/#{user}/#{repo}/#{path}?#{opts}")
+    req = sa
+    .get("https://#{domain}/repos/#{user}/#{repo}/#{path}?#{q}")
     .set('Content-Type', 'application/json')
     .set('Accept', 'application/vnd.github.raw')
-    .set('Authorization', "token #{token}")
-    .end (err, data) ->
+    
+    # Auth token?
+    req = req.set('Authorization', "token #{token}") if token
+    
+    # Send.
+    req.end (err, data) ->
         cb err, data?.body

@@ -1,5 +1,93 @@
+$closed = #4ACAB4
+$opened = #FE5D55
+
 body
+    background: #31323A
     padding: 100px
 
+#box
+    background: #43444f
+    border-radius: 6px
+    box-shadow: 2px 4px 6px rgba(0,0,0,0.2)
+
+#progress
+    padding: 20px
+    border-radius: 0 0 6px 6px
+
+    &:after
+        clear: both
+        display: block
+        content: ""
+
+    .bars
+        position: relative
+        
+        div
+            border-radius: 6px
+            height: 12px
+
+            &.closed
+                position: absolute
+                top: 0
+                left: 0
+                background: $closed
+
+                &:not(.done)
+                    border-radius: 6px 0 0 6px
+            
+            &.opened
+                width: 100%
+                background: $opened
+
+    h2
+        font-size: 14px
+        text-transform: uppercase
+        margin: 10px 0 0 0
+
+        &.closed
+            float: left
+            color: $closed
+        
+        &.opened
+            float: right
+            color: $opened
+
 #graph
+    background: #FFF
+    border-radius: 6px 6px 0 0
     height: 200px
+
+    svg
+        path
+            &.line
+                fill: none
+                stroke: #CBC8C3
+                stroke-width: 1px
+                clip-path: url(#clip)
+            
+                &.actual
+                    stroke-width: 2px
+                    stroke: $closed
+
+            &.area
+                clip-path: url(#clip)
+                fill: #FAFAF8
+
+        .axis
+            shape-rendering: crispEdges
+            
+            &.x
+                line
+                    stroke: #EBEBE9
+
+                text
+                    font-weight: bold
+                    fill: #CBC8C3
+
+                path
+                    display: none
+
+            &.y
+                line, path
+                    fill: none
+                    stroke: #000

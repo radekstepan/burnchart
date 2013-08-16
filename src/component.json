@@ -5,8 +5,9 @@
     "dependencies": {
         "bestiejs/lodash": "*",
         "caolan/async": "*",
-        "cristiandouce/rickshaw": "*",
-        "visionmedia/superagent": "*"
+        "mbostock/d3": "*",
+        "visionmedia/superagent": "*",
+        "necolas/normalize.css": "*"
     },
     "scripts": [
         "app.coffee",
@@ -15,6 +16,7 @@
         "modules/milestones.coffee",
         "modules/regex.coffee",
         "modules/request.coffee",
+        "modules/repos.coffee",
         "templates/body.eco",
         "templates/label.eco"
     ],

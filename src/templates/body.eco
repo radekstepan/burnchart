@@ -1,2 +1,15 @@
-<div id="graph"></div>
-<div id="timeline"></div>
+<div id="box">
+    <div id="graph"></div>
+    <div id="progress">
+        <div class="bars">
+            <% if @progress is 100: %>
+                <div class="closed done" style="width:100%"></div>
+            <% else: %>
+                <div class="closed" style="width:<%= @progress %>%"></div>
+            <% end %>
+            <div class="opened"></div>
+        </div>
+        <h2 class="closed">Closed / <%= Math.floor @progress %>%</h2>
+        <h2 class="opened">Open / <%= 100 - Math.floor @progress %>%</h2>
+    </div>
+</div>

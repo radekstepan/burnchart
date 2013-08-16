@@ -3,3 +3,4 @@ node_modules/
 *.log
 src/components/
 build/
+config.json
