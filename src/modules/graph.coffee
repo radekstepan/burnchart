@@ -18,34 +18,10 @@ module.exports =
         # Swap?
         [ b, a ] = [ a, b ] if b < a
 
-        return cb null, [
+        cb null, [
             { date: new Date(a), points: total }
             { date: new Date(b), points: 0 }
         ]
-
-        # When do we start & end?
-        [ year, month, day ] = _.map(a.match(reg.datetime)[1].split('-'), (d) -> parseInt(d) )
-
-        # The head/tail are quite specific.
-        head = { date: new Date(a), points: total }
-        tail = { date: b = new Date(b.match(reg.datetime)[1]), points: 0 }
-
-        # The fillers...
-        days = []
-        do add = (i = 1) ->
-            # Add the time point at lunchtime.
-            days.push { date: c = new Date(year, month - 1, day + i, 12) }
-            # Moar?
-            add(i + 1) if c < b
-
-        # Daily velocity needed.
-        daily = total / (days.length + 1)
-        # Map points to days.
-        days = _.map days, (day) ->
-            day.points = total -= daily
-            day
-
-        cb null, [ head ].concat(days).concat([ tail ])
 
     'render': ([ actual, ideal ], cb) ->
         # Get available space.    

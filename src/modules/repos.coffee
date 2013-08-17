@@ -18,9 +18,9 @@ class exports.Repos
 
     fetch: (cb) ->
         self = @
-        req.config (err, config) ->
-            return cb err if err
-            self.models = ( new Repo(entry) for entry in config )
+        req.config (err, { protocol, host, token, repos }) ->
+            protocol ?= 'https' ; host ?= 'api.github.com'
+            self.models = ( new Repo({ protocol, host, token, repo: r }) for r in repos )
             cb null
 
     at: (index) ->

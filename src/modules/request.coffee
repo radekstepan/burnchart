@@ -13,7 +13,7 @@ module.exports =
         _.extend query, { per_page: '100' }
         request repo, query, 'issues', cb
 
-    # Get config from our domain always.
+    # Get config from our host always.
     'config': (cb) ->
         sa
         .get("http://#{window.location.host}/config.json")
@@ -22,12 +22,12 @@ module.exports =
             cb err, data?.body
 
 # Make a request using SuperAgent.
-request = ({ domain, token, user, repo }, query, path, cb) ->
+request = ({ protocol, host, token, repo }, query, path, cb) ->
     # Make the query params.
     q = ( "#{k}=#{v}" for k, v of query ).join('&')
 
     req = sa
-    .get("https://#{domain}/repos/#{user}/#{repo}/#{path}?#{q}")
+    .get("#{protocol}://#{host}/repos/#{repo}/#{path}?#{q}")
     .set('Content-Type', 'application/json')
     .set('Accept', 'application/vnd.github.raw')
     
