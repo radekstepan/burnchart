@@ -9,30 +9,15 @@ reg        = require './regex'
 req        = require './request'
 
 # Eco templates as functions.
-templates = {} ; ( templates[t] = require("./#{t}") for t in [ 'body', 'label' ] )
+tml = {}
+( tml[t] = require("../templates/#{t}") for t in [ 'progress' ] )
 
-class exports.Repos
-
-    constructor: ->
-        @models = []
-
-    fetch: (cb) ->
-        self = @
-        req.config (err, { protocol, host, token, repos }) ->
-            protocol ?= 'https' ; host ?= 'api.github.com'
-            self.models = ( new Repo({ protocol, host, token, repo: r }) for r in repos )
-            cb null
-
-    at: (index) ->
-        @models[index]
-
-
-class Repo
+class exports.Repo
 
     constructor: (opts) ->
         ( @[k] = v for k, v of opts )
 
-    render: (cb) ->
+    render: (cb) =>
         self = @
 
         async.waterfall [ (cb) ->
@@ -67,7 +52,7 @@ class Repo
                 _.partial(graph.actual, self.issues.closed.data, self.milestone.created_at, total)
                 _.partial(graph.ideal, self.milestone.created_at, self.milestone.due_on, total)
             ], (err, values) ->
-                document.querySelector('body').innerHTML = templates.body { progress }
+                document.querySelector('#progress').innerHTML = tml.progress { progress }
 
                 graph.render values, cb
 

@@ -7,18 +7,21 @@
         "caolan/async": "*",
         "mbostock/d3": "*",
         "visionmedia/superagent": "*",
+        "pazguille/route66": "*",
         "necolas/normalize.css": "*"
     },
     "scripts": [
         "app.coffee",
+        "modules/config.coffee",
         "modules/graph.coffee",
         "modules/issues.coffee",
         "modules/milestones.coffee",
         "modules/regex.coffee",
         "modules/request.coffee",
-        "modules/repos.coffee",
+        "modules/repo.coffee",
         "templates/body.eco",
-        "templates/label.eco"
+        "templates/label.eco",
+        "templates/progress.eco"
     ],
     "styles": [
         "styles/app.styl"

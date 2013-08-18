@@ -1,14 +1,27 @@
 #!/usr/bin/env coffee
-{ Repos } = require './repos'
+async    = require 'async'
+{ _ }    = require 'lodash'
+Router   = require 'route66'
+
+config   = require './modules/config'
+{ Repo } = require './modules/repo'
 
 module.exports = ->
-    # A new repo collection.
-    collection = new Repos()
-    # Get the coll/config.
-    collection.fetch (err) ->
-        throw err if err
-        # Use the head.
-        repo = collection.at(0)
-        # Render the repo.
-        repo.render (err) ->
-            throw err if err
+    # A new router.
+    new Router().path
+        '/:user/:repo': ->
+            repo = _.toArray(arguments).join('/')
+
+            # Render the body.
+            document.querySelector('body').innerHTML = do require('./templates/body')
+
+            # Get config/cache.
+            async.waterfall [ config
+            # Instantiate.
+            , (conf, cb) ->
+                cb null, new Repo _.extend { repo }, conf
+            # Render.
+            , (repo, cb) ->
+                repo.render cb
+            ], (err) ->
+                throw err if err

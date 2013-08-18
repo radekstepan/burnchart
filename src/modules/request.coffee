@@ -26,6 +26,9 @@ request = ({ protocol, host, token, repo }, query, path, cb) ->
     # Make the query params.
     q = ( "#{k}=#{v}" for k, v of query ).join('&')
 
+    host ?= 'api.github.com'
+    protocol ?= 'https'
+
     req = sa
     .get("#{protocol}://#{host}/repos/#{repo}/#{path}?#{q}")
     .set('Content-Type', 'application/json')
