@@ -1,28 +1,34 @@
 #!/usr/bin/env coffee
 async    = require 'async'
 { _ }    = require 'lodash'
-Router   = require 'route66'
 
 config   = require './modules/config'
 render   = require './modules/render'
 { Repo } = require './modules/repo'
 
+route = ->
+    if match = window.location.hash.match /^#!\/(.+)\/(.+)$/
+        repo = match[1..3].join('/')
+
+        # We are loading.
+        render 'body', 'loading', { repo }
+
+        # Get config/cache.
+        return async.waterfall [ config
+        # Instantiate.
+        , (conf, cb) ->
+            cb null, new Repo _.extend { repo }, conf
+        # Render.
+        , (repo, cb) ->
+            repo.render cb
+        ], (err) ->
+            render 'body', 'error', { text: err.toString() } if err
+
+    # Info notice for you.
+    render 'body', 'info'
+
 module.exports = ->
-    # Show info notice?
-    render 'body', 'info' unless location.hash
-
-    # A new router.
-    new Router().path
-        '/:user/:repo': ->
-            repo = _.toArray(arguments).join('/')
-
-            # Get config/cache.
-            async.waterfall [ config
-            # Instantiate.
-            , (conf, cb) ->
-                cb null, new Repo _.extend { repo }, conf
-            # Render.
-            , (repo, cb) ->
-                repo.render cb
-            ], (err) ->
-                render 'body', 'error', { text: err.toString() } if err
+    # Detect route changes.
+    window.addEventListener 'hashchange', route, no
+    # And route now.
+    do route

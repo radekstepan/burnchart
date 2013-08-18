@@ -1,0 +1,4 @@
+<div class="box generic">
+    <h2>GitHub Burndown Chart</h2>
+    <p>Loading <a href="#!/<%- @repo %>">#!/<%- @repo %></a>.</p>
+</div>

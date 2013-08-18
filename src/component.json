@@ -7,7 +7,6 @@
         "caolan/async": "*",
         "mbostock/d3": "*",
         "visionmedia/superagent": "*",
-        "pazguille/route66": "*",
         "necolas/normalize.css": "*"
     },
     "scripts": [
@@ -24,6 +23,7 @@
         "templates/graph.eco",
         "templates/info.eco",
         "templates/label.eco",
+        "templates/loading.eco",
         "templates/progress.eco"
     ],
     "styles": [
