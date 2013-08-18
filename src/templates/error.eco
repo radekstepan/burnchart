@@ -1,3 +1,4 @@
-<div class="box" id="info">
-    <p>Hello trouble</p>
+<div class="box error">
+    <h2>Trouble</h2>
+    <p><%- @text %></p>
 </div>

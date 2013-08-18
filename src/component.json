@@ -18,6 +18,7 @@
         "modules/milestones.coffee",
         "modules/regex.coffee",
         "modules/request.coffee",
+        "modules/render.coffee",
         "modules/repo.coffee",
         "templates/error.eco",
         "templates/graph.eco",

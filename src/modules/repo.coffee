@@ -7,6 +7,7 @@ issues     = require './issues'
 graph      = require './graph'
 reg        = require './regex'
 req        = require './request'
+render     = require './render'
 
 # Eco templates as functions.
 tml = {}
@@ -23,8 +24,10 @@ class exports.Repo
         async.waterfall [ (cb) ->
             # Get the current milestone.
             milestones.get_current self, (err, warn, milestone) ->
+                return cb err if err
+                return cb warn if warn
                 self.milestone = milestone
-                cb err
+                cb null
 
         # Get all issues.
         (cb) ->
@@ -52,8 +55,13 @@ class exports.Repo
                 _.partial(graph.actual, self.issues.closed.data, self.milestone.created_at, total)
                 _.partial(graph.ideal, self.milestone.created_at, self.milestone.due_on, total)
             ], (err, values) ->
-                document.querySelector('#progress').innerHTML = tml.progress { progress }
+                # Render the body.
+                render 'body', 'graph'
 
+                # Render the progress.
+                render '#progress', 'progress', { progress }
+
+                # Render the chart.
                 graph.render values, cb
 
         ], cb
