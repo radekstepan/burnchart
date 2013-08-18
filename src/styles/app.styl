@@ -16,13 +16,30 @@ h2
     font-size: 14px
     text-transform: uppercase
 
-#repos
-    color: #FFF
-
-#box
+.box
     background: #43444f
-    border-radius: 6px
+    color: #FFF
     box-shadow: 2px 4px 6px rgba(0,0,0,0.2)
+
+    &.info, &.error, &.success
+        border-top: 4px solid #E2E2E2
+
+    &.info
+        border-top-color: #96CFFB
+
+    &.error
+        border-top-color: #FE5D55
+
+    &.info, &.error
+        padding: 20px
+        width: 50%
+        margin: 0 auto
+
+    &.success
+        border-top-color: #4ACAB4
+
+    a
+        color: #FFF
 
 #progress
     padding: 20px
@@ -66,7 +83,6 @@ h2
 
 #graph
     background: #FFF
-    border-radius: 6px 6px 0 0
     height: 200px
 
     svg

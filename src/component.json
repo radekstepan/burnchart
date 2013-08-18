@@ -19,7 +19,9 @@
         "modules/regex.coffee",
         "modules/request.coffee",
         "modules/repo.coffee",
-        "templates/body.eco",
+        "templates/error.eco",
+        "templates/graph.eco",
+        "templates/info.eco",
         "templates/label.eco",
         "templates/progress.eco"
     ],

@@ -6,14 +6,22 @@ Router   = require 'route66'
 config   = require './modules/config'
 { Repo } = require './modules/repo'
 
+# Render an eco template into selector.
+show = (selector, template, context = {}) ->
+    tml = require "./templates/#{template}"
+    document.querySelector(selector).innerHTML = tml context
+
 module.exports = ->
+    # Show info notice?
+    show 'body', 'info' unless location.hash
+
     # A new router.
     new Router().path
         '/:user/:repo': ->
             repo = _.toArray(arguments).join('/')
 
             # Render the body.
-            document.querySelector('body').innerHTML = do require('./templates/body')
+            show 'body', 'graph'
 
             # Get config/cache.
             async.waterfall [ config

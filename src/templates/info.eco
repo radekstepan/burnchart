@@ -1,0 +1,4 @@
+<div class="box info" id="info">
+    <h2>GitHub Burndown Chart</h2>
+    <p>Use your browser's location hash to specify a repo: <a href="#!/radekstepan/disposable">#!/radekstepan/disposable</a>.</p>
+</div>

@@ -1,5 +1,4 @@
-<div id="repos"></div>
-<div id="box">
+<div class="box">
     <div id="graph"></div>
     <div id="progress"></div>
 </div>
