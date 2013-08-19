@@ -71,6 +71,9 @@ module.exports =
             total -= velocity if days[i] and not days[i].off_day
             day
 
+        # Do we need to make a link to right now?
+        days.push { date: now, points: 0 } if (now = new Date()) > cutoff
+
         cb null, days
 
     # Render the D3 chart.
