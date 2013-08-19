@@ -29,6 +29,7 @@
         "templates/progress.eco"
     ],
     "styles": [
+        "styles/fonts.css",
         "styles/app.styl"
     ]
 }

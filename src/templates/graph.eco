@@ -1,4 +1,5 @@
 <div class="box">
+    <h1><%- @name %></h2>
     <div id="graph">
         <div id="tooltip"></div>
     </div>

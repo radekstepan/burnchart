@@ -67,7 +67,7 @@ class exports.Repo
                 )
             ], (err, values) ->
                 # Render the body.
-                render 'body', 'graph'
+                render 'body', 'graph', name: self.repo
 
                 # Render the progress.
                 render '#progress', 'progress', { progress }

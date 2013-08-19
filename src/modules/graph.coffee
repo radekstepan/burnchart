@@ -81,7 +81,7 @@ module.exports =
         # Get available space.    
         { height, width } = document.querySelector('#graph').getBoundingClientRect()
 
-        margin = { top: 20, right: 20, bottom: 20, left: 20 }
+        margin = { top: 20, right: 30, bottom: 30, left: 30 }
         width -= margin.left + margin.right
         height -= margin.top + margin.bottom
 
@@ -106,7 +106,7 @@ module.exports =
         
         # Line generator.
         line = d3.svg.line()
-        .interpolate("precise")
+        .interpolate("linear")
         .x( (d) -> x(d.date) )
         .y( (d) -> y(d.points) )
 
@@ -144,13 +144,28 @@ module.exports =
         .attr("class", "ideal line")
         .attr("d", line(ideal))
 
+        # Add an actual line drop shadow.
+        svg.append("path")
+        .attr("class", "actual line shadow")
+        .attr("d", line.y( (d) -> y(d.points) + 4 )(actual))
+
         # Add the actual line path.
         svg.append("path")
         .attr("class", "actual line")
-        .attr("d", line(actual))
+        .attr("d", line.y( (d) -> y(d.points) )(actual))
 
         # Collect the tooltip here.
         tooltip = null
+
+        # Add circle shadows.
+        svg.selectAll('circle.shadow')
+        .data(actual[1...])
+        .enter()
+        .append('svg:circle')
+        .attr("cx", ({ date }) -> x date )
+        .attr("cy", ({ points }) -> y(points) + 4 )
+        .attr("r",  ({ radius }) -> 5 )
+        .attr('class', 'shadow')
 
         # Show when we closed an issue.
         svg.selectAll("a.issue")

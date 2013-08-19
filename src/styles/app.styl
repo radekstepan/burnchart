@@ -1,11 +1,13 @@
-$closed = #4ACAB4
-$opened = #FE5D55
-$grey   = #CBC8C3
+$closed = #4DAF7C
+$opened = #E55F3A
+$grey   = #E2E2E2
 $ideal  = $grey
 
 body
-    background: #31323A
+    font-family: 'Source Sans Pro', sans-serif
+    background: linear-gradient(135deg, #d7bcab 0%, #cc9485 100%)
     padding: 100px
+    color: #64584C
 
 ul
     list-style-type: none
@@ -15,31 +17,104 @@ ul
         padding: 0
 
 h2
-    font-size: 14px
+    font-size: 16px
     text-transform: uppercase
 
 .box
-    background: #43444f
-    color: #FFF
+    background: #FFF
     box-shadow: 2px 4px 6px rgba(0,0,0,0.2)
 
     &.generic, &.info, &.error, &.success
-        border-top: 4px solid #E2E2E2
+        border-top: 4px solid #EAC85D
         padding: 20px
         width: 50%
         margin: 0 auto
 
     &.info
-        border-top-color: #96CFFB
+        border-top-color: #5F90B0
 
     &.error
-        border-top-color: #FE5D55
+        border-top-color: #E45E39
 
     &.success
-        border-top-color: #4ACAB4
+        border-top-color: #4DB07A
 
     a
+        color: #64584C
+
+    h1
+        margin: 0
+        padding: 10px 30px
         color: #FFF
+        background: #55BC75
+        font-size: 20px
+        text-transform: uppercase
+
+#graph
+    background: #55BC75
+    height: 200px
+    position: relative
+
+    #tooltip
+        position: absolute
+        top: 0
+        left: 0
+
+    svg
+        path
+            &.line
+                fill: none
+                stroke-width: 1px
+                clip-path: url(#clip)
+
+                &.actual
+                    stroke-width: 4px
+                    stroke: #FFF
+
+                    &.shadow
+                        stroke-width: 5px
+                        stroke: rgba(#000, 0.25)
+
+                &.ideal
+                    stroke: #3D9E68
+                    stroke-dasharray: 5,5
+
+            &.area
+                clip-path: url(#clip)
+                fill: #4DAF7C
+
+        line
+            &.today
+                stroke: rgba(#FFF, 0.75)
+                stroke-width: 1px
+
+        circle
+            fill: #FFF
+            stroke: transparent
+            stroke-width: 15px
+            cursor: pointer
+
+            &.shadow
+                fill: rgba(#000, 0.25)
+
+        .axis
+            shape-rendering: crispEdges
+            
+            &.x
+                line
+                    stroke: #3D9E68
+
+                text
+                    font-weight: bold
+                    fill: #FFF
+
+                path
+                    display: none
+
+            &.y
+                line, path
+                    fill: none
+                    stroke: #000
 
 #progress
     padding: 20px
@@ -80,63 +155,3 @@ h2
         &.opened
             float: right
             color: $opened
-
-#graph
-    background: #FFF
-    height: 200px
-    position: relative
-
-    #tooltip
-        position: absolute
-        top: 0
-        left: 0
-
-    svg
-        path
-            &.line
-                fill: none
-                stroke: $grey
-                stroke-width: 1px
-                clip-path: url(#clip)
-
-                &.actual
-                    stroke-width: 2px
-                    stroke: $closed
-
-                &.ideal
-                    stroke: $ideal
-
-            &.area
-                clip-path: url(#clip)
-                fill: lighten($grey, 90%)
-
-        line
-            &.today
-                stroke: $grey
-                stroke-width: 2px
-                stroke-dasharray: 5,5
-
-        circle
-            fill: $closed
-            stroke: transparent
-            stroke-width: 20px
-            cursor: pointer
-
-        .axis
-            shape-rendering: crispEdges
-            
-            &.x
-                line
-                    stroke: #EBEBE9
-
-                text
-                    font-weight: bold
-                    fill: $grey
-
-                path
-                    display: none
-
-            &.y
-                line, path
-                    fill: none
-                    stroke: #000
