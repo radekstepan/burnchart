@@ -16,7 +16,7 @@ module.exports =
         min = +Infinity ; max = -Infinity
 
         # Generate the actual closes.
-        rest = _.map collection, ({ closed_at, size, title }) ->
+        rest = _.map collection, ({ closed_at, size, title, html_url }) ->
             min = size if size < min
             max = size if size > max
             {
@@ -24,6 +24,7 @@ module.exports =
                 points: total -= size
                 size
                 title
+                html_url
             }
         
         # Now add a radius in a range (will be used for a circle).
@@ -149,10 +150,14 @@ module.exports =
         tooltip = null
 
         # Show when we closed an issue.
-        svg.selectAll("circle")
+        svg.selectAll("a.issue")
         .data(actual[1...]) # skip the starting point
         .enter()
-        .append("circle")
+        # A wrapping link.
+        .append('svg:a')
+        .attr("xlink:href", ({ html_url }) -> html_url )
+        .attr("xlink:show", 'new')
+        .append('svg:circle')
         .attr("cx", ({ date }) -> x date )
         .attr("cy", ({ points }) -> y points )
         .attr("r",  ({ radius }) -> 5 ) # fixed for now
