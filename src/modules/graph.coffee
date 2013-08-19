@@ -5,24 +5,51 @@ d3    = require 'd3'
 reg   = require './regex'
 
 module.exports =    
-    # Map closed issues ready to be visualized by Rickshaw.
-    # Assumes collection has been `filter`ed and is ordered.
+    # Map closed issues.
     'actual': (collection, created_at, total, cb) ->
         head = [ { date: new Date(created_at), points: total } ]
         rest = _.map collection, ({ closed_at, size }) ->
             { date: new Date(closed_at), points: total -= size }
         cb null, head.concat rest
 
-    # Map ideal velocity for each day ready to be visualized by Rickshaw.
-    'ideal': (a, b, total, cb) ->
+    # Map ideal velocity for each day.
+    'ideal': (a, b, off_days, total, cb) ->
         # Swap?
         [ b, a ] = [ a, b ] if b < a
 
-        cb null, [
-            { date: new Date(a), points: total }
-            { date: new Date(b), points: 0 }
-        ]
+        # We start here adding days to `d`.
+        [ y, m, d ] = _.map a.match(reg.datetime)[1].split('-'), (v) -> parseInt v
+        # We want to end here.
+        cutoff = new Date(b)
 
+        # Go through the beginning to the end skipping off days.
+        days = [] ; length = 0
+        do once = (inc = 0) ->
+            # A new day.
+            day = new Date y, m - 1, d + inc
+            
+            # Does this day count?
+            day_of = 7 if !day_of = day.getDay()
+            if day_of in off_days
+                days.push { date: day, off_day: yes }
+            else
+                length += 1
+                days.push { date: day }
+            
+            # Go again?
+            once(inc + 1) unless day > cutoff
+
+        # Map points on the array of days now.
+        velocity = total / (length - 1)
+        
+        days = _.map days, (day, i) ->
+            day.points = total
+            total -= velocity if days[i] and not days[i].off_day
+            day
+
+        cb null, days
+
+    # Render the D3 chart.
     'render': ([ actual, ideal ], cb) ->
         # Get available space.    
         { height, width } = document.querySelector('#graph').getBoundingClientRect()
@@ -52,7 +79,7 @@ module.exports =
         
         # Line generator.
         line = d3.svg.line()
-        .interpolate("basis")
+        .interpolate("precise")
         .x( (d) -> x(d.date) )
         .y( (d) -> y(d.points) )
 

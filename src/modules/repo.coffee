@@ -52,8 +52,19 @@ class exports.Repo
                 (total = self.issues.open.points + self.issues.closed.points)
 
             async.parallel [
-                _.partial(graph.actual, self.issues.closed.data, self.milestone.created_at, total)
-                _.partial(graph.ideal, self.milestone.created_at, self.milestone.due_on, total)
+                _.partial(
+                    graph.actual,
+                    self.issues.closed.data,
+                    self.milestone.created_at,
+                    total
+                )
+                _.partial(
+                    graph.ideal,
+                    self.milestone.created_at,
+                    self.milestone.due_on,
+                    self.off_days or [],
+                    total
+                )
             ], (err, values) ->
                 # Render the body.
                 render 'body', 'graph'
