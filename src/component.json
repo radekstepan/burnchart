@@ -7,7 +7,9 @@
         "caolan/async": "*",
         "mbostock/d3": "*",
         "visionmedia/superagent": "*",
-        "necolas/normalize.css": "*"
+        "necolas/normalize.css": "*",
+        "component/tip": "*",
+        "component/aurora-tip": "*"
     },
     "scripts": [
         "app.coffee",

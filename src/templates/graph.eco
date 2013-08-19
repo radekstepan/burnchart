@@ -1,4 +1,6 @@
 <div class="box">
-    <div id="graph"></div>
+    <div id="graph">
+        <div id="tooltip"></div>
+    </div>
     <div id="progress"></div>
 </div>

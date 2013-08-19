@@ -82,6 +82,12 @@ h2
 #graph
     background: #FFF
     height: 200px
+    position: relative
+
+    #tooltip
+        position: absolute
+        top: 0
+        left: 0
 
     svg
         path
@@ -98,6 +104,12 @@ h2
             &.area
                 clip-path: url(#clip)
                 fill: #FAFAF8
+
+        circle
+            fill: $closed
+            stroke: transparent
+            stroke-width: 20px
+            cursor: pointer
 
         .axis
             shape-rendering: crispEdges

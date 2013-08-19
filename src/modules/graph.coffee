@@ -1,15 +1,38 @@
 #!/usr/bin/env coffee
 { _ } = require 'lodash'
 d3    = require 'd3'
+Tip   = require 'tip'
 
 reg   = require './regex'
 
 module.exports =    
     # Map closed issues.
     'actual': (collection, created_at, total, cb) ->
-        head = [ { date: new Date(created_at), points: total } ]
-        rest = _.map collection, ({ closed_at, size }) ->
-            { date: new Date(closed_at), points: total -= size }
+        head = [ {
+            date: new Date(created_at)
+            points: total
+        } ]
+        
+        min = +Infinity ; max = -Infinity
+
+        # Generate the actual closes.
+        rest = _.map collection, ({ closed_at, size, title }) ->
+            min = size if size < min
+            max = size if size > max
+            {
+                date: new Date(closed_at)
+                points: total -= size
+                size
+                title
+            }
+        
+        # Now add a radius in a range (will be used for a circle).
+        range = d3.scale.linear().domain([ min, max ]).range([ 5, 8 ])
+
+        rest = _.map rest, (issue) ->
+            issue.radius = range issue.size
+            issue
+
         cb null, head.concat rest
 
     # Map ideal velocity for each day.
@@ -41,7 +64,7 @@ module.exports =
 
         # Map points on the array of days now.
         velocity = total / (length - 1)
-        
+
         days = _.map days, (day, i) ->
             day.points = total
             total -= velocity if days[i] and not days[i].off_day
@@ -121,5 +144,31 @@ module.exports =
         svg.append("path")
         .attr("class", "actual line")
         .attr("d", line(actual))
+
+        # Collect the tooltip here.
+        tooltip = null
+
+        # Show when we closed an issue.
+        svg.selectAll("circle")
+        .data(actual[1...]) # skip the starting point
+        .enter()
+        .append("circle")
+        .attr("cx", ({ date }) -> x date )
+        .attr("cy", ({ points }) -> y points )
+        .attr("r",  ({ radius }) -> 5 ) # fixed for now
+        .on('mouseover', ({ date, points, title }) ->
+            # Pass a title string.
+            tooltip = new Tip title
+            # Absolutely position the div.
+            div = document.querySelector '#tooltip'
+            div.style.left = x(date) + margin.left + 'px'
+            div.style.top = y(points) + margin.top + 'px'
+            # And now show us on the div.
+            tooltip.show '#tooltip'
+        )
+        .on('mouseout', (d) ->
+            # Hide after a time has passed if exists.
+            tooltip?.hide(200)
+        )
 
         cb null
