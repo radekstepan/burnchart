@@ -1,5 +1,7 @@
 $closed = #4ACAB4
 $opened = #FE5D55
+$grey   = #CBC8C3
+$ideal  = $grey
 
 body
     background: #31323A
@@ -93,17 +95,26 @@ h2
         path
             &.line
                 fill: none
-                stroke: #CBC8C3
+                stroke: $grey
                 stroke-width: 1px
                 clip-path: url(#clip)
-            
+
                 &.actual
                     stroke-width: 2px
                     stroke: $closed
 
+                &.ideal
+                    stroke: $ideal
+
             &.area
                 clip-path: url(#clip)
-                fill: #FAFAF8
+                fill: lighten($grey, 90%)
+
+        line
+            &.today
+                stroke: $grey
+                stroke-width: 2px
+                stroke-dasharray: 5,5
 
         circle
             fill: $closed
@@ -120,7 +131,7 @@ h2
 
                 text
                     font-weight: bold
-                    fill: #CBC8C3
+                    fill: $grey
 
                 path
                     display: none

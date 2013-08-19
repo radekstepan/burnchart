@@ -99,7 +99,7 @@ module.exports =
         
         # Area generator.
         area = d3.svg.area()
-        .interpolate("monotone")
+        .interpolate("precise")
         .x( (d) -> x(d.date) )
         .y0(height)
         .y1( (d) -> y(d.points) )
@@ -178,5 +178,13 @@ module.exports =
             # Hide after a time has passed if exists.
             tooltip?.hide(200)
         )
+
+        # Add a line showing where we are now.
+        svg.append("svg:line")
+        .attr("class", "today")
+        .attr("x1", x(new Date()))
+        .attr("y1", 0)
+        .attr("x2", x(new Date()))
+        .attr("y2", height)
 
         cb null
