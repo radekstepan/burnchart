@@ -81,7 +81,7 @@ module.exports =
         # Get available space.    
         { height, width } = document.querySelector('#graph').getBoundingClientRect()
 
-        margin = { top: 20, right: 30, bottom: 40, left: 50 }
+        margin = { top: 10, right: 30, bottom: 40, left: 50 }
         width -= margin.left + margin.right
         height -= margin.top + margin.bottom
 
@@ -104,13 +104,6 @@ module.exports =
         .tickSize(-width)
         .ticks(5)
         .tickPadding(10)
-
-        # Area generator.
-        area = d3.svg.area()
-        .interpolate("precise")
-        .x( (d) -> x(d.date) )
-        .y0(height)
-        .y1( (d) -> y(d.points) )
         
         # Line generator.
         line = d3.svg.line()
@@ -129,18 +122,6 @@ module.exports =
         .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
 
-        # Add the clip path.
-        svg.append("clipPath")
-        .attr("id", "clip")
-        .append("rect")
-        .attr("width", width)
-        .attr("height", height)
-
-        # Add the area path.
-        svg.append("path")
-        .attr("class", "area")
-        .attr("d", area(ideal))
-
         # Add the x-axis.
         svg.append("g")
         .attr("class", "x axis")
@@ -152,33 +133,26 @@ module.exports =
         .attr("class", "y axis")
         .call(yAxis)
 
+        # Add a line showing where we are now.
+        svg.append("svg:line")
+        .attr("class", "today")
+        .attr("x1", x(new Date()))
+        .attr("y1", 0)
+        .attr("x2", x(new Date()))
+        .attr("y2", height)
+
         # Add the ideal line path.
         svg.append("path")
         .attr("class", "ideal line")
-        .attr("d", line(ideal))
-
-        # Add an actual line drop shadow.
-        svg.append("path")
-        .attr("class", "actual line shadow")
-        .attr("d", line.y( (d) -> y(d.points) + 4 )(actual))
+        .attr("d", line.interpolate("basis")(ideal))
 
         # Add the actual line path.
         svg.append("path")
         .attr("class", "actual line")
-        .attr("d", line.y( (d) -> y(d.points) )(actual))
+        .attr("d", line.interpolate("linear").y( (d) -> y(d.points) )(actual))
 
         # Collect the tooltip here.
         tooltip = null
-
-        # Add circle shadows.
-        svg.selectAll('circle.shadow')
-        .data(actual[1...])
-        .enter()
-        .append('svg:circle')
-        .attr("cx", ({ date }) -> x date )
-        .attr("cy", ({ points }) -> y(points) + 4 )
-        .attr("r",  ({ radius }) -> 5 )
-        .attr('class', 'shadow')
 
         # Show when we closed an issue.
         svg.selectAll("a.issue")
@@ -206,13 +180,5 @@ module.exports =
             # Hide after a time has passed if exists.
             tooltip?.hide(200)
         )
-
-        # Add a line showing where we are now.
-        svg.append("svg:line")
-        .attr("class", "today")
-        .attr("x1", x(new Date()))
-        .attr("y1", 0)
-        .attr("x2", x(new Date()))
-        .attr("y2", height)
 
         cb null

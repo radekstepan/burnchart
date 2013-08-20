@@ -44,14 +44,12 @@ h2
 
     h1
         margin: 0
-        padding: 10px 30px
-        color: #FFF
-        background: #55BC75
+        padding: 20px
+        color: #64584c
         font-size: 20px
         text-transform: uppercase
 
 #graph
-    background: #55BC75
     height: 200px
     position: relative
 
@@ -68,46 +66,36 @@ h2
                 clip-path: url(#clip)
 
                 &.actual
-                    stroke-width: 4px
-                    stroke: #FFF
-
-                    &.shadow
-                        stroke-width: 5px
-                        stroke: rgba(#000, 0.25)
+                    stroke-width: 3px
+                    stroke: #64584c
 
                 &.ideal
-                    stroke: #3D9E68
-                    stroke-dasharray: 5,5
-
-            &.area
-                clip-path: url(#clip)
-                fill: #4DAF7C
+                    stroke: #CACACA
+                    stroke-width: 3px
 
         line
             &.today
-                stroke: rgba(#FFF, 0.75)
+                stroke: #CACACA
                 stroke-width: 1px
                 shape-rendering: crispEdges
+                stroke-dasharray: 5,5
 
         circle
-            fill: #FFF
+            fill: #64584c
             stroke: transparent
             stroke-width: 15px
             cursor: pointer
-
-            &.shadow
-                fill: rgba(#000, 0.25)
 
         .axis
             shape-rendering: crispEdges
             
             line
-                stroke: #3D9E68
+                stroke: rgba(#CACACA, 0.25)
                 shape-rendering: crispEdges
 
             text
                 font-weight: bold
-                fill: #FFF
+                fill: #CACACA
 
             path
                 display: none
