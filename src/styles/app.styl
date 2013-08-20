@@ -87,6 +87,7 @@ h2
             &.today
                 stroke: rgba(#FFF, 0.75)
                 stroke-width: 1px
+                shape-rendering: crispEdges
 
         circle
             fill: #FFF
@@ -100,21 +101,16 @@ h2
         .axis
             shape-rendering: crispEdges
             
-            &.x
-                line
-                    stroke: #3D9E68
+            line
+                stroke: #3D9E68
+                shape-rendering: crispEdges
 
-                text
-                    font-weight: bold
-                    fill: #FFF
+            text
+                font-weight: bold
+                fill: #FFF
 
-                path
-                    display: none
-
-            &.y
-                line, path
-                    fill: none
-                    stroke: #000
+            path
+                display: none
 
 #progress
     padding: 20px

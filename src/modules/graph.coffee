@@ -81,11 +81,11 @@ module.exports =
         # Get available space.    
         { height, width } = document.querySelector('#graph').getBoundingClientRect()
 
-        margin = { top: 20, right: 30, bottom: 30, left: 30 }
+        margin = { top: 20, right: 30, bottom: 40, left: 50 }
         width -= margin.left + margin.right
         height -= margin.top + margin.bottom
 
-        # Scales and axis.
+        # Scales and axes.
         x = d3.time.scale().range([ 0, width ])
         y = d3.scale.linear().range([ height, 0 ])
         
@@ -94,9 +94,17 @@ module.exports =
         .tickSize(-height)
         # ...with day of the month...
         .tickFormat( (d) -> d.getDate() )
-        # ...once per day.
+        # ...once per day...
         .ticks(d3.time.hours, 24)
-        
+        # ...and give us a spacer.
+        .tickPadding(10)
+
+        yAxis = d3.svg.axis().scale(y)
+        .orient("left")
+        .tickSize(-width)
+        .ticks(5)
+        .tickPadding(10)
+
         # Area generator.
         area = d3.svg.area()
         .interpolate("precise")
@@ -138,6 +146,11 @@ module.exports =
         .attr("class", "x axis")
         .attr("transform", "translate(0,#{height})")
         .call(xAxis)
+
+        # Add the y-axis.
+        svg.append("g")
+        .attr("class", "y axis")
+        .call(yAxis)
 
         # Add the ideal line path.
         svg.append("path")
@@ -185,7 +198,7 @@ module.exports =
             # Absolutely position the div.
             div = document.querySelector '#tooltip'
             div.style.left = x(date) + margin.left + 'px'
-            div.style.top = y(points) + margin.top + 'px'
+            div.style.top = -10 + y(points) + margin.top + 'px'
             # And now show us on the div.
             tooltip.show '#tooltip'
         )
