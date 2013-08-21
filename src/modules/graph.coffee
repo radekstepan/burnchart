@@ -76,10 +76,10 @@ module.exports =
 
     # Render the D3 chart.
     'render': ([ actual, ideal ], cb) ->
-        (target = document.querySelector('#graph')).innerHTML = ''
+        document.querySelector('#svg').innerHTML = ''
 
         # Get available space.    
-        { height, width } = target.getBoundingClientRect()
+        { height, width } = document.querySelector('#graph').getBoundingClientRect()
 
         margin = { top: 30, right: 30, bottom: 40, left: 50 }
         width -= margin.left + margin.right
@@ -115,7 +115,7 @@ module.exports =
         y.domain([ 0, ideal[0].points ]).nice()
 
         # Add an SVG element with the desired dimensions and margin.
-        svg = d3.select("#graph").append("svg")
+        svg = d3.select("#svg").append("svg")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
         .append("g")
