@@ -81,7 +81,7 @@ module.exports =
         # Get available space.    
         { height, width } = document.querySelector('#graph').getBoundingClientRect()
 
-        margin = { top: 10, right: 30, bottom: 40, left: 50 }
+        margin = { top: 30, right: 30, bottom: 40, left: 50 }
         width -= margin.left + margin.right
         height -= margin.top + margin.bottom
 
@@ -121,11 +121,28 @@ module.exports =
         .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
 
-        # Add the x-axis.
+        # Add the days x-axis.
         svg.append("g")
-        .attr("class", "x axis")
+        .attr("class", "x axis day")
         .attr("transform", "translate(0,#{height})")
         .call(xAxis)
+
+        # Add the months x-axis.
+        m = [
+            'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+            'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+        ]
+
+        mAxis = xAxis
+        .orient("top")
+        .tickSize(height)
+        .tickFormat( (d) -> m[d.getMonth()] )
+        .ticks(2)
+        
+        svg.append("g")
+        .attr("class", "x axis month")
+        .attr("transform", "translate(0,#{height})")
+        .call(mAxis)
 
         # Add the y-axis.
         svg.append("g")
