@@ -16,16 +16,14 @@ module.exports =
         min = +Infinity ; max = -Infinity
 
         # Generate the actual closes.
-        rest = _.map collection, ({ closed_at, size, title, html_url }) ->
+        rest = _.map collection, (issue) ->
+            { size, closed_at } = issue
             min = size if size < min
             max = size if size > max
-            {
+
+            _.extend {}, issue,
                 date: new Date(closed_at)
                 points: total -= size
-                size
-                title
-                html_url
-            }
         
         # Now add a radius in a range (will be used for a circle).
         range = d3.scale.linear().domain([ min, max ]).range([ 5, 8 ])
@@ -182,9 +180,9 @@ module.exports =
         .attr("cx", ({ date }) -> x date )
         .attr("cy", ({ points }) -> y points )
         .attr("r",  ({ radius }) -> 5 ) # fixed for now
-        .on('mouseover', ({ date, points, title }) ->
+        .on('mouseover', ({ date, points, title, number }) ->
             # Pass a title string.
-            tooltip = new Tip title
+            tooltip = new Tip "##{number}: #{title}"
             # Absolutely position the div.
             div = document.querySelector '#tooltip'
             div.style.left = x(date) + margin.left + 'px'
