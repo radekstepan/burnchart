@@ -18,6 +18,11 @@ class exports.Repo
     constructor: (opts) ->
         ( @[k] = v for k, v of opts )
 
+        # Defaults.
+        @host ?= 'api.github.com'
+        @protocol ?= 'https'
+        @size_label = new RegExp(@size_label) or reg.size_label
+
     render: (cb) =>
         self = @
 
@@ -36,10 +41,12 @@ class exports.Repo
         # Filter them to labeled ones.
         (all, cb) ->
             async.map all, (array, cb) ->
-                issues.filter array, reg.size_label, (err, warn, filtered, total) ->
+                issues.filter array, self.size_label, (err, warn, filtered, total) ->
                     cb err, [ filtered, total ]
             , (err, [ open, closed ]) ->
                 return cb err if err
+                # Empty?
+                return cb 'No matching issues found' if open[1] + closed[1] is 0
                 # Save the open/closed on us first.
                 self.issues =
                     closed: { points: closed[1], data: closed[0] }
