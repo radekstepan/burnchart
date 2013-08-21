@@ -90,12 +90,11 @@ module.exports =
         y = d3.scale.linear().range([ height, 0 ])
         
         xAxis = d3.svg.axis().scale(x)
+        .orient("bottom")
         # Show vertical lines...
         .tickSize(-height)
         # ...with day of the month...
         .tickFormat( (d) -> d.getDate() )
-        # ...once per day...
-        .ticks(d3.time.hours, 24)
         # ...and give us a spacer.
         .tickPadding(10)
 
