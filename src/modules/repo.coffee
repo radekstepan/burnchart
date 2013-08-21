@@ -79,6 +79,13 @@ class exports.Repo
                 # Render the progress.
                 render '#progress', 'progress', { progress }
 
+                # Generate a trendline?
+                values.push(graph.trendline(
+                    values[0],
+                    self.milestone.created_at,
+                    self.milestone.due_on
+                )) if values[0].length
+
                 # Render the chart.
                 do doit = -> graph.render values, cb
 

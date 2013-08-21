@@ -74,8 +74,47 @@ module.exports =
 
         cb null, days
 
+    # A trendline.
+    # http://classroom.synonym.com/calculate-trendline-2709.html
+    'trendline': (actual, created_at, due_on) ->
+        start = +actual[0].date
+        
+        values = _.map actual, ({ date, points }) ->
+            [ +date - start, points ]
+
+        b1 = 0 ; e = 0 ; c1 = 0
+        a = (l = values.length) * _.reduce(values, (sum, [ a, b ]) ->
+            b1 += a ; e += b
+            c1 += Math.pow(a, 2)
+            sum + (a * b)
+        , 0)
+
+        b = b1 * e
+        c = l * c1
+        d = Math.pow(b1, 2)
+
+        slope = (a - b) / (c - d)
+
+        f = slope * b1
+
+        intercept = (e - f) / l
+
+        fn = (x) -> slope * x + intercept
+
+        a = +new Date(created_at) - start ; b = +new Date(due_on) - start
+
+        [
+            {
+                date: new Date(created_at)
+                points: fn(a)
+            }, {
+                date: new Date(due_on)
+                points: fn(b)
+            }
+        ]
+
     # Render the D3 chart.
-    'render': ([ actual, ideal ], cb) ->
+    'render': ([ actual, ideal, trendline ], cb) ->
         document.querySelector('#svg').innerHTML = ''
 
         # Get available space.    
@@ -161,6 +200,11 @@ module.exports =
         svg.append("path")
         .attr("class", "ideal line")
         .attr("d", line.interpolate("basis")(ideal))
+
+        # Add the trendline path.
+        svg.append("path")
+        .attr("class", "trendline line")
+        .attr("d", line.interpolate("linear")(trendline))
 
         # Add the actual line path.
         svg.append("path")
