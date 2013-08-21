@@ -28,7 +28,11 @@ route = ->
     render 'body', 'info'
 
 module.exports = ->
-    # Detect route changes.
-    window.addEventListener 'hashchange', route, no
-    # And route now.
-    do route
+    # Do we have browser support?
+    if 'onhashchange' of window and 'hash' of window.location
+        # Detect route changes.
+        window.addEventListener 'hashchange', route, no
+        # And route now.
+        return do route
+
+    render 'body', 'error', { text: 'URL fragment identifier not supported' }
