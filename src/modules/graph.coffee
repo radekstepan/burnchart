@@ -76,8 +76,10 @@ module.exports =
 
     # Render the D3 chart.
     'render': ([ actual, ideal ], cb) ->
+        (target = document.querySelector('#graph')).innerHTML = ''
+
         # Get available space.    
-        { height, width } = document.querySelector('#graph').getBoundingClientRect()
+        { height, width } = target.getBoundingClientRect()
 
         margin = { top: 30, right: 30, bottom: 40, left: 50 }
         width -= margin.left + margin.right

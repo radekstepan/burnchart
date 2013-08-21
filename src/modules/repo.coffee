@@ -80,6 +80,9 @@ class exports.Repo
                 render '#progress', 'progress', { progress }
 
                 # Render the chart.
-                graph.render values, cb
+                do doit = -> graph.render values, cb
+
+                # Watch window resize?
+                window.onresize = doit if 'onresize' of window
 
         ], cb
