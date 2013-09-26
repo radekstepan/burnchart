@@ -78,13 +78,13 @@ module.exports =
     # http://classroom.synonym.com/calculate-trendline-2709.html
     'trendline': (actual, created_at, due_on) ->
         start = +actual[0].date
-        
-        # Now is an actual point too.
-        last = actual[actual.length - 1]
-        actual.push { 'date': new Date(), 'points': last.points }
 
         values = _.map actual, ({ date, points }) ->
             [ +date - start, points ]
+
+        # Now is an actual point too.
+        last = actual[actual.length - 1]
+        values.push [ + new Date() - start, last.points ]
 
         b1 = 0 ; e = 0 ; c1 = 0
         a = (l = values.length) * _.reduce(values, (sum, [ a, b ]) ->
