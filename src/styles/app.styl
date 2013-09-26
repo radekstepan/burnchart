@@ -1,13 +1,18 @@
+// color definitions
 $closed = #4DAF7C
 $opened = #E55F3A
-$grey   = #E2E2E2
-$ideal  = $grey
+$grey   = #CACACA
+$brown  = #64584C
 
+// font and gradient bg
 body
-    font-family: 'Source Sans Pro', sans-serif
+    height: 100%
     background: linear-gradient(135deg, #d7bcab 0%, #cc9485 100%)
+    background-repeat: no-repeat
+    background-attachment: fixed
+    font-family: 'Source Sans Pro', sans-serif
     padding: 100px
-    color: #64584C
+    color: $brown
 
 ul
     list-style-type: none
@@ -20,10 +25,12 @@ h2
     font-size: 16px
     text-transform: uppercase
 
+// the white content box
 .box
     background: #FFF
     box-shadow: 2px 4px 6px rgba(0,0,0,0.2)
 
+    // different classes thereof
     &.generic, &.info, &.error, &.success
         border-top: 4px solid #EAC85D
         padding: 20px
@@ -40,19 +47,21 @@ h2
         border-top-color: #4DB07A
 
     a
-        color: #64584C
+        color: $brown
 
     h1
         margin: 0
         padding: 20px
-        color: #64584c
+        color: $brown
         font-size: 20px
         text-transform: uppercase
 
+// where D3 renders to
 #graph
     height: 200px
     position: relative
 
+    // position will be adjusted dynamically
     #tooltip
         position: absolute
         top: 0
@@ -65,50 +74,59 @@ h2
                 stroke-width: 1px
                 clip-path: url(#clip)
 
+                // actual progress
                 &.actual
-                    stroke: #64584c
+                    stroke: $brown
                     stroke-width: 3px
 
+                // ideal velocity throughout the sprint
                 &.ideal
-                    stroke: #CACACA
+                    stroke: $grey
                     stroke-width: 3px
 
+                // trend of actual issue closures
                 &.trendline
-                    stroke: #64584c
+                    stroke: $brown
                     stroke-width: 1.5px
                     stroke-dasharray: 5,5
 
+        // right now
         line
             &.today
-                stroke: #CACACA
+                stroke: $grey
                 stroke-width: 1px
                 shape-rendering: crispEdges
                 stroke-dasharray: 5,5
 
+        // represents one issue closed
         circle
-            fill: #64584c
+            fill: $brown
+            // make it easier to click
             stroke: transparent
             stroke-width: 15px
             cursor: pointer
 
+        // axes...
         .axis
             shape-rendering: crispEdges
             
             line
-                stroke: rgba(#CACACA, 0.25)
+                stroke: rgba($grey, 0.25)
                 shape-rendering: crispEdges
 
             text
                 font-weight: bold
-                fill: #CACACA
+                fill: $grey
 
             path
                 display: none
 
+// progression graph
 #progress
     padding: 20px
     border-radius: 0 0 6px 6px
 
+    // clear
     &:after
         clear: both
         display: block
@@ -116,7 +134,8 @@ h2
 
     .bars
         position: relative
-        
+
+        // the two bars        
         div
             border-radius: 6px
             height: 12px
@@ -127,6 +146,7 @@ h2
                 left: 0
                 background: $closed
 
+                // when we have issues left
                 &:not(.done)
                     border-radius: 6px 0 0 6px
             
