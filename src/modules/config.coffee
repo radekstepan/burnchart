@@ -1,12 +1,24 @@
 #!/usr/bin/env coffee
 { _ } = require 'lodash'
 
-req   = require './request'
+request = require './request'
+regex   = require './regex'
 
+# Have it?
 config = null
+# We are cold.
 wait   = no
+# Callbacks go here.
 queue  = []
 
+# Defaults.
+defaults =
+    # You do know we work with GitHub right?
+    'host': 'api.github.com'
+    # Making NSA (err taxpayer) work for it.
+    'protocol': 'https'
+
+# Get (& cache) configuration from the server.
 module.exports = (cb) ->
     # Have config?
     return cb null, config if config
@@ -14,10 +26,18 @@ module.exports = (cb) ->
     queue.push cb
     # Load it?
     unless wait
+        # Everyone else wait now.
         wait = yes
-        req.config (err, result) ->
+        # Make the request.
+        request.config (err, result) ->
             # Save config?
-            config = result unless err
-            # Call back for each.
+            unless err
+                config = result        
+                # Tack on defaults?
+                ( config[k] ?= v for k, v of defaults )
+                # RegExpify the size label?
+                config.size_label = new RegExp(config.size_label) or regex.size_label
+
+            # Call back for each enqueued.
             _.each queue, (cb) ->
-                cb err, result
+                cb err, config # is either null or provided by now

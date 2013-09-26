@@ -5,8 +5,9 @@ Tip   = require 'tip'
 
 reg   = require './regex'
 
-module.exports =    
-    # Map closed issues.
+module.exports =
+    
+    # A graph of closed issues.
     'actual': (collection, created_at, total, cb) ->
         head = [ {
             date: new Date(created_at)
@@ -18,9 +19,11 @@ module.exports =
         # Generate the actual closes.
         rest = _.map collection, (issue) ->
             { size, closed_at } = issue
+            # Determine the range.
             min = size if size < min
             max = size if size > max
 
+            # Dropping points remaining.
             _.extend {}, issue,
                 date: new Date(closed_at)
                 points: total -= size
@@ -32,9 +35,9 @@ module.exports =
             issue.radius = range issue.size
             issue
 
-        cb null, head.concat rest
+        cb null, [].concat head, rest
 
-    # Map ideal velocity for each day.
+    # A graph of an ideal progression..
     'ideal': (a, b, off_days, total, cb) ->
         # Swap?
         [ b, a ] = [ a, b ] if b < a
@@ -74,11 +77,11 @@ module.exports =
 
         cb null, days
 
-    # A trendline.
-    # http://classroom.synonym.com/calculate-trendline-2709.html
+    # Graph representing a trendling of actual issues.
     'trendline': (actual, created_at, due_on) ->
         start = +actual[0].date
 
+        # Values is a list of time from the start and points remaining.
         values = _.map actual, ({ date, points }) ->
             [ +date - start, points ]
 
@@ -86,6 +89,7 @@ module.exports =
         last = actual[actual.length - 1]
         values.push [ + new Date() - start, last.points ]
 
+        # http://classroom.synonym.com/calculate-trendline-2709.html
         b1 = 0 ; e = 0 ; c1 = 0
         a = (l = values.length) * _.reduce(values, (sum, [ a, b ]) ->
             b1 += a ; e += b
@@ -93,19 +97,12 @@ module.exports =
             sum + (a * b)
         , 0)
 
-        b = b1 * e
-        c = l * c1
-        d = Math.pow(b1, 2)
-
-        slope = (a - b) / (c - d)
-
-        f = slope * b1
-
-        intercept = (e - f) / l
-
+        slope = (a - (b1 * e)) / ((l * c1) - (Math.pow(b1, 2)))
+        intercept = (e - (slope * b1)) / l
         fn = (x) -> slope * x + intercept
 
-        a = +new Date(created_at) - start ; b = +new Date(due_on) - start
+        a = +new Date(created_at) - start
+        b = +new Date(due_on) - start
 
         [
             {
@@ -117,7 +114,7 @@ module.exports =
             }
         ]
 
-    # Render the D3 chart.
+    # The graph as a whole.
     'render': ([ actual, ideal, trendline ], cb) ->
         document.querySelector('#svg').innerHTML = ''
 
@@ -128,10 +125,11 @@ module.exports =
         width -= margin.left + margin.right
         height -= margin.top + margin.bottom
 
-        # Scales and axes.
+        # Scales.
         x = d3.time.scale().range([ 0, width ])
         y = d3.scale.linear().range([ height, 0 ])
         
+        # Axes.
         xAxis = d3.svg.axis().scale(x)
         .orient("bottom")
         # Show vertical lines...
@@ -222,6 +220,7 @@ module.exports =
         svg.selectAll("a.issue")
         .data(actual[1...]) # skip the starting point
         .enter()
+        
         # A wrapping link.
         .append('svg:a')
         .attr("xlink:href", ({ html_url }) -> html_url )

@@ -1,10 +1,11 @@
 #!/usr/bin/env coffee
-req = require './request'
+request = require './request'
 
 module.exports =
-    # Used at initialization stage.
+
+    # Get current milestones for a repo..
     'get_current': (repo, cb) ->
-        req.all_milestones repo, (err, data) ->
+        request.all_milestones repo, (err, data) ->
             # Request errors.
             return cb err if err
             # GitHub errors.
@@ -15,4 +16,5 @@ module.exports =
             m = data[0]
             # Empty milestone?
             return cb null, 'No issues for milestone' if m.open_issues + m.closed_issues is 0
+            
             cb null, null, m

@@ -13,6 +13,7 @@
     },
     "scripts": [
         "app.coffee",
+        
         "modules/config.coffee",
         "modules/graph.coffee",
         "modules/issues.coffee",
@@ -21,6 +22,7 @@
         "modules/request.coffee",
         "modules/render.coffee",
         "modules/repo.coffee",
+        
         "templates/error.eco",
         "templates/graph.eco",
         "templates/info.eco",

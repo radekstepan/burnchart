@@ -6,6 +6,7 @@ req   = require './request'
 reg   = require './regex'
 
 module.exports =
+
     # Used on an initial fetch of issues for a repo.
     'get_all': (repo, cb) ->
         # For each state...
@@ -61,22 +62,3 @@ module.exports =
         
         catch err
             return cb err, warnings
-
-    # Map a collection of closed issues into days and determine the velocity for the range of all days.
-    # Assumes collection has been `filter`ed and is ordered.
-    'into_days': (collection, regex, cb) ->
-        days = {}
-        for issue in collection
-            { state, number, closed_at } = issue
-            number ?= '?'
-            return "Issue ##{number} does not have a `closed_at` parameter" unless closed_at
-            unless matches = closed_at.match reg.datetime
-                return "Issue ##{number} does not match the `closed_at` pattern"
-            
-            # Explode the matches.
-            [ date, time ] = matches[1...]
-            # Save it.
-            days[date] ?= []
-            days[date].push issue
-
-        cb null, days
