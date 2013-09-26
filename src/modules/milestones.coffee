@@ -6,11 +6,11 @@ module.exports =
     # Get current milestones for a repo..
     'get_current': (repo, cb) ->
         request.all_milestones repo, (err, data) ->
-            # Request errors.
+            # Request errors?
             return cb err if err
-            # GitHub errors.
+            # GitHub errors?
             return cb data.message if data.message
-            # Empty warning.
+            # Empty warning?
             return cb null, 'No open milestones for repo' unless data.length
             # The first milestone should be ending soonest.
             m = data[0]

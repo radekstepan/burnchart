@@ -19,8 +19,7 @@ module.exports =
         sa
         .get("http://#{window.location.host}/config.json")
         .set('Content-Type', 'application/json')
-        .end (err, data) ->
-            cb err, data?.body
+        .end _.partialRight respond, cb
 
 # Make a request using SuperAgent to GitHub.
 request = ({ protocol, host, token, path }, query, noun, cb) ->
@@ -39,5 +38,11 @@ request = ({ protocol, host, token, path }, query, noun, cb) ->
     req = req.set('Authorization', "token #{token}") if token
     
     # Send.
-    req.end (err, data) ->
-        cb err, data?.body
+    req.end _.partialRight respond, cb
+
+# How do we respond to a response?
+respond = (data, cb) ->
+    # 2xx?
+    return cb data.error.message if data.statusType isnt 2
+    # All good.
+    cb null, data?.body

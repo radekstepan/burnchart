@@ -30,14 +30,18 @@ module.exports = (cb) ->
         wait = yes
         # Make the request.
         request.config (err, result) ->
-            # Save config?
-            unless err
-                config = result        
-                # Tack on defaults?
-                ( config[k] ?= v for k, v of defaults )
-                # RegExpify the size label?
-                config.size_label = new RegExp(config.size_label) or regex.size_label
+            # We do not strictly require config files.
+            config = ( if err then { } else result )
+            
+            # Tack on defaults?
+            ( config[k] ?= v for k, v of defaults )
+            
+            # RegExpify the size label?
+            if config.size_label
+                config.size_label = new RegExp config.size_label
+            else
+                config.size_label = regex.size_label
 
             # Call back for each enqueued.
             _.each queue, (cb) ->
-                cb err, config # is either null or provided by now
+                cb null, config
