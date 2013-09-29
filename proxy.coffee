@@ -8,7 +8,7 @@ request = require 'request'
 # Read the original config.
 config = JSON.parse fs.readFileSync './config.json', 'utf-8'
 # This is the scrubbed version.
-_.extend scrubbed = {}, config, { protocol: 'http', token: null }
+_.extend scrubbed = {}, config, { 'protocol': 'http', 'token': null }
 
 proxy = (req, res, next) ->
     write = (code, body) ->
