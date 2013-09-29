@@ -25,9 +25,9 @@ Displays a burndown chart from a set of GitHub issues in the current milestone.
 
 There are three modes of operation balancing between usability & security:
 
-1. **Static Mode**: You can just serve the `public` directory using a static file server or GitHub Pages. No config needed, just serve the app and point to your repo in the browser, e.g.: `http://127.0.0.1:8000/#!/radekstepan/disposable`. You are rate limited to the tune of [60 requests per hour](http://developer.github.com/v3/#rate-limiting).
-1. **Static Mode (Public Token)**: As before but now you want to use your [GitHub OAuth2 API Token](http://developer.github.com/v3/#authentication) in the config. This will require you to specify the token in the `config.json` file as outlined below.
-1. **Proxy Mode (Private Token)**: You find it preposterous to share your token with the world. In this case you will need to serve the app using the [Proxy Mode](#proxy-mode). Your token will be scrubbed from the config file and all requests be routed through a proxy.
+1. **Static Mode**: you can just serve the `public` directory using a static file server or GitHub Pages. No config needed, just serve the app and point to your repo in the browser, e.g.: `http://127.0.0.1:8000/#!/radekstepan/disposable`. You are rate limited to the tune of [60 requests per hour](http://developer.github.com/v3/#rate-limiting).
+1. **Static Mode (Public Token)**: as before but now you want to use your [GitHub OAuth2 API Token](http://developer.github.com/v3/#authentication) in the config. This will require you to specify the token in the `config.json` file as outlined below.
+1. **Proxy Mode (Private Token)**: you find it preposterous to share your token with the world. In this case you will need to serve the app using the [Proxy Mode](#proxy-mode). Your token will be scrubbed from the config file and all requests be routed through a proxy.
 
 All of the following fields are defined in `config.json` and none of them, including the file itself, are required:
 
