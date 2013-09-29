@@ -1,0 +1,37 @@
+{
+    "name": "app",
+    "main": "app.js",
+    "version": "1.0.0-alpha",
+    "dependencies": {
+        "bestiejs/lodash": "*",
+        "caolan/async": "*",
+        "mbostock/d3": "*",
+        "visionmedia/superagent": "*",
+        "necolas/normalize.css": "*",
+        "component/tip": "*",
+        "component/aurora-tip": "*"
+    },
+    "scripts": [
+        "app.coffee",
+        
+        "modules/config.coffee",
+        "modules/graph.coffee",
+        "modules/issues.coffee",
+        "modules/milestones.coffee",
+        "modules/regex.coffee",
+        "modules/request.coffee",
+        "modules/render.coffee",
+        "modules/repo.coffee",
+        
+        "templates/error.eco",
+        "templates/graph.eco",
+        "templates/info.eco",
+        "templates/label.eco",
+        "templates/loading.eco",
+        "templates/progress.eco"
+    ],
+    "styles": [
+        "styles/fonts.css",
+        "styles/app.styl"
+    ]
+}

@@ -1,15 +1,38 @@
 {
     "name": "github-burndown-chart",
-    "version": "0.2.1",
+    "version": "1.0.0-alpha",
+    "description": "Shows a burndown chart for GitHub Issues",
+    "directories": {
+        "test": "test"
+    },
     "dependencies": {
         "coffee-script": "~1.6.3",
-        "flatiron": "~0.3.8",
-        "union": "~0.3.7",
-        "connect": "~2.8.4",
-        "eco": "~1.1.0-rc-3",
-        "js-yaml": "~2.1.0"
+        "async": "~0.2.9",
+        "proxyquire": "~0.5.1",
+        "lodash": "~1.3.1",
+        "connect": "~2.8.5",
+        "request": "~2.27.0"
+    },
+    "devDependencies": {
+        "mocha": "~1.12.0"
     },
     "scripts": {
-        "start": "start.js"
+        "test": "make test"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/radekstepan/github-burndown-chart.git"
+    },
+    "keywords": [
+        "github",
+        "issues",
+        "burndown",
+        "chart",
+        "scrum"
+    ],
+    "author": "Radek <dev@radekstepan.com>",
+    "license": "BSD",
+    "bugs": {
+        "url": "https://github.com/radekstepan/github-burndown-chart/issues"
     }
 }
