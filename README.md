@@ -82,3 +82,14 @@ $ PORT=1234 coffee proxy.coffee
 ```
 
 Visit the port in question in the browser and continue as before.
+
+##Build It
+
+If you would like to run your own build for a custom version of the app, use the [Apps/B Builder](https://github.com/intermine/apps-b-builder).
+
+In short:
+
+```bash
+$ npm install apps-b-builder -g
+$ apps-b build ./src/ ./build/
+```
