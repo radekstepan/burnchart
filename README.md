@@ -2,7 +2,7 @@
 
 An app that displays a burndown chart for your GitHub Issues.
 
-![image](https://raw.github.com/radekstepan/github-burndown-chart/master/example.png)
+![image](https://raw.github.com/radekstepan/github-burndown-chart/original/example.png)
 
 ## Requirements:
 
