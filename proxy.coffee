@@ -7,6 +7,8 @@ request = require 'request'
 
 # Read the original config.
 config = JSON.parse fs.readFileSync './config.json', 'utf-8'
+# Some defaults.
+config.host ?= 'api.github.com'
 # This is the scrubbed version.
 _.extend scrubbed = {}, config, { 'protocol': 'http', 'token': null }
 
@@ -24,14 +26,15 @@ proxy = (req, res, next) ->
     # API request?
     if req.url.match /^\/repos/
         # The new headers.
-        headers = Accept: 'application/vnd.github.raw'
+        headers = 'Accept': 'application/vnd.github.raw'
         # Add a token?
         headers.Authorization = 'token ' + config.token if config.token
-        # Make the request.
+        # Make the HTTPS request.
         return request {
-            uri: 'https://' + config.host + req.url
+            'uri': 'https://' + config.host + req.url
             headers
         }, (_err, _res, body) ->
+            return write(500) if _err
             write _res.statusCode, body
 
     # Get handled by Connect.

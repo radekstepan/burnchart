@@ -2,6 +2,14 @@
 sa    = require 'superagent'
 { _ } = require 'lodash'
 
+# Custom JSON parser.
+sa.parse =
+    'application/json': (res) ->
+        try
+            JSON.parse res
+        catch e
+            {} # it was not to be...
+
 module.exports =
     
     # Get all milestones.

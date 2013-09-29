@@ -20,7 +20,7 @@ There are three modes of operation balancing between usability & security:
 
 1. You can just serve the `public` directory using a static file server or GitHub Pages. No config needed, just serve the app and point to your repo in the browser, e.g.: `http://127.0.0.1:8000/#!/radekstepan/disposable`. You are rate limited to the tune of [60 requests per hour](http://developer.github.com/v3/#rate-limiting).
 1. As before but now you want to use your [GitHub OAuth2 API Token](http://developer.github.com/v3/#authentication) in the config. This will require you to specify the token in the `config.json` file as outlined below.
-1. You find it preposterous to share your token with the world. In this case you will need to serve the app through `proxy.coffee`. Your token will be scrubbed from the config file and all requests be routed through this proxy.
+1. You find it preposterous to share your token with the world. In this case you will need to serve the app using the [Proxy Mode](#proxy-mode). Your token will be scrubbed from the config file and all requests be routed through a proxy.
 
 None of the following fields or the file, `config.json` itself are required:
 
@@ -38,7 +38,7 @@ This is also the default label if no other is specified.
 
 ###Token
 
-Your OAuth2 token from GitHub. Get it [here](https://github.com/settings/applications). Bear in mind that if you just statically serve the app, everybody will be able to see the token in transmission. If you would like to avoid that, use the `proxy.coffee` file to route the traffic.
+Your OAuth2 token from GitHub. Get it [here](https://github.com/settings/applications). Bear in mind that if you just statically serve the app, everybody will be able to see the token in transmission. If you would like to avoid that, use the [Proxy Mode](#proxy-mode).
 
 Using the token increases your limit of requests per hour from [60 to 5000](http://developer.github.com/v3/#rate-limiting).
 
