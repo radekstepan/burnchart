@@ -1,15 +1,16 @@
 #!/usr/bin/env coffee
+proxy  = do require('proxyquire').noCallThru
 assert = require 'assert'
 path   = require 'path'
-proxy  = require 'proxyquire'
 
 req = {}
 
 milestones = proxy path.resolve(__dirname, '../src/modules/milestones.coffee'),
     './request': req
 
-module.exports =  
-    'get current from 1': (done) ->
+module.exports =
+
+    'milestones - get current from 1': (done) ->
         req.all_milestones = (opts, cb) ->
             cb null, [
                 {
@@ -22,10 +23,10 @@ module.exports =
         milestones.get_current {}, (err, warn, milestone) ->
             assert.ifError err
             assert.equal milestone.number, 1
-            done.call null
+            do done
 
     # We always take from head because of request params.
-    'get current from > 1': (done) ->
+    'milestones - get current from > 1': (done) ->
         req.all_milestones = (opts, cb) ->
             cb null, [
                 {
@@ -48,26 +49,26 @@ module.exports =
         milestones.get_current {}, (err, warn, milestone) ->
             assert.ifError err
             assert.equal milestone.number, 2
-            done.call null
+            do done
 
-    'get current when empty': (done) ->
+    'milestones - get current when empty': (done) ->
         req.all_milestones = (opts, cb) ->
             cb null, []
 
         milestones.get_current {}, (err, warn, milestone) ->
             assert.ifError err
             assert.equal warn, 'No open milestones for repo'
-            done.call null
+            do done
 
-    'get current when not found': (done) ->
+    'milestones - get current when not found': (done) ->
         req.all_milestones = (opts, cb) ->
             cb null, { 'message': 'Not Found' }
 
         milestones.get_current {}, (err, warn, milestone) ->
             assert.equal err, 'Not Found'
-            done.call null
+            do done
 
-    'get current when no issues': (done) ->
+    'milestones - get current when no issues': (done) ->
         req.all_milestones = (opts, cb) ->
             cb null, [
                 {
@@ -82,4 +83,4 @@ module.exports =
         milestones.get_current {}, (err, warn, milestone) ->
             assert.ifError err
             assert.equal warn, 'No issues for milestone'
-            done.call null
+            do done
