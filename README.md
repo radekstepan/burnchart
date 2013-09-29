@@ -1,15 +1,17 @@
 #GitHub Burndown Chart
 
+**The original app got completely rewritten, see [notes](#rewrite), thank you.**
+
 Displays a burndown chart from a set of GitHub issues in the current milestone.
 
 [ ![Codeship Status for radekstepan/github-burndown-chart](https://www.codeship.io/projects/d69f4420-e5b0-0130-bbae-1632ddfb80f8/status?branch=rework)](https://www.codeship.io/projects/5855)
 
 ##Features
 
-1. Client side.
-1. Private repos.
-1. Off days.
-1. Trend line.
+1. Client side; easily hosted on GitHub Pages.
+1. Private repos; use your GitHub API Token hiding it from public view if need be.
+1. Off days; specify which days of the week to leave out from ideal burndown progression line.
+1. Trend line; to see if you can make it to the deadline at this pace.
 
 ![image](https://raw.github.com/radekstepan/github-burndown-chart/master/example.png)
 
@@ -19,7 +21,7 @@ Displays a burndown chart from a set of GitHub issues in the current milestone.
 1. Make sure this repo has some **issues** assigned to a **milestone**.
 1. Put some **labels** on the issues looking like this: `size 1`, `size 3` etc.
 1. **Close** some of them labeled issues.
-1. Visit [http://radekstepan.github.io/github-burndown-chart](http://radekstepan.github.io/github-burndown-chart) following the instructions there.
+1. Visit [http://radekstepan.com/github-burndown-chart/](http://radekstepan.com/github-burndown-chart/) following the instructions there.
 
 ##Configuration
 
@@ -93,3 +95,24 @@ In short:
 $ npm install apps-b-builder -g
 $ apps-b build ./src/ ./build/
 ```
+
+##Test It
+
+```bash
+$ npm install -d
+$ make test
+```
+
+Each bugfix receives an accompanying test case.
+
+##Rewrite
+
+The original app got rewritten from a clunky server side to a (better) client side app. Some tests are also provided and more will be going into the future.
+
+If you are upgrading from the previous app, then please bear in mind that `config.yaml` is replaced with `config.json`.
+
+If you would like to use the original app, please refer to the `original` branch.
+
+##Thanks
+
+Thank you for using the app and your feedback/comments are very much welcome. Radek
