@@ -13,7 +13,7 @@ Displays a burndown chart from a set of GitHub issues in the current milestone.
 1. Off days; specify which days of the week to leave out from ideal burndown progression line.
 1. Trend line; to see if you can make it to the deadline at this pace.
 
-![image](https://raw.github.com/radekstepan/github-burndown-chart/original/example.png)
+![image](https://raw.github.com/radekstepan/github-burndown-chart/master/example.png)
 
 ##Quickstart
 
