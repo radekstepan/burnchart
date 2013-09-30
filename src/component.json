@@ -3,7 +3,7 @@
     "main": "app.js",
     "version": "1.0.0-alpha",
     "dependencies": {
-        "bestiejs/lodash": "*",
+        "lodash/lodash": "*",
         "caolan/async": "*",
         "mbostock/d3": "*",
         "visionmedia/superagent": "*",

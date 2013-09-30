@@ -25,7 +25,7 @@ module.exports =
     # Get config from our host always.
     'config': (cb) ->
         sa
-        .get("http://#{window.location.host}/config.json")
+        .get("http://#{window.location.host + window.location.pathname}config.json")
         .set('Content-Type', 'application/json')
         .end _.partialRight respond, cb
 

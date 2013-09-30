@@ -3,7 +3,7 @@
 
 
 
-/*! normalize.css v2.1.2 | MIT License | git.io/normalize */
+/*! normalize.css v2.1.3 | MIT License | git.io/normalize */
 
 /* ==========================================================================
    HTML5 display definitions
@@ -344,8 +344,8 @@ html input[disabled] {
 }
 
 /**
- * 1. Address box sizing set to `content-box` in IE 8/9.
- * 2. Remove excess padding in IE 8/9.
+ * 1. Address box sizing set to `content-box` in IE 8/9/10.
+ * 2. Remove excess padding in IE 8/9/10.
  */
 
 input[type="checkbox"],
@@ -521,24 +521,30 @@ table {
     font-style: normal;
     font-weight: 400;
     src: local('Source Sans Pro'), local('SourceSansPro-Regular'),
-    url('fonts/SourceSansPro-Regular.woff') format('woff');
+    url("app/styles/../../fonts/SourceSansPro-Regular.woff") format('woff');
 }
 @font-face {
     font-family: 'Source Sans Pro';
     font-style: normal;
     font-weight: 600;
     src: local('Source Sans Pro Semibold'), local('SourceSansPro-Semibold'),
-    url('fonts/SourceSansPro-Semibold.woff') format('woff');
+    url("app/styles/../../fonts/SourceSansPro-Semibold.woff") format('woff');
 }
 @font-face {
     font-family: 'Source Sans Pro';
     font-style: normal;
     font-weight: 700;
     src: local('Source Sans Pro Bold'), local('SourceSansPro-Bold'),
-    url('fonts/SourceSansPro-Bold.woff') format('woff');
+    url("app/styles/../../fonts/SourceSansPro-Bold.woff") format('woff');
 }
 body {
   height: 100%;
+  background: #d7bcab;
+  background: -moz-linear-gradient(-45deg, #d7bcab 0%, #cc9485 100%);
+  background: -webkit-gradient(linear, left top, right bottom, color-stop(0%, #d7bcab), color-stop(100%, #cc9485));
+  background: -webkit-linear-gradient(-45deg, #d7bcab 0%, #cc9485 100%);
+  background: -o-linear-gradient(-45deg, #d7bcab 0%, #cc9485 100%);
+  background: -ms-linear-gradient(-45deg, #d7bcab 0%, #cc9485 100%);
   background: linear-gradient(135deg, #d7bcab 0%, #cc9485 100%);
   background-repeat: no-repeat;
   background-attachment: fixed;
