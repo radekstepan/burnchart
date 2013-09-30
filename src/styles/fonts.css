@@ -3,19 +3,19 @@
     font-style: normal;
     font-weight: 400;
     src: local('Source Sans Pro'), local('SourceSansPro-Regular'),
-    url('/fonts/SourceSansPro-Regular.woff') format('woff');
+    url('fonts/SourceSansPro-Regular.woff') format('woff');
 }
 @font-face {
     font-family: 'Source Sans Pro';
     font-style: normal;
     font-weight: 600;
     src: local('Source Sans Pro Semibold'), local('SourceSansPro-Semibold'),
-    url('/fonts/SourceSansPro-Semibold.woff') format('woff');
+    url('fonts/SourceSansPro-Semibold.woff') format('woff');
 }
 @font-face {
     font-family: 'Source Sans Pro';
     font-style: normal;
     font-weight: 700;
     src: local('Source Sans Pro Bold'), local('SourceSansPro-Bold'),
-    url('/fonts/SourceSansPro-Bold.woff') format('woff');
+    url('fonts/SourceSansPro-Bold.woff') format('woff');
 }
