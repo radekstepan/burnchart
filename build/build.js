@@ -28116,7 +28116,9 @@ module.exports = function(cb) {
     wait = true;
     return request.config(function(err, result) {
       var field, k, v, validator;
-      config = (err ? {} : result);
+      if (err || !_.isObject(result)) {
+        config = {};
+      }
       for (k in defaults) {
         v = defaults[k];
         if (config[k] == null) {

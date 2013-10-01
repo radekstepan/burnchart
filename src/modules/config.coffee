@@ -44,7 +44,7 @@ module.exports = (cb) ->
         # Make the request.
         request.config (err, result) ->
             # We do not strictly require config files.
-            config = ( if err then { } else result )
+            config = {} if err or not _.isObject result
             
             # Tack on defaults?
             ( config[k] ?= v for k, v of defaults )
