@@ -55,9 +55,9 @@ module.exports =
         req.all_milestones = (opts, cb) ->
             cb null, []
 
-        milestones.get_current {}, (err, warn, milestone) ->
+        milestones.get_current { path: 'some/repo' }, (err, warn, milestone) ->
             assert.ifError err
-            assert.equal warn, 'No open milestones for repo'
+            assert.equal warn, 'No open milestones for repo some/repo'
             do done
 
     'milestones - get current when not found': (done) ->
@@ -72,6 +72,7 @@ module.exports =
         req.all_milestones = (opts, cb) ->
             cb null, [
                 {
+                    'title': 'No issues'
                     'number': 1
                     'created_at': '2013-01-01T00:00:00Z'
                     'due_on': '2013-02-01T00:00:00Z',
@@ -82,5 +83,5 @@ module.exports =
 
         milestones.get_current {}, (err, warn, milestone) ->
             assert.ifError err
-            assert.equal warn, 'No issues for milestone'
+            assert.equal warn, 'No issues for milestone No issues'
             do done

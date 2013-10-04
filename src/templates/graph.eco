@@ -1,5 +1,8 @@
 <div class="box">
-    <h1><%- @name %></h2>
+    <h1><%- @repo %><br><%- @milestone.title %></h1>
+    <% if @milestone.description: %>
+        <p><%- @milestone.description %></p>
+    <% end %>
     <div id="graph">
         <div id="tooltip"></div>
         <div id="svg"></div>
