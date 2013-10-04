@@ -85,3 +85,21 @@ module.exports =
             assert.ifError err
             assert.equal warn, 'No issues for milestone No issues'
             do done
+
+    'milestones - has description': (done) ->
+        marked = require 'marked'
+
+        req.all_milestones = (opts, cb) ->
+            cb null, [
+                {
+                    'number': 1
+                    'created_at': '2013-01-01T00:00:00Z'
+                    'due_on': '2013-02-01T00:00:00Z'
+                    'description': 'A description of this <strong>milestone</strong> goes *here*'
+                }
+            ]
+
+        milestones.get_current {}, (err, warn, milestone) ->
+            assert.ifError err
+            assert.equal milestone.description, 'A description of this <strong>milestone</strong> goes <em>here</em>'
+            do done

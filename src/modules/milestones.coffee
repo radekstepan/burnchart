@@ -1,4 +1,6 @@
 #!/usr/bin/env coffee
+marked = require 'marked'
+
 request = require './request'
 
 module.exports =
@@ -16,5 +18,7 @@ module.exports =
             m = data[0]
             # Empty milestone?
             return cb null, "No issues for milestone #{m.title}" if m.open_issues + m.closed_issues is 0
-            
+            # Has description? Parse GFM.
+            m.description = marked(m.description)[3...-5] if m.description
+
             cb null, null, m

@@ -516,6 +516,7 @@ table {
   left: 85%;
 }
 
+
 @font-face {
     font-family: 'Source Sans Pro';
     font-style: normal;
@@ -571,8 +572,8 @@ h2 {
 .box.info,
 .box.error,
 .box.success {
+  padding: 20px 0;
   border-top: 4px solid #eac85d;
-  padding: 20px;
   width: 50%;
   margin: 0 auto;
 }
@@ -594,6 +595,17 @@ h2 {
   color: #64584c;
   font-size: 20px;
   text-transform: uppercase;
+}
+.box h2 {
+  margin: 0;
+  padding: 0 20px 20px;
+}
+.box p {
+  margin: 0;
+  padding: 0 20px;
+}
+.box p.description {
+  margin-top: -10px;
 }
 #graph {
   height: 200px;
@@ -679,6 +691,7 @@ h2 {
 }
 #progress h2 {
   margin: 10px 0 0 0;
+  padding: 0;
 }
 #progress h2.closed {
   float: left;
