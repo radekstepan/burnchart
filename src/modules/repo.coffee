@@ -59,7 +59,7 @@ module.exports = (opts, cb) ->
             )
         ], (err, values) ->
             # Render the body.
-            render 'body', 'graph', name: opts.repo
+            render 'body', 'graph', { repo: opts.path, milestone: opts.milestone }
 
             # Render the progress.
             render '#progress', 'progress', { progress }
