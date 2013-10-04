@@ -1,4 +1,5 @@
 #!/usr/bin/env coffee
+{ _ } = require 'lodash'
 request = require './request'
 
 module.exports =
@@ -12,8 +13,10 @@ module.exports =
             return cb data.message if data.message
             # Empty warning?
             return cb null, 'No open milestones for repo' unless data.length
-            # The first milestone should be ending soonest.
-            m = data[0]
+            # Filter milestones without due date.
+            m = _.rest data, { 'due_on' : null }
+            # The first milestone should be ending soonest. Prefer milestones with due dates.
+            m = if m[0] then m[0] else data[0]
             # Empty milestone?
             return cb null, 'No issues for milestone' if m.open_issues + m.closed_issues is 0
             
