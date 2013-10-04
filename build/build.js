@@ -26,14 +26,10 @@ function require(path, parent, orig) {
   // perform real require()
   // by invoking the module's
   // registered function
-  if (!module._resolving && !module.exports) {
-    var mod = {};
-    mod.exports = {};
-    mod.client = mod.component = true;
-    module._resolving = true;
-    module.call(this, mod.exports, require.relative(resolved), mod);
-    delete module._resolving;
-    module.exports = mod.exports;
+  if (!module.exports) {
+    module.exports = {};
+    module.client = module.component = true;
+    module.call(this, module.exports, require.relative(resolved), module);
   }
 
   return module.exports;
@@ -205,7 +201,7 @@ module.exports = require('./dist/lodash.compat.js');
 require.register("lodash-lodash/dist/lodash.compat.js", function(exports, require, module){
 /**
  * @license
- * Lo-Dash 2.2.0 (Custom Build) <http://lodash.com/>
+ * Lo-Dash 2.2.1 (Custom Build) <http://lodash.com/>
  * Build: `lodash -o ./dist/lodash.compat.js`
  * Copyright 2012-2013 The Dojo Foundation <http://dojofoundation.org/>
  * Based on Underscore.js 1.5.2 <http://underscorejs.org/LICENSE>
@@ -792,8 +788,8 @@ require.register("lodash-lodash/dist/lodash.compat.js", function(exports, requir
     /*--------------------------------------------------------------------------*/
 
     /**
-     * Creates a `lodash` object which wraps the given value to enable method
-     * chaining.
+     * Creates a `lodash` object which wraps the given value to enable intuitive
+     * method chaining.
      *
      * In addition to Lo-Dash methods, wrappers also have the following `Array` methods:
      * `concat`, `join`, `pop`, `push`, `reverse`, `shift`, `slice`, `sort`, `splice`,
@@ -826,6 +822,8 @@ require.register("lodash-lodash/dist/lodash.compat.js", function(exports, requir
      *
      * The wrapper functions `first` and `last` return wrapped values when `n` is
      * provided, otherwise they return unwrapped values.
+     *
+     * Explicit chaining can be enabled by using the `_.chain` method.
      *
      * @name _
      * @constructor
@@ -6104,9 +6102,12 @@ require.register("lodash-lodash/dist/lodash.compat.js", function(exports, requir
 
             push.apply(args, arguments);
             var result = func.apply(object, args);
-            return (value && typeof value == 'object' && value === result)
-              ? this
-              : new ctor(result);
+            if (value && typeof value == 'object' && value === result) {
+              return this;
+            }
+            result = new ctor(result);
+            result.__chain__ = this.__chain__;
+            return result;
           };
         }
       });
@@ -6336,7 +6337,7 @@ require.register("lodash-lodash/dist/lodash.compat.js", function(exports, requir
       // and Laura Doktorova's doT.js
       // https://github.com/olado/doT
       var settings = lodash.templateSettings;
-      text || (text = '');
+      text = String(text || '');
 
       // avoid missing dependencies when `iteratorTemplate` is not defined
       options = defaults({}, options, settings);
@@ -6508,7 +6509,8 @@ require.register("lodash-lodash/dist/lodash.compat.js", function(exports, requir
     /*--------------------------------------------------------------------------*/
 
     /**
-     * Creates a `lodash` object that wraps the given value.
+     * Creates a `lodash` object that wraps the given value with explicit
+     * method chaining enabled.
      *
      * @static
      * @memberOf _
@@ -6524,9 +6526,10 @@ require.register("lodash-lodash/dist/lodash.compat.js", function(exports, requir
      * ];
      *
      * var youngest = _.chain(stooges)
-     *     .sortBy(function(stooge) { return stooge.age; })
+     *     .sortBy('age')
      *     .map(function(stooge) { return stooge.name + ' is ' + stooge.age; })
-     *     .first();
+     *     .first()
+     *     .value();
      * // => 'moe is 40'
      */
     function chain(value) {
@@ -6563,7 +6566,7 @@ require.register("lodash-lodash/dist/lodash.compat.js", function(exports, requir
     }
 
     /**
-     * Enables method chaining on the wrapper object.
+     * Enables explicit method chaining on the wrapper object.
      *
      * @name chain
      * @memberOf _
@@ -6571,11 +6574,21 @@ require.register("lodash-lodash/dist/lodash.compat.js", function(exports, requir
      * @returns {*} Returns the wrapper object.
      * @example
      *
-     * var sum = _([1, 2, 3])
-     *     .chain()
-     *     .reduce(function(sum, num) { return sum + num; })
-     *     .value()
-     * // => 6`
+     * var stooges = [
+     *   { 'name': 'moe', 'age': 40 },
+     *   { 'name': 'larry', 'age': 50 }
+     * ];
+     *
+     * // without explicit chaining
+     * _(stooges).first();
+     * // => { 'name': 'moe', 'age': 40 }
+     *
+     * // with explicit chaining
+     * _(stooges).chain()
+     *   .first()
+     *   .pick('age')
+     *   .value()
+     * // => { 'age': 40 }
      */
     function wrapperChain() {
       this.__chain__ = true;
@@ -6809,7 +6822,7 @@ require.register("lodash-lodash/dist/lodash.compat.js", function(exports, requir
      * @memberOf _
      * @type string
      */
-    lodash.VERSION = '2.2.0';
+    lodash.VERSION = '2.2.1';
 
     // add "Chaining" functions to the wrapper
     lodash.prototype.chain = wrapperChain;
@@ -28108,6 +28121,9 @@ validators = {
 };
 
 module.exports = function(cb) {
+  if (typeof window === 'undefined') {
+    config = null;
+  }
   if (config) {
     return cb(null, config);
   }
@@ -28115,16 +28131,9 @@ module.exports = function(cb) {
   if (!wait) {
     wait = true;
     return request.config(function(err, result) {
-      var field, k, v, validator;
-      if (err || !_.isObject(result)) {
-        config = {};
-      }
-      for (k in defaults) {
-        v = defaults[k];
-        if (config[k] == null) {
-          config[k] = v;
-        }
-      }
+      var field, validator, _results;
+      wait = false;
+      config = _.defaults(result || {}, defaults);
       if (config.size_label) {
         config.size_label = new RegExp(config.size_label);
       } else {
@@ -28138,9 +28147,11 @@ module.exports = function(cb) {
           }
         }
       }
-      return _.each(queue, function(cb) {
-        return cb(null, config);
-      });
+      _results = [];
+      while (queue.length) {
+        _results.push(queue.pop()(null, config));
+      }
+      return _results;
     });
   }
 };

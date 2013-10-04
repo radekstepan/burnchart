@@ -33,6 +33,8 @@ validators =
 
 # Get (& cache) configuration from the server.
 module.exports = (cb) ->
+    # Skip cache in node.
+    config = null if typeof window is 'undefined'
     # Have config?
     return cb null, config if config
     # Enqueue.
@@ -43,9 +45,12 @@ module.exports = (cb) ->
         wait = yes
         # Make the request.
         request.config (err, result) ->
+            # The wait is over.
+            wait = no
+
             # We do not strictly require config files.
-            config = _.defaults result, defaults
-            
+            config = _.defaults result or {}, defaults
+
             # RegExpify the size label?
             if config.size_label
                 config.size_label = new RegExp config.size_label
@@ -58,5 +63,4 @@ module.exports = (cb) ->
                     return cb "Config field `#{field}` misconfigured"
 
             # Call back for each enqueued.
-            _.each queue, (cb) ->
-                cb null, config
+            ( queue.pop() null, config while queue.length )
