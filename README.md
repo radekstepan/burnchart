@@ -74,7 +74,7 @@ Use this strategy if you do not wish for your token to be publicly visible. Prox
 Make sure you have [CoffeeScript](http://coffeescript.org/) installed:
 
 ```bash
-$ npm install coffeescript -g
+$ npm install coffee-script -g
 ```
 
 Then start the proxy passing port number as an argument:
