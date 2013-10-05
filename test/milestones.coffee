@@ -20,7 +20,7 @@ module.exports =
                 }
             ]
 
-        milestones.get_current {}, (err, warn, milestone) ->
+        milestones {}, (err, warn, milestone) ->
             assert.ifError err
             assert.equal milestone.number, 1
             do done
@@ -35,7 +35,7 @@ module.exports =
                 }
             ]
 
-        milestones.get_current {}, (err, warn, milestone) ->
+        milestones {}, (err, warn, milestone) ->
             assert.ifError err
             assert.equal milestone.number, 1
             do done
@@ -61,7 +61,7 @@ module.exports =
                 }
             ]
 
-        milestones.get_current {}, (err, warn, milestone) ->
+        milestones {}, (err, warn, milestone) ->
             assert.ifError err
             assert.equal milestone.number, 2
             do done
@@ -86,7 +86,7 @@ module.exports =
                 }
             ]
 
-        milestones.get_current {}, (err, warn, milestone) ->
+        milestones {}, (err, warn, milestone) ->
             assert.ifError err
             assert.equal milestone.number, 1
             do done
@@ -95,16 +95,16 @@ module.exports =
         req.all_milestones = (opts, cb) ->
             cb null, []
 
-        milestones.get_current { 'path': 'some/repo' }, (err, warn, milestone) ->
+        milestones { 'path': 'some/repo' }, (err, warn, milestone) ->
             assert.ifError err
             assert.equal warn, 'No open milestones for repo some/repo'
             do done
 
     'milestones - get current when not found': (done) ->
         req.all_milestones = (opts, cb) ->
-            cb null, { 'message': 'Not Found' }
+            cb 'Not Found'
 
-        milestones.get_current {}, (err, warn, milestone) ->
+        milestones {}, (err, warn, milestone) ->
             assert.equal err, 'Not Found'
             do done
 
@@ -121,9 +121,48 @@ module.exports =
                 }
             ]
 
-        milestones.get_current {}, (err, warn, milestone) ->
+        milestones {}, (err, warn, milestone) ->
             assert.ifError err
-            assert.equal warn, 'No issues for milestone No issues'
+            assert.equal warn, 'No issues for milestone `No issues`'
+            do done
+
+    'milestones - get one': (done) ->
+        m =
+            'number': 1
+            'created_at': '2013-01-01T00:00:00Z'
+            'due_on': '2013-02-01T00:00:00Z'
+
+        req.one_milestone = (opts, number, cb) ->
+            cb null, m
+
+        milestones { 'milestone': 1 }, (err, warn, milestone) ->
+            assert.ifError err
+            assert.equal warn, null
+            assert.deepEqual milestone, m
+            do done
+
+    'milestones - get one (404)': (done) ->
+        req.one_milestone = (opts, number, cb) ->
+            cb 'Not Found'
+
+        milestones { 'milestone': 9 }, (err, warn, milestone) ->
+            assert.equal err, 'Not Found'
+            do done
+
+    'milestones - get one when no issues': (done) ->
+        req.one_milestone = (opts, number, cb) ->
+            cb null, {
+                'title': 'No issues'
+                'number': 1
+                'created_at': '2013-01-01T00:00:00Z'
+                'due_on': '2013-02-01T00:00:00Z',
+                'open_issues': 0,
+                'closed_issues': 0
+            }
+
+        milestones { 'milestone': 9 }, (err, warn, milestone) ->
+            assert.ifError err
+            assert.equal warn, 'No issues for milestone `No issues`'
             do done
 
     'milestones - has description': (done) ->
@@ -139,7 +178,7 @@ module.exports =
                 }
             ]
 
-        milestones.get_current {}, (err, warn, milestone) ->
+        milestones {}, (err, warn, milestone) ->
             assert.ifError err
             assert.equal milestone.description, 'A description of this <strong>milestone</strong> goes <em>here</em>'
             do done

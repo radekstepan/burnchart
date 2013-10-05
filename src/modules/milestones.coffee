@@ -4,15 +4,31 @@ marked = require 'marked'
 
 request = require './request'
 
-module.exports =
-
-    # Get current milestones for a repo..
-    'get_current': (repo, cb) ->
-        request.all_milestones repo, (err, data) ->
-            # Request errors?
+# Get current/specified milestone for a repo.
+module.exports = (repo, cb) ->
+    # Has description? Parse GFM.
+    parse = (data) ->
+        data.description = marked(data.description)[3...-5] if data.description
+        data
+    
+    # Get a specific milestone.
+    if repo.milestone
+        request.one_milestone repo, repo.milestone, (err, m) ->
+            # Errors?
             return cb err if err
-            # GitHub errors?
-            return cb data.message if data.message
+            # Empty milestone?
+            if m.open_issues + m.closed_issues is 0
+                return cb null, "No issues for milestone `#{m.title}`"
+            # Parse GFM.
+            m = parse m
+
+            cb null, null, m
+
+    # Get the current milestone out of many.
+    else
+        request.all_milestones repo, (err, data) ->
+            # Errors?
+            return cb err if err
             # Empty warning?
             return cb null, "No open milestones for repo #{repo.path}" unless data.length
             # The first milestone should be ending soonest.
@@ -22,8 +38,9 @@ module.exports =
             # The first milestone should be ending soonest. Prefer milestones with due dates.
             m = if m[0] then m[0] else data[0]
             # Empty milestone?
-            return cb null, "No issues for milestone #{m.title}" if m.open_issues + m.closed_issues is 0
-            # Has description? Parse GFM.
-            m.description = marked(m.description)[3...-5] if m.description
+            if m.open_issues + m.closed_issues is 0
+                return cb null, "No issues for milestone `#{m.title}`"
+            # Parse GFM.
+            m = parse m
 
             cb null, null, m

@@ -11,9 +11,9 @@ render     = require './render'
 # Setup a repo and render it.
 module.exports = (opts, cb) ->
 
-    # Get the current milestone.
+    # Get the current/specified milestone.
     async.waterfall [ (cb) ->
-        milestones.get_current opts, (err, warn, milestone) ->
+        milestones opts, (err, warn, milestone) ->
             return cb err if err
             return cb warn if warn
             opts.milestone = milestone

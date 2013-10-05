@@ -11,17 +11,21 @@ repo   = require './modules/repo'
 route = ->
     # Do we have a location match?
     if match = window.location.hash.match regex.location
-        # Get the user/repo pair then.
-        path = match[1..3].join('/')
+        # User/repo/(milestone) path
+        path = match[1][1...]
 
         # Say we are loading this repo then.
         render 'body', 'loading', { path }
+
+        # Did we specify a milestone?
+        [ u, r, m ] = path.split('/')
+        opts = if m then { 'path': "#{u}/#{r}", 'milestone': m } else { path }
 
         # Get config/cache.
         return async.waterfall [ config
         # Render this repo.
         , (conf, cb) ->
-            repo _.extend({ path }, conf), cb
+            repo _.extend(opts, conf), cb
         ], (err) ->
             render 'body', 'error', { 'text': err.toString() } if err
 

@@ -29098,17 +29098,22 @@ render = require('./modules/render');
 repo = require('./modules/repo');
 
 route = function() {
-  var match, path;
+  var m, match, opts, path, r, u, _ref;
   if (match = window.location.hash.match(regex.location)) {
-    path = match.slice(1, 4).join('/');
+    path = match[1].slice(1);
     render('body', 'loading', {
       path: path
     });
+    _ref = path.split('/'), u = _ref[0], r = _ref[1], m = _ref[2];
+    opts = m ? {
+      'path': "" + u + "/" + r,
+      'milestone': m
+    } : {
+      path: path
+    };
     return async.waterfall([
       config, function(conf, cb) {
-        return repo(_.extend({
-          path: path
-        }, conf), cb);
+        return repo(_.extend(opts, conf), cb);
       }
     ], function(err) {
       if (err) {
@@ -29446,9 +29451,6 @@ module.exports = {
           if (err) {
             return cb(err);
           }
-          if (data.message) {
-            return cb(data.message);
-          }
           if (!data.length) {
             return cb(null, results);
           }
@@ -29518,15 +29520,30 @@ marked = require('marked');
 
 request = require('./request');
 
-module.exports = {
-  'get_current': function(repo, cb) {
+module.exports = function(repo, cb) {
+  var parse;
+  parse = function(data) {
+    if (data.description) {
+      data.description = marked(data.description).slice(3, -5);
+    }
+    return data;
+  };
+  if (repo.milestone) {
+    return request.one_milestone(repo, repo.milestone, function(err, m) {
+      if (err) {
+        return cb(err);
+      }
+      if (m.open_issues + m.closed_issues === 0) {
+        return cb(null, "No issues for milestone `" + m.title + "`");
+      }
+      m = parse(m);
+      return cb(null, null, m);
+    });
+  } else {
     return request.all_milestones(repo, function(err, data) {
       var m;
       if (err) {
         return cb(err);
-      }
-      if (data.message) {
-        return cb(data.message);
       }
       if (!data.length) {
         return cb(null, "No open milestones for repo " + repo.path);
@@ -29537,11 +29554,9 @@ module.exports = {
       });
       m = m[0] ? m[0] : data[0];
       if (m.open_issues + m.closed_issues === 0) {
-        return cb(null, "No issues for milestone " + m.title);
+        return cb(null, "No issues for milestone `" + m.title + "`");
       }
-      if (m.description) {
-        m.description = marked(m.description).slice(3, -5);
-      }
+      m = parse(m);
       return cb(null, null, m);
     });
   }
@@ -29552,7 +29567,7 @@ require.register("app/modules/regex.js", function(exports, require, module){
 module.exports = {
   'datetime': /^(\d{4}-\d{2}-\d{2})T(.*)/,
   'size_label': /^size (\d+)$/,
-  'location': /^#!\/([^\/]+)\/([^\/]+)$/
+  'location': /^#!((\/[^\/]+){2,3})$/
 };
 
 });
@@ -29585,6 +29600,15 @@ module.exports = {
     };
     return request(repo, query, 'milestones', cb);
   },
+  'one_milestone': function(repo, number, cb) {
+    var query;
+    query = {
+      'state': 'open',
+      'sort': 'due_date',
+      'direction': 'asc'
+    };
+    return request(repo, query, "milestones/" + number, cb);
+  },
   'all_issues': function(repo, query, cb) {
     _.extend(query, {
       'per_page': '100'
@@ -29616,10 +29640,14 @@ request = function(_arg, query, noun, cb) {
 };
 
 respond = function(data, cb) {
+  var _ref;
   if (data.statusType !== 2) {
+    if ((data != null ? (_ref = data.body) != null ? _ref.message : void 0 : void 0) != null) {
+      return cb(data.body.message);
+    }
     return cb(data.error.message);
   }
-  return cb(null, data != null ? data.body : void 0);
+  return cb(null, data.body);
 };
 
 });
@@ -29654,7 +29682,7 @@ render = require('./render');
 module.exports = function(opts, cb) {
   return async.waterfall([
     function(cb) {
-      return milestones.get_current(opts, function(err, warn, milestone) {
+      return milestones(opts, function(err, warn, milestone) {
         if (err) {
           return cb(err);
         }
@@ -29877,7 +29905,7 @@ module.exports = function(__obj) {
   }
   (function() {
     (function() {
-      __out.push('<div class="box info">\n    <h2>GitHub Burndown Chart</h2>\n    <p>Use your browser\'s location hash to specify a repo: <a href="#!/radekstepan/disposable">#!/radekstepan/disposable</a>.</p>\n</div>');
+      __out.push('<div class="box info">\n    <h2>GitHub Burndown Chart</h2>\n    <p>Use your browser\'s location hash to specify a <strong>repo</strong>: <a href="#!/radekstepan/disposable">#!/radekstepan/disposable</a>.</p>\n    <p>You can choose a specific <strong>milestone</strong> like so: <a href="#!/radekstepan/disposable/1">#!/radekstepan/disposable/1</a>.</p>\n</div>');
     
     }).call(this);
     

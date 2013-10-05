@@ -4,5 +4,5 @@ module.exports =
     'datetime': /^(\d{4}-\d{2}-\d{2})T(.*)/
     # How does a size label look like?
     'size_label': /^size (\d+)$/
-    # How do we specify which user/repo we want?
-    'location': /^#!\/([^\/]+)\/([^\/]+)$/
+    # How do we specify which user/repo/(milestone) we want?
+    'location': /^#!((\/[^\/]+){2,3})$/

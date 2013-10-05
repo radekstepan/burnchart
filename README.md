@@ -12,6 +12,7 @@ Displays a burndown chart from a set of GitHub issues in the current milestone.
 1. Private repos; use your GitHub API Token hiding it from public view if need be.
 1. Off days; specify which days of the week to leave out from ideal burndown progression line.
 1. Trend line; to see if you can make it to the deadline at this pace.
+1. Multiple milestones; watch multiple milestones per repo, e.g. when using them for tracking epics.
 
 ![image](https://raw.github.com/radekstepan/github-burndown-chart/master/example.png)
 

@@ -20,10 +20,8 @@ module.exports =
                     state
                     page
                 }, (err, data) ->
-                    # Request errors.
+                    # Errors?
                     return cb err if err
-                    # GitHub errors.
-                    return cb data.message if data.message
                     # Empty?
                     return cb null, results unless data.length
                     # Concat sorted (API does not sort on closed_at!).

@@ -17,6 +17,11 @@ module.exports =
         query = { 'state': 'open', 'sort': 'due_date', 'direction': 'asc' }
         request repo, query, 'milestones', cb
     
+    # Get one milestone.
+    'one_milestone': (repo, number, cb) ->
+        query = { 'state': 'open', 'sort': 'due_date', 'direction': 'asc' }
+        request repo, query, "milestones/#{number}", cb
+
     # Get all issues for a state.
     'all_issues': (repo, query, cb) ->
         _.extend query, { 'per_page': '100' }
@@ -51,6 +56,10 @@ request = ({ protocol, host, token, path }, query, noun, cb) ->
 # How do we respond to a response?
 respond = (data, cb) ->
     # 2xx?
-    return cb data.error.message if data.statusType isnt 2
+    if data.statusType isnt 2
+        # Do we have a message from GitHub?
+        return cb data.body.message if data?.body?.message?
+        # Use SA one.
+        return cb data.error.message
     # All good.
-    cb null, data?.body
+    cb null, data.body

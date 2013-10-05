@@ -140,7 +140,7 @@ module.exports =
         called = 0
         req.all_issues = (repo, opts, cb) ->
             called += 1
-            cb null, { 'message': 'Not Found' }
+            cb 'Not Found'
 
         issues.get_all repo, (err, [ open, closed ]) ->
             assert.equal err, 'Not Found'
