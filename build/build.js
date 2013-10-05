@@ -29814,11 +29814,11 @@ module.exports = function(__obj) {
     (function() {
       __out.push('<div class="box">\n    <h1>');
     
-      __out.push(this.repo);
+      __out.push(this.milestone.title);
     
       __out.push('@');
     
-      __out.push(this.milestone.title);
+      __out.push(this.repo);
     
       __out.push('</h1>\n    ');
     

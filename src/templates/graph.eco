@@ -1,5 +1,5 @@
 <div class="box">
-    <h1><%- @repo %>@<%- @milestone.title %></h1>
+    <h1><%- @milestone.title %>@<%- @repo %></h1>
     <% if @milestone.description: %>
         <p class="description"><%- @milestone.description %></p>
     <% end %>
