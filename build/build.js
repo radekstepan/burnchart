@@ -29552,7 +29552,7 @@ require.register("app/modules/regex.js", function(exports, require, module){
 module.exports = {
   'datetime': /^(\d{4}-\d{2}-\d{2})T(.*)/,
   'size_label': /^size (\d+)$/,
-  'location': /^#!\/(.+)\/(.+)$/
+  'location': /^#!\/([^\/]+)\/([^\/]+)$/
 };
 
 });

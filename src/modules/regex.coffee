@@ -5,4 +5,4 @@ module.exports =
     # How does a size label look like?
     'size_label': /^size (\d+)$/
     # How do we specify which user/repo we want?
-    'location': /^#!\/(.+)\/(.+)$/
+    'location': /^#!\/([^\/]+)\/([^\/]+)$/
