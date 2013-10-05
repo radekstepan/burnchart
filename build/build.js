@@ -29333,14 +29333,16 @@ module.exports = {
     fn = function(x) {
       return slope * x + intercept;
     };
-    a = +new Date(created_at) - start;
-    b = +new Date(due_on) - start;
+    created_at = new Date(created_at);
+    due_on = due_on ? new Date(due_on) : new Date();
+    a = created_at - start;
+    b = due_on - start;
     return [
       {
-        date: new Date(created_at),
+        date: created_at,
         points: fn(a)
       }, {
-        date: new Date(due_on),
+        date: due_on,
         points: fn(b)
       }
     ];
@@ -29508,7 +29510,9 @@ module.exports = {
 
 });
 require.register("app/modules/milestones.js", function(exports, require, module){
-var marked, request;
+var marked, request, _;
+
+_ = require('lodash')._;
 
 marked = require('marked');
 
@@ -29528,6 +29532,10 @@ module.exports = {
         return cb(null, "No open milestones for repo " + repo.path);
       }
       m = data[0];
+      m = _.rest(data, {
+        'due_on': null
+      });
+      m = m[0] ? m[0] : data[0];
       if (m.open_issues + m.closed_issues === 0) {
         return cb(null, "No issues for milestone " + m.title);
       }

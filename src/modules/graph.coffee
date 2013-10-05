@@ -101,15 +101,20 @@ module.exports =
         intercept = (e - (slope * b1)) / l
         fn = (x) -> slope * x + intercept
 
-        a = +new Date(created_at) - start
-        b = +new Date(due_on) - start
+        # Milestone always has a creation date.
+        created_at = new Date created_at
+        # Due date can be empty.
+        due_on = if due_on then new Date(due_on) else new Date()
+
+        a = created_at - start
+        b = due_on - start
 
         [
             {
-                date: new Date(created_at)
+                date: created_at
                 points: fn(a)
             }, {
-                date: new Date(due_on)
+                date: due_on
                 points: fn(b)
             }
         ]
