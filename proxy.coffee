@@ -20,7 +20,8 @@ proxy = (req, res, next) ->
     # Config?
     if req.url is '/config.json'
         # Refer to us like so.
-        scrubbed.host = req.headers.host
+        # Prefer custom header x-forwarded-host if defined.
+        scrubbed.host = req.headers['x-forwarded-host'] or req.headers.host
         return write 200, JSON.stringify scrubbed, null, 4
 
     # API request?
