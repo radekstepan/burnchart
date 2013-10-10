@@ -45,9 +45,14 @@ module.exports =
                 { labels, number } = issue
                 number ?= '?'
                 return false unless labels
-                switch ( {} for { name } in labels when name and regex.test(name) ).length
+                # Find size labels only
+                size_labels = _.filter(labels, (label) ->
+                    regex.test label.name
+                )
+                switch size_labels.length
                     when 0 then false
                     when 1
+                        name = size_labels[0].name
                         # Provide the size attribute on the issue.
                         total += issue.size = parseInt name.match(regex)[1]
                         true
