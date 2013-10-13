@@ -46,6 +46,8 @@ The way we are getting a size of an issue from GitHub is by putting a label on i
 
 This is also the default label if no other is specified.
 
+When multiple matching size labels are present on an issue, their **sum** is taken as the size of the whole issue. This allows you to mix & match (if you want) without creating too many labels in the GitHub interface.
+
 ###Token
 
 Your OAuth2 token from GitHub. Get it [here](https://github.com/settings/applications). Bear in mind that if you just statically serve the app, everybody will be able to see the token in transmission. If you would like to avoid that, use the [Proxy Mode](#proxy-mode).

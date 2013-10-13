@@ -149,41 +149,42 @@ module.exports =
 
     'issues - filter on existing label regex': (done) ->
         issues.filter [ { labels: [ { name: 'size 15' } ] } ]
-        , regex.size_label, (err, warn, data) ->
+        , regex.size_label, (err, data) ->
             assert.ifError err
-            assert.ifError warn
             assert.equal data.length, 1
             assert.equal data[0].size, 15
             do done
 
     'issues - filter when no labels': (done) ->
         issues.filter [ { } ]
-        , regex.size_label, (err, warn, data) ->
+        , regex.size_label, (err, data) ->
             assert.ifError err
-            assert.ifError warn
             assert.equal data.length, 0
             do done
 
     'issues - filter when empty labels': (done) ->
         issues.filter [ { labels: [] } ]
-        , regex.size_label, (err, warn, data) ->
+        , regex.size_label, (err, data) ->
             assert.ifError err
-            assert.ifError warn
             assert.equal data.length, 0
             do done
 
     'issues - filter when not matching regex': (done) ->
         issues.filter [ { labels: [ { name: 'size 1A' } ] } ]
-        , regex.size_label, (err, warn, data) ->
+        , regex.size_label, (err, data) ->
             assert.ifError err
-            assert.ifError warn
             assert.equal data.length, 0
             do done
 
     'issues - filter when multiple match the regex': (done) ->
-        issues.filter [ { labels: [ { name: 'size 1' }, { name: 'size 6' } ] } ]
-        , regex.size_label, (err, warn, data) ->
+        issues.filter [
+            { labels: [ { name: 'size 1' }, { name: 'size 6' } ] }
+            { labels: [ { name: 'size really big' }, { name: 'size 4' } ] }
+        ]
+        , regex.size_label, (err, data) ->
             assert.ifError err
-            assert.equal warn.length, 1
-            assert.equal data.length, 1
+            assert.equal data.length, 2
+            [ a, b ] = data
+            assert.equal a.size, 7
+            assert.equal b.size, 4
             do done

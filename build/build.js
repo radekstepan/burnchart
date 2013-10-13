@@ -29465,48 +29465,24 @@ module.exports = {
     return async.parallel([_.partial(one_status, 'open'), _.partial(one_status, 'closed')], cb);
   },
   'filter': function(collection, regex, cb) {
-    var err, filtered, total, warnings;
-    warnings = null;
+    var filtered, total;
     total = 0;
-    try {
-      filtered = _.filter(collection, function(issue) {
-        var labels, name, number;
-        labels = issue.labels, number = issue.number;
-        if (number == null) {
-          number = '?';
+    filtered = _.filter(collection, function(issue) {
+      var labels;
+      if (!(labels = issue.labels)) {
+        return false;
+      }
+      issue.size = _.reduce(labels, function(sum, label) {
+        var matches;
+        if (!(matches = label.name.match(regex))) {
+          return sum;
         }
-        if (!labels) {
-          return false;
-        }
-        switch (((function() {
-              var _i, _len, _results;
-              _results = [];
-              for (_i = 0, _len = labels.length; _i < _len; _i++) {
-                name = labels[_i].name;
-                if (name && regex.test(name)) {
-                  _results.push({});
-                }
-              }
-              return _results;
-            })()).length) {
-          case 0:
-            return false;
-          case 1:
-            total += issue.size = parseInt(name.match(regex)[1]);
-            return true;
-          default:
-            if (warnings == null) {
-              warnings = [];
-            }
-            warnings.push("Issue #" + number + " has multiple matching size labels");
-            return true;
-        }
-      });
-      return cb(null, warnings, filtered, total);
-    } catch (_error) {
-      err = _error;
-      return cb(err, warnings);
-    }
+        return sum += parseInt(matches[1]);
+      }, 0);
+      total += issue.size;
+      return !!issue.size;
+    });
+    return cb(null, filtered, total);
   }
 };
 
