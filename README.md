@@ -99,6 +99,16 @@ $ npm install apps-b-builder -g
 $ apps-b build ./src/ ./build/
 ```
 
+##Publish It
+
+If you would like to track changes to build files in `gh-pages` branch, execute the following command:
+
+```bash
+$ make publish
+```
+
+It will checkout the `gh-pages` branch, copy the two build files from master and provided we have changed them locally, make a commit a push them to remote.
+
 ##Test It
 
 ```bash
