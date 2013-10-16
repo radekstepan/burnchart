@@ -26,7 +26,7 @@ module.exports = (opts, cb) ->
     # Filter them to labeled ones.
     (all, cb) ->
         async.map all, (array, cb) ->
-            issues.filter array, opts.size_label, (err, warn, filtered, total) ->
+            issues.filter array, opts.size_label, (err, filtered, total) ->
                 cb err, [ filtered, total ]
         , (err, [ open, closed ]) ->
             return cb err if err
