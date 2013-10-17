@@ -12,7 +12,10 @@
         "component/aurora-tip": "*",
         "component/marked": "*"
     },
-    "scripts": [
+    "styles": [
+        "styles/fonts.css"
+    ],
+    "apps-b": [
         "app.coffee",
         
         "modules/config.coffee",
@@ -29,10 +32,8 @@
         "templates/info.eco",
         "templates/label.eco",
         "templates/loading.eco",
-        "templates/progress.eco"
-    ],
-    "styles": [
-        "styles/fonts.css",
+        "templates/progress.eco",
+
         "styles/app.styl"
     ]
 }

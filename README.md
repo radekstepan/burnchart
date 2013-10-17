@@ -95,8 +95,8 @@ If you would like to run your own build for a custom version of the app, use the
 In short:
 
 ```bash
-$ npm install apps-b-builder -g
-$ apps-b build ./src/ ./build/
+$ npm install -d
+$ make build
 ```
 
 ##Publish It

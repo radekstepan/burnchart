@@ -1,6 +1,9 @@
 test:
 	./node_modules/.bin/mocha --compilers coffee:coffee-script --reporter spec --ui exports --bail
 
+build:
+	./node_modules/.bin/apps-b ./src/ ./build/
+
 publish:
 	git checkout gh-pages
 	git show master:build/build.js > build.js
@@ -13,4 +16,4 @@ publish:
 	fi
 	git checkout master
 
-.PHONY: test
+.PHONY: build test

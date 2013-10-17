@@ -15,7 +15,8 @@
     },
     "devDependencies": {
         "mocha": "~1.12.0",
-        "marked": "~0.2.9"
+        "marked": "~0.2.9",
+        "apps-b-builder": "~0.4.0"
     },
     "scripts": {
         "test": "make test"
