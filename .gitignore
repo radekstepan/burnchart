@@ -3,3 +3,5 @@ node_modules/
 *.log
 src/components/
 config.json
+vendor/
+.build_cache~

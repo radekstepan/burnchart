@@ -4,12 +4,12 @@
     <meta charset="utf-8">
     <title>GitHub Burndown Chart</title>
     
-    <link href="build.css" media="all" rel="stylesheet" type="text/css" />
-    <script src="build.js"></script>
+    <link href="app.bundle.min.css" media="all" rel="stylesheet" type="text/css" />
+    <script src="app.bundle.min.js"></script>
     <script>
     document.onreadystatechange = function() {
         if (document.readyState == "complete") {
-            require('app').call(null);
+            require('ghbc').call(null);
         }
     };
     </script>

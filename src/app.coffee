@@ -1,7 +1,4 @@
 #!/usr/bin/env coffee
-async    = require 'async'
-{ _ }    = require 'lodash'
-
 config = require './modules/config'
 regex  = require './modules/regex'
 render = require './modules/render'

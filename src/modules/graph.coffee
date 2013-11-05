@@ -1,9 +1,7 @@
 #!/usr/bin/env coffee
-{ _ } = require 'lodash'
-d3    = require 'd3'
-Tip   = require 'tip'
+{ _, d3  } = require './require'
 
-reg   = require './regex'
+reg = require './regex'
 
 module.exports =
     
@@ -219,7 +217,10 @@ module.exports =
         .attr("d", line.interpolate("linear").y( (d) -> y(d.points) )(actual))
 
         # Collect the tooltip here.
-        tooltip = null
+        tooltip = d3.tip().attr('class', 'd3-tip').html ({ number, title }) ->
+            "##{number}: #{title}"
+
+        svg.call(tooltip)
 
         # Show when we closed an issue.
         svg.selectAll("a.issue")
@@ -234,19 +235,7 @@ module.exports =
         .attr("cx", ({ date }) -> x date )
         .attr("cy", ({ points }) -> y points )
         .attr("r",  ({ radius }) -> 5 ) # fixed for now
-        .on('mouseover', ({ date, points, title, number }) ->
-            # Pass a title string.
-            tooltip = new Tip "##{number}: #{title}"
-            # Absolutely position the div.
-            div = document.querySelector '#tooltip'
-            div.style.left = x(date) + margin.left + 'px'
-            div.style.top = -10 + y(points) + margin.top + 'px'
-            # And now show us on the div.
-            tooltip.show '#tooltip'
-        )
-        .on('mouseout', (d) ->
-            # Hide after a time has passed if exists.
-            tooltip?.hide(200)
-        )
+        .on('mouseover', tooltip.show)
+        .on('mouseout', tooltip.hide)
 
         cb null

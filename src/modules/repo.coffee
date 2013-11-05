@@ -1,6 +1,5 @@
 #!/usr/bin/env coffee
-{ _ }      = require 'lodash'
-async      = require 'async'
+{ _, async  } = require './require'
 
 milestones = require './milestones'
 issues     = require './issues'

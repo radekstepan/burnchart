@@ -1,13 +1,22 @@
-test:
-	./node_modules/.bin/mocha --compilers coffee:coffee-script --reporter spec --ui exports --bail
+install:
+	npm install
+	bower install
 
 build:
-	./node_modules/.bin/apps-b ./src/ ./build/
+	grunt
+
+minify:
+	grunt minify
+
+watch:
+	watch --color -n 1 make build
 
 publish:
+	build
+	minify
 	git checkout gh-pages
-	git show master:build/build.js > build.js
-	git show master:build/build.css > build.css
+	git show master:build/app.bundle.min.js > app.bundle.min.js
+	git show master:build/app.bundle.min.css > app.bundle.min.css
 	git add .
 	@status=$$(git status --porcelain); \
 	if ! test "x$${status}" = x; then \
@@ -15,5 +24,8 @@ publish:
 		git push -u origin gh-pages; \
 	fi
 	git checkout master
+
+test:
+	./node_modules/.bin/mocha --compilers coffee:coffee-script --reporter spec --ui exports --bail
 
 .PHONY: build test

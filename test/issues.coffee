@@ -9,6 +9,12 @@ regex = require path.resolve(__dirname, '../src/modules/regex.coffee')
 
 issues = proxy path.resolve(__dirname, '../src/modules/issues.coffee'),
     './request': req
+    './require':
+        '_': require 'lodash'
+        'superagent': null
+        'd3': null
+        'async': require 'async'
+        'marked': null
 
 repo = { 'milestone': { 'number': no } }
 

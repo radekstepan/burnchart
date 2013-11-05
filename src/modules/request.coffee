@@ -1,9 +1,8 @@
 #!/usr/bin/env coffee
-sa    = require 'superagent'
-{ _ } = require 'lodash'
+{ superagent, _  } = require './require'
 
 # Custom JSON parser.
-sa.parse =
+superagent.parse =
     'application/json': (res) ->
         try
             JSON.parse res
@@ -29,7 +28,7 @@ module.exports =
 
     # Get config from our host always.
     'config': (cb) ->
-        sa
+        superagent
         .get("http://#{window.location.host + window.location.pathname}config.json")
         .set('Content-Type', 'application/json')
         .end _.partialRight respond, cb
@@ -39,7 +38,7 @@ request = ({ protocol, host, token, path }, query, noun, cb) ->
     # Make the query params.
     q = ( "#{k}=#{v}" for k, v of query ).join('&')
 
-    req = sa
+    req = superagent
     # The URI.
     .get("#{protocol}://#{host}/repos/#{path}/#{noun}?#{q}")
     # The content type.

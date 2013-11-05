@@ -1,5 +1,5 @@
 #!/usr/bin/env coffee
-{ _ } = require 'lodash'
+{ _ } = require './require'
 
 request = require './request'
 regex   = require './regex'

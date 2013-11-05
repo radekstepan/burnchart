@@ -1,6 +1,5 @@
 #!/usr/bin/env coffee
-{ _ }  = require 'lodash'
-marked = require 'marked'
+{ _, marked  } = require './require'
 
 request = require './request'
 

@@ -1,0 +1,13 @@
+{
+    "name": "github-burndown-chart",
+    "version": "1.0.0-alpha",
+    "dependencies": {
+        "lodash": null,
+        "async": null,
+        "d3": null,
+        "d3-tip": null,
+        "superagent": null,
+        "normalize-css": null,
+        "marked": null
+    }
+}

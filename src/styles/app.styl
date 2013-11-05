@@ -1,3 +1,5 @@
+@import 'nib'
+
 // color definitions
 $closed = #4DAF7C
 $opened = #E55F3A
@@ -137,6 +139,27 @@ h2
 
             path
                 display: none
+
+// tooltips
+.d3-tip
+    margin-top: -10px
+    font-size: 11px
+    padding: 8px 10px 7px 10px
+    text-align: center
+    background: rgba(0,0,0,0.75)
+    color: #fff
+    border-radius: 3px
+
+    &:after
+        width: 100%
+        color: rgba(0,0,0,0.8)
+        content: "\25BC"
+        position: absolute
+
+    &.n:after
+        margin: -3px 0 0 0
+        top: 100%
+        left: 0
 
 // progression graph
 #progress

@@ -90,14 +90,14 @@ Visit the port in question in the browser and continue as before.
 
 ##Build It
 
-If you would like to run your own build for a custom version of the app, use the [Apps/B Builder](https://github.com/intermine/apps-b-builder).
-
-In short:
+If you would like to build a custom version of your app, edit the `Gruntfile.coffee` and run the following:
 
 ```bash
-$ npm install -d
-$ make build
+$ make install
+$ make build
 ```
+
+We are using the [Bower](http://bower.io/) package manager and [Grunt](http://gruntjs.com/) task runner.
 
 ##Publish It
 

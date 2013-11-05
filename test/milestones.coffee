@@ -7,6 +7,12 @@ req = {}
 
 milestones = proxy path.resolve(__dirname, '../src/modules/milestones.coffee'),
     './request': req
+    './require':
+        '_': require 'lodash'
+        'superagent': null
+        'd3': null
+        'async': null
+        'marked': require 'marked'
 
 module.exports =
 
@@ -166,8 +172,6 @@ module.exports =
             do done
 
     'milestones - has description': (done) ->
-        marked = require 'marked'
-
         req.all_milestones = (opts, cb) ->
             cb null, [
                 {

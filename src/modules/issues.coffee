@@ -1,9 +1,8 @@
 #!/usr/bin/env coffee
-{ _ } = require 'lodash'
-async = require 'async'
+{ _, async  } = require './require'
 
-req   = require './request'
-reg   = require './regex'
+req = require './request'
+reg = require './regex'
 
 module.exports =
 

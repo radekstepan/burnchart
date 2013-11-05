@@ -7,6 +7,12 @@ req = {}
 
 config = proxy path.resolve(__dirname, '../src/modules/config.coffee'),
     './request': req
+    './require':
+        '_': require 'lodash'
+        'superagent': null
+        'd3': null
+        'async': null
+        'marked': null
 
 { size_label } = require path.resolve __dirname, '../src/modules/regex.coffee'
 

@@ -10,7 +10,12 @@ class Superagent
     end: (cb) -> cb @response
 
 request = proxy path.resolve(__dirname, '../src/modules/request.coffee'),
-    'superagent': sa = new Superagent()
+    './require':
+        '_': require 'lodash'
+        'superagent': sa = new Superagent()
+        'd3': null
+        'async': null
+        'marked': null
 
 module.exports =
 
