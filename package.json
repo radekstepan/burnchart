@@ -18,7 +18,7 @@
         "marked": "~0.2.9",
         
         "grunt": "~0.4.1",
-        "grunt-apps-c": "0.1.6",
+        "grunt-apps-c": "0.1.7",
         "grunt-contrib-stylus": "~0.9.0",
         "grunt-contrib-concat": "~0.3.0",
         "grunt-contrib-uglify": "~0.2.5",
