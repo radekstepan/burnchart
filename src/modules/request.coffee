@@ -44,7 +44,7 @@ request = ({ protocol, host, token, path }, query, noun, cb) ->
     # The content type.
     .set('Content-Type', 'application/json')
     # The media type.
-    .set('Accept', 'application/vnd.github.raw')
+    .set('Accept', 'application/vnd.github.v3')
     
     # Auth token?
     req = req.set('Authorization', "token #{token}") if token

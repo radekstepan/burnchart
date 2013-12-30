@@ -10,7 +10,7 @@
     var resolved = require.resolve(path);
 
     // lookup failed
-    if (null == resolved) {
+    if (null === resolved) {
       orig = orig || path;
       parent = parent || 'root';
       var err = new Error('Failed to require "' + orig + '" from "' + parent + '"');
@@ -36,7 +36,7 @@
     }
 
     return module.exports;
-  }
+  };
 
   /**
    * Registered modules.
@@ -76,7 +76,7 @@
     ];
 
     for (var i = 0; i < paths.length; i++) {
-      var path = paths[i];
+      path = paths[i];
       if (require.modules.hasOwnProperty(path)) return path;
       if (require.aliases.hasOwnProperty(path)) return require.aliases[path];
     }
@@ -102,7 +102,7 @@
     for (var i = 0; i < path.length; ++i) {
       if ('..' == path[i]) {
         curr.pop();
-      } else if ('.' != path[i] && '' != path[i]) {
+      } else if ('.' !== path[i] && '' !== path[i]) {
         segs.push(path[i]);
       }
     }
@@ -167,7 +167,7 @@
     var localRequire = function(path) {
       var resolved = localRequire.resolve(path);
       return require(resolved, parent, path);
-    }
+    };
 
     /**
      * Resolve relative to the parent.
@@ -843,7 +843,7 @@
           }
           return _results;
         })()).join('&');
-        req = superagent.get("" + protocol + "://" + host + "/repos/" + path + "/" + noun + "?" + q).set('Content-Type', 'application/json').set('Accept', 'application/vnd.github.raw');
+        req = superagent.get("" + protocol + "://" + host + "/repos/" + path + "/" + noun + "?" + q).set('Content-Type', 'application/json').set('Accept', 'application/vnd.github.v3');
         if (token) {
           req = req.set('Authorization', "token " + token);
         }

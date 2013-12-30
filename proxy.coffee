@@ -1,5 +1,5 @@
 #!/usr/bin/env coffee
-{ _ }   = require 'lodash'
+_       = require 'lodash'
 http    = require 'http'
 fs      = require 'fs'
 connect = require 'connect'
@@ -27,7 +27,11 @@ proxy = (req, res, next) ->
     # API request?
     if req.url.match /^\/repos/
         # The new headers.
-        headers = 'Accept': 'application/vnd.github.raw'
+        headers =
+            # See http://developer.github.com/v3/media/#beta-v3-and-the-future
+            'Accept': 'application/vnd.github.v3'
+            # See http://developer.github.com/v3/#user-agent-required
+            'User-Agent': 'GitHub-Burndown-Chart'
         # Add a token?
         headers.Authorization = 'token ' + config.token if config.token
         # Make the HTTPS request.
@@ -39,9 +43,10 @@ proxy = (req, res, next) ->
             write _res.statusCode, body
 
     # Get handled by Connect.
-    next()
+    do next
 
 app = connect()
 .use(proxy)
 .use(connect.static(__dirname + '/public'))
-.listen process.env.PORT
+.listen process.env.PORT, ->
+    console.log 'Proxy listening on port', app.address().port
