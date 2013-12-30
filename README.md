@@ -32,7 +32,7 @@ There are three modes of operation balancing between usability & security:
 1. **Static Mode (Public Token)**: as before but now you want to use your [GitHub OAuth2 API Token](http://developer.github.com/v3/#authentication) in the config. This will require you to specify the token in the `config.json` file as outlined below.
 1. **Proxy Mode (Private Token)**: you find it preposterous to share your token with the world. In this case you will need to serve the app using the [Proxy Mode](#proxy-mode). Your token will be scrubbed from the config file and all requests be routed through a proxy.
 
-All of the following fields are defined in `config.json` and none of them, including the file itself, are required:
+All of the following fields are defined in `config.json` and none of them, including the file itself, are required. Just make sure that if the file exists, it is served with a correct MIME media type which is [application/json](http://stackoverflow.com/questions/477816/what-is-the-correct-json-content-type).
 
 ###Size Label
 
@@ -94,7 +94,7 @@ If you would like to build a custom version of your app, edit the `Gruntfile.cof
 
 ```bash
 $ make install
-$ make build
+$ make build
 ```
 
 We are using the [Bower](http://bower.io/) package manager and [Grunt](http://gruntjs.com/) task runner.
