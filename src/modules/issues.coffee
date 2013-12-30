@@ -37,22 +37,29 @@ module.exports =
         ], cb
 
     # Filter an array of incoming issues based on a regex & save size on them.
-    'filter': (collection, regex, cb) ->
+    'filter': (collection, use_title, regex, cb) ->
         # The total size of all issues.
         total = 0
         
         filtered = _.filter collection, (issue) ->
-            # Skip if no labels exist.
-            return no unless labels = issue.labels
+            if use_title
+                return no unless matches = issue.title.match(regex)
+                issue.size = parseFloat matches[1]
+            else
+                # Are we saving it?
+                !!issue.size
 
-            # Determine the total issue size from all labels.
-            issue.size = _.reduce labels, (sum, label) ->
-                # Not matching.
-                return sum unless matches = label.name.match(regex)
-                # Increase sum.
-                sum += parseInt matches[1]
-            , 0
-            
+                # Skip if no labels exist.
+                return no unless labels = issue.labels
+
+                # Determine the total issue size from all labels.
+                issue.size = _.reduce labels, (sum, label) ->
+                    # Not matching.
+                    return sum unless matches = label.name.match(regex)
+                    # Increase sum.
+                    sum += parseInt matches[1]
+                , 0
+
             # Increase the total.
             total += issue.size
 

@@ -25,7 +25,7 @@ module.exports = (opts, cb) ->
     # Filter them to labeled ones.
     (all, cb) ->
         async.map all, (array, cb) ->
-            issues.filter array, opts.size_label, (err, filtered, total) ->
+            issues.filter array, opts.use_title, opts.size_label, (err, filtered, total) ->
                 cb err, [ filtered, total ]
         , (err, [ open, closed ]) ->
             return cb err if err
@@ -36,7 +36,7 @@ module.exports = (opts, cb) ->
                 closed: { points: closed[1], data: closed[0] }
                 open:   { points: open[1],   data: open[0]   }
             cb null
-    
+
     # Create actual and ideal lines & render.
     (cb) ->
         progress = 100 * opts.issues.closed.points /
