@@ -785,7 +785,7 @@
     // request.coffee
     root.require.register('ghbc/src/modules/request.js', function(exports, require, module) {
     
-      var request, respond, superagent, _, _ref;
+      var error, headers, request, response, superagent, _, _ref;
       
       _ref = require('./require'), superagent = _ref.superagent, _ = _ref._;
       
@@ -803,38 +803,59 @@
       
       module.exports = {
         'all_milestones': function(repo, cb) {
-          var query;
-          query = {
-            'state': 'open',
-            'sort': 'due_date',
-            'direction': 'asc'
-          };
-          return request(repo, query, 'milestones', cb);
+          return request({
+            'protocol': repo.protocol,
+            'host': repo.host,
+            'path': "/repos/" + repo.path + "/milestones",
+            'query': {
+              'state': 'open',
+              'sort': 'due_date',
+              'direction': 'asc'
+            },
+            'headers': headers(repo.token)
+          }, cb);
         },
         'one_milestone': function(repo, number, cb) {
-          var query;
-          query = {
-            'state': 'open',
-            'sort': 'due_date',
-            'direction': 'asc'
-          };
-          return request(repo, query, "milestones/" + number, cb);
+          return request({
+            'protocol': repo.protocol,
+            'host': repo.host,
+            'path': "/repos/" + repo.path + "/milestones/" + number,
+            'query': {
+              'state': 'open',
+              'sort': 'due_date',
+              'direction': 'asc'
+            },
+            'headers': headers(repo.token)
+          }, cb);
         },
         'all_issues': function(repo, query, cb) {
-          _.extend(query, {
-            'per_page': '100'
-          });
-          return request(repo, query, 'issues', cb);
+          return request({
+            'protocol': repo.protocol,
+            'host': repo.host,
+            'path': "/repos/" + repo.path + "/issues",
+            'query': _.extend(query, {
+              'per_page': '100'
+            }),
+            'headers': headers(repo.token)
+          }, cb);
         },
         'config': function(cb) {
-          return superagent.get("http://" + (window.location.host + window.location.pathname) + "config.json").set('Content-Type', 'application/json').end(_.partialRight(respond, cb));
+          return request({
+            'protocol': 'http',
+            'host': window.location.host,
+            'path': "" + window.location.pathname + "config.json",
+            'headers': _.extend(headers(), {
+              'Accept': 'application/json'
+            })
+          }, cb);
         }
       };
       
-      request = function(_arg, query, noun, cb) {
-        var host, k, path, protocol, q, req, token, v;
-        protocol = _arg.protocol, host = _arg.host, token = _arg.token, path = _arg.path;
-        q = ((function() {
+      request = function(_arg, cb) {
+        var exited, headers, host, k, path, protocol, q, query, req, timeout, v;
+        protocol = _arg.protocol, host = _arg.host, path = _arg.path, query = _arg.query, headers = _arg.headers;
+        exited = false;
+        q = query ? '?' + ((function() {
           var _results;
           _results = [];
           for (k in query) {
@@ -842,16 +863,31 @@
             _results.push("" + k + "=" + v);
           }
           return _results;
-        })()).join('&');
-        req = superagent.get("" + protocol + "://" + host + "/repos/" + path + "/" + noun + "?" + q).set('Content-Type', 'application/json').set('Accept', 'application/vnd.github.v3');
-        if (token) {
-          req = req.set('Authorization', "token " + token);
+        })()).join('&') : '';
+        req = superagent.get("" + protocol + "://" + host + path + q);
+        for (k in headers) {
+          v = headers[k];
+          req.set(k, v);
         }
-        return req.end(_.partialRight(respond, cb));
+        timeout = setTimeout(function() {
+          exited = true;
+          return cb('Request has timed out');
+        }, 3e3);
+        return req.end(function(err, data) {
+          if (exited) {
+            return;
+          }
+          exited = true;
+          clearTimeout(timeout);
+          return response(err, data, cb);
+        });
       };
       
-      respond = function(data, cb) {
+      response = function(err, data, cb) {
         var _ref1;
+        if (err) {
+          return cb(error(err));
+        }
         if (data.statusType !== 2) {
           if ((data != null ? (_ref1 = data.body) != null ? _ref1.message : void 0 : void 0) != null) {
             return cb(data.body.message);
@@ -859,6 +895,40 @@
           return cb(data.error.message);
         }
         return cb(null, data.body);
+      };
+      
+      headers = function(token) {
+        var h;
+        h = _.extend({}, {
+          'Content-Type': 'application/json',
+          'Accept': 'application/vnd.github.v3'
+        });
+        if (token != null) {
+          h.Authorization = "token " + token;
+        }
+        return h;
+      };
+      
+      error = function(err) {
+        var message;
+        switch (false) {
+          case !_.isString(err):
+            message = err;
+            break;
+          case !_.isArray(err):
+            message = err[1];
+            break;
+          case !(_.isObject(err) && _.isString(err.message)):
+            message = err.message;
+        }
+        if (!message) {
+          try {
+            message = JSON.stringify(err);
+          } catch (_error) {
+            message = err.toString();
+          }
+        }
+        return message;
       };
       
     });

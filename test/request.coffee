@@ -2,12 +2,17 @@
 proxy  = do require('proxyquire').noCallThru
 assert = require 'assert'
 path   = require 'path'
+_      = require 'lodash'
 
 class Superagent
 
-    get: -> @
-    set: -> @
-    end: (cb) -> cb @response
+    get: (uri) ->
+        @params = { uri }
+        @
+    set: (key, value) ->
+        @params[key] = value
+        @
+    end: (cb) -> cb null, @response
 
 request = proxy path.resolve(__dirname, '../src/modules/request.coffee'),
     './require':
@@ -25,10 +30,30 @@ module.exports =
             'error': no
             'body': [ null ]
         
-        request.all_milestones {}, (err) ->
+        request.all_milestones {}, (err, data) ->
             assert.ifError err
+            assert.deepEqual sa.params,
+                'uri': 'undefined://undefined/repos/undefined/milestones?state=open&sort=due_date&direction=asc'
+                'Content-Type': 'application/json',
+                'Accept': 'application/vnd.github.v3'
+            assert.deepEqual data, [ null ]
             do done
 
+    'request - one milestone (ok)': (done) ->
+        sa.response =
+            'statusType': 2
+            'error': no
+            'body': [ null ]
+        
+        request.one_milestone {}, 1, (err, data) ->
+            assert.ifError err
+            assert.deepEqual sa.params,
+                'uri': 'undefined://undefined/repos/undefined/milestones/1?state=open&sort=due_date&direction=asc'
+                'Content-Type': 'application/json',
+                'Accept': 'application/vnd.github.v3'
+            assert.deepEqual data, [ null ]
+            do done
+    
     'request - one milestone (404)': (done) ->
         sa.response =
             'statusType': 4
@@ -49,4 +74,19 @@ module.exports =
         
         request.one_milestone {}, 9, (err) ->
             assert.equal err, 'Error'
+            do done
+
+    'request - all issues (ok)': (done) ->
+        sa.response =
+            'statusType': 2
+            'error': no
+            'body': [ null ]
+        
+        request.all_issues {}, {}, (err, data) ->
+            assert.ifError err
+            assert.deepEqual sa.params,
+                'uri': 'undefined://undefined/repos/undefined/issues?per_page=100'
+                'Content-Type': 'application/json',
+                'Accept': 'application/vnd.github.v3'
+            assert.deepEqual data, [ null ]
             do done

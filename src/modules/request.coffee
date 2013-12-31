@@ -12,48 +12,75 @@ superagent.parse =
 module.exports =
     
     # Get all milestones.
-    'all_milestones': (repo, cb) ->
-        query = { 'state': 'open', 'sort': 'due_date', 'direction': 'asc' }
-        request repo, query, 'milestones', cb
+    'all_milestones': (repo, cb) ->       
+        request
+            'protocol': repo.protocol
+            'host':     repo.host
+            'path':     "/repos/#{repo.path}/milestones"
+            'query':    { 'state': 'open', 'sort': 'due_date', 'direction': 'asc' }
+            'headers':  headers repo.token
+        , cb   
     
     # Get one milestone.
-    'one_milestone': (repo, number, cb) ->
-        query = { 'state': 'open', 'sort': 'due_date', 'direction': 'asc' }
-        request repo, query, "milestones/#{number}", cb
+    'one_milestone': (repo, number, cb) ->        
+        request
+            'protocol': repo.protocol
+            'host':     repo.host
+            'path':     "/repos/#{repo.path}/milestones/#{number}"
+            'query':    { 'state': 'open', 'sort': 'due_date', 'direction': 'asc' }
+            'headers':  headers repo.token
+        , cb        
 
     # Get all issues for a state.
-    'all_issues': (repo, query, cb) ->
-        _.extend query, { 'per_page': '100' }
-        request repo, query, 'issues', cb
+    'all_issues': (repo, query, cb) ->       
+        request
+            'protocol': repo.protocol
+            'host':     repo.host
+            'path':     "/repos/#{repo.path}/issues"
+            'query':    _.extend query, { 'per_page': '100' }
+            'headers':  headers repo.token
+        , cb
 
     # Get config from our host always.
-    'config': (cb) ->
-        superagent
-        .get("http://#{window.location.host + window.location.pathname}config.json")
-        .set('Content-Type', 'application/json')
-        .end _.partialRight respond, cb
+    'config': (cb) ->       
+        request
+            'protocol': 'http'
+            'host':     window.location.host
+            'path':     "#{window.location.pathname}config.json"
+            'headers':  _.extend headers(), { 'Accept': 'application/json' }
+        , cb
 
-# Make a request using SuperAgent to GitHub.
-request = ({ protocol, host, token, path }, query, noun, cb) ->
+# Make a request using SuperAgent.
+request = ({ protocol, host, path, query, headers }, cb) ->
+    exited = no
+
     # Make the query params.
-    q = ( "#{k}=#{v}" for k, v of query ).join('&')
+    q = if query then '?' + ( "#{k}=#{v}" for k, v of query ).join('&') else ''
 
-    req = superagent
     # The URI.
-    .get("#{protocol}://#{host}/repos/#{path}/#{noun}?#{q}")
-    # The content type.
-    .set('Content-Type', 'application/json')
-    # The media type.
-    .set('Accept', 'application/vnd.github.v3')
+    req = superagent.get("#{protocol}://#{host}#{path}#{q}")
+    # Add headers.
+    ( req.set(k, v) for k, v of headers )
     
-    # Auth token?
-    req = req.set('Authorization', "token #{token}") if token
-    
+    # Timeout for requests that do not finish... see #32.
+    timeout = setTimeout ->
+        exited = yes
+        cb 'Request has timed out'
+    , 3e3
+
     # Send.
-    req.end _.partialRight respond, cb
+    req.end (err, data) ->
+        # Arrived too late.
+        return if exited
+        # All fine.
+        exited = yes
+        clearTimeout timeout
+        # Actually process the response.
+        response err, data, cb
 
 # How do we respond to a response?
-respond = (data, cb) ->
+response = (err, data, cb) ->
+    return cb error err if err
     # 2xx?
     if data.statusType isnt 2
         # Do we have a message from GitHub?
@@ -62,3 +89,31 @@ respond = (data, cb) ->
         return cb data.error.message
     # All good.
     cb null, data.body
+
+# Give us headers.
+headers = (token) ->
+    # The defaults.
+    h = _.extend {},
+        'Content-Type': 'application/json'
+        'Accept': 'application/vnd.github.v3'
+    # Add token?
+    h.Authorization = "token #{token}" if token?
+    h
+
+# Parse an error.
+error = (err) ->
+    switch
+        when _.isString err
+            message = err
+        when _.isArray err
+            message = err[1]
+        when _.isObject(err) and _.isString(err.message)
+            message = err.message
+
+    unless message
+        try
+            message = JSON.stringify err
+        catch
+            message = do err.toString
+
+    message

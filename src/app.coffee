@@ -24,7 +24,7 @@ route = ->
         , (conf, cb) ->
             repo _.extend(opts, conf), cb
         ], (err) ->
-            render 'body', 'error', { 'text': err.toString() } if err
+            render 'body', 'error', { 'text': do err.toString } if err
 
     # Info notice for you.
     render 'body', 'info'
