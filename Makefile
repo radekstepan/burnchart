@@ -11,9 +11,7 @@ minify:
 watch:
 	watch --color -n 1 make build
 
-publish:
-	build
-	minify
+publish: build minify
 	git checkout gh-pages
 	git show master:build/app.bundle.min.js > app.bundle.min.js
 	git show master:build/app.bundle.min.css > app.bundle.min.css
