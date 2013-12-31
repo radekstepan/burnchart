@@ -9,7 +9,7 @@ minify:
 	grunt minify
 
 watch:
-	watch --color -n 1 make build
+	watch --color -n 1 grunt
 
 publish: build minify
 	git checkout gh-pages

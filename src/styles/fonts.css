@@ -2,20 +2,17 @@
     font-family: 'Source Sans Pro';
     font-style: normal;
     font-weight: 400;
-    src: local('Source Sans Pro'), local('SourceSansPro-Regular'),
-    url('../../fonts/SourceSansPro-Regular.woff') format('woff');
+    src: local('Source Sans Pro'), local('SourceSansPro-Regular'), url(http://themes.googleusercontent.com/static/fonts/sourcesanspro/v6/ODelI1aHBYDBqgeIAH2zlBM0YzuT7MdOe03otPbuUS0.woff) format('woff');
 }
 @font-face {
     font-family: 'Source Sans Pro';
     font-style: normal;
     font-weight: 600;
-    src: local('Source Sans Pro Semibold'), local('SourceSansPro-Semibold'),
-    url('../../fonts/SourceSansPro-Semibold.woff') format('woff');
+    src: local('Source Sans Pro Semibold'), local('SourceSansPro-Semibold'), url(http://themes.googleusercontent.com/static/fonts/sourcesanspro/v6/toadOcfmlt9b38dHJxOBGJ6-ys_j0H4QL65VLqzI3wI.woff) format('woff');
 }
 @font-face {
     font-family: 'Source Sans Pro';
     font-style: normal;
     font-weight: 700;
-    src: local('Source Sans Pro Bold'), local('SourceSansPro-Bold'),
-    url('../../fonts/SourceSansPro-Bold.woff') format('woff');
+    src: local('Source Sans Pro Bold'), local('SourceSansPro-Bold'), url(http://themes.googleusercontent.com/static/fonts/sourcesanspro/v6/toadOcfmlt9b38dHJxOBGFkQc6VGVFSmCnC_l7QZG60.woff) format('woff');
 }

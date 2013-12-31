@@ -38,7 +38,8 @@ module.exports = (grunt) ->
                 src: [
                     # Vendor dependencies.
                     'vendor/normalize-css/normalize.css'
-                    # Our style.
+                    # Our styles.
+                    'src/styles/fonts.css'
                     'build/app.css'
                 ]
                 dest: 'build/app.bundle.css'
