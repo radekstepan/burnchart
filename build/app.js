@@ -872,7 +872,7 @@
         timeout = setTimeout(function() {
           exited = true;
           return cb('Request has timed out');
-        }, 3e3);
+        }, 1e4);
         return req.end(function(err, data) {
           if (exited) {
             return;

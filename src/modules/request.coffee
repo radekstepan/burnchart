@@ -66,7 +66,7 @@ request = ({ protocol, host, path, query, headers }, cb) ->
     timeout = setTimeout ->
         exited = yes
         cb 'Request has timed out'
-    , 3e3
+    , 1e4 # give us 10s
 
     # Send.
     req.end (err, data) ->
