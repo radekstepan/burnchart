@@ -24,6 +24,6 @@ publish: build minify
 	git checkout master
 
 test:
-	./node_modules/.bin/mocha --compilers coffee:coffee-script --reporter spec --ui exports --bail
+	./node_modules/.bin/mocha --compilers coffee:coffee-script --reporter spec --ui exports --timeout 20000 --slow 15000 --bail
 
 .PHONY: build test

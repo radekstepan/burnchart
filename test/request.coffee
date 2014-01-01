@@ -6,13 +6,24 @@ _      = require 'lodash'
 
 class Superagent
 
+    # How soon do we call back?
+    timeout: 1
+
+    # Save the uri.
     get: (uri) ->
         @params = { uri }
         @
+
+    # Save the key-value pair.
     set: (key, value) ->
         @params[key] = value
         @
-    end: (cb) -> cb null, @response
+    
+    # Call back with the response.
+    end: (cb) ->
+        setTimeout =>
+            cb null, @response
+        , @timeout
 
 request = proxy path.resolve(__dirname, '../src/modules/request.coffee'),
     './require':
@@ -89,4 +100,15 @@ module.exports =
                 'Content-Type': 'application/json',
                 'Accept': 'application/vnd.github.v3'
             assert.deepEqual data, [ null ]
+            do done
+
+    'request - timeout': (done) ->
+        sa.timeout = 10001
+        sa.response =
+            'statusType': 2
+            'error': no
+            'body': [ null ]
+        
+        request.all_issues {}, {}, (err) ->
+            assert.equal err, 'Request has timed out'
             do done
