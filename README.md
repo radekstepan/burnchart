@@ -129,3 +129,7 @@ If you would like to use the original app, please refer to the `original` branch
 ##Thanks
 
 Thank you for using the app and your feedback/comments are very much welcome. Radek
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/radekstepan/github-burndown-chart/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
