@@ -1,4 +1,4 @@
-#GitHub Burndown Chart
+#GitHub Burndown Chart [![Built with Grunt](https://cdn.gruntjs.com/builtwith.png)](http://gruntjs.com/)
 
 **The original app got completely rewritten, see [notes](#rewrite), thank you.**
 
