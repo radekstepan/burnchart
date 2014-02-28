@@ -29,7 +29,7 @@ Displays a burndown chart from a set of GitHub issues in the current milestone.
 There are three modes of operation balancing between usability & security:
 
 1. **Static Mode**: you can just serve the `public` directory using a static file server or GitHub Pages. No config needed, just serve the app and point to your repo in the browser, e.g.: `http://127.0.0.1:8000/#!/radekstepan/disposable`. You are rate limited to the tune of [60 requests per hour](http://developer.github.com/v3/#rate-limiting).
-1. **Static Mode (Public Token)**: as before but now you want to use your [GitHub OAuth2 API Token](http://developer.github.com/v3/#authentication) in the config. This will require you to specify the token in the `config.json` file as outlined below.
+1. **Static Mode (Public Token)**: as before but now you want to use your [GitHub Personal Access Token](http://developer.github.com/v3/#authentication) in the config. This will require you to specify the token in the `config.json` file as outlined below.
 1. **Proxy Mode (Private Token)**: you find it preposterous to share your token with the world. In this case you will need to serve the app using the [Proxy Mode](#proxy-mode). Your token will be scrubbed from the config file and all requests be routed through a proxy.
 
 All of the following fields are defined in `config.json` and none of them, including the file itself, are required. Just make sure that if the file exists, it is served with a correct MIME media type which is [application/json](http://stackoverflow.com/questions/477816/what-is-the-correct-json-content-type).
@@ -50,7 +50,7 @@ When multiple matching size labels are present on an issue, their **sum** is tak
 
 ###Token
 
-Your OAuth2 token from GitHub. Get it [here](https://github.com/settings/applications). Bear in mind that if you just statically serve the app, everybody will be able to see the token in transmission. If you would like to avoid that, use the [Proxy Mode](#proxy-mode).
+Your **personal access token** token from GitHub. Get it [here](https://github.com/settings/applications). Bear in mind that if you just statically serve the app, everybody will be able to see the token in transmission. If you would like to avoid that, use the [Proxy Mode](#proxy-mode).
 
 Using the token increases your limit of requests per hour from [60 to 5000](http://developer.github.com/v3/#rate-limiting).
 
@@ -129,7 +129,3 @@ If you would like to use the original app, please refer to the `original` branch
 ##Thanks
 
 Thank you for using the app and your feedback/comments are very much welcome. Radek
-
-
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/radekstepan/github-burndown-chart/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
-
