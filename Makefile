@@ -26,4 +26,7 @@ publish: build minify
 test:
 	./node_modules/.bin/mocha --compilers coffee:coffee-script --reporter spec --ui exports --timeout 20000 --slow 15000 --bail
 
+serve:
+	cd public; python -m SimpleHTTPServer 1892
+
 .PHONY: build test
