@@ -1,23 +1,23 @@
 @import 'nib'
 
 // color definitions
-$closed = #4DAF7C
-$opened = #E55F3A
-$grey   = #CACACA
-$brown  = #64584C
-$background = #d7bcab
-$background2 = #cc9485
+$closed      = #4DAF7C
+$opened      = #E55F3A
+$grey        = #CACACA
+$brown       = #64584C
+$background1 = #D7BCAB
+$background2 = #CC9485
 
 // font and gradient bg
 body
     height: 100%
     background: $background
-    background: -moz-linear-gradient(-45deg, $background 0%, $background2 100%)
+    background: -moz-linear-gradient(-45deg, $background1 0%, $background2 100%)
     background: -webkit-gradient(linear, left top, right bottom, color-stop(0%,$background), color-stop(100%,$background2))
-    background: -webkit-linear-gradient(-45deg, $background 0%,$background2 100%)
-    background: -o-linear-gradient(-45deg, $background 0%,$background2 100%)
-    background: -ms-linear-gradient(-45deg, $background 0%,$background2 100%)
-    background: linear-gradient(135deg, $background 0%,$background2 100%)
+    background: -webkit-linear-gradient(-45deg, $background1 0%,$background2 100%)
+    background: -o-linear-gradient(-45deg, $background1 0%,$background2 100%)
+    background: -ms-linear-gradient(-45deg, $background1 0%,$background2 100%)
+    background: linear-gradient(135deg, $background1 0%,$background2 100%)
     background-repeat: no-repeat
     background-attachment: fixed
     font-family: 'Source Sans Pro', sans-serif

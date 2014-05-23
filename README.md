@@ -70,6 +70,10 @@ An array of day integers (Monday = 1) representing days of the week when you are
 }
 ```
 
+###Style
+
+Edit the `src/styles/app.styl` file to change the look & feel of the app. The head of the file contains variables for easy editing.
+
 ##Proxy Mode
 
 Use this strategy if you do not wish for your token to be publicly visible. Proxy mode routes all requests from the client side app through it, scrubbing the token from the `config.json` file. It is *slightly* slower than requesting data straight from GitHub of course.
