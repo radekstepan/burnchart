@@ -1,8 +1,6 @@
 #GitHub Burndown Chart [![Built with Grunt](https://cdn.gruntjs.com/builtwith.png)](http://gruntjs.com/)
 
-**The original app got completely rewritten, see [notes](#rewrite), thank you.**
-
-Displays a burndown chart from a set of GitHub issues in the current milestone.
+Displays a burndown chart from a set of GitHub issues in a milestone.
 
 [ ![Codeship Status for radekstepan/github-burndown-chart](https://www.codeship.io/projects/d69f4420-e5b0-0130-bbae-1632ddfb80f8/status)](https://www.codeship.io/projects/5855)
 
@@ -101,7 +99,19 @@ $ make install
 $ make build
 ```
 
-We are using the [Bower](http://bower.io/) package manager and [Grunt](http://gruntjs.com/) task runner.
+When you are done developing, you may want to create a minified build:
+
+```bash
+$ make minify
+```
+
+We are using the [Bower](http://bower.io/) package manager and [Grunt](http://gruntjs.com/) task runner. To [install Bower](http://bower.io/#install-bower) and [install Grunt](http://gruntjs.com/installing-grunt) run the following commands:
+
+```bash
+$ sudo npm install bower -g
+$ sudo npm install grunt -g
+$ sudo npm install grunt-cli -g
+```
 
 ##Publish It
 

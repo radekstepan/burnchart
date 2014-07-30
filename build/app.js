@@ -1116,7 +1116,7 @@
         }
         (function() {
           (function() {
-            __out.push('<div class="box info">\n    <h2>GitHub Burndown Chart</h2>\n    <p>Use your browser\'s location hash to specify a <strong>repo</strong>: <a href="#!/radekstepan/disposable">#!/radekstepan/disposable</a>.</p>\n    <p>You can choose a specific <strong>milestone</strong> like so: <a href="#!/radekstepan/disposable/1">#!/radekstepan/disposable/1</a>.</p>\n</div>');
+            __out.push('<div class="box info">\n    <h2>GitHub Burndown Chart</h2>\n    \n    <p>Use your browser\'s location hash to specify a <strong>repo</strong>: <a href="#!/radekstepan/disposable">#!/radekstepan/disposable</a>.</p>\n    \n    <p>You can choose a specific <strong>milestone</strong> by its <em>number</em>: <a href="#!/radekstepan/disposable/1">#!/radekstepan/disposable/1</a>.</p>\n\n    <p>To get the milestone <em>number</em>, fetch all your milestones using <a href="https://developer.github.com/v3/issues/milestones/#list-milestones-for-a-repository" title="GitHub API docs">GitHub API</a>.</p>\n</div>');
           
           }).call(this);
           
