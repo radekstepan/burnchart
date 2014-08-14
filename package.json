@@ -1,6 +1,6 @@
 {
     "name": "github-burndown-chart",
-    "version": "1.0.0-alpha",
+    "version": "1.0.0",
     "description": "Shows a burndown chart for GitHub Issues",
     "directories": {
         "test": "test"
@@ -15,7 +15,7 @@
     },
     "devDependencies": {
         "mocha": "~1.12.0",
-        "marked": "~0.2.9",
+        "marked": "~0.3.2",
         
         "grunt": "~0.4.1",
         "grunt-apps-c": "0.1.10",
