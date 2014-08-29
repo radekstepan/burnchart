@@ -40,26 +40,32 @@ ul
         padding: 10px 24px
         line-height: 44px
         height: 44px
-        background: #1C262F
+        background: rgba(#000, 30%)
         display: inline-block
 
         .icon
             margin: 0
 
-    div.search
+    .q
         position: relative
         display: inline-block
-        margin: 13px 0 0 20px
+        margin: 13px 20px 0 20px
         vertical-align: top
 
         .icon
             position: absolute
             color: #303D4A
-            top: 8px
-            left: 12px
+
+            &.search
+                top: 8px
+                left: 12px
+
+            &.down-open
+                top: 8px
+                right: 12px
 
         input
-            background: #1C262F
+            background: rgba(#000, 30%)
             border: 0
             padding: 10px 12px 10px 36px
             font-family: $serif_font
@@ -109,16 +115,19 @@ ul
     margin-top: 20px
 
     #hero
-        background: url('img/tweed.png') top left
+        background: url('img/hires/2.jpg') center
+        background-size: cover
         border-radius: 2px
-        border: 1px solid #DDE1ED
+        // border: 1px solid #DDE1ED
         margin-bottom: 30px
 
         .content
             border-radius: 2px
             color: #FFF
             padding: 30px
-            background: rgba(lawngreen, 40%)
+            // background: rgba(lawngreen, 40%)
+            // background: #33AADD
+            background: rgba(#000, 30%)
             box-shadow: inset 0 1px 2px rgba(#000, 20%)
 
             h2
@@ -140,13 +149,21 @@ ul
                 margin-top: 10px
 
                 a
-                    font-weight: bold
                     font-family: $serif_font
-                    background: darken(#619530, 40%)
-                    color: #FFF
+                    // background: rgba(#000, 40%)
                     padding: 10px 20px
                     border-radius: 2px
                     display: inline-block
+                    margin: 0 4px
+
+                    &.primary
+                        font-weight: bold
+                        background: #00B361
+                        color: #FFF
+                    
+                    &.secondary
+                        background: #FFF
+                        color: #00B361
 
     #repos
         border: 1px solid #CDCECF
@@ -165,18 +182,64 @@ ul
 
             tr
                 td
-                    background: lighten(#FCFCFC, 30%)
+                    background: #FCFCFC
                     padding: 20px 30px
                     border-bottom: 1px solid #EAECF2
+
+                    .milestone
+                        .icon
+                            font-size: 10px
+                            margin: 0
+
+                    .progress
+                        width: 200px
+
+                        .percent, .due
+                            color: darken(#C1C4D0, 20%)
+                            font-size: 13px
+
+                        .percent
+                            float: right
+
+                        .bar
+                            border-radius: 4px
+                            background: #EAECF2
+                            height: 10px
+                            width: 100%
+
+                            &.inner
+                                box-shadow: inset 0 1px 2px rgba(#000, 20%)
+
+                            &.red
+                                background: #FF2955
+
+                            &.green
+                                background: #4BDA66
+
+                        .due
+                            &.red
+                                color: #FF2955
+                                font-weight: bold
 
                     &:first-child
                         a
                             color: #3E4457
                             font-weight: bold
 
+                &:nth-child(2)
+                    td
+                        background: lighten(#FCFCFC, 60%)
+
                 &:last-child
                     td
                         border: 0
+
+                &.done
+                    td
+                        background: #EBF6F1
+
+                        .milestone, .percent, .due
+                            color: #9FC9B5
 
         .header, .footer
             padding: 20px 30px

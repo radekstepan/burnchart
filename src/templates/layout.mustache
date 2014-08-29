@@ -5,8 +5,9 @@
 
     <h1><span class="icon fire-station"></span></h1>
 
-    <div class="search">
+    <div class="q">
         <span class="icon search"></span>
+        <span class="icon down-open"></span>
         <input type="text" placeholder="Jump to...">
     </div>
 
@@ -31,7 +32,8 @@
             <h2>See your project progress</h2>
             <p>Not sure where to start? Just add a demo repo to see a chart. There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable.</p>
             <div class="cta">
-                <a href="#"><span class="icon plus-circled"></span> Add your project</a>
+                <a href="#" class="primary"><span class="icon plus-circled"></span> Add your project</a>
+                <a href="#" class="secondary">Read the Guide</a>
             </div>
         </div>
     </div>
@@ -45,13 +47,55 @@
         <table>
             <tr>
                 <td><a class="repo" href="#">radekstepan/disposable</a></td>
-                <td><span class="milestone">1.0</a></td>
-                <td><span class="status">due in 5 days on track</span></td>
+                <td><span class="milestone">Milestone 1.0 <span class="icon down-open"></span></a></td>
+                <td>
+                    <div class="progress">
+                        <span class="percent">40%</span>
+                        <span class="due">due on Friday</span>
+                        <div class="outer bar">
+                            <div class="inner bar red" style="width:40%"></div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            <tr class="done">
+                <td><a class="repo" href="#">radekstepan/burnchart</a></td>
+                <td><span class="milestone">Beta Milestone <span class="icon down-open"></span></a></td>
+                <td>
+                    <div class="progress">
+                        <span class="percent">100%</span>
+                        <span class="due">due tomorrow</span>
+                        <div class="outer bar">
+                            <div class="inner bar green" style="width:100%"></div>
+                        </div>
+                    </div>
+                </td>
             </tr>
             <tr>
-                <td><a class="repo" href="#">radekstepan/burnchart</a></td>
-                <td><span class="milestone">MVP</a></td>
-                <td><span class="status">due today</span></td>
+                <td><a class="repo" href="#">intermine/intermine</a></td>
+                <td><span class="milestone">Emma Release 96 <span class="icon down-open"></span></a></td>
+                <td>
+                    <div class="progress">
+                        <span class="percent">27%</span>
+                        <span class="due">due in 2 weeks</span>
+                        <div class="outer bar">
+                            <div class="inner bar red" style="width:27%"></div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td><a class="repo" href="#">microsoft/windows</a></td>
+                <td><span class="milestone">RC 9 <span class="icon down-open"></span></a></td>
+                <td>
+                    <div class="progress">
+                        <span class="percent">90%</span>
+                        <span class="due red">overdue by a month</span>
+                        <div class="outer bar">
+                            <div class="inner bar red" style="width:90%"></div>
+                        </div>
+                    </div>
+                </td>
             </tr>
         </table>
 

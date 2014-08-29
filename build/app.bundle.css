@@ -409,6 +409,7 @@ table {
 @font-face{font-family:'MuseoSans500Regular';src:url("fonts/museo-sans-500.eot");src:url("fonts/museo-sans-500.eot?#iefix") format('embedded-opentype'),url("fonts/museo-sans-500.woff") format('woff'),url("fonts/museo-sans-500.ttf") format('truetype'),url("fonts/museo-sans-500.svg#MuseoSans500Regular") format('svg');font-weight:normal;font-style:normal}
 @font-face{font-family:'Fontello';src:url("fonts/fontello.eot?74672344");src:url("fonts/fontello.eot?74672344#iefix") format('embedded-opentype'),url("fonts/fontello.woff?74672344") format('woff'),url("fonts/fontello.ttf?74672344") format('truetype'),url("fonts/fontello.svg?74672344#fontello") format('svg');font-weight:normal;font-style:normal}
 
+.icon{vertical-align:middle;}
 .icon:before{font-family:"Fontello";font-style:normal;font-weight:normal;speak:none;display:inline-block;text-decoration:inherit;text-align:center;font-variant:normal;text-transform:none;line-height:1em}
 .icon.cog:before{content:'\e800'}
 .icon.search:before{content:'\e801'}
@@ -427,11 +428,13 @@ ul li{display:inline-block}
 .icon{margin-right:4px}
 .wrap{width:800px;margin:0 auto}
 #head{background:#252f39;color:#86939c;height:64px;}
-#head h1{font-size:26px;margin:0;padding:10px 24px;line-height:44px;height:44px;background:#1c262f;display:inline-block;}
+#head h1{font-size:26px;margin:0;padding:10px 24px;line-height:44px;height:44px;background:rgba(0,0,0,0.3);display:inline-block;}
 #head h1 .icon{margin:0}
-#head div.search{position:relative;display:inline-block;margin:13px 0 0 20px;vertical-align:top;}
-#head div.search .icon{position:absolute;color:#303d4a;top:8px;left:12px}
-#head div.search input{background:#1c262f;border:0;padding:10px 12px 10px 36px;font-family:'MuseoSlab500Regular',serif;font-size:14px;-webkit-border-radius:2px;border-radius:2px;color:rgba(255,255,255,0.5);width:220px}
+#head .q{position:relative;display:inline-block;margin:13px 20px 0 20px;vertical-align:top;}
+#head .q .icon{position:absolute;color:#303d4a;}
+#head .q .icon.search{top:8px;left:12px}
+#head .q .icon.down-open{top:8px;right:12px}
+#head .q input{background:rgba(0,0,0,0.3);border:0;padding:10px 12px 10px 36px;font-family:'MuseoSlab500Regular',serif;font-size:14px;-webkit-border-radius:2px;border-radius:2px;color:rgba(255,255,255,0.5);width:220px}
 #head ul{display:inline-block;}
 #head ul li{margin-left:30px}
 #head a{font-weight:bold;}
@@ -442,20 +445,34 @@ ul li{display:inline-block}
 #title .milestone{font-size:16px;font-weight:bold;margin:0 20px}
 #title .description{display:inline-block;font-family:'MuseoSlab500Regular',serif;color:#aaa}
 #content{padding:20px;margin-top:20px;}
-#content #hero{background:url("img/tweed.png") top left;-webkit-border-radius:2px;border-radius:2px;border:1px solid #dde1ed;margin-bottom:30px;}
-#content #hero .content{-webkit-border-radius:2px;border-radius:2px;color:#fff;padding:30px;background:rgba(124,252,0,0.4);-webkit-box-shadow:inset 0 1px 2px rgba(0,0,0,0.2);box-shadow:inset 0 1px 2px rgba(0,0,0,0.2);}
+#content #hero{background:url("img/hires/2.jpg") center;-webkit-background-size:cover;-moz-background-size:cover;background-size:cover;-webkit-border-radius:2px;border-radius:2px;margin-bottom:30px;}
+#content #hero .content{-webkit-border-radius:2px;border-radius:2px;color:#fff;padding:30px;background:rgba(0,0,0,0.3);-webkit-box-shadow:inset 0 1px 2px rgba(0,0,0,0.2);box-shadow:inset 0 1px 2px rgba(0,0,0,0.2);}
 #content #hero .content h2{margin-bottom:20px;margin-left:140px}
 #content #hero .content p{font-family:'MuseoSlab500Regular',serif;font-size:18px;line-height:24px;margin-left:140px}
 #content #hero .content .address{font-size:120px;float:left}
 #content #hero .content .cta{text-align:center;margin-top:10px;}
-#content #hero .content .cta a{font-weight:bold;font-family:'MuseoSlab500Regular',serif;background:#3a591d;color:#fff;padding:10px 20px;-webkit-border-radius:2px;border-radius:2px;display:inline-block}
+#content #hero .content .cta a{font-family:'MuseoSlab500Regular',serif;padding:10px 20px;-webkit-border-radius:2px;border-radius:2px;display:inline-block;margin:0 4px;}
+#content #hero .content .cta a.primary{font-weight:bold;background:#00b361;color:#fff}
+#content #hero .content .cta a.secondary{background:#fff;color:#00b361}
 #content #repos{border:1px solid #cdcecf;-webkit-border-radius:2px;border-radius:2px;}
 #content #repos h2{color:#3e4457;display:inline-block}
 #content #repos .sort{float:right;line-height:30px}
 #content #repos table{width:100%;}
-#content #repos table tr td{background:#fdfdfd;padding:20px 30px;border-bottom:1px solid #eaecf2;}
+#content #repos table tr td{background:#fcfcfc;padding:20px 30px;border-bottom:1px solid #eaecf2;}
+#content #repos table tr td .milestone .icon{font-size:10px;margin:0}
+#content #repos table tr td .progress{width:200px;}
+#content #repos table tr td .progress .percent,#content #repos table tr td .progress .due{color:#9399ad;font-size:13px}
+#content #repos table tr td .progress .percent{float:right}
+#content #repos table tr td .progress .bar{-webkit-border-radius:4px;border-radius:4px;background:#eaecf2;height:10px;width:100%;}
+#content #repos table tr td .progress .bar.inner{-webkit-box-shadow:inset 0 1px 2px rgba(0,0,0,0.2);box-shadow:inset 0 1px 2px rgba(0,0,0,0.2)}
+#content #repos table tr td .progress .bar.red{background:#ff2955}
+#content #repos table tr td .progress .bar.green{background:#4bda66}
+#content #repos table tr td .progress .due.red{color:#ff2955;font-weight:bold}
 #content #repos table tr td:first-child a{color:#3e4457;font-weight:bold}
+#content #repos table tr:nth-child(2) td{background:#fefefe}
 #content #repos table tr:last-child td{border:0}
+#content #repos table tr.done td{background:#ebf6f1;}
+#content #repos table tr.done td .milestone,#content #repos table tr.done td .percent,#content #repos table tr.done td .due{color:#9fc9b5}
 #content #repos .header,#content #repos .footer{padding:20px 30px}
 #content #repos .header{-webkit-box-shadow:0 1px 2px rgba(221,225,237,0.5);box-shadow:0 1px 2px rgba(221,225,237,0.5);margin-bottom:2px;border-bottom:1px solid #dde1ed;}
 #content #repos .header a{font-family:'MuseoSlab500Regular',serif}
