@@ -11,10 +11,12 @@ module.exports = (grunt) ->
 
         stylus:
             compile:
-                options:
-                    paths: [ 'src/app.styl' ]
-                files:
-                    'build/app.css': 'src/app.styl'
+                src: [
+                    'src/styles/fonts.styl'
+                    'src/styles/icons.styl'
+                    'src/styles/app.styl'
+                ]
+                dest: 'build/app.css'
 
         concat:            
             scripts:

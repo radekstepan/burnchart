@@ -1,0 +1,208 @@
+@import 'nib'
+
+$serif_font = 'MuseoSlab500Regular', serif // 'SinaNova-RegularRegular', serif
+$sans_serif_font = 'MuseoSans500Regular', sans-serif
+
+body
+    color: #3E4457
+    font-family: $sans_serif_font
+
+a
+    color: #AAAAAA
+    text-decoration: none
+
+h1, h2, h3, p
+    margin: 0
+
+ul
+    list-style-type: none
+    margin: 0
+    padding: 0
+
+    li
+        display: inline-block
+
+.icon
+    margin-right: 4px
+
+.wrap
+    width: 800px
+    margin: 0 auto
+
+#head
+    background: #252F39
+    color: #86939C
+    height: 64px
+
+    h1
+        font-size: 26px
+        margin: 0
+        padding: 10px 24px
+        line-height: 44px
+        height: 44px
+        background: #1C262F
+        display: inline-block
+
+        .icon
+            margin: 0
+
+    div.search
+        position: relative
+        display: inline-block
+        margin: 13px 0 0 20px
+        vertical-align: top
+
+        .icon
+            position: absolute
+            color: #303D4A
+            top: 8px
+            left: 12px
+
+        input
+            background: #1C262F
+            border: 0
+            padding: 10px 12px 10px 36px
+            font-family: $serif_font
+            font-size: 14px
+            border-radius: 2px
+            color: rgba(#FFF, 50%)
+            width: 220px
+
+    ul
+        display: inline-block
+
+        li
+            margin-left: 30px
+
+    a
+        font-weight: bold
+
+        &.active, &:hover
+            color: #DDE1ED
+
+    .right
+        float: right
+        margin-right: 20px
+        line-height: 64px
+
+#title
+    border-bottom: 3px solid #F3F4F8
+
+    h2
+        border-bottom: 3px solid #AAAFBF
+        margin: 30px 0 -3px 0
+        display: inline-block
+        padding-bottom: 20px
+
+    .milestone
+        font-size: 16px
+        font-weight: bold
+        margin: 0 20px
+
+    .description
+        display: inline-block
+        font-family: $serif_font
+        color: #AAAAAA
+
+#content
+    padding: 20px
+    margin-top: 20px
+
+    #hero
+        background: url('img/tweed.png') top left
+        border-radius: 2px
+        border: 1px solid #DDE1ED
+        margin-bottom: 30px
+
+        .content
+            border-radius: 2px
+            color: #FFF
+            padding: 30px
+            background: rgba(lawngreen, 40%)
+            box-shadow: inset 0 1px 2px rgba(#000, 20%)
+
+            h2
+                margin-bottom: 20px
+                margin-left: 140px
+
+            p
+                font-family: $serif_font
+                font-size: 18px
+                line-height: 24px
+                margin-left: 140px
+
+            .address
+                font-size: 120px
+                float: left
+
+            .cta
+                text-align: center
+                margin-top: 10px
+
+                a
+                    font-weight: bold
+                    font-family: $serif_font
+                    background: darken(#619530, 40%)
+                    color: #FFF
+                    padding: 10px 20px
+                    border-radius: 2px
+                    display: inline-block
+
+    #repos
+        border: 1px solid #CDCECF
+        border-radius: 2px
+
+        h2
+            color: #3E4457
+            display: inline-block
+
+        .sort
+            float: right
+            line-height: 30px
+
+        table
+            width: 100%
+
+            tr
+                td
+                    background: lighten(#FCFCFC, 30%)
+                    padding: 20px 30px
+                    border-bottom: 1px solid #EAECF2
+
+                    &:first-child
+                        a
+                            color: #3E4457
+                            font-weight: bold
+
+                &:last-child
+                    td
+                        border: 0
+
+        .header, .footer
+            padding: 20px 30px
+
+        .header
+            box-shadow: 0 1px 2px rgba(#DDE1ED, 50%)
+            margin-bottom: 2px
+            border-bottom: 1px solid #DDE1ED
+
+            a
+                font-family: $serif_font
+
+        .footer
+            background: #F9FAFB
+            color: #AAAFBF
+            box-shadow: inset 0 1px 2px rgba(#DDE1ED, 20%)
+            border-top: 1px solid #DDE1ED
+            text-align: right
+            font-family: $serif_font
+
+            .icon
+                color: #AAAFBF
+
+#footer
+    border-top: 1px solid #F3F4F8
+    text-align: center
+    padding: 30px
+    margin-top: 30px
+    font-family: $serif_font
