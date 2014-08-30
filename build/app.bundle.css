@@ -421,7 +421,7 @@ table {
 .icon.down-open:before{content:'\e807'}
 
 body{color:#3e4457;font-family:'MuseoSans500Regular',sans-serif}
-a{color:#aaa;text-decoration:none}
+a{color:#b1b6c4;text-decoration:none}
 h1,h2,h3,p{margin:0}
 ul{list-style-type:none;margin:0;padding:0;}
 ul li{display:inline-block}
@@ -434,25 +434,25 @@ ul li{display:inline-block}
 #head .q .icon{position:absolute;color:#303d4a;}
 #head .q .icon.search{top:8px;left:12px}
 #head .q .icon.down-open{top:8px;right:12px}
-#head .q input{background:rgba(0,0,0,0.3);border:0;padding:10px 12px 10px 36px;font-family:'MuseoSlab500Regular',serif;font-size:14px;-webkit-border-radius:2px;border-radius:2px;color:rgba(255,255,255,0.5);width:220px}
+#head .q input{background:rgba(0,0,0,0.3);border:0;padding:10px 12px 10px 36px;font-size:14px;-webkit-border-radius:2px;border-radius:2px;color:rgba(255,255,255,0.5);width:220px}
 #head ul{display:inline-block;}
 #head ul li{margin-left:30px}
 #head a{font-weight:bold;}
 #head a.active,#head a:hover{color:#dde1ed}
 #head .right{float:right;margin-right:20px;line-height:64px;}
-#head .right a{-webkit-border-radius:2px;border-radius:2px;background:#fff;color:#00b361;padding:10px 20px}
+#head .right a{-webkit-border-radius:2px;border-radius:2px;background:#fff;color:#00b361;padding:11px 20px}
 #title{border-bottom:3px solid #f3f4f8;}
 #title h2{border-bottom:3px solid #aaafbf;margin:30px 0 -3px 0;display:inline-block;padding-bottom:20px}
 #title .milestone{font-size:16px;font-weight:bold;margin:0 20px}
-#title .description{display:inline-block;font-family:'MuseoSlab500Regular',serif;color:#aaa}
+#title .description{display:inline-block;font-family:'MuseoSlab500Regular',serif;color:#b1b6c4}
 #content{padding:20px;margin-top:20px;}
 #content #hero{background:url("img/hires/2.jpg") center;-webkit-background-size:cover;-moz-background-size:cover;background-size:cover;-webkit-border-radius:2px;border-radius:2px;margin-bottom:30px;}
 #content #hero .content{-webkit-border-radius:2px;border-radius:2px;color:#fff;padding:30px;background:rgba(0,0,0,0.3);-webkit-box-shadow:inset 0 1px 2px rgba(0,0,0,0.2);box-shadow:inset 0 1px 2px rgba(0,0,0,0.2);}
 #content #hero .content h2{margin-bottom:20px;margin-left:140px}
-#content #hero .content p{font-family:'MuseoSlab500Regular',serif;font-size:18px;line-height:24px;margin-left:140px}
+#content #hero .content p{font-family:'MuseoSlab500Regular',serif;font-size:18px;line-height:24px;margin-left:140px;text-align:justify;text-justify:inter-word}
 #content #hero .content .address{font-size:120px;float:left}
 #content #hero .content .cta{text-align:center;margin-top:10px;}
-#content #hero .content .cta a{font-family:'MuseoSlab500Regular',serif;padding:10px 20px;-webkit-border-radius:2px;border-radius:2px;display:inline-block;margin:0 4px;}
+#content #hero .content .cta a{font-family:'MuseoSlab500Regular',serif;padding:11px 20px;-webkit-border-radius:2px;border-radius:2px;display:inline-block;margin:0 4px;}
 #content #hero .content .cta a.primary{font-weight:bold;background:#00b361;color:#fff}
 #content #hero .content .cta a.secondary{background:#fff;color:#00b361}
 #content #repos{border:1px solid #cdcecf;-webkit-border-radius:2px;border-radius:2px;}
@@ -479,4 +479,18 @@ ul li{display:inline-block}
 #content #repos .header a{font-family:'MuseoSlab500Regular',serif}
 #content #repos .footer{background:#f9fafb;color:#aaafbf;-webkit-box-shadow:inset 0 1px 2px rgba(221,225,237,0.2);box-shadow:inset 0 1px 2px rgba(221,225,237,0.2);border-top:1px solid #dde1ed;text-align:right;font-family:'MuseoSlab500Regular',serif;}
 #content #repos .footer .icon{color:#aaafbf}
+#content #add{border:1px solid #cdcecf;-webkit-border-radius:2px;border-radius:2px;width:400px;margin-top:30px;}
+#content #add h2{color:#3e4457}
+#content #add p{font-family:'MuseoSlab500Regular',serif;color:#b1b6c4;margin-top:10px;line-height:20px;text-align:justify;text-justify:inter-word;}
+#content #add p a{color:#3e4457}
+#content #add .form{padding:20px;}
+#content #add .form table{width:100%;}
+#content #add .form table tr td:first-child{width:100%}
+#content #add .form input{-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;padding:10px;width:100%;-webkit-border-radius:2px 0 0 2px;border-radius:2px 0 0 2px;border:1px solid #dde1ed;border-right:0;-webkit-box-shadow:inset 0 1px 2px rgba(0,0,0,0.2);box-shadow:inset 0 1px 2px rgba(0,0,0,0.2)}
+#content #add .form a{margin-left:-2px;font-family:'MuseoSlab500Regular',serif;padding:11px 20px;-webkit-border-radius:0 2px 2px 0;border-radius:0 2px 2px 0;display:inline-block;font-weight:bold;background:#00b361;color:#fff}
+#content #add .header,#content #add .footer{padding:20px 30px}
+#content #add .header{-webkit-box-shadow:0 1px 2px rgba(221,225,237,0.5);box-shadow:0 1px 2px rgba(221,225,237,0.5);margin-bottom:2px;border-bottom:1px solid #dde1ed;}
+#content #add .header a{font-family:'MuseoSlab500Regular',serif}
+#content #add .footer{background:#f9fafb;color:#aaafbf;-webkit-box-shadow:inset 0 1px 2px rgba(221,225,237,0.2);box-shadow:inset 0 1px 2px rgba(221,225,237,0.2);border-top:1px solid #dde1ed;text-align:center;font-family:'MuseoSlab500Regular',serif;}
+#content #add .footer .icon{color:#aaafbf}
 #footer{border-top:1px solid #f3f4f8;text-align:center;padding:30px;margin-top:30px;font-family:'MuseoSlab500Regular',serif}
