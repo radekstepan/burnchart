@@ -225,6 +225,65 @@
       
     });
 
+    // firebase.coffee
+    root.require.register('burnchart/src/components/firebase.js', function(exports, require, module) {
+    
+      var authCb, state, user;
+      
+      user = require('./user');
+      
+      state = require('../modules/state');
+      
+      authCb = function() {};
+      
+      module.exports = new can.Map({
+        setClient: function(root, success, error) {
+          var client;
+          client = new Firebase("https://" + root + ".firebaseio.com");
+          state.load('Loading');
+          this.attr('auth', new FirebaseSimpleLogin(client, function(err, obj) {
+            if (err || !obj) {
+              if (!obj) {
+                state.none();
+              }
+              return authCb(err);
+            }
+            user(obj);
+            state.info("" + obj.displayName + " is logged in");
+            return authCb();
+          }));
+          return client;
+        },
+        login: function(cb, provider) {
+          if (provider == null) {
+            provider = 'github';
+          }
+          if (!this.client) {
+            return cb('Client is not setup');
+          }
+          authCb = cb;
+          state.load('Connecting GitHub account');
+          return this.auth.login(provider, {
+            'rememberMe': true,
+            'scope': 'public_repo'
+          });
+        },
+        logout: function() {
+          var _ref;
+          if ((_ref = this.auth) != null) {
+            _ref.logout();
+          }
+          user({});
+          return state.info('You have logged out');
+        },
+        signup: function(data, cb) {
+          console.log(data);
+          return cb(null);
+        }
+      });
+      
+    });
+
     // layout.mustache
     root.require.register('burnchart/src/templates/layout.js', function(exports, require, module) {
     

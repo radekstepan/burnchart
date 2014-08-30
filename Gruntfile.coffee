@@ -26,6 +26,8 @@ module.exports = (grunt) ->
                     'vendor/lodash/dist/lodash.js'
                     'vendor/async/lib/async.js'
                     'vendor/ractive/ractive.js'
+                    'vendor/firebase/lib/firebase.js'
+                    'vendor/firebase-simple-login/firebase-simple-login.js'
                     # Our app.
                     'build/app.js'
                 ]
