@@ -1,3 +1,4 @@
 {
-    "firebase": "burnchart-app"
+    "firebase": "burnchart",
+    "provider": "github"
 }

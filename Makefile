@@ -11,4 +11,7 @@ watch:
 serve:
 	cd public; python -m SimpleHTTPServer 8000
 
+deploy:
+	firebase deploy
+
 .PHONY: build

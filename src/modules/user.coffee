@@ -1,7 +1,8 @@
 # Currently logged-in user.
-module.exports = user = can.compute({ })
-user.bind 'change', (ev, obj) ->
-    mixpanel.people.set
-        '$email': obj.email
-        'name': obj.displayName
-    mixpanel.identify obj.username
+module.exports = user = new Ractive()
+
+# Init now.
+do user.render
+
+user.observe '*', ->
+    console.log 'User', arguments

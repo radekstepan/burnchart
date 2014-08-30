@@ -3,11 +3,15 @@ module.exports = (grunt) ->
         pkg: grunt.file.readJSON("package.json")
         
         apps_c:
+            loader:
+                dest: 'public/js/commonjs.js'
+
             commonjs:
-                src: [ 'src/**/*.{coffee,mustache}' ]
-                dest: 'build/app.js'
+                src: [ 'src/**/*.{coffee,js,json,mustache}' ]
+                dest: 'public/js/app.js'
                 options:
                     main: 'src/app.coffee'
+                    loader: no
 
         stylus:
             compile:
@@ -16,22 +20,22 @@ module.exports = (grunt) ->
                     'src/styles/icons.styl'
                     'src/styles/app.styl'
                 ]
-                dest: 'build/app.css'
+                dest: 'public/css/app.css'
 
         concat:            
             scripts:
                 src: [
+                    # CommonJS loader.
+                    'public/js/commonjs.js'
                     # Vendor dependencies.
-                    'vendor/jquery/jquery.js'
                     'vendor/lodash/dist/lodash.js'
-                    'vendor/async/lib/async.js'
                     'vendor/ractive/ractive.js'
-                    'vendor/firebase/lib/firebase.js'
+                    'vendor/firebase/firebase.js'
                     'vendor/firebase-simple-login/firebase-simple-login.js'
                     # Our app.
-                    'build/app.js'
+                    'public/js/app.js'
                 ]
-                dest: 'build/app.bundle.js'
+                dest: 'public/js/app.bundle.js'
                 options:
                     separator: ';' # for minification purposes
 
@@ -40,21 +44,21 @@ module.exports = (grunt) ->
                     # Vendor dependencies.
                     'vendor/normalize-css/normalize.css'
                     # Our style.
-                    'build/app.css'
+                    'public/css/app.css'
                 ]
-                dest: 'build/app.bundle.css'
+                dest: 'public/css/app.bundle.css'
 
         uglify:
             scripts:
                 files:
-                    'build/app.min.js': 'build/app.js'
-                    'build/app.bundle.min.js': 'build/app.bundle.js'
+                    'public/js/app.min.js': 'public/js/app.js'
+                    'public/js/app.bundle.min.js': 'public/js/app.bundle.js'
 
         cssmin:
             combine:
                 files:
-                    'build/app.min.css': 'build/app.css'
-                    'build/app.bundle.min.css': 'build/app.bundle.css'
+                    'public/css/app.min.css': 'public/css/app.css'
+                    'public/css/app.bundle.min.css': 'public/css/app.bundle.css'
 
     grunt.loadNpmTasks('grunt-apps-c')
     grunt.loadNpmTasks('grunt-contrib-stylus')
