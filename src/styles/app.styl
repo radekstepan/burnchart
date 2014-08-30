@@ -3,13 +3,16 @@
 $serif_font = 'MuseoSlab500Regular', serif
 $sans_serif_font = 'MuseoSans500Regular', sans-serif
 
+$strong_color = #C1041C
+$highlight_color = #FFBB2A
+
 body
     color: #3E4457
     font-family: $sans_serif_font
 
 a
-    color: #B1B6C4
     text-decoration: none
+    color: #AAAFBF
 
 h1, h2, h3, p
     margin: 0
@@ -30,8 +33,7 @@ ul
     margin: 0 auto
 
 #head
-    background: #252F39
-    color: #86939C
+    background: $strong_color
     height: 64px
 
     h1
@@ -40,8 +42,9 @@ ul
         padding: 10px 24px
         line-height: 44px
         height: 44px
-        background: rgba(#000, 30%)
+        background: #77000E
         display: inline-block
+        color: $strong_color
 
         .icon
             margin: 0
@@ -54,7 +57,7 @@ ul
 
         .icon
             position: absolute
-            color: #303D4A
+            color: $strong_color
 
             &.search
                 top: 8px
@@ -65,12 +68,12 @@ ul
                 right: 12px
 
         input
-            background: rgba(#000, 30%)
+            background: #77000E
             border: 0
             padding: 10px 12px 10px 36px
             font-size: 14px
             border-radius: 2px
-            color: rgba(#FFF, 50%)
+            color: #FFF
             width: 220px
 
     ul
@@ -80,10 +83,11 @@ ul
             margin-left: 30px
 
     a
+        color: #E0808D
         font-weight: bold
 
         &.active, &:hover
-            color: #DDE1ED
+            color: #FFF
 
     .right
         float: right
@@ -92,8 +96,8 @@ ul
 
         a
             border-radius: 2px
-            background: #FFF
-            color: #00B361
+            background: $highlight_color
+            color: $strong_color
             padding: 11px 20px
 
 #title
@@ -161,12 +165,12 @@ ul
 
                     &.primary
                         font-weight: bold
-                        background: #00B361
+                        background: $strong_color
                         color: #FFF
                     
                     &.secondary
                         background: #FFF
-                        color: #00B361
+                        color: $strong_color
 
     #repos
         border: 1px solid #CDCECF
@@ -214,14 +218,14 @@ ul
                                 box-shadow: inset 0 1px 2px rgba(#000, 20%)
 
                             &.red
-                                background: #FF2955
+                                background: $strong_color
 
                             &.green
-                                background: #4BDA66
+                                background: #00B361
 
                         .due
                             &.red
-                                color: #FF2955
+                                color: $strong_color
                                 font-weight: bold
 
                     &:first-child
@@ -242,7 +246,7 @@ ul
                         background: #EBF6F1
 
                         .milestone, .percent, .due
-                            color: #9FC9B5
+                            color: #00B361
 
         .header, .footer
             padding: 20px 30px
@@ -313,7 +317,7 @@ ul
                 border-radius: 0 2px 2px 0
                 display: inline-block
                 font-weight: bold
-                background: #00B361
+                background: $strong_color
                 color: #FFF
 
         .header, .footer
@@ -336,6 +340,7 @@ ul
             font-family: $serif_font
 
             .icon
+                display: inline-block
                 color: #AAAFBF
 
 #footer
