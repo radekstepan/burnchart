@@ -1,8 +1,5 @@
 # Currently logged-in user.
 module.exports = user = new Ractive()
 
-# Init now.
-do user.render
-
-user.observe '*', ->
+user.observe 'uid', ->
     console.log 'User', arguments

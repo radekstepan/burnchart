@@ -1,10 +1,10 @@
 <div id="head">
     <div class="right">
-        {{#user}}
+        {{#user.displayName}}
             {{user.displayName}} logged in
         {{else}}
-            <a href="#" class="github"><span class="icon github"></span> Sign In</a>
-        {{/user}}
+            <a href="#" class="github" on-click="login"><span class="icon github"></span> Sign In</a>
+        {{/user.displayName}}
     </div>
 
     <h1><span class="icon fire-station"></span></h1>

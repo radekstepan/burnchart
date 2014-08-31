@@ -5,6 +5,7 @@
         "lodash": "2.3.0",
         "normalize-css": "2.1.3",
         "ractive": "~0.5.5",
+        "ractive-plugins": "Rich-Harris/Ractive-plugins",
         "firebase": "~1.0.21",
         "firebase-simple-login": "~1.6.3"
     }

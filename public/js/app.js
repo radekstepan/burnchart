@@ -7,9 +7,7 @@
     // app.coffee
     root.require.register('burnchart/src/app.js', function(exports, require, module) {
     
-      var App, header, user;
-      
-      user = require('./modules/user');
+      var App, header;
       
       header = require('./components/header');
       
@@ -19,9 +17,6 @@
         template: require('./templates/layout'),
         'components': {
           'Header': header
-        },
-        'data': {
-          'user': user.data
         }
       });
       
@@ -32,13 +27,28 @@
     // header.coffee
     root.require.register('burnchart/src/components/header.js', function(exports, require, module) {
     
-      var firebase;
+      var firebase, user;
       
       firebase = require('../modules/firebase');
       
+      user = require('../modules/user');
+      
       module.exports = Ractive.extend({
         'template': require('../templates/header'),
-        init: function() {}
+        init: function() {
+          console.log(this.get('user.uid'));
+          return this.on('login', function() {
+            return firebase.login(function(err) {
+              if (err) {
+                throw err;
+              }
+            });
+          });
+        },
+        'data': {
+          user: user
+        },
+        'adapt': [Ractive.adaptors.Ractive]
       });
       
     });
@@ -112,9 +122,7 @@
       
       module.exports = user = new Ractive();
       
-      user.render();
-      
-      user.observe('*', function() {
+      user.observe('uid', function() {
         return console.log('User', arguments);
       });
       
@@ -123,7 +131,7 @@
     // header.mustache
     root.require.register('burnchart/src/templates/header.js', function(exports, require, module) {
     
-      module.exports = ["<div id=\"head\">","    <div class=\"right\">","        {{#user}}","            {{user.displayName}} logged in","        {{else}}","            <a href=\"#\" class=\"github\"><span class=\"icon github\"></span> Sign In</a>","        {{/user}}","    </div>","","    <h1><span class=\"icon fire-station\"></span></h1>","","    <div class=\"q\">","        <span class=\"icon search\"></span>","        <span class=\"icon down-open\"></span>","        <input type=\"text\" placeholder=\"Jump to...\">","    </div>","","    <ul>","        <li><a href=\"#\" class=\"add\"><span class=\"icon plus-circled\"></span> Add a Project</a></li>","        <li><a href=\"#\" class=\"faq\">FAQ</a></li>","    </ul>","</div>"].join("\n");
+      module.exports = ["<div id=\"head\">","    <div class=\"right\">","","    </div>","","    <h1><span class=\"icon fire-station\"></span></h1>","","    <div class=\"q\">","        <span class=\"icon search\"></span>","        <span class=\"icon down-open\"></span>","        <input type=\"text\" placeholder=\"Jump to...\">","    </div>","","    <ul>","        <li><a href=\"#\" class=\"add\"><span class=\"icon plus-circled\"></span> Add a Project</a></li>","        <li><a href=\"#\" class=\"faq\">FAQ</a></li>","    </ul>","</div>"].join("\n");
     });
 
     // layout.mustache
