@@ -19974,61 +19974,97 @@
 //
 // Changes to either Ractive will be reflected in both.
 
-(function () {
+(function ( global, factory ) {
 
-	var RactiveWrapper;
+    'use strict';
 
-	Ractive.adaptors.Ractive = {
-		filter: function ( object ) {
-			return object instanceof Ractive;
-		},
-		wrap: function ( ractive, otherRactive, keypath, prefixer ) {
-			return new RactiveWrapper( ractive, otherRactive, keypath, prefixer );
-		}
-	};
+    // Common JS (i.e. browserify) environment
+    if ( typeof module !== 'undefined' && module.exports && typeof require === 'function' ) {
+        factory( require( 'ractive' ) );
+    }
 
-	RactiveWrapper = function ( ractive, otherRactive, keypath, prefixer ) {
-		var wrapper = this;
+    // AMD?
+    else if ( typeof define === 'function' && define.amd ) {
+        define([ 'ractive' ], factory );
+    }
 
-		this.value = otherRactive;
+    // browser global
+    else if ( global.Ractive ) {
+        factory( global.Ractive );
+    }
 
-		this.changeHandler = otherRactive.on( 'change', function ( changeHash ) {
-			wrapper.shortCircuit = true;
-			ractive.set( prefixer( changeHash ) );
-			wrapper.shortCircuit = false;
-		});
+    else {
+        throw new Error( 'Could not find Ractive! It must be loaded before the ractive-adaptor-ractive plugin' );
+    }
 
-		this.resetHandler = otherRactive.on( 'reset', function ( newData ) {
-			wrapper.shortCircuit = true;
-			ractive.update( keypath );
-			wrapper.shortCircuit = false;
-		});
-	};
+}( typeof window !== 'undefined' ? window : this, function ( Ractive ) {
 
-	RactiveWrapper.prototype = {
-		teardown: function () {
-			this.changeHandler.cancel();
-			this.resetHandler.cancel();
-		},
-		get: function () {
-			return this.value.get();
-		},
-		set: function ( keypath, value ) {
-			this.value.set( keypath, value );
-		},
-		reset: function ( object ) {
-			// If the new object is a Backbone model, assume this one is
-			// being retired. Ditto if it's not a model at all
-			if ( object instanceof Ractive || typeof object !== 'object' ) {
-				return false;
-			}
+    'use strict';
 
-			// Otherwise if this is a POJO, reset the model
-			this.value.reset( object );
-		}
-	};
+    if ( !Ractive ) {
+        throw new Error( 'Could not find Ractive! Check your paths config' );
+    }
 
-}());;/* Firebase v1.0.21 */ (function() {var h,aa=this;function n(a){return void 0!==a}function ba(){}function ca(a){a.sb=function(){return a.md?a.md:a.md=new a}}
+    var RactiveWrapper;
+
+    Ractive.adaptors.Ractive = {
+        filter: function ( object ) {
+            return object instanceof Ractive;
+        },
+        wrap: function ( ractive, otherRactive, keypath, prefixer ) {
+            return new RactiveWrapper( ractive, otherRactive, keypath, prefixer );
+        }
+    };
+
+    RactiveWrapper = function ( ractive, otherRactive, keypath, prefixer ) {
+        var wrapper = this;
+
+        this.value = otherRactive;
+
+        this.changeHandler = otherRactive.on( 'change', function ( changeHash ) {
+            wrapper.setting = true;
+            ractive.set( prefixer( changeHash ) );
+            wrapper.setting = false;
+        });
+
+        this.resetHandler = otherRactive.on( 'reset', function ( newData ) {
+            wrapper.setting = true;
+            ractive.update( keypath );
+            wrapper.setting = false;
+        });
+    };
+
+    RactiveWrapper.prototype = {
+        teardown: function () {
+            this.changeHandler.cancel();
+            this.resetHandler.cancel();
+        },
+        get: function () {
+            return this.value.get();
+        },
+        set: function ( keypath, value ) {
+            // Only set if the we didn't originate the change.
+            if (!this.setting) {
+                this.value.set( keypath, value );
+            }
+        },
+        reset: function ( object ) {
+            if (this.setting) {
+                return;
+            }
+
+            // If the new object is a Backbone model, assume this one is
+            // being retired. Ditto if it's not a model at all
+            if ( object instanceof Ractive || typeof object !== 'object' ) {
+                return false;
+            }
+
+            // Otherwise if this is a POJO, reset the model
+            this.value.reset( object );
+        }
+    };
+
+}));;/* Firebase v1.0.21 */ (function() {var h,aa=this;function n(a){return void 0!==a}function ba(){}function ca(a){a.sb=function(){return a.md?a.md:a.md=new a}}
 function da(a){var b=typeof a;if("object"==b)if(a){if(a instanceof Array)return"array";if(a instanceof Object)return b;var c=Object.prototype.toString.call(a);if("[object Window]"==c)return"object";if("[object Array]"==c||"number"==typeof a.length&&"undefined"!=typeof a.splice&&"undefined"!=typeof a.propertyIsEnumerable&&!a.propertyIsEnumerable("splice"))return"array";if("[object Function]"==c||"undefined"!=typeof a.call&&"undefined"!=typeof a.propertyIsEnumerable&&!a.propertyIsEnumerable("call"))return"function"}else return"null";
 else if("function"==b&&"undefined"==typeof a.call)return"object";return b}function ea(a){return"array"==da(a)}function fa(a){var b=da(a);return"array"==b||"object"==b&&"number"==typeof a.length}function q(a){return"string"==typeof a}function ga(a){return"number"==typeof a}function ha(a){var b=typeof a;return"object"==b&&null!=a||"function"==b}function ia(a,b,c){return a.call.apply(a.bind,arguments)}
 function ja(a,b,c){if(!a)throw Error();if(2<arguments.length){var d=Array.prototype.slice.call(arguments,2);return function(){var c=Array.prototype.slice.call(arguments);Array.prototype.unshift.apply(c,d);return a.apply(b,c)}}return function(){return a.apply(b,arguments)}}function r(a,b,c){r=Function.prototype.bind&&-1!=Function.prototype.bind.toString().indexOf("native code")?ia:ja;return r.apply(null,arguments)}
@@ -20368,7 +20404,6 @@ goog.exportProperty(FirebaseSimpleLogin,"onOpen",FirebaseSimpleLogin.onOpen);Fir
       module.exports = Ractive.extend({
         'template': require('../templates/header'),
         init: function() {
-          console.log(this.get('user.uid'));
           return this.on('login', function() {
             return firebase.login(function(err) {
               if (err) {
@@ -20407,7 +20442,6 @@ goog.exportProperty(FirebaseSimpleLogin,"onOpen",FirebaseSimpleLogin.onOpen);Fir
       
       FB = (function() {
         function FB() {
-          console.log('Init Firebase');
           this.client = new Firebase("https://" + config.firebase + ".firebaseio.com");
           this.auth = new FirebaseSimpleLogin(this.client, function(err, obj) {
             if (err || !obj) {
@@ -20450,20 +20484,14 @@ goog.exportProperty(FirebaseSimpleLogin,"onOpen",FirebaseSimpleLogin.onOpen);Fir
     // user.coffee
     root.require.register('burnchart/src/modules/user.js', function(exports, require, module) {
     
-      var user;
-      
-      module.exports = user = new Ractive();
-      
-      user.observe('uid', function() {
-        return console.log('User', arguments);
-      });
+      module.exports = new Ractive();
       
     });
 
     // header.mustache
     root.require.register('burnchart/src/templates/header.js', function(exports, require, module) {
     
-      module.exports = ["<div id=\"head\">","    <div class=\"right\">","","    </div>","","    <h1><span class=\"icon fire-station\"></span></h1>","","    <div class=\"q\">","        <span class=\"icon search\"></span>","        <span class=\"icon down-open\"></span>","        <input type=\"text\" placeholder=\"Jump to...\">","    </div>","","    <ul>","        <li><a href=\"#\" class=\"add\"><span class=\"icon plus-circled\"></span> Add a Project</a></li>","        <li><a href=\"#\" class=\"faq\">FAQ</a></li>","    </ul>","</div>"].join("\n");
+      module.exports = ["<div id=\"head\">","    <div class=\"right\">","        {{#user.displayName}}","            {{user.displayName}} logged in","        {{else}}","            <a href=\"#\" class=\"github\" on-click=\"login\"><span class=\"icon github\"></span> Sign In</a>","        {{/user.displayName}}","    </div>","","    <h1><span class=\"icon fire-station\"></span></h1>","","    <div class=\"q\">","        <span class=\"icon search\"></span>","        <span class=\"icon down-open\"></span>","        <input type=\"text\" placeholder=\"Jump to...\">","    </div>","","    <ul>","        <li><a href=\"#\" class=\"add\"><span class=\"icon plus-circled\"></span> Add a Project</a></li>","        <li><a href=\"#\" class=\"faq\">FAQ</a></li>","    </ul>","</div>"].join("\n");
     });
 
     // layout.mustache

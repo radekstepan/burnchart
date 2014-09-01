@@ -36,7 +36,6 @@
       module.exports = Ractive.extend({
         'template': require('../templates/header'),
         init: function() {
-          console.log(this.get('user.uid'));
           return this.on('login', function() {
             return firebase.login(function(err) {
               if (err) {
@@ -75,7 +74,6 @@
       
       FB = (function() {
         function FB() {
-          console.log('Init Firebase');
           this.client = new Firebase("https://" + config.firebase + ".firebaseio.com");
           this.auth = new FirebaseSimpleLogin(this.client, function(err, obj) {
             if (err || !obj) {
@@ -118,20 +116,14 @@
     // user.coffee
     root.require.register('burnchart/src/modules/user.js', function(exports, require, module) {
     
-      var user;
-      
-      module.exports = user = new Ractive();
-      
-      user.observe('uid', function() {
-        return console.log('User', arguments);
-      });
+      module.exports = new Ractive();
       
     });
 
     // header.mustache
     root.require.register('burnchart/src/templates/header.js', function(exports, require, module) {
     
-      module.exports = ["<div id=\"head\">","    <div class=\"right\">","","    </div>","","    <h1><span class=\"icon fire-station\"></span></h1>","","    <div class=\"q\">","        <span class=\"icon search\"></span>","        <span class=\"icon down-open\"></span>","        <input type=\"text\" placeholder=\"Jump to...\">","    </div>","","    <ul>","        <li><a href=\"#\" class=\"add\"><span class=\"icon plus-circled\"></span> Add a Project</a></li>","        <li><a href=\"#\" class=\"faq\">FAQ</a></li>","    </ul>","</div>"].join("\n");
+      module.exports = ["<div id=\"head\">","    <div class=\"right\">","        {{#user.displayName}}","            {{user.displayName}} logged in","        {{else}}","            <a href=\"#\" class=\"github\" on-click=\"login\"><span class=\"icon github\"></span> Sign In</a>","        {{/user.displayName}}","    </div>","","    <h1><span class=\"icon fire-station\"></span></h1>","","    <div class=\"q\">","        <span class=\"icon search\"></span>","        <span class=\"icon down-open\"></span>","        <input type=\"text\" placeholder=\"Jump to...\">","    </div>","","    <ul>","        <li><a href=\"#\" class=\"add\"><span class=\"icon plus-circled\"></span> Add a Project</a></li>","        <li><a href=\"#\" class=\"faq\">FAQ</a></li>","    </ul>","</div>"].join("\n");
     });
 
     // layout.mustache

@@ -6,16 +6,13 @@ authCb = ->
 
 class FB
     
-    constructor: ->
-        console.log 'Init Firebase'
-        
+    constructor: ->       
         # Setup a new client.
         @client = new Firebase "https://#{config.firebase}.firebaseio.com"
         
         # Check if we have a user in session.
         @auth = new FirebaseSimpleLogin @client, (err, obj) ->
-            if err or not obj
-                return authCb err
+            return authCb err if err or not obj
 
             # Save user.
             user.set obj

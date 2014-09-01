@@ -30,7 +30,7 @@ module.exports = (grunt) ->
                     # Vendor dependencies.
                     'vendor/lodash/dist/lodash.js'
                     'vendor/ractive/ractive.js'
-                    'vendor/ractive-plugins/adaptors/Ractive.js'
+                    'vendor/ractive-adaptor/adaptor.js'
                     'vendor/firebase/firebase.js'
                     'vendor/firebase-simple-login/firebase-simple-login.js'
                     # Our app.
