@@ -3,7 +3,7 @@
         {{#user.displayName}}
             {{user.displayName}} logged in
         {{else}}
-            <a href="#" class="github" on-click="login"><span class="icon github"></span> Sign In</a>
+            <a href="#" class="github" on-click="!login"><span class="icon github"></span> Sign In</a>
         {{/user.displayName}}
     </div>
 
@@ -16,7 +16,7 @@
     </div>
 
     <ul>
-        <li><a href="#" class="add"><span class="icon plus-circled"></span> Add a Project</a></li>
+        <li><a href="#project/add" class="add"><span class="icon plus-circled"></span> Add a Project</a></li>
         <li><a href="#" class="faq">FAQ</a></li>
     </ul>
 </div>

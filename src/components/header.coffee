@@ -1,5 +1,6 @@
 firebase = require '../modules/firebase'
 user     = require '../modules/user'
+mediator = require '../modules/mediator'
 
 module.exports = Ractive.extend
 
@@ -7,7 +8,7 @@ module.exports = Ractive.extend
 
     init: ->
         # Login user.
-        @on 'login', ->
+        @on '!login', ->
             firebase.login (err) ->
                 throw err if err
 

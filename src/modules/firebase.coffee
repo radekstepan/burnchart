@@ -16,7 +16,6 @@ class FB
 
             # Save user.
             user.set obj
-            console.log "#{obj.displayName} is logged in"
 
     # Login a user.
     login: (cb) ->
@@ -26,7 +25,6 @@ class FB
         authCb = cb
 
         # Login.
-        console.log 'Connecting GitHub account'
         @auth.login config.provider,
             'rememberMe': yes
             'scope': 'public_repo'
@@ -35,6 +33,5 @@ class FB
     logout: ->
         @auth?.logout
         do user.reset
-        console.log 'You have logged out'
 
 module.exports = new FB()

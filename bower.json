@@ -7,6 +7,7 @@
         "ractive": "~0.5.5",
         "ractive-adaptor": "radekstepan/ractive-adaptor-ractive",
         "firebase": "~1.0.21",
-        "firebase-simple-login": "~1.6.3"
+        "firebase-simple-login": "~1.6.3",
+        "grapnel": "~0.4.2"
     }
 }

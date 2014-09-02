@@ -33,6 +33,7 @@ module.exports = (grunt) ->
                     'vendor/ractive-adaptor/adaptor.js'
                     'vendor/firebase/firebase.js'
                     'vendor/firebase-simple-login/firebase-simple-login.js'
+                    'vendor/grapnel/src/grapnel.js'
                     # Our app.
                     'public/js/app.js'
                 ]
