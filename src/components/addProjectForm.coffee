@@ -8,5 +8,15 @@ module.exports = Ractive.extend
 
     'data':
         'user': user
+        'value': null
 
     'adapt': [ Ractive.adaptors.Ractive ]
+
+    init: ->
+        autocomplete = (value) ->
+            console.log 'Autocomplete', value
+
+        @observe 'value', _.debounce(autocomplete, 200), { 'init': no }
+
+        @on 'submit', ->
+            console.log 'Submit the form with', @get('value')

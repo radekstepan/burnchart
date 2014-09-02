@@ -57,9 +57,22 @@
       module.exports = Ractive.extend({
         'template': require('../templates/addProjectForm'),
         'data': {
-          'user': user
+          'user': user,
+          'value': null
         },
-        'adapt': [Ractive.adaptors.Ractive]
+        'adapt': [Ractive.adaptors.Ractive],
+        init: function() {
+          var autocomplete;
+          autocomplete = function(value) {
+            return console.log('Autocomplete', value);
+          };
+          this.observe('value', _.debounce(autocomplete, 200), {
+            'init': false
+          });
+          return this.on('submit', function() {
+            return console.log('Submit the form with', this.get('value'));
+          });
+        }
       });
       
     });
@@ -200,13 +213,13 @@
     // addProjectForm.mustache
     root.require.register('burnchart/src/templates/addProjectForm.js', function(exports, require, module) {
     
-      module.exports = ["<div id=\"add\">","    <div class=\"header\">","        <h2>Add a Project</h2>","        <p>Type in the name of the repository as you would normally. If you'd like to add a private GitHub project, <a href=\"#\">Sign In</a> first.</p>","    </div>","","    <div class=\"form\">","        <table>","            <tr>","                <td>","                    <input type=\"text\" placeholder=\"user/repo\" autocomplete=\"off\">","                </td>","                <td>","                    <a href=\"#\">Add</a>","                </td>","            </tr>","        </table>","    </div>","","    <div class=\"footer\">","        <span class=\"icon spin6\"></span> Connecting to your repo.","    </div>","</div>"].join("\n");
+      module.exports = ["<div id=\"add\">","    <div class=\"header\">","        <h2>Add a Project</h2>","        <p>Type in the name of the repository as you would normally. If you'd like to add a private GitHub project, <a href=\"#\">Sign In</a> first.</p>","    </div>","","    <div class=\"form\">","        <table>","            <tr>","                <td>","                    <input type=\"text\" placeholder=\"user/repo\" autocomplete=\"off\" value=\"{{value}}\">","                </td>","                <td>","                    <a on-click=\"submit\">Add</a>","                </td>","            </tr>","        </table>","    </div>","</div>"].join("\n");
     });
 
     // header.mustache
     root.require.register('burnchart/src/templates/header.js', function(exports, require, module) {
     
-      module.exports = ["<div id=\"head\">","    <div class=\"right\">","        {{#user.displayName}}","            {{user.displayName}} logged in","        {{else}}","            <a href=\"#\" class=\"github\" on-click=\"!login\"><span class=\"icon github\"></span> Sign In</a>","        {{/user.displayName}}","    </div>","","    <h1><span class=\"icon fire-station\"></span></h1>","","    <div class=\"q\">","        <span class=\"icon search\"></span>","        <span class=\"icon down-open\"></span>","        <input type=\"text\" placeholder=\"Jump to...\">","    </div>","","    <ul>","        <li><a href=\"#project/add\" class=\"add\"><span class=\"icon plus-circled\"></span> Add a Project</a></li>","        <li><a href=\"#\" class=\"faq\">FAQ</a></li>","    </ul>","</div>"].join("\n");
+      module.exports = ["<div id=\"head\">","    <div class=\"right\">","        {{#user.displayName}}","            {{user.displayName}} logged in","        {{else}}","            <a class=\"github\" on-click=\"!login\"><span class=\"icon github\"></span> Sign In</a>","        {{/user.displayName}}","    </div>","","    <h1><span class=\"icon fire-station\"></span></h1>","","    <div class=\"q\">","        <span class=\"icon search\"></span>","        <span class=\"icon down-open\"></span>","        <input type=\"text\" placeholder=\"Jump to...\">","    </div>","","    <ul>","        <li><a href=\"#project/add\" class=\"add\"><span class=\"icon plus-circled\"></span> Add a Project</a></li>","        <li><a href=\"#\" class=\"faq\">FAQ</a></li>","    </ul>","</div>"].join("\n");
     });
 
     // layout.mustache
