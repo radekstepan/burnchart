@@ -26,6 +26,20 @@ charcoal, charriot
 [ ] rotate between percentage progress and points left
 [ ] Send notifications to people like Codeship or have our own delivery system perhaps like Github or just show a notification icon and onclick ask people to upgrade 
 
+### The 20%
+
+[ ] Do not show login/logged-in state when we are still fetching that information from Firebase
+[ ] Handle 404 on routes; from catch all check if '/' or go 404 controller
+[ ] Variable document.title on different pages
+[ ] In add a project form autocomplete on my username, orgs I am member of and repos I have access to
+[ ] Someone might create a public repo, add it to the system and switch it to private; need to check repo priviledges at runtime; or when asking for auth, one would choose either public OR public/private, but this could get confusign.
+[ ] Make sure the padding fits throughout the interface; we have user-select on elements.
+[ ] Validate repo input and show a loading sign of sorts
+[ ] When fetching repo say if no perms to access or does not exist
+[ ] Check location.hash is supported
+[ ] Have an app wide of triggering a URL and have named routes too
+[ ] Check that we have not run out of requests to make
+
 ### Extras
 
 [ ] choose your own strategy for naming issues, e.g. all issues are one size
@@ -44,11 +58,6 @@ charcoal, charriot
 [ ] show velocity number for each member of the team in the corner of the layout
 [ ] show velocity for all team members and how it progresses through time
 [ ] points collector - give medals for 1st 3 spots in terms of velocity
-[ ] Do not show login/logged-in state when we are still fetching that information from Firebase
-[ ] Handle 404 on routes; from catch all check if '/' or go 404 controller
-[ ] Variable document.title on different pages
-[ ] In add a project form autocomplete on my username, orgs I am member of and repos I have access to
-[ ] Someone might create a public repo, add it to the system and switch it to private; need to check repo priviledges at runtime; or when asking for auth, one would choose either public OR public/private, but this could get confusign.
 
 ## Notes
 

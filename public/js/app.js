@@ -46,13 +46,15 @@
     // addProjectForm.coffee
     root.require.register('burnchart/src/components/addProjectForm.js', function(exports, require, module) {
     
-      var firebase, mediator, user;
+      var firebase, github, mediator, user;
       
       firebase = require('../modules/firebase');
       
       user = require('../modules/user');
       
       mediator = require('../modules/mediator');
+      
+      github = require('../modules/github');
       
       module.exports = Ractive.extend({
         'template': require('../templates/addProjectForm'),
@@ -70,7 +72,15 @@
             'init': false
           });
           return this.on('submit', function() {
-            return console.log('Submit the form with', this.get('value'));
+            var repo, reponame, username, _ref;
+            _ref = this.get('value').split('/'), username = _ref[0], reponame = _ref[1];
+            repo = github.getRepo(username, reponame);
+            return repo.show(function(err, repo, xhr) {
+              if (err) {
+                throw err;
+              }
+              return window.location.hash = '#';
+            });
           });
         }
       });
@@ -162,6 +172,30 @@
       })();
       
       module.exports = new FB();
+      
+    });
+
+    // github.coffee
+    root.require.register('burnchart/src/modules/github.js', function(exports, require, module) {
+    
+      var auth, github, setToken, user;
+      
+      user = require('./user');
+      
+      auth = 'oauth';
+      
+      github = null;
+      
+      (setToken = function(token) {
+        return github = new Github({
+          token: token,
+          auth: auth
+        });
+      })(null);
+      
+      user.observe('accessToken', setToken);
+      
+      module.exports = github;
       
     });
 

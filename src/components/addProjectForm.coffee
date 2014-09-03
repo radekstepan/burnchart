@@ -1,6 +1,7 @@
 firebase = require '../modules/firebase'
 user     = require '../modules/user'
 mediator = require '../modules/mediator'
+github   = require '../modules/github'
 
 module.exports = Ractive.extend
 
@@ -19,4 +20,11 @@ module.exports = Ractive.extend
         @observe 'value', _.debounce(autocomplete, 200), { 'init': no }
 
         @on 'submit', ->
-            console.log 'Submit the form with', @get('value')
+            [ username, reponame ] = @get('value').split('/')
+            repo = github.getRepo username, reponame
+            repo.show (err, repo, xhr) ->
+                throw err if err
+                # TODO: save repo to us & Firebase.
+                # Redirect to the dashboard.
+                # TODO: trigger a named route
+                window.location.hash = '#'
