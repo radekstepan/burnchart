@@ -59,7 +59,7 @@ charcoal, charriot
 - [ ] show velocity for all team members and how it progresses through time
 - [ ] points collector - give medals for 1st 3 spots in terms of velocity
 - [ ] show past commits or due dates like in [this calendar](https://dribbble.com/shots/1736128-Meetups-Page?list=shots&sort=popular&timeframe=now&offset=5)
-- allow people to submit suggestions via GitHub Issues
+- [ ] allow people to submit suggestions via GitHub Issues
 
 ## Notes
 
