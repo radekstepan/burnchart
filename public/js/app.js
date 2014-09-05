@@ -129,37 +129,38 @@
     // firebase.coffee
     root.require.register('burnchart/src/modules/firebase.js', function(exports, require, module) {
     
-      var FB, authCb, config, user;
+      var Class, config, user;
       
       config = require('../models/config');
       
       user = require('./user');
       
-      authCb = function() {};
-      
-      FB = (function() {
-        function FB() {
+      Class = (function() {
+        function Class() {
+          var _this = this;
           this.client = new Firebase("https://" + config.firebase + ".firebaseio.com");
           this.auth = new FirebaseSimpleLogin(this.client, function(err, obj) {
             if (err || !obj) {
-              return authCb(err);
+              return _this.authCb(err);
             }
             return user.set(obj);
           });
         }
       
-        FB.prototype.login = function(cb) {
+        Class.prototype.authCb = function() {};
+      
+        Class.prototype.login = function(cb) {
           if (!this.client) {
             return cb('Client is not setup');
           }
-          authCb = cb;
+          this.authCb = cb;
           return this.auth.login(config.provider, {
             'rememberMe': true,
             'scope': 'public_repo'
           });
         };
       
-        FB.prototype.logout = function() {
+        Class.prototype.logout = function() {
           var _ref;
           if ((_ref = this.auth) != null) {
             _ref.logout;
@@ -167,11 +168,11 @@
           return user.reset();
         };
       
-        return FB;
+        return Class;
       
       })();
       
-      module.exports = new FB();
+      module.exports = new Class();
       
     });
 
