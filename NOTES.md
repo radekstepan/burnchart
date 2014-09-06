@@ -119,3 +119,9 @@ Grant write access for this user.
 We want repos to have a 1 to many users mapping. This way changes in one get propagated to others. The issue is that users may be kicked from a project in which case they can't see the cached stats for a repo.
 
 We can get [repositories](https://developer.github.com/v3/repos/) for a user, but we have to get orgs too and get repos there again.
+
+###Getting latest repo changes
+
+Only users that have a `user` timestamp on repos < 30m (our config) can receive updates from repos. Otherwise we try to fetch the latest permissions from GitHub with a x minute/second retry.
+
+We get the latest data from GitHub if our data is > 30s old (user configured). Then we broadcast latest changes to all other users (including us) updating the `age` timestamp on the repo. Receiving updates resets the user-set timeout.
