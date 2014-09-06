@@ -93,3 +93,29 @@ Accessing dynamic paths in the rules can be done using a `$` prefix. This serves
     }
 
 [User-based rules](https://www.firebase.com/docs/web/guide/user-security.html).
+
+Use `uid` from Simple Login which is a string ID guaranteed to be unique across all providers.
+
+Grant write access for this user.
+
+    {
+      "rules": {
+        "users": {
+          "$user_id": {
+            // grants write access to the owner of this user account
+            // whose uid must exactly match the key ($user_id)
+            ".write": "$user_id === auth.uid",
+    
+            "email": {
+              // an email is only allowed in the profile if it matches
+              // the auth token's email account (for Google or password auth)
+              ".validate": "newData.val() === auth.email"
+            }
+          }
+        }
+      }
+    }
+
+We want repos to have a 1 to many users mapping. This way changes in one get propagated to others. The issue is that users may be kicked from a project in which case they can't see the cached stats for a repo.
+
+We can get [repositories](https://developer.github.com/v3/repos/) for a user, but we have to get orgs too and get repos there again.
