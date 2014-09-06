@@ -125,3 +125,9 @@ We can get [repositories](https://developer.github.com/v3/repos/) for a user, bu
 Only users that have a `user` timestamp on repos < 30m (our config) can receive updates from repos. Otherwise we try to fetch the latest permissions from GitHub with a x minute/second retry.
 
 We get the latest data from GitHub if our data is > 30s old (user configured). Then we broadcast latest changes to all other users (including us) updating the `age` timestamp on the repo. Receiving updates resets the user-set timeout.
+
+Since we do not have control over GitHub repos, we need to take care of all situations that can arise:
+
+1. Repo does not exist: remove from `repos`
+2. Repo exists but you don't have access: remove user from `repo`
+3. GitHub times out: set a system `status` message to all
