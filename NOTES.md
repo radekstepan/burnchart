@@ -131,7 +131,14 @@ Since we do not have control over GitHub repos, we need to take care of all situ
 1. Repo gives us 404 (does not exist or we don't have perms): remove user from `repo`.
 1. Repo gives us success: add user to the `repo`; trigger a poll if needed to fetch latest data
 1. GitHub times out: set a system `status` message to all
+1. We run out of requests we can make: show a message to the user, similar to GitHub timeout but only to that one specific user
 
 [GitHub shows 404](https://developer.github.com/v3/troubleshooting/#why-am-i-getting-a-404-error-on-a-repository-that-exists) when we don't have access OR repo does not exist.
 
-Keep track of last update to a repo so we can clear old projects.
+Keep track of last update to a repo so we can clear old projects (later, as needed).
+
+Only use repo name when we are adding the user to the repo, from there on use the repo `id` which will be preserved even if the repo is renamed. But the [milestones API](https://developer.github.com/v3/issues/milestones/) does not use the `id` :(, in which case we would show 404 and let the user delete this and add a new one. Alternatively, try to fetch the new repo name from GitHub after making a query to get the repo by its `id`:
+
+  GET /repositories/:id 
+
+When fetching the issues, we can constrain on a `milestone` and `state`.
