@@ -128,6 +128,10 @@ We get the latest data from GitHub if our data is > 30s old (user configured). T
 
 Since we do not have control over GitHub repos, we need to take care of all situations that can arise:
 
-1. Repo does not exist: remove from `repos`
-2. Repo exists but you don't have access: remove user from `repo`
-3. GitHub times out: set a system `status` message to all
+1. Repo gives us 404 (does not exist or we don't have perms): remove user from `repo`.
+1. Repo gives us success: add user to the `repo`; trigger a poll if needed to fetch latest data
+1. GitHub times out: set a system `status` message to all
+
+[GitHub shows 404](https://developer.github.com/v3/troubleshooting/#why-am-i-getting-a-404-error-on-a-repository-that-exists) when we don't have access OR repo does not exist.
+
+Keep track of last update to a repo so we can clear old projects.
