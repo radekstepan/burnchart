@@ -66,3 +66,4 @@ charcoal, charriot
 - *payment gateways* in Canada: http://www.shopify.com/payment-gateways/canada
 - start people on a *Startup* plan showing them a comparison table to upgrade to a better offering
 - Startup, small business and enterprise plans
+- keep discussion going via [gitter](http://gitter.im)
