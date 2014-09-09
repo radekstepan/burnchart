@@ -61,6 +61,7 @@ charcoal, charriot
 - [ ] points collector - give medals for 1st 3 spots in terms of velocity
 - [ ] show past commits or due dates like in [this calendar](https://dribbble.com/shots/1736128-Meetups-Page?list=shots&sort=popular&timeframe=now&offset=5)
 - [ ] allow people to submit suggestions via GitHub Issues
+- [ ] find a way where, as a group, we can share repo data by trusting the other repo members that use our platform
 
 ## Notes
 

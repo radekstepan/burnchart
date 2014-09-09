@@ -139,6 +139,35 @@ Keep track of last update to a repo so we can clear old projects (later, as need
 
 Only use repo name when we are adding the user to the repo, from there on use the repo `id` which will be preserved even if the repo is renamed. But the [milestones API](https://developer.github.com/v3/issues/milestones/) does not use the `id` :(, in which case we would show 404 and let the user delete this and add a new one. Alternatively, try to fetch the new repo name from GitHub after making a query to get the repo by its `id`:
 
-  GET /repositories/:id 
+  GET /repositories/:id
 
 When fetching the issues, we can constrain on a `milestone` and `state`.
+
+**Vulnerability**: if we share repos between users, one of them can write whatever change she wants and *spoil* the chart for others. Until we fix this, let us have a 1 repo to 1 user mapping.
+
+##Design
+
+###Adding a new user
+
+- [ ] we get a `user` object from GH
+- [ ] get a list of repos from FB by asking for our `user` root
+- [ ] *a*: user is not there so let us create this root object
+- [ ] *b*: user is there so we get back a list of repos
+
+###Adding a new repo
+
+- [ ] make a request to GH fetching a repo by `user/repo`
+- [ ] *a*: GH gives us 404 - show a message to the user
+- [ ] *b1*: we get back a repo object, so a write into our `user` root as a `set()` operation (overriding any existing entry if it exists)
+- [ ] *b2*: in client register our repo to receive updates from FB and since it is new - it triggers a fetch from GH immediately
+
+###Updating a repo
+
+- [ ] listen for our `user`, `repo` changes from FB which actually will render new data
+- [ ] our local repo object has an `age` information, if it reaches a threshold, trigger a fetch from GH
+- [ ] *a*: GH gives us 404 - show a message to the user saying last `state` on the repo, e.g. last success 5 minutes ago, keep showing the *old* data if any
+- [ ] *b*: GH gives us data, make an `update()` on FB saying `state` is `null` (OK) updating the `age` to time now
+
+###Deleting a repo
+
+- [ ] remove our `repo` under the `user`, no questions asked. All subscribers are switched off and views disposed of
