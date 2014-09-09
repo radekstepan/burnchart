@@ -24,7 +24,8 @@ charcoal, charriot
 - [ ] sort projects based on their closest due dates
 - [ ] show only repo name if all projects are under our name
 - [ ] rotate between percentage progress and points left
-- [ ] Send notifications to people like Codeship or have our own delivery system perhaps like Github or just show a notification icon and onclick ask people to upgrade 
+- [ ] Send notifications to people like Codeship or have our own delivery system perhaps like Github or just show a notification icon and onclick ask people to upgrade
+- [ ] Show all issues as [one size](https://github.com/radekstepan/github-burndown-chart/issues/46).
 
 ### The 20%
 
