@@ -171,3 +171,13 @@ When fetching the issues, we can constrain on a `milestone` and `state`.
 ###Deleting a repo
 
 - [ ] remove our `repo` under the `user`, no questions asked. All subscribers are switched off and views disposed of
+
+###Upgrading an account to private repos
+
+Private repos (extra `scope` in FB login) are part of a paid plan. Need to recognize that a user has an active paid account with us, before using the extended scope.
+
+GH repositories have a `private` flag.
+
+Since we do not *trust* users it is I that need to be upgrading users, at the same time it needs to be automatic.
+
+We should not kill a user if they are no longer paid, maybe they got behind a payment, just disable latest data from private repos.
