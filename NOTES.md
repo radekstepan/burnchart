@@ -196,6 +196,8 @@ Using a free instance of [IronWorker](http://dev.iron.io/worker/reference/enviro
 
 Because security rules cannot override existing rules, we need to separate the table of subscribers from saving the info on the suer herself.
 
-- [ ] fetch updates for a `private` repo only if our user is in a `subscribers` collection which is not writable by them
-- [ ] use a JS library to allow Stripe payment processing; people submit their card details and we get a Stripe `token` back. Save this token and user id on FB under `payments` collection.
-- [ ] have a worker process the `payments` and write into `subscribers` with our own `admin_key`
+- [ ] fetch updates for a `private` repo only if our user has a `plan` flag set to `business` or whatever
+- [ ] use a JS library to allow Stripe payment processing; people submit their card details and we get a Stripe `token` back. Save this token and user id on FB under `payments` collection that only adds new entries, never deletes.
+- [ ] have a worker process the `payments` ever 6 minutes or faster via IronWorker
+- [ ] run an extra worker to check for for repos that return 404 when user is on an `open-source` plan; this is to find cheaters
+- [ ] run an extra worker that checks for `business` plans and if we have payments for these or not
