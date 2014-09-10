@@ -67,5 +67,7 @@ charcoal, charriot
 
 - *payment gateways* in Canada: http://www.shopify.com/payment-gateways/canada
 - start people on a *Startup* plan showing them a comparison table to upgrade to a better offering
-- Startup, small business and enterprise plans
+- community (open source), small business (private repos) and enterprise plans (contact us)
 - keep discussion going via [gitter](http://gitter.im)
+- [credit card form](http://designmodo.com/ux-credit-card-payment-form/) ux from Designmodo
+- workers: using a free instance of IronWorker and assuming 5s runtime each time gives us a poll every 6 minutes. Zapier would poll every 15 minutes but already integrates Stripe and FB.
