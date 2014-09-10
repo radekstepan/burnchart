@@ -172,6 +172,10 @@ When fetching the issues, we can constrain on a `milestone` and `state`.
 
 - [ ] remove our `repo` under the `user`, no questions asked. All subscribers are switched off and views disposed of
 
+###Deleting a user
+
+- [ ] execute a `remove()` in FB if our tokens match for a user, will remove all repos too
+
 ###Upgrading an account to private repos
 
 Private repos (extra `scope` in FB login) are part of a paid plan. Need to recognize that a user has an active paid account with us, before using the extended scope.
@@ -181,3 +185,10 @@ GH repositories have a `private` flag.
 Since we do not *trust* users it is I that need to be upgrading users, at the same time it needs to be automatic.
 
 We should not kill a user if they are no longer paid, maybe they got behind a payment, just disable latest data from private repos.
+
+Set the private scope on all auth and put the burden on me to proove who has paid for an account or not, since someone could send a request to FB saying that a repo is public when it is not.
+
+I can run a script once in a while to see whose repo returns 404 when it is set as `private = false`, put the burden on me to prove.
+
+- [ ] fetch updates for a `private` repo only if we have a status as `subscriber` on user which is not writable by them
+- [ ] use an in-between service to process payment from say Stripe
