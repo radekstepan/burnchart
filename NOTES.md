@@ -190,5 +190,12 @@ Set the private scope on all auth and put the burden on me to proove who has pai
 
 I can run a script once in a while to see whose repo returns 404 when it is set as `private = false`, put the burden on me to prove.
 
-- [ ] fetch updates for a `private` repo only if we have a status as `subscriber` on user which is not writable by them
-- [ ] use an in-between service to process payment from say Stripe
+Using a free instance of [IronWorker](http://dev.iron.io/worker/reference/environment/#maximum_run_time_per_worker) and assuming 5s runtime each time gives us a poll every 6 minutes.
+
+[Zapier](https://zapier.com/zapbook/firebase/stripe/) would poll every 15 minutes but already integrates Stripe and FB.
+
+Because security rules cannot override existing rules, we need to separate the table of subscribers from saving the info on the suer herself.
+
+- [ ] fetch updates for a `private` repo only if our user is in a `subscribers` collection which is not writable by them
+- [ ] use a JS library to allow Stripe payment processing; people submit their card details and we get a Stripe `token` back. Save this token and user id on FB under `payments` collection.
+- [ ] have a worker process the `payments` and write into `subscribers` with our own `admin_key`
