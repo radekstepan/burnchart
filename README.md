@@ -65,7 +65,7 @@ charcoal, charriot
 
 ## Notes
 
-- *payment gateways* in Canada: http://www.shopify.com/payment-gateways/canada
+- *payment gateways* in Canada: [Shopify](http://www.shopify.com/payment-gateways/canada), [Chargify](http://chargify.com/payment-gateways/) list
 - start people on a *Startup* plan showing them a comparison table to upgrade to a better offering
 - community (open source), small business (private repos) and enterprise plans (contact us)
 - keep discussion going via [gitter](http://gitter.im)
