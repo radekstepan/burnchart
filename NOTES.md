@@ -161,6 +161,17 @@ When fetching the issues, we can constrain on a `milestone` and `state`.
 - [ ] *b1*: we get back a repo object, so a write into our `user` root as a `set()` operation (overriding any existing entry if it exists)
 - [ ] *b2*: in client register our repo to receive updates from FB and since it is new - it triggers a fetch from GH immediately
 
+Have the following [script](http://www.google.com/url?q=http%3A%2F%2Fjsfiddle.net%2Fkatowulf%2F5ESSp%2F&sa=D&sntz=1&usg=AFQjCNGCBxXSIqExOhOjtjSExWsrwmN8cQ) check that `private` repos are allowed:
+
+"$user": {
+   repos: {
+      "$private": {
+        ".validate": "($private == false) || subscribers.$user != null"
+      }
+   }
+}
+
+
 ###Updating a repo
 
 - [ ] listen for our `user`, `repo` changes from FB which actually will render new data
@@ -194,10 +205,27 @@ Using a free instance of [IronWorker](http://dev.iron.io/worker/reference/enviro
 
 [Zapier](https://zapier.com/zapbook/firebase/stripe/) would poll every 15 minutes but already integrates Stripe and FB.
 
-Because security rules cannot override existing rules, we need to separate the table of subscribers from saving the info on the suer herself.
+Because security rules cannot override existing rules, we need to separate the table of subscribers from saving the info on the user herself.
+
+People buy subscriptions that extends their expiry date. This expiry date is calculated and set by the worker who adds together all subscriptions to come up with an *end date*.
+
+One can use `Firebase.ServerValue.TIMESTAMP` for accurate timestamping.
 
 - [ ] fetch updates for a `private` repo only if our user has a `plan` flag set to `business` or whatever
-- [ ] use a JS library to allow Stripe payment processing; people submit their card details and we get a Stripe `token` back. Save this token and user id on FB under `payments` collection that only adds new entries, never deletes.
-- [ ] have a worker process the `payments` ever 6 minutes or faster via IronWorker
+- [ ] use a JS library to allow Stripe payment processing; people submit their card details and we get a Stripe `token` back. Save this token and on FB under `payments/processing/user` collection (*dirty*).
+- [ ] have a worker process the `payments/processing/user` ever 6 minutes or faster via IronWorker, once processed, move the payment into `payments/processed/user` collection that is writable only with our admin token and is read-only for the user
 - [ ] run an extra worker to check for for repos that return 404 when user is on an `open-source` plan; this is to find cheaters
-- [ ] run an extra worker that checks for `business` plans and if we have payments for these or not
+- [ ] run an extra worker that checks for `business` plans and if we have `payments` for these or not
+- [ ] show user a list of her subscription purchases, that shows the state of the processing as workers go through these. She needs to see a due date so assume all purchases went through and do a date calculation on the client
+
+The following [approach](http://stackoverflow.com/a/21220875/105707) will allow write access to certain paths by a worker:
+
+
+  var FirebaseTokenGenerator = require("firebase-token-generator");
+  var tokenGenerator = new FirebaseTokenGenerator(YOUR_FIREBASE_SECRET);
+  var token = tokenGenerator.createToken({ 'isWorker': true }, { 'expires': 0 });
+
+  {
+    "rules:
+      ".read": "auth.isWorker === true"
+  }
