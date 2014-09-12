@@ -1,31 +1,19 @@
-# burnchart
+# burnchart.io
 
 ## Concept
 
 GitHub Burndown Chart as a service. Public repos are free, for private access auth via GitHub and pay.
-
-## Name
-
-charcoal, charriot
-
-- gurndown [.com/.io] github burndown
-- bithubchart [.com/.io] burndown github chart
-- burnchart [.io]
 
 ## Tasks
 
 ### MVP
 
 - [ ] landing page allows you to immediately jump into action
-- [ ] past repos are cached remotely or in localStorage
-- [ ] show chart for the current milestone or choose a custom one
-- [ ] be able to config options through UI that currently have to be hardcoded in config
-- [ ] embed user tracking
+- [ ] use GitHub to login
+- [ ] show chart for the current milestone, default to the first one returned and allow to choose a custom one
 - [ ] sort projects based on their closest due dates
 - [ ] show only repo name if all projects are under our name
-- [ ] rotate between percentage progress and points left
-- [ ] Send notifications to people like Codeship or have our own delivery system perhaps like Github or just show a notification icon and onclick ask people to upgrade
-- [ ] Show all issues as [one size](https://github.com/radekstepan/github-burndown-chart/issues/46).
+- [ ] show all issues as [one size](https://github.com/radekstepan/github-burndown-chart/issues/46)
 
 ### The 20%
 
@@ -43,6 +31,10 @@ charcoal, charriot
 
 ### Extras
 
+- [ ] rotate between percentage progress and points left
+- [ ] be able to config options through UI that currently have to be hardcoded in config
+- [ ] cache repos in `localStorage` for those that do not use GitHub login
+- [ ] allow people to go straight to a URL that fetches the repo, if public, for them; to demo our app without adding a repo (add it behind the scenes); *req* cache repos
 - [ ] choose your own strategy for naming issues, e.g. all issues are one size
 - [ ] choose your own theme
 - [ ] custom milestone start dates
