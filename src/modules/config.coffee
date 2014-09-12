@@ -17,6 +17,7 @@ defaults =
     'host': 'api.github.com'
     # Making NSA (err taxpayer) work for it.
     'protocol': 'https'
+    'use_title': false
 
 # Validators of config fields.
 validators =
