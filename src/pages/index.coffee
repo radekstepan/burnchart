@@ -1,6 +1,8 @@
+Hero     = require '../components/hero'
+Projects = require '../components/projects'
+
 module.exports = Ractive.extend
 
     'template': require '../templates/pages/index'
 
-    init: ->
-        console.log 'Index page'
+    'components': { Hero, Projects }

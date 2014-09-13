@@ -7,9 +7,13 @@
     // app.coffee
     root.require.register('burnchart/src/app.js', function(exports, require, module) {
     
-      var App, Header, el, mediator, route, router;
+      var App, Header, el, key, route, router, _i, _len, _ref;
       
-      mediator = require('./modules/mediator');
+      _ref = ['projects'];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        key = _ref[_i];
+        require("./modules/" + key);
+      }
       
       Header = require('./components/header');
       
@@ -117,6 +121,44 @@
       
     });
 
+    // hero.coffee
+    root.require.register('burnchart/src/components/hero.js', function(exports, require, module) {
+    
+      var mediator, projects;
+      
+      projects = require('../modules/projects');
+      
+      mediator = require('../modules/mediator');
+      
+      module.exports = Ractive.extend({
+        'template': require('../templates/hero'),
+        'data': {
+          'projects': projects
+        },
+        'adapt': [Ractive.adaptors.Ractive]
+      });
+      
+    });
+
+    // projects.coffee
+    root.require.register('burnchart/src/components/projects.js', function(exports, require, module) {
+    
+      var mediator, projects;
+      
+      projects = require('../modules/projects');
+      
+      mediator = require('../modules/mediator');
+      
+      module.exports = Ractive.extend({
+        'template': require('../templates/projects'),
+        'data': {
+          'projects': projects
+        },
+        'adapt': [Ractive.adaptors.Ractive]
+      });
+      
+    });
+
     // config.json
     root.require.register('burnchart/src/models/config.js', function(exports, require, module) {
     
@@ -207,10 +249,73 @@
       
     });
 
+    // projects.coffee
+    root.require.register('burnchart/src/modules/projects.js', function(exports, require, module) {
+    
+      var RactiveModel, mediator;
+      
+      mediator = require('./mediator');
+      
+      RactiveModel = require('./ractiveModel');
+      
+      module.exports = new RactiveModel({
+        'data': {
+          'items': []
+        },
+        init: function() {
+          var _this = this;
+          return mediator.on('!projects/get', function(provider) {
+            switch (provider) {
+              case 'local':
+                return localforage.getItem('projects', function(items) {
+                  if (items == null) {
+                    items = [];
+                  }
+                  return _this.set('items', items);
+                });
+              case 'github':
+                throw 'Not implemented yet';
+            }
+          });
+        }
+      });
+      
+    });
+
+    // ractiveModel.coffee
+    root.require.register('burnchart/src/modules/ractiveModel.js', function(exports, require, module) {
+    
+      module.exports = function(opts) {
+        var Model, model;
+        Model = Ractive.extend(opts);
+        model = new Model();
+        model.render();
+        return model;
+      };
+      
+    });
+
     // user.coffee
     root.require.register('burnchart/src/modules/user.js', function(exports, require, module) {
     
-      module.exports = new Ractive();
+      var RactiveModel, mediator;
+      
+      mediator = require('./mediator');
+      
+      RactiveModel = require('./ractiveModel');
+      
+      module.exports = new RactiveModel({
+        'data': {
+          'provider': "local",
+          'id': "0",
+          'uid': "local:0"
+        },
+        init: function() {
+          return this.observe('uid', function() {
+            return mediator.fire('!projects/get', this.get('provider'));
+          });
+        }
+      });
       
     });
 
@@ -225,9 +330,6 @@
         'template': require('../templates/pages/addProject'),
         'components': {
           AddProjectForm: AddProjectForm
-        },
-        init: function() {
-          return console.log('Add a project page');
         }
       });
       
@@ -236,10 +338,17 @@
     // index.coffee
     root.require.register('burnchart/src/pages/index.js', function(exports, require, module) {
     
+      var Hero, Projects;
+      
+      Hero = require('../components/hero');
+      
+      Projects = require('../components/projects');
+      
       module.exports = Ractive.extend({
         'template': require('../templates/pages/index'),
-        init: function() {
-          return console.log('Index page');
+        'components': {
+          Hero: Hero,
+          Projects: Projects
         }
       });
       
@@ -257,6 +366,12 @@
       module.exports = ["<div id=\"head\">","    <div class=\"right\">","        {{#user.displayName}}","            {{user.displayName}} logged in","        {{else}}","            <a class=\"github\" on-click=\"!login\"><span class=\"icon github\"></span> Sign In</a>","        {{/user.displayName}}","    </div>","","    <h1><span class=\"icon fire-station\"></span></h1>","","    <div class=\"q\">","        <span class=\"icon search\"></span>","        <span class=\"icon down-open\"></span>","        <input type=\"text\" placeholder=\"Jump to...\">","    </div>","","    <ul>","        <li><a href=\"#project/add\" class=\"add\"><span class=\"icon plus-circled\"></span> Add a Project</a></li>","        <li><a href=\"#\" class=\"faq\">FAQ</a></li>","    </ul>","</div>"].join("\n");
     });
 
+    // hero.mustache
+    root.require.register('burnchart/src/templates/hero.js', function(exports, require, module) {
+    
+      module.exports = ["{{^projects.items}}","    <div id=\"hero\">","        <div class=\"content\">","            <span class=\"icon address\"></span>","            <h2>See your project progress</h2>","            <p>Not sure where to start? Just add a demo repo to see a chart. There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable.</p>","            <div class=\"cta\">","                <a href=\"#project/add\" class=\"primary\"><span class=\"icon plus-circled\"></span> Add your project</a>","                <a href=\"#\" class=\"secondary\">Read the Guide</a>","            </div>","        </div>","    </div>","{{/projects.items}}"].join("\n");
+    });
+
     // layout.mustache
     root.require.register('burnchart/src/templates/layout.js', function(exports, require, module) {
     
@@ -272,7 +387,13 @@
     // index.mustache
     root.require.register('burnchart/src/templates/pages/index.js', function(exports, require, module) {
     
-      module.exports = ["<div id=\"title\">","    <div class=\"wrap\">","        <h2>Disposable Project</h2>","        <span class=\"milestone\">Milestone 1.0</span>","        <p class=\"description\">The one where we deliver all that we promised.</p>","    </div>","</div>","","<div id=\"content\" class=\"wrap\">","    <div id=\"hero\">","        <div class=\"content\">","            <span class=\"icon address\"></span>","            <h2>See your project progress</h2>","            <p>Not sure where to start? Just add a demo repo to see a chart. There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable.</p>","            <div class=\"cta\">","                <a href=\"#project/add\" class=\"primary\"><span class=\"icon plus-circled\"></span> Add your project</a>","                <a href=\"#\" class=\"secondary\">Read the Guide</a>","            </div>","        </div>","    </div>","","    <div id=\"repos\">","        <div class=\"header\">","            <a href=\"#\" class=\"sort\"><span class=\"icon sort-alphabet\"></span> Sorted by priority</a>","            <h2>Projects</h2>","        </div>","","        <table>","            <tr>","                <td><a class=\"repo\" href=\"#\">radekstepan/disposable</a></td>","                <td><span class=\"milestone\">Milestone 1.0 <span class=\"icon down-open\"></span></a></td>","                <td>","                    <div class=\"progress\">","                        <span class=\"percent\">40%</span>","                        <span class=\"due\">due on Friday</span>","                        <div class=\"outer bar\">","                            <div class=\"inner bar red\" style=\"width:40%\"></div>","                        </div>","                    </div>","                </td>","            </tr>","            <tr class=\"done\">","                <td><a class=\"repo\" href=\"#\">radekstepan/burnchart</a></td>","                <td><span class=\"milestone\">Beta Milestone <span class=\"icon down-open\"></span></a></td>","                <td>","                    <div class=\"progress\">","                        <span class=\"percent\">100%</span>","                        <span class=\"due\">due tomorrow</span>","                        <div class=\"outer bar\">","                            <div class=\"inner bar green\" style=\"width:100%\"></div>","                        </div>","                    </div>","                </td>","            </tr>","            <tr>","                <td><a class=\"repo\" href=\"#\">intermine/intermine</a></td>","                <td><span class=\"milestone\">Emma Release 96 <span class=\"icon down-open\"></span></a></td>","                <td>","                    <div class=\"progress\">","                        <span class=\"percent\">27%</span>","                        <span class=\"due\">due in 2 weeks</span>","                        <div class=\"outer bar\">","                            <div class=\"inner bar red\" style=\"width:27%\"></div>","                        </div>","                    </div>","                </td>","            </tr>","            <tr>","                <td><a class=\"repo\" href=\"#\">microsoft/windows</a></td>","                <td><span class=\"milestone\">RC 9 <span class=\"icon down-open\"></span></a></td>","                <td>","                    <div class=\"progress\">","                        <span class=\"percent\">90%</span>","                        <span class=\"due red\">overdue by a month</span>","                        <div class=\"outer bar\">","                            <div class=\"inner bar red\" style=\"width:90%\"></div>","                        </div>","                    </div>","                </td>","            </tr>","        </table>","","        <div class=\"footer\">","            <a href=\"#\"><span class=\"icon cog\"></span> Edit</a>","        </div>","    </div>","</div>"].join("\n");
+      module.exports = ["<div id=\"title\">","    <div class=\"wrap\">","        <h2>Disposable Project</h2>","        <span class=\"milestone\">Milestone 1.0</span>","        <p class=\"description\">The one where we deliver all that we promised.</p>","    </div>","</div>","","<div id=\"content\" class=\"wrap\">","    <Hero/>","    <Projects/>","</div>"].join("\n");
+    });
+
+    // projects.mustache
+    root.require.register('burnchart/src/templates/projects.js', function(exports, require, module) {
+    
+      module.exports = ["{{#projects.items}}","    <div id=\"projects\">","        <div class=\"header\">","            <a href=\"#\" class=\"sort\"><span class=\"icon sort-alphabet\"></span> Sorted by priority</a>","            <h2>Projects</h2>","        </div>","","        <table>","            {{#projects.items}}","                <tr>","                    <td><a class=\"repo\" href=\"#\">demo/demo</a></td>","                    <td><span class=\"milestone\">Milestone 1.0 <span class=\"icon down-open\"></span></a></td>","                    <td>","                        <div class=\"progress\">","                            <span class=\"percent\">40%</span>","                            <span class=\"due\">due on Friday</span>","                            <div class=\"outer bar\">","                                <div class=\"inner bar red\" style=\"width:40%\"></div>","                            </div>","                        </div>","                    </td>","                </tr>","            {{/projects.items}}","","            <tr>","                <td><a class=\"repo\" href=\"#\">radekstepan/disposable</a></td>","                <td><span class=\"milestone\">Milestone 1.0 <span class=\"icon down-open\"></span></a></td>","                <td>","                    <div class=\"progress\">","                        <span class=\"percent\">40%</span>","                        <span class=\"due\">due on Friday</span>","                        <div class=\"outer bar\">","                            <div class=\"inner bar red\" style=\"width:40%\"></div>","                        </div>","                    </div>","                </td>","            </tr>","            <tr class=\"done\">","                <td><a class=\"repo\" href=\"#\">radekstepan/burnchart</a></td>","                <td><span class=\"milestone\">Beta Milestone <span class=\"icon down-open\"></span></a></td>","                <td>","                    <div class=\"progress\">","                        <span class=\"percent\">100%</span>","                        <span class=\"due\">due tomorrow</span>","                        <div class=\"outer bar\">","                            <div class=\"inner bar green\" style=\"width:100%\"></div>","                        </div>","                    </div>","                </td>","            </tr>","            <tr>","                <td><a class=\"repo\" href=\"#\">intermine/intermine</a></td>","                <td><span class=\"milestone\">Emma Release 96 <span class=\"icon down-open\"></span></a></td>","                <td>","                    <div class=\"progress\">","                        <span class=\"percent\">27%</span>","                        <span class=\"due\">due in 2 weeks</span>","                        <div class=\"outer bar\">","                            <div class=\"inner bar red\" style=\"width:27%\"></div>","                        </div>","                    </div>","                </td>","            </tr>","            <tr>","                <td><a class=\"repo\" href=\"#\">microsoft/windows</a></td>","                <td><span class=\"milestone\">RC 9 <span class=\"icon down-open\"></span></a></td>","                <td>","                    <div class=\"progress\">","                        <span class=\"percent\">90%</span>","                        <span class=\"due red\">overdue by a month</span>","                        <div class=\"outer bar\">","                            <div class=\"inner bar red\" style=\"width:90%\"></div>","                        </div>","                    </div>","                </td>","            </tr>","        </table>","","        <div class=\"footer\">","            <a href=\"#\"><span class=\"icon cog\"></span> Edit</a>","        </div>","    </div>","{{/projects.items}}"].join("\n");
     });
   })();
 

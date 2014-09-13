@@ -36,6 +36,7 @@ module.exports = (grunt) ->
                     'vendor/grapnel/src/grapnel.js'
                     'vendor/github/lib/base64.js'
                     'vendor/github/github.js'
+                    'vendor/localforage/dist/localforage.js'
                     # Our app.
                     'public/js/app.js'
                 ]

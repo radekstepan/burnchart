@@ -1,6 +1,9 @@
-mediator = require './modules/mediator'
+( require "./modules/#{key}" for key in [
+    'projects'
+] )
 
 Header = require './components/header'
+
 
 el = '#page'
 
@@ -21,6 +24,6 @@ App = Ractive.extend
 
     init: ->
         # Init the routes.
-        Grapnel.listen router
+        Grapnel.listen router        
 
 module.exports = new App()
