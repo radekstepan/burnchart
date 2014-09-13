@@ -24617,20 +24617,19 @@ requireModule('promise/polyfill').polyfill();
         'adapt': [Ractive.adaptors.Ractive],
         init: function() {
           var autocomplete;
-          autocomplete = function(value) {
-            return console.log('Autocomplete', value);
-          };
+          autocomplete = function(value) {};
           this.observe('value', _.debounce(autocomplete, 200), {
             'init': false
           });
           return this.on('submit', function() {
-            var repo, reponame, username, _ref;
-            _ref = this.get('value').split('/'), username = _ref[0], reponame = _ref[1];
-            repo = github.getRepo(username, reponame);
+            var name, owner, repo, _ref;
+            _ref = this.get('value').split('/'), owner = _ref[0], name = _ref[1];
+            repo = github.getRepo(owner, name);
             return repo.show(function(err, repo, xhr) {
               if (err) {
                 throw err;
               }
+              mediator.fire('!projects/add', repo);
               return window.location.hash = '#';
             });
           });
@@ -24812,7 +24811,7 @@ requireModule('promise/polyfill').polyfill();
         },
         init: function() {
           var _this = this;
-          return mediator.on('!projects/get', function(provider) {
+          mediator.on('!projects/get', function(provider) {
             switch (provider) {
               case 'local':
                 return localforage.getItem('projects', function(items) {
@@ -24824,6 +24823,12 @@ requireModule('promise/polyfill').polyfill();
               case 'github':
                 throw 'Not implemented yet';
             }
+          });
+          return mediator.on('!projects/add', function(repo) {
+            return _this.push('items', {
+              'owner': repo.owner.login,
+              'name': repo.name
+            });
           });
         }
       });
@@ -24941,7 +24946,7 @@ requireModule('promise/polyfill').polyfill();
     // projects.mustache
     root.require.register('burnchart/src/templates/projects.js', function(exports, require, module) {
     
-      module.exports = ["{{#projects.items}}","    <div id=\"projects\">","        <div class=\"header\">","            <a href=\"#\" class=\"sort\"><span class=\"icon sort-alphabet\"></span> Sorted by priority</a>","            <h2>Projects</h2>","        </div>","","        <table>","            {{#projects.items}}","                <tr>","                    <td><a class=\"repo\" href=\"#\">demo/demo</a></td>","                    <td><span class=\"milestone\">Milestone 1.0 <span class=\"icon down-open\"></span></a></td>","                    <td>","                        <div class=\"progress\">","                            <span class=\"percent\">40%</span>","                            <span class=\"due\">due on Friday</span>","                            <div class=\"outer bar\">","                                <div class=\"inner bar red\" style=\"width:40%\"></div>","                            </div>","                        </div>","                    </td>","                </tr>","            {{/projects.items}}","","            <tr>","                <td><a class=\"repo\" href=\"#\">radekstepan/disposable</a></td>","                <td><span class=\"milestone\">Milestone 1.0 <span class=\"icon down-open\"></span></a></td>","                <td>","                    <div class=\"progress\">","                        <span class=\"percent\">40%</span>","                        <span class=\"due\">due on Friday</span>","                        <div class=\"outer bar\">","                            <div class=\"inner bar red\" style=\"width:40%\"></div>","                        </div>","                    </div>","                </td>","            </tr>","            <tr class=\"done\">","                <td><a class=\"repo\" href=\"#\">radekstepan/burnchart</a></td>","                <td><span class=\"milestone\">Beta Milestone <span class=\"icon down-open\"></span></a></td>","                <td>","                    <div class=\"progress\">","                        <span class=\"percent\">100%</span>","                        <span class=\"due\">due tomorrow</span>","                        <div class=\"outer bar\">","                            <div class=\"inner bar green\" style=\"width:100%\"></div>","                        </div>","                    </div>","                </td>","            </tr>","            <tr>","                <td><a class=\"repo\" href=\"#\">intermine/intermine</a></td>","                <td><span class=\"milestone\">Emma Release 96 <span class=\"icon down-open\"></span></a></td>","                <td>","                    <div class=\"progress\">","                        <span class=\"percent\">27%</span>","                        <span class=\"due\">due in 2 weeks</span>","                        <div class=\"outer bar\">","                            <div class=\"inner bar red\" style=\"width:27%\"></div>","                        </div>","                    </div>","                </td>","            </tr>","            <tr>","                <td><a class=\"repo\" href=\"#\">microsoft/windows</a></td>","                <td><span class=\"milestone\">RC 9 <span class=\"icon down-open\"></span></a></td>","                <td>","                    <div class=\"progress\">","                        <span class=\"percent\">90%</span>","                        <span class=\"due red\">overdue by a month</span>","                        <div class=\"outer bar\">","                            <div class=\"inner bar red\" style=\"width:90%\"></div>","                        </div>","                    </div>","                </td>","            </tr>","        </table>","","        <div class=\"footer\">","            <a href=\"#\"><span class=\"icon cog\"></span> Edit</a>","        </div>","    </div>","{{/projects.items}}"].join("\n");
+      module.exports = ["{{#projects.items}}","    <div id=\"projects\">","        <div class=\"header\">","            <a href=\"#\" class=\"sort\"><span class=\"icon sort-alphabet\"></span> Sorted by priority</a>","            <h2>Projects</h2>","        </div>","","        <table>","            {{#projects.items}}","                <tr>","                    <td><a class=\"repo\" href=\"#\">{{owner}}/{{name}}</a></td>","                    <td><span class=\"milestone\">??? <span class=\"icon down-open\"></span></a></td>","                    <td>","                        <div class=\"progress\">","                            <span class=\"percent\">10%</span>","                            <span class=\"due\">???</span>","                            <div class=\"outer bar\">","                                <div class=\"inner bar green\" style=\"width:10%\"></div>","                            </div>","                        </div>","                    </td>","                </tr>","            {{/projects.items}}","","            <tr>","                <td><a class=\"repo\" href=\"#\">radekstepan/disposable</a></td>","                <td><span class=\"milestone\">Milestone 1.0 <span class=\"icon down-open\"></span></a></td>","                <td>","                    <div class=\"progress\">","                        <span class=\"percent\">40%</span>","                        <span class=\"due\">due on Friday</span>","                        <div class=\"outer bar\">","                            <div class=\"inner bar red\" style=\"width:40%\"></div>","                        </div>","                    </div>","                </td>","            </tr>","            <tr class=\"done\">","                <td><a class=\"repo\" href=\"#\">radekstepan/burnchart</a></td>","                <td><span class=\"milestone\">Beta Milestone <span class=\"icon down-open\"></span></a></td>","                <td>","                    <div class=\"progress\">","                        <span class=\"percent\">100%</span>","                        <span class=\"due\">due tomorrow</span>","                        <div class=\"outer bar\">","                            <div class=\"inner bar green\" style=\"width:100%\"></div>","                        </div>","                    </div>","                </td>","            </tr>","            <tr>","                <td><a class=\"repo\" href=\"#\">intermine/intermine</a></td>","                <td><span class=\"milestone\">Emma Release 96 <span class=\"icon down-open\"></span></a></td>","                <td>","                    <div class=\"progress\">","                        <span class=\"percent\">27%</span>","                        <span class=\"due\">due in 2 weeks</span>","                        <div class=\"outer bar\">","                            <div class=\"inner bar red\" style=\"width:27%\"></div>","                        </div>","                    </div>","                </td>","            </tr>","            <tr>","                <td><a class=\"repo\" href=\"#\">microsoft/windows</a></td>","                <td><span class=\"milestone\">RC 9 <span class=\"icon down-open\"></span></a></td>","                <td>","                    <div class=\"progress\">","                        <span class=\"percent\">90%</span>","                        <span class=\"due red\">overdue by a month</span>","                        <div class=\"outer bar\">","                            <div class=\"inner bar red\" style=\"width:90%\"></div>","                        </div>","                    </div>","                </td>","            </tr>","        </table>","","        <div class=\"footer\">","            <a href=\"#\"><span class=\"icon cog\"></span> Edit</a>","        </div>","    </div>","{{/projects.items}}"].join("\n");
     });
   })();
 

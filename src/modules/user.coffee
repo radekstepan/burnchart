@@ -13,4 +13,4 @@ module.exports = new RactiveModel
     init: ->
         # When we are changed, get our projects.
         @observe 'uid', ->
-            mediator.fire '!projects/get', @get('provider')
+            mediator.fire '!projects/get'
