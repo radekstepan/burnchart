@@ -34,9 +34,10 @@ module.exports = (grunt) ->
                     'vendor/firebase/firebase.js'
                     'vendor/firebase-simple-login/firebase-simple-login.js'
                     'vendor/grapnel/src/grapnel.js'
-                    'vendor/github/lib/base64.js'
-                    'vendor/github/github.js'
+                    'vendor/superagent/superagent.js'
                     'vendor/localforage/dist/localforage.js'
+                    'vendor/async/lib/async.js'
+                    'vendor/moment/moment.js'
                     # Our app.
                     'public/js/app.js'
                 ]

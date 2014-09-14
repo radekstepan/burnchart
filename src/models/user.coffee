@@ -9,3 +9,4 @@ module.exports = new Model
         'provider': "local"
         'id':       "0"
         'uid':      "local:0"
+        'token':    null

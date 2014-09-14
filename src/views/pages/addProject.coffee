@@ -1,12 +1,11 @@
 mediator = require '../../modules/mediator'
-github   = require '../../modules/github'
 user     = require '../../models/user'
 
 module.exports = Ractive.extend
 
     'template': require '../../templates/pages/addProject'
 
-    'data': { 'value': null, user }
+    'data': { 'value': 'radekstepan/disposable', user }
 
     'adapt': [ Ractive.adaptors.Ractive ]
 
@@ -22,11 +21,9 @@ module.exports = Ractive.extend
         # TODO: listen to Enter keypress.
         @on 'submit', ->
             [ owner, name ] = @get('value').split('/')
-            repo = github.getRepo owner, name
-            repo.show (err, repo, xhr) ->
-                throw err if err
-                # TODO: save repo to us & Firebase.
-                mediator.fire '!projects/add', repo
+
+            # TODO: save repo & persist.
+            mediator.fire '!projects/add', { owner, name }, ->
                 # Redirect to the dashboard.
                 # TODO: trigger a named route
                 window.location.hash = '#'

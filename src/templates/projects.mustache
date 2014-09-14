@@ -1,4 +1,4 @@
-{{#projects.items}}
+{{#projects.list}}
     <div id="projects">
         <div class="header">
             <a href="#" class="sort"><span class="icon sort-alphabet"></span> Sorted by priority</a>
@@ -6,25 +6,37 @@
         </div>
 
         <table>
-            {{#projects.items}}
+            {{#projects.list}}
                 <tr>
                     <td><a class="repo" href="#">{{owner}}/{{name}}</a></td>
-                    <td><span class="milestone">??? <span class="icon down-open"></span></a></td>
-                    <td>
-                        <div class="progress">
-                            <span class="percent">10%</span>
-                            <span class="due">???</span>
-                            <div class="outer bar">
-                                <div class="inner bar green" style="width:10%"></div>
-                            </div>
-                        </div>
-                    </td>
+                    {{# { milestone: getMilestone(milestones.list) } }}
+                        {{#milestone}}
+                            <td>
+                                <span class="milestone">
+                                    {{ milestone.title }}
+                                    <span class="icon down-open">
+                                </span>
+                            </td>
+                            <td>
+                                <div class="progress">
+                                    <span class="percent">{{Math.floor(format.progress(closed_issues, open_issues))}}%</span>
+                                    <span class="due">due {{format.fromNow(due_on)}}</span>
+                                    <div class="outer bar">
+                                        <div class="inner bar {{format.onTime(milestone)}}" style="width:{{format.progress(closed_issues, open_issues)}}%"></div>
+                                    </div>
+                                </div>
+                            </td>
+                        {{/milestone}}
+                        {{^milestone}}
+                            <td colspan="2"><span class="milestone"><em>No milestones yet</em></td>
+                        {{/milestone}}
+                    {{/}}
                 </tr>
-            {{/projects.items}}
+            {{/projects.list}}
 
             <tr>
                 <td><a class="repo" href="#">radekstepan/disposable</a></td>
-                <td><span class="milestone">Milestone 1.0 <span class="icon down-open"></span></a></td>
+                <td><span class="milestone">Milestone 1.0 <span class="icon down-open"></span></td>
                 <td>
                     <div class="progress">
                         <span class="percent">40%</span>
@@ -80,4 +92,4 @@
             <a href="#"><span class="icon cog"></span> Edit</a>
         </div>
     </div>
-{{/projects.items}}
+{{/projects.list}}

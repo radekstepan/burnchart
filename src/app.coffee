@@ -1,9 +1,11 @@
-( require "./models/#{key}" for key in [
-    'projects'
+( require "./#{key}" for key in [
+    'utils/mixins'
+    'models/projects'
 ] )
 
 Header = require './views/header'
 
+mediator = require './modules/mediator'
 
 el = '#page'
 
@@ -15,6 +17,10 @@ route = (page, req, evt) ->
 router =
     '':            _.partial route, 'index'
     'project/add': _.partial route, 'addProject'
+    # TODO: remove in production.
+    'reset':       ->
+        mediator.fire '!projects/clear'
+        window.location.hash = '#'
 
 App = Ractive.extend
     

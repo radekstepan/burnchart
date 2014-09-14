@@ -8,12 +8,12 @@ GitHub Burndown Chart as a service. Public repos are free, for private access au
 
 ### MVP
 
-- [ ] landing page allows you to immediately jump into action
+- [x] landing page allows you to immediately jump into action
 - [ ] show chart for the current milestone, default to the first one returned and allow to choose a custom one
 - [ ] sort projects based on their closest due dates
 - [ ] show only repo name if all projects are under our name
 - [ ] show all issues as [one size](https://github.com/radekstepan/github-burndown-chart/issues/46)
-- [ ] use local storage to save information about us, but keep the API open for Firebase
+- [x] use local storage to save information about us, but keep the API open for Firebase
 
 ### The 20%
 
