@@ -8,7 +8,7 @@ module.exports = new Model
         'items': []
 
     init: ->
-        # Initialize with items if stored locally.
+        # Initialize with items stored locally.
         localforage.getItem 'projects', (items=[]) =>
             @set 'items', items
 

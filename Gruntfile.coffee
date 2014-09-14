@@ -65,11 +65,22 @@ module.exports = (grunt) ->
                     'public/css/app.min.css': 'public/css/app.css'
                     'public/css/app.bundle.min.css': 'public/css/app.bundle.css'
 
+        watch:
+            scripts:
+                files: "src/**/*.*"
+                tasks: [ "default" ]
+                options:
+                    interrupt: true # interrupt build when a file has changed?
+                    debounceDelay: 250 # delay a bit
+                    livereload: true
+
+
     grunt.loadNpmTasks('grunt-apps-c')
     grunt.loadNpmTasks('grunt-contrib-stylus')
     grunt.loadNpmTasks('grunt-contrib-concat')
     grunt.loadNpmTasks('grunt-contrib-uglify')
     grunt.loadNpmTasks('grunt-contrib-cssmin')
+    grunt.loadNpmTasks('grunt-contrib-watch')
 
     grunt.registerTask('default', [
         'apps_c'

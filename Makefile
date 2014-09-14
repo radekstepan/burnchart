@@ -6,7 +6,7 @@ build:
 	grunt
 
 watch:
-	watch --color -n 1 make build
+	grunt watch
 
 serve:
 	cd public; python -m SimpleHTTPServer 8000
