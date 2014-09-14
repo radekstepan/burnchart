@@ -30,6 +30,7 @@ GitHub Burndown Chart as a service. Public repos are free, for private access au
 - [ ] Check that we have not run out of requests to make
 - [ ] Deal with running out of GH API requests
 - [ ] Since persistence is async, deal with the flicker (show laoding?) when we are still getting data
+- [ ] On page load get all the latest data regardless of `time_ago`
 
 ### Extras
 
@@ -61,7 +62,7 @@ GitHub Burndown Chart as a service. Public repos are free, for private access au
 
 - *payment gateways* in Canada: [Shopify](http://www.shopify.com/payment-gateways/canada), [Chargify](http://chargify.com/payment-gateways/) list
 - start people on a *Community* plan showing them a comparison table to upgrade to a better offering
-- community (open source), small business (private repos) and enterprise plans (contact us)
+- community (open source, local storage), business (private repos, firebase)
 - keep discussion going via [gitter](http://gitter.im)
 - [credit card form](http://designmodo.com/ux-credit-card-payment-form/) ux from Designmodo
 - workers: using a free instance of IronWorker and assuming 5s runtime each time gives us a poll every 6 minutes. Zapier would poll every 15 minutes but already integrates Stripe and FB.
