@@ -229,3 +229,9 @@ The following [approach](http://stackoverflow.com/a/21220875/105707) will allow 
     "rules:
       ".read": "auth.isWorker === true"
   }
+
+##Components Architecture
+
+1. **Views** (components) orchestrate user input, this could be coming from browser events but also 3rd party data sources like GitHub.
+1. Ractive **Models** communicate among themselves via Mediator and are observed by Views.
+1. **Persistence** layer has modules that communicate with `Firebase` and `localForage` to persist Model data in the browser or in a remote db.

@@ -1,15 +1,15 @@
-( require "./modules/#{key}" for key in [
+( require "./models/#{key}" for key in [
     'projects'
 ] )
 
-Header = require './components/header'
+Header = require './views/header'
 
 
 el = '#page'
 
 route = (page, req, evt) ->
     document.title = 'BurnChart: GitHub Burndown Chart as a Service'
-    Page = require "./pages/#{page}"
+    Page = require "./views/pages/#{page}"
     new Page { el }
 
 router =

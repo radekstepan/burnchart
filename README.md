@@ -29,6 +29,7 @@ GitHub Burndown Chart as a service. Public repos are free, for private access au
 - [ ] Have an app wide of triggering a URL and have named routes too
 - [ ] Check that we have not run out of requests to make
 - [ ] Deal with running out of GH API requests
+- [ ] Since persistence is async, deal with the flicker (show laoding?) when we are still getting data
 
 ### Extras
 

@@ -1,11 +1,10 @@
-projects = require '../modules/projects'
 mediator = require '../modules/mediator'
+projects = require '../models/projects'
 
 module.exports = Ractive.extend
 
     'template': require '../templates/projects'
 
-    'data':
-        'projects': projects
+    'data': { projects }
 
     'adapt': [ Ractive.adaptors.Ractive ]

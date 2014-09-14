@@ -1,5 +1,5 @@
 config = require '../models/config'
-user   = require './user'
+user   = require '../models/user'
 
 # Default "silent" callback for auth.
 class Class

@@ -24560,17 +24560,17 @@ requireModule('promise/polyfill').polyfill();
       _ref = ['projects'];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         key = _ref[_i];
-        require("./modules/" + key);
+        require("./models/" + key);
       }
       
-      Header = require('./components/header');
+      Header = require('./views/header');
       
       el = '#page';
       
       route = function(page, req, evt) {
         var Page;
         document.title = 'BurnChart: GitHub Burndown Chart as a Service';
-        Page = require("./pages/" + page);
+        Page = require("./views/pages/" + page);
         return new Page({
           el: el
         });
@@ -24595,117 +24595,6 @@ requireModule('promise/polyfill').polyfill();
       
     });
 
-    // addProjectForm.coffee
-    root.require.register('burnchart/src/components/addProjectForm.js', function(exports, require, module) {
-    
-      var firebase, github, mediator, user;
-      
-      firebase = require('../modules/firebase');
-      
-      user = require('../modules/user');
-      
-      mediator = require('../modules/mediator');
-      
-      github = require('../modules/github');
-      
-      module.exports = Ractive.extend({
-        'template': require('../templates/addProjectForm'),
-        'data': {
-          'user': user,
-          'value': null
-        },
-        'adapt': [Ractive.adaptors.Ractive],
-        init: function() {
-          var autocomplete;
-          autocomplete = function(value) {};
-          this.observe('value', _.debounce(autocomplete, 200), {
-            'init': false
-          });
-          return this.on('submit', function() {
-            var name, owner, repo, _ref;
-            _ref = this.get('value').split('/'), owner = _ref[0], name = _ref[1];
-            repo = github.getRepo(owner, name);
-            return repo.show(function(err, repo, xhr) {
-              if (err) {
-                throw err;
-              }
-              mediator.fire('!projects/add', repo);
-              return window.location.hash = '#';
-            });
-          });
-        }
-      });
-      
-    });
-
-    // header.coffee
-    root.require.register('burnchart/src/components/header.js', function(exports, require, module) {
-    
-      var firebase, mediator, user;
-      
-      firebase = require('../modules/firebase');
-      
-      user = require('../modules/user');
-      
-      mediator = require('../modules/mediator');
-      
-      module.exports = Ractive.extend({
-        'template': require('../templates/header'),
-        init: function() {
-          return this.on('!login', function() {
-            return firebase.login(function(err) {
-              if (err) {
-                throw err;
-              }
-            });
-          });
-        },
-        'data': {
-          user: user
-        },
-        'adapt': [Ractive.adaptors.Ractive]
-      });
-      
-    });
-
-    // hero.coffee
-    root.require.register('burnchart/src/components/hero.js', function(exports, require, module) {
-    
-      var mediator, projects;
-      
-      projects = require('../modules/projects');
-      
-      mediator = require('../modules/mediator');
-      
-      module.exports = Ractive.extend({
-        'template': require('../templates/hero'),
-        'data': {
-          'projects': projects
-        },
-        'adapt': [Ractive.adaptors.Ractive]
-      });
-      
-    });
-
-    // projects.coffee
-    root.require.register('burnchart/src/components/projects.js', function(exports, require, module) {
-    
-      var mediator, projects;
-      
-      projects = require('../modules/projects');
-      
-      mediator = require('../modules/mediator');
-      
-      module.exports = Ractive.extend({
-        'template': require('../templates/projects'),
-        'data': {
-          'projects': projects
-        },
-        'adapt': [Ractive.adaptors.Ractive]
-      });
-      
-    });
-
     // config.json
     root.require.register('burnchart/src/models/config.js', function(exports, require, module) {
     
@@ -24715,6 +24604,62 @@ requireModule('promise/polyfill').polyfill();
       };
     });
 
+    // projects.coffee
+    root.require.register('burnchart/src/models/projects.js', function(exports, require, module) {
+    
+      var Model, mediator, user;
+      
+      mediator = require('../modules/mediator');
+      
+      Model = require('../utils/model');
+      
+      user = require('./user');
+      
+      module.exports = new Model({
+        'data': {
+          'items': []
+        },
+        init: function() {
+          var _this = this;
+          localforage.getItem('projects', function(items) {
+            if (items == null) {
+              items = [];
+            }
+            return _this.set('items', items);
+          });
+          this.observe('items', function() {
+            return localforage.setItem('projects', this.get('items'));
+          });
+          return mediator.on('!projects/add', function(repo) {
+            return _this.push('items', {
+              'owner': repo.owner.login,
+              'name': repo.name
+            });
+          });
+        }
+      });
+      
+    });
+
+    // user.coffee
+    root.require.register('burnchart/src/models/user.js', function(exports, require, module) {
+    
+      var Model, mediator;
+      
+      mediator = require('../modules/mediator');
+      
+      Model = require('../utils/model');
+      
+      module.exports = new Model({
+        'data': {
+          'provider': "local",
+          'id': "0",
+          'uid': "local:0"
+        }
+      });
+      
+    });
+
     // firebase.coffee
     root.require.register('burnchart/src/modules/firebase.js', function(exports, require, module) {
     
@@ -24722,7 +24667,7 @@ requireModule('promise/polyfill').polyfill();
       
       config = require('../models/config');
       
-      user = require('./user');
+      user = require('../models/user');
       
       Class = (function() {
         function Class() {
@@ -24770,7 +24715,7 @@ requireModule('promise/polyfill').polyfill();
     
       var auth, github, setToken, user;
       
-      user = require('./user');
+      user = require('../models/user');
       
       auth = 'oauth';
       
@@ -24796,123 +24741,6 @@ requireModule('promise/polyfill').polyfill();
       
     });
 
-    // projects.coffee
-    root.require.register('burnchart/src/modules/projects.js', function(exports, require, module) {
-    
-      var RactiveModel, mediator;
-      
-      mediator = require('./mediator');
-      
-      RactiveModel = require('./ractiveModel');
-      
-      module.exports = new RactiveModel({
-        'data': {
-          'items': []
-        },
-        init: function() {
-          var _this = this;
-          mediator.on('!projects/get', function(provider) {
-            switch (provider) {
-              case 'local':
-                return localforage.getItem('projects', function(items) {
-                  if (items == null) {
-                    items = [];
-                  }
-                  return _this.set('items', items);
-                });
-              case 'github':
-                throw 'Not implemented yet';
-            }
-          });
-          return mediator.on('!projects/add', function(repo) {
-            return _this.push('items', {
-              'owner': repo.owner.login,
-              'name': repo.name
-            });
-          });
-        }
-      });
-      
-    });
-
-    // ractiveModel.coffee
-    root.require.register('burnchart/src/modules/ractiveModel.js', function(exports, require, module) {
-    
-      module.exports = function(opts) {
-        var Model, model;
-        Model = Ractive.extend(opts);
-        model = new Model();
-        model.render();
-        return model;
-      };
-      
-    });
-
-    // user.coffee
-    root.require.register('burnchart/src/modules/user.js', function(exports, require, module) {
-    
-      var RactiveModel, mediator;
-      
-      mediator = require('./mediator');
-      
-      RactiveModel = require('./ractiveModel');
-      
-      module.exports = new RactiveModel({
-        'data': {
-          'provider': "local",
-          'id': "0",
-          'uid': "local:0"
-        },
-        init: function() {
-          return this.observe('uid', function() {
-            return mediator.fire('!projects/get', this.get('provider'));
-          });
-        }
-      });
-      
-    });
-
-    // addProject.coffee
-    root.require.register('burnchart/src/pages/addProject.js', function(exports, require, module) {
-    
-      var AddProjectForm;
-      
-      AddProjectForm = require('../components/addProjectForm');
-      
-      module.exports = Ractive.extend({
-        'template': require('../templates/pages/addProject'),
-        'components': {
-          AddProjectForm: AddProjectForm
-        }
-      });
-      
-    });
-
-    // index.coffee
-    root.require.register('burnchart/src/pages/index.js', function(exports, require, module) {
-    
-      var Hero, Projects;
-      
-      Hero = require('../components/hero');
-      
-      Projects = require('../components/projects');
-      
-      module.exports = Ractive.extend({
-        'template': require('../templates/pages/index'),
-        'components': {
-          Hero: Hero,
-          Projects: Projects
-        }
-      });
-      
-    });
-
-    // addProjectForm.mustache
-    root.require.register('burnchart/src/templates/addProjectForm.js', function(exports, require, module) {
-    
-      module.exports = ["<div id=\"add\">","    <div class=\"header\">","        <h2>Add a Project</h2>","        <p>Type in the name of the repository as you would normally. If you'd like to add a private GitHub project, <a href=\"#\">Sign In</a> first.</p>","    </div>","","    <div class=\"form\">","        <table>","            <tr>","                <td>","                    <input type=\"text\" placeholder=\"user/repo\" autocomplete=\"off\" value=\"{{value}}\">","                </td>","                <td>","                    <a on-click=\"submit\">Add</a>","                </td>","            </tr>","        </table>","    </div>","</div>"].join("\n");
-    });
-
     // header.mustache
     root.require.register('burnchart/src/templates/header.js', function(exports, require, module) {
     
@@ -24934,7 +24762,7 @@ requireModule('promise/polyfill').polyfill();
     // addProject.mustache
     root.require.register('burnchart/src/templates/pages/addProject.js', function(exports, require, module) {
     
-      module.exports = ["<div id=\"content\" class=\"wrap\">","    <AddProjectForm/>","</div>"].join("\n");
+      module.exports = ["<div id=\"content\" class=\"wrap\">","    <div id=\"add\">","        <div class=\"header\">","            <h2>Add a Project</h2>","            <p>Type in the name of the repository as you would normally. If you'd like to add a private GitHub project, <a href=\"#\">Sign In</a> first.</p>","        </div>","","        <div class=\"form\">","            <table>","                <tr>","                    <td>","                        <input type=\"text\" placeholder=\"user/repo\" autocomplete=\"off\" value=\"{{value}}\">","                    </td>","                    <td>","                        <a on-click=\"submit\">Add</a>","                    </td>","                </tr>","            </table>","        </div>","    </div>","</div>"].join("\n");
     });
 
     // index.mustache
@@ -24947,6 +24775,147 @@ requireModule('promise/polyfill').polyfill();
     root.require.register('burnchart/src/templates/projects.js', function(exports, require, module) {
     
       module.exports = ["{{#projects.items}}","    <div id=\"projects\">","        <div class=\"header\">","            <a href=\"#\" class=\"sort\"><span class=\"icon sort-alphabet\"></span> Sorted by priority</a>","            <h2>Projects</h2>","        </div>","","        <table>","            {{#projects.items}}","                <tr>","                    <td><a class=\"repo\" href=\"#\">{{owner}}/{{name}}</a></td>","                    <td><span class=\"milestone\">??? <span class=\"icon down-open\"></span></a></td>","                    <td>","                        <div class=\"progress\">","                            <span class=\"percent\">10%</span>","                            <span class=\"due\">???</span>","                            <div class=\"outer bar\">","                                <div class=\"inner bar green\" style=\"width:10%\"></div>","                            </div>","                        </div>","                    </td>","                </tr>","            {{/projects.items}}","","            <tr>","                <td><a class=\"repo\" href=\"#\">radekstepan/disposable</a></td>","                <td><span class=\"milestone\">Milestone 1.0 <span class=\"icon down-open\"></span></a></td>","                <td>","                    <div class=\"progress\">","                        <span class=\"percent\">40%</span>","                        <span class=\"due\">due on Friday</span>","                        <div class=\"outer bar\">","                            <div class=\"inner bar red\" style=\"width:40%\"></div>","                        </div>","                    </div>","                </td>","            </tr>","            <tr class=\"done\">","                <td><a class=\"repo\" href=\"#\">radekstepan/burnchart</a></td>","                <td><span class=\"milestone\">Beta Milestone <span class=\"icon down-open\"></span></a></td>","                <td>","                    <div class=\"progress\">","                        <span class=\"percent\">100%</span>","                        <span class=\"due\">due tomorrow</span>","                        <div class=\"outer bar\">","                            <div class=\"inner bar green\" style=\"width:100%\"></div>","                        </div>","                    </div>","                </td>","            </tr>","            <tr>","                <td><a class=\"repo\" href=\"#\">intermine/intermine</a></td>","                <td><span class=\"milestone\">Emma Release 96 <span class=\"icon down-open\"></span></a></td>","                <td>","                    <div class=\"progress\">","                        <span class=\"percent\">27%</span>","                        <span class=\"due\">due in 2 weeks</span>","                        <div class=\"outer bar\">","                            <div class=\"inner bar red\" style=\"width:27%\"></div>","                        </div>","                    </div>","                </td>","            </tr>","            <tr>","                <td><a class=\"repo\" href=\"#\">microsoft/windows</a></td>","                <td><span class=\"milestone\">RC 9 <span class=\"icon down-open\"></span></a></td>","                <td>","                    <div class=\"progress\">","                        <span class=\"percent\">90%</span>","                        <span class=\"due red\">overdue by a month</span>","                        <div class=\"outer bar\">","                            <div class=\"inner bar red\" style=\"width:90%\"></div>","                        </div>","                    </div>","                </td>","            </tr>","        </table>","","        <div class=\"footer\">","            <a href=\"#\"><span class=\"icon cog\"></span> Edit</a>","        </div>","    </div>","{{/projects.items}}"].join("\n");
+    });
+
+    // model.coffee
+    root.require.register('burnchart/src/utils/model.js', function(exports, require, module) {
+    
+      module.exports = function(opts) {
+        var Model, model;
+        Model = Ractive.extend(opts);
+        model = new Model();
+        model.render();
+        return model;
+      };
+      
+    });
+
+    // header.coffee
+    root.require.register('burnchart/src/views/header.js', function(exports, require, module) {
+    
+      var firebase, mediator, user;
+      
+      firebase = require('../modules/firebase');
+      
+      mediator = require('../modules/mediator');
+      
+      user = require('../models/user');
+      
+      module.exports = Ractive.extend({
+        'template': require('../templates/header'),
+        init: function() {
+          return this.on('!login', function() {
+            return firebase.login(function(err) {
+              if (err) {
+                throw err;
+              }
+            });
+          });
+        },
+        'data': {
+          user: user
+        },
+        'adapt': [Ractive.adaptors.Ractive]
+      });
+      
+    });
+
+    // hero.coffee
+    root.require.register('burnchart/src/views/hero.js', function(exports, require, module) {
+    
+      var mediator, projects;
+      
+      mediator = require('../modules/mediator');
+      
+      projects = require('../models/projects');
+      
+      module.exports = Ractive.extend({
+        'template': require('../templates/hero'),
+        'data': {
+          projects: projects
+        },
+        'adapt': [Ractive.adaptors.Ractive]
+      });
+      
+    });
+
+    // addProject.coffee
+    root.require.register('burnchart/src/views/pages/addProject.js', function(exports, require, module) {
+    
+      var github, mediator, user;
+      
+      mediator = require('../../modules/mediator');
+      
+      github = require('../../modules/github');
+      
+      user = require('../../models/user');
+      
+      module.exports = Ractive.extend({
+        'template': require('../../templates/pages/addProject'),
+        'data': {
+          'value': null,
+          user: user
+        },
+        'adapt': [Ractive.adaptors.Ractive],
+        init: function() {
+          var autocomplete;
+          autocomplete = function(value) {};
+          this.observe('value', _.debounce(autocomplete, 200), {
+            'init': false
+          });
+          return this.on('submit', function() {
+            var name, owner, repo, _ref;
+            _ref = this.get('value').split('/'), owner = _ref[0], name = _ref[1];
+            repo = github.getRepo(owner, name);
+            return repo.show(function(err, repo, xhr) {
+              if (err) {
+                throw err;
+              }
+              mediator.fire('!projects/add', repo);
+              return window.location.hash = '#';
+            });
+          });
+        }
+      });
+      
+    });
+
+    // index.coffee
+    root.require.register('burnchart/src/views/pages/index.js', function(exports, require, module) {
+    
+      var Hero, Projects;
+      
+      Hero = require('../hero');
+      
+      Projects = require('../projects');
+      
+      module.exports = Ractive.extend({
+        'template': require('../../templates/pages/index'),
+        'components': {
+          Hero: Hero,
+          Projects: Projects
+        }
+      });
+      
+    });
+
+    // projects.coffee
+    root.require.register('burnchart/src/views/projects.js', function(exports, require, module) {
+    
+      var mediator, projects;
+      
+      mediator = require('../modules/mediator');
+      
+      projects = require('../models/projects');
+      
+      module.exports = Ractive.extend({
+        'template': require('../templates/projects'),
+        'data': {
+          projects: projects
+        },
+        'adapt': [Ractive.adaptors.Ractive]
+      });
+      
     });
   })();
 

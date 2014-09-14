@@ -1,15 +1,12 @@
-firebase = require '../modules/firebase'
-user     = require '../modules/user'
-mediator = require '../modules/mediator'
-github   = require '../modules/github'
+mediator = require '../../modules/mediator'
+github   = require '../../modules/github'
+user     = require '../../models/user'
 
 module.exports = Ractive.extend
 
-    'template': require '../templates/addProjectForm'
+    'template': require '../../templates/pages/addProject'
 
-    'data':
-        'user': user
-        'value': null
+    'data': { 'value': null, user }
 
     'adapt': [ Ractive.adaptors.Ractive ]
 
@@ -19,6 +16,8 @@ module.exports = Ractive.extend
         autocomplete = (value) ->
 
         @observe 'value', _.debounce(autocomplete, 200), { 'init': no }
+
+        # TODO: focus on the input field
 
         # TODO: listen to Enter keypress.
         @on 'submit', ->

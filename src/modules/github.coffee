@@ -1,4 +1,4 @@
-user = require './user'
+user = require '../models/user'
 
 auth = 'oauth'
 

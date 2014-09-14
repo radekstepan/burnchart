@@ -1,6 +1,6 @@
 firebase = require '../modules/firebase'
-user     = require '../modules/user'
 mediator = require '../modules/mediator'
+user     = require '../models/user'
 
 module.exports = Ractive.extend
 
