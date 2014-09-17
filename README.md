@@ -31,7 +31,7 @@ GitHub Burndown Chart as a service. Public repos are free, for private access au
 - [ ] Deal with running out of GH API requests
 - [ ] Since persistence is async, deal with the flicker (show laoding?) when we are still getting data
 - [ ] On page load get all the latest data regardless of `time_ago`
-- [ ] Show loading sign like userde.sk if we are loading for more than 1s
+- [ ] Show loading sign on top of [browser window](https://github.com/buunguyen/topbar) which is unobtrusive enough we can show it immediately.
 
 ### Extras
 
