@@ -68,3 +68,18 @@ GitHub Burndown Chart as a service. Public repos are free, for private access au
 - [credit card form](http://designmodo.com/ux-credit-card-payment-form/) ux from Designmodo
 - workers: using a free instance of IronWorker and assuming 5s runtime each time gives us a poll every 6 minutes. Zapier would poll every 15 minutes but already integrates Stripe and FB.
 - worst case scenario I provide even Small Business plan for free and provide a better experience
+
+
+## Plans
+
+### Community
+
+- your repos are saved locally
+- no auto-updates to milestones, everything fetched on page load
+- no private repos
+
+### Business
+
+- repos, milestones saved remotely
+- auto-update with new information
+- private repos
