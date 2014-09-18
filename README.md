@@ -6,16 +6,14 @@ GitHub Burndown Chart as a service. Public repos are free, for private access au
 
 ## Tasks
 
-### MVP
+### MVP - Community Plan
 
-- [x] landing page allows you to immediately jump into action
-- [ ] show chart for the current milestone, default to the first one returned and allow to choose a custom one
-- [ ] sort projects based on their closest due dates
-- [ ] show only repo name if all projects are under our name
+- [x] show a list of projects and their milestones with progress & due date
+- [ ] show burnchart for that project milestone
 - [ ] show all issues as [one size](https://github.com/radekstepan/github-burndown-chart/issues/46)
-- [x] use local storage to save information about us, but keep the API open for Firebase
+- [x] use `localStorage` to save project names
 
-### The 20%
+### Extras
 
 - [ ] Do not show login/logged-in state when we are still fetching that information from Firebase
 - [ ] Handle 404 on routes; from catch all check if '/' or go 404 controller
@@ -32,9 +30,6 @@ GitHub Burndown Chart as a service. Public repos are free, for private access au
 - [ ] Since persistence is async, deal with the flicker (show laoding?) when we are still getting data
 - [ ] On page load get all the latest data regardless of `time_ago`
 - [ ] Show loading sign on top of [browser window](https://github.com/buunguyen/topbar) which is unobtrusive enough we can show it immediately.
-
-### Extras
-
 - [ ] rotate between percentage progress and points left
 - [ ] be able to config options through UI that currently have to be hardcoded in config
 - [ ] cache repos in `localStorage` for those that do not use GitHub login

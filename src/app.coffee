@@ -12,11 +12,12 @@ el = '#page'
 route = (page, req, evt) ->
     document.title = 'BurnChart: GitHub Burndown Chart as a Service'
     Page = require "./views/pages/#{page}"
-    new Page { el }
+    new Page { el, 'data': { 'route': req.params } }
 
 router =
-    '':            _.partial route, 'index'
-    'project/add': _.partial route, 'addProject'
+    '':                              _.partial route, 'index'
+    'project/add':                   _.partial route, 'addProject'
+    'chart/:owner/:name/:milestone': _.partial route, 'showChart'
     # TODO: remove in production.
     'reset':       ->
         mediator.fire '!projects/clear'

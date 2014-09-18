@@ -8,8 +8,4 @@ module.exports = Ractive.extend
 
     'components': { Hero, Projects }
 
-    'data':
-        'format': format
-        # Find the milestone that is active.
-        getMilestone: (list) ->
-            _.findWhere list, 'active'
+    'data': { format }

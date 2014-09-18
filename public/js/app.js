@@ -26,13 +26,17 @@
         document.title = 'BurnChart: GitHub Burndown Chart as a Service';
         Page = require("./views/pages/" + page);
         return new Page({
-          el: el
+          el: el,
+          'data': {
+            'route': req.params
+          }
         });
       };
       
       router = {
         '': _.partial(route, 'index'),
         'project/add': _.partial(route, 'addProject'),
+        'chart/:owner/:name/:milestone': _.partial(route, 'showChart'),
         'reset': function() {
           mediator.fire('!projects/clear');
           return window.location.hash = '#';
@@ -96,36 +100,31 @@
           'list': []
         },
         init: function() {
-          var getMilestones,
-            _this = this;
-          getMilestones = function() {};
+          var _this = this;
           localforage.getItem('projects', function(projects) {
             if (projects == null) {
               projects = [];
             }
-            return _this.set('list', projects);
+            return async.each(projects, function(project, cb) {
+              return mediator.fire('!projects/add', project);
+            }, function(err) {
+              if (err) {
+                throw err;
+              }
+            });
           });
           this.observe('list', function(projects) {
             return localforage.setItem('projects', projects);
           });
           mediator.on('!projects/add', function(repo, done) {
             return request.allMilestones(repo, function(err, res) {
-              var active, milestones;
+              var milestones;
               if (err) {
-                throw err;
+                return done(err);
               }
               milestones = _.pluckMany(res, config.fields.milestone);
-              active = _.find(milestones, function(m) {
-                return 0 < m.open_issues + m.closed_issues;
-              });
-              if (active != null) {
-                active.active = true;
-              }
               _this.push('list', _.merge(repo, {
-                'milestones': {
-                  'list': milestones,
-                  'checked_at': date.now()
-                }
+                milestones: milestones
               }));
               return done();
             });
@@ -390,7 +389,7 @@
     // layout.mustache
     root.require.register('burnchart/src/templates/layout.js', function(exports, require, module) {
     
-      module.exports = ["<Header/>","","<div id=\"page\">","    <!-- content loaded from a router -->","</div>","","<div id=\"footer\">","    <div class=\"wrap\">","        &copy; 2012-2014 Radek Stepan","    </div>","</div>"].join("\n");
+      module.exports = ["<Header/>","","<div id=\"page\">","    <!-- content loaded from a router -->","</div>","","<div id=\"footer\">","    <div class=\"wrap\">","        &copy; 2012-2014 <a href=\"http://cloudfi.re\">Cloudfire Systems</a>","    </div>","</div>"].join("\n");
     });
 
     // addProject.mustache
@@ -405,10 +404,16 @@
       module.exports = ["<div id=\"title\">","    <div class=\"wrap\">","        <h2>Disposable Project</h2>","        <span class=\"milestone\">Milestone 1.0</span>","        <p class=\"description\">The one where we deliver all that we promised.</p>","    </div>","</div>","","<div id=\"content\" class=\"wrap\">","    <Hero/>","    <Projects/>","</div>"].join("\n");
     });
 
+    // showChart.mustache
+    root.require.register('burnchart/src/templates/pages/showChart.js', function(exports, require, module) {
+    
+      module.exports = ["<div id=\"content\" class=\"wrap\">","    <div id=\"chart\">","        <div id=\"tooltip\"></div>","        <div id=\"svg\"></div>","    </div>","</div>"].join("\n");
+    });
+
     // projects.mustache
     root.require.register('burnchart/src/templates/projects.js', function(exports, require, module) {
     
-      module.exports = ["{{#projects.list}}","    <div id=\"projects\">","        <div class=\"header\">","            <a href=\"#\" class=\"sort\"><span class=\"icon sort-alphabet\"></span> Sorted by priority</a>","            <h2>Projects</h2>","        </div>","","        <table>","            {{#projects.list}}","                <tr>","                    <td><a class=\"repo\" href=\"#\">{{owner}}/{{name}}</a></td>","                    {{# { milestone: getMilestone(milestones.list) } }}","                        {{#milestone}}","                            <td>","                                <span class=\"milestone\">","                                    {{ milestone.title }}","                                    <span class=\"icon down-open\">","                                </span>","                            </td>","                            <td>","                                <div class=\"progress\">","                                    <span class=\"percent\">{{Math.floor(format.progress(closed_issues, open_issues))}}%</span>","                                    <span class=\"due\">due {{format.fromNow(due_on)}}</span>","                                    <div class=\"outer bar\">","                                        <div class=\"inner bar {{format.onTime(milestone)}}\" style=\"width:{{format.progress(closed_issues, open_issues)}}%\"></div>","                                    </div>","                                </div>","                            </td>","                        {{/milestone}}","                        {{^milestone}}","                            <td colspan=\"2\"><span class=\"milestone\"><em>No milestones yet</em></td>","                        {{/milestone}}","                    {{/}}","                </tr>","            {{/projects.list}}","","            <tr>","                <td><a class=\"repo\" href=\"#\">radekstepan/disposable</a></td>","                <td><span class=\"milestone\">Milestone 1.0 <span class=\"icon down-open\"></span></td>","                <td>","                    <div class=\"progress\">","                        <span class=\"percent\">40%</span>","                        <span class=\"due\">due on Friday</span>","                        <div class=\"outer bar\">","                            <div class=\"inner bar red\" style=\"width:40%\"></div>","                        </div>","                    </div>","                </td>","            </tr>","            <tr class=\"done\">","                <td><a class=\"repo\" href=\"#\">radekstepan/burnchart</a></td>","                <td><span class=\"milestone\">Beta Milestone <span class=\"icon down-open\"></span></a></td>","                <td>","                    <div class=\"progress\">","                        <span class=\"percent\">100%</span>","                        <span class=\"due\">due tomorrow</span>","                        <div class=\"outer bar\">","                            <div class=\"inner bar green\" style=\"width:100%\"></div>","                        </div>","                    </div>","                </td>","            </tr>","            <tr>","                <td><a class=\"repo\" href=\"#\">intermine/intermine</a></td>","                <td><span class=\"milestone\">Emma Release 96 <span class=\"icon down-open\"></span></a></td>","                <td>","                    <div class=\"progress\">","                        <span class=\"percent\">27%</span>","                        <span class=\"due\">due in 2 weeks</span>","                        <div class=\"outer bar\">","                            <div class=\"inner bar red\" style=\"width:27%\"></div>","                        </div>","                    </div>","                </td>","            </tr>","            <tr>","                <td><a class=\"repo\" href=\"#\">microsoft/windows</a></td>","                <td><span class=\"milestone\">RC 9 <span class=\"icon down-open\"></span></a></td>","                <td>","                    <div class=\"progress\">","                        <span class=\"percent\">90%</span>","                        <span class=\"due red\">overdue by a month</span>","                        <div class=\"outer bar\">","                            <div class=\"inner bar red\" style=\"width:90%\"></div>","                        </div>","                    </div>","                </td>","            </tr>","        </table>","","        <div class=\"footer\">","            <a href=\"#\"><span class=\"icon cog\"></span> Edit</a>","        </div>","    </div>","{{/projects.list}}"].join("\n");
+      module.exports = ["{{#projects.list.length}}","    <div id=\"projects\">","        <div class=\"header\">","            <a href=\"#\" class=\"sort\"><span class=\"icon sort-alphabet\"></span> Sorted by priority</a>","            <h2>Projects</h2>","        </div>","","        <table>","            {{#projects.list}}","                {{#milestones}}","                    <tr>","                        <td><a class=\"repo\">{{owner}}/{{name}}</a></td>","                            <td>","                                <a class=\"milestone\" href=\"#chart/{{owner}}/{{name}}/{{number}}\">{{ title }}</a>","                            </td>","                            <td>","                                <div class=\"progress\">","                                    <span class=\"percent\">{{Math.floor(format.progress(closed_issues, open_issues))}}%</span>","                                    <span class=\"due\">due {{format.fromNow(due_on)}}</span>","                                    <div class=\"outer bar\">","                                        <div class=\"inner bar {{format.onTime(this)}}\" style=\"width:{{format.progress(closed_issues, open_issues)}}%\"></div>","                                    </div>","                                </div>","                            </td>","                    </tr>","                {{/milestones}}","            {{/projects.list}}","","        <!--","            <tr>","                <td><a class=\"repo\" href=\"#\">radekstepan/disposable</a></td>","                <td><span class=\"milestone\">Milestone 1.0 <span class=\"icon down-open\"></span></td>","                <td>","                    <div class=\"progress\">","                        <span class=\"percent\">40%</span>","                        <span class=\"due\">due on Friday</span>","                        <div class=\"outer bar\">","                            <div class=\"inner bar red\" style=\"width:40%\"></div>","                        </div>","                    </div>","                </td>","            </tr>","            <tr class=\"done\">","                <td><a class=\"repo\" href=\"#\">radekstepan/burnchart</a></td>","                <td><span class=\"milestone\">Beta Milestone <span class=\"icon down-open\"></span></a></td>","                <td>","                    <div class=\"progress\">","                        <span class=\"percent\">100%</span>","                        <span class=\"due\">due tomorrow</span>","                        <div class=\"outer bar\">","                            <div class=\"inner bar green\" style=\"width:100%\"></div>","                        </div>","                    </div>","                </td>","            </tr>","            <tr>","                <td><a class=\"repo\" href=\"#\">intermine/intermine</a></td>","                <td><span class=\"milestone\">Emma Release 96 <span class=\"icon down-open\"></span></a></td>","                <td>","                    <div class=\"progress\">","                        <span class=\"percent\">27%</span>","                        <span class=\"due\">due in 2 weeks</span>","                        <div class=\"outer bar\">","                            <div class=\"inner bar red\" style=\"width:27%\"></div>","                        </div>","                    </div>","                </td>","            </tr>","            <tr>","                <td><a class=\"repo\" href=\"#\">microsoft/windows</a></td>","                <td><span class=\"milestone\">RC 9 <span class=\"icon down-open\"></span></a></td>","                <td>","                    <div class=\"progress\">","                        <span class=\"percent\">90%</span>","                        <span class=\"due red\">overdue by a month</span>","                        <div class=\"outer bar\">","                            <div class=\"inner bar red\" style=\"width:90%\"></div>","                        </div>","                    </div>","                </td>","            </tr>","        -->","        </table>","","        <div class=\"footer\">","            <a href=\"#\"><span class=\"icon cog\"></span> Edit</a>","        </div>","    </div>","{{/projects.list}}"].join("\n");
     });
 
     // date.coffee
@@ -583,10 +588,20 @@
           Projects: Projects
         },
         'data': {
-          'format': format,
-          getMilestone: function(list) {
-            return _.findWhere(list, 'active');
-          }
+          format: format
+        }
+      });
+      
+    });
+
+    // showChart.coffee
+    root.require.register('burnchart/src/views/pages/showChart.js', function(exports, require, module) {
+    
+      module.exports = Ractive.extend({
+        'template': require('../../templates/pages/showChart'),
+        'adapt': [Ractive.adaptors.Ractive],
+        init: function() {
+          return console.log(this.get('route'));
         }
       });
       

@@ -38,6 +38,9 @@ module.exports = (grunt) ->
                     'vendor/localforage/dist/localforage.js'
                     'vendor/async/lib/async.js'
                     'vendor/moment/moment.js'
+                    'vendor/d3/d3.js'
+                    'vendor/d3-tip/index.js'
+                    'vendor/marked/lib/marked.js'
                     # Our app.
                     'public/js/app.js'
                 ]

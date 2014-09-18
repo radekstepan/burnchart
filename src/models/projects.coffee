@@ -11,14 +11,15 @@ module.exports = new Model
         'list': []
 
     init: ->
-        # Fetches a list of milestones for a repo.
-        getMilestones = ->
-
         # Initialize with items stored locally.
         localforage.getItem 'projects', (projects=[]) =>
-            @set 'list', projects
+            # Fetch milestones for each of these projects.
+            async.each projects, (project, cb) ->
+                mediator.fire '!projects/add', project
+            , (err) ->
+                throw err if err
 
-        # Persist in local storage.
+        # Persist projects in local storage.
         @observe 'list', (projects) ->
             localforage.setItem 'projects', projects
 
@@ -28,24 +29,15 @@ module.exports = new Model
 
             # Fetch milestones (which validates repo too).
             request.allMilestones repo, (err, res) =>
-                throw err if err
+                return done err if err
 
                 # Pluck these fields for milestones.
                 milestones = _.pluckMany res, config.fields.milestone
 
-                # Set the default milestone as the soonest one with issues.
-                active = _.find milestones, (m) ->
-                    0 < m.open_issues + m.closed_issues
+                # Push to the stack.
+                @push 'list', _.merge repo, { milestones }
 
-                active?.active = true
-
-                # Push to the stack
-                @push 'list', _.merge repo,
-                    'milestones':
-                        'list':       milestones
-                        'checked_at': do date.now # checked now
-
-                # Call back so we can redirect.
+                # Call back.
                 do done
 
         mediator.on '!projects/clear', =>
