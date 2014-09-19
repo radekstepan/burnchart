@@ -1,12 +1,12 @@
-config = require '../models/config'
 user   = require '../models/user'
+config = require '../models/config'
 
 # Default "silent" callback for auth.
 class Class
     
     constructor: ->       
         # Setup a new client.
-        @client = new Firebase "https://#{config.firebase}.firebaseio.com"
+        @client = new Firebase "https://#{config.get('firebase')}.firebaseio.com"
         
         # Check if we have a user in session.
         @auth = new FirebaseSimpleLogin @client, (err, obj) =>
@@ -26,7 +26,7 @@ class Class
         @authCb = cb
 
         # Login.
-        @auth.login config.provider,
+        @auth.login config.get('provider'),
             'rememberMe': yes
             'scope': 'public_repo'
 

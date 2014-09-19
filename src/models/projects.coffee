@@ -1,8 +1,8 @@
+config   = require '../models/config'
 mediator = require '../modules/mediator'
 request  = require '../modules/request'
 Model    = require '../utils/model'
 date     = require '../utils/date'
-config   = require './config'
 user     = require './user'
 
 module.exports = new Model
@@ -32,7 +32,7 @@ module.exports = new Model
                 return done err if err
 
                 # Pluck these fields for milestones.
-                milestones = _.pluckMany res, config.fields.milestone
+                milestones = _.pluckMany res, config.get('fields.milestone')
 
                 # Push to the stack.
                 @push 'list', _.merge repo, { milestones }

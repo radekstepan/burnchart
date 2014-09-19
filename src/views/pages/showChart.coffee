@@ -1,3 +1,5 @@
+project = require '../../modules/project'
+
 module.exports = Ractive.extend
 
     'template': require '../../templates/pages/showChart'
@@ -5,4 +7,4 @@ module.exports = Ractive.extend
     'adapt': [ Ractive.adaptors.Ractive ]
 
     init: ->
-        console.log @get 'route'
+        project @get 'route'

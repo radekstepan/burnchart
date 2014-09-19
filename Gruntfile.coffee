@@ -18,6 +18,7 @@ module.exports = (grunt) ->
                 src: [
                     'src/styles/fonts.styl'
                     'src/styles/icons.styl'
+                    'src/styles/chart.styl'
                     'src/styles/app.styl'
                 ]
                 dest: 'public/css/app.css'

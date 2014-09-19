@@ -20,8 +20,6 @@ module.exports =
     # Get a repo.
     'repo': (repo, cb) ->
         data = _.defaults
-            'protocol': repo.protocol
-            'host':     repo.host
             'path':     "/repos/#{repo.owner}/#{repo.name}"
             'headers':  headers user.get('token')
         , defaults.github
@@ -31,8 +29,6 @@ module.exports =
     # Get all open milestones.
     'allMilestones': (repo, cb) ->       
         data = _.defaults
-            'protocol': repo.protocol
-            'host':     repo.host
             'path':     "/repos/#{repo.owner}/#{repo.name}/milestones"
             'query':    { 'state': 'open', 'sort': 'due_date', 'direction': 'asc' }
             'headers':  headers user.get('token')
@@ -42,23 +38,23 @@ module.exports =
     
     # Get one open milestone.
     'oneMilestone': (repo, number, cb) ->        
-        request
-            'protocol': repo.protocol
-            'host':     repo.host
+        data = _.defaults
             'path':     "/repos/#{repo.owner}/#{repo.name}/milestones/#{number}"
             'query':    { 'state': 'open', 'sort': 'due_date', 'direction': 'asc' }
             'headers':  headers user.get('token')
-        , cb
+        , defaults.github
+
+        request data, cb
 
     # Get all issues for a state.
     'allIssues': (repo, query, cb) ->       
-        request
-            'protocol': repo.protocol
-            'host':     repo.host
+        data = _.defaults
             'path':     "/repos/#{repo.owner}/#{repo.name}/issues"
             'query':    _.extend query, { 'per_page': '100' }
             'headers':  headers user.get('token')
-        , cb
+        , defaults.github
+
+        request data, cb
 
 # Make a request using SuperAgent.
 request = ({ protocol, host, path, query, headers }, cb) ->

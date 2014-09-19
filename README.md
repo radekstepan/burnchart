@@ -9,8 +9,8 @@ GitHub Burndown Chart as a service. Public repos are free, for private access au
 ### MVP - Community Plan
 
 - [x] show a list of projects and their milestones with progress & due date
-- [ ] show burnchart for that project milestone
-- [ ] show all issues as [one size](https://github.com/radekstepan/github-burndown-chart/issues/46)
+- [x] show burnchart for that project milestone
+- [x] show all issues as [one size](https://github.com/radekstepan/github-burndown-chart/issues/46)
 - [x] use `localStorage` to save project names
 
 ### Extras

@@ -436,6 +436,22 @@ table {
 }@keyframes spin{0%{-webkit-transform:rotate(0);-moz-transform:rotate(0);-o-transform:rotate(0);-ms-transform:rotate(0);transform:rotate(0)}
 100%{-webkit-transform:rotate(360deg);-moz-transform:rotate(360deg);-o-transform:rotate(360deg);-ms-transform:rotate(360deg);transform:rotate(360deg)}
 }
+#chart{height:200px;position:relative;}
+#chart #tooltip{position:absolute;top:0;left:0}
+#chart svg path.line{fill:none;stroke-width:1px;clip-path:url("#clip");}
+#chart svg path.line.actual{stroke:#64584c;stroke-width:3px}
+#chart svg path.line.ideal{stroke:#cacaca;stroke-width:3px}
+#chart svg path.line.trendline{stroke:#64584c;stroke-width:1.5px;stroke-dasharray:5,5}
+#chart svg line.today{stroke:#cacaca;stroke-width:1px;shape-rendering:crispEdges;stroke-dasharray:5,5}
+#chart svg circle{fill:#64584c;stroke:transparent;stroke-width:15px;cursor:pointer}
+#chart svg .axis{shape-rendering:crispEdges;}
+#chart svg .axis line{stroke:rgba(202,202,202,0.25);shape-rendering:crispEdges}
+#chart svg .axis text{font-weight:bold;fill:#cacaca}
+#chart svg .axis path{display:none}
+.d3-tip{margin-top:-10px;font-size:11px;padding:8px 10px 7px 10px;text-align:center;background:rgba(0,0,0,0.75);color:#fff;-webkit-border-radius:3px;border-radius:3px;}
+.d3-tip:after{width:100%;color:rgba(0,0,0,0.8);content:"\25BC";position:absolute}
+.d3-tip.n:after{margin:-3px 0 0 0;top:100%;left:0}
+
 body{color:#3e4457;font-family:'MuseoSans500Regular',sans-serif}
 a{text-decoration:none;color:#aaafbf;cursor:pointer}
 h1,h2,h3,p{margin:0}
