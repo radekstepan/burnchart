@@ -31,10 +31,10 @@ module.exports =
         ], cb
 
     # Filter an array of incoming issues based on a regex & save size on them.
-    'filter': (collection, regex, cb) ->
+    'filter': (collection, cb) ->
         # The total size of all issues.
         total = 0
-        
+
         # Which point counting mode are we in?
         switch config.get 'chart.points'
             # All issues are the same size
@@ -53,7 +53,7 @@ module.exports =
                     # Determine the total issue size from all labels.
                     issue.size = _.reduce labels, (sum, label) ->
                         # Not matching.
-                        return sum unless matches = label.name.match(regex)
+                        return sum unless matches = label.name.match config.get 'chart.size_label'
                         # Increase sum.
                         sum += parseInt matches[1]
                     , 0
@@ -63,5 +63,5 @@ module.exports =
 
                     # Are we saving it?
                     !!issue.size
-        
+
         cb null, filtered, total

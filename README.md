@@ -54,6 +54,7 @@ GitHub Burndown Chart as a service. Public repos are free, for private access au
 - [ ] allow people to submit suggestions via GitHub Issues
 - [ ] find a way where, as a group, we can share repo data by trusting the other repo members that use our platform
 - [ ] support Jira & Gitlab
+- [x] closed issues can be moved to a newly created milestone, this messes up the chart since we assume milestone is created first!
 
 ## Notes
 

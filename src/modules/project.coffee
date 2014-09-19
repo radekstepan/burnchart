@@ -21,7 +21,7 @@ module.exports = (opts, cb) ->
     # Filter them to labeled ones.
     (all, cb) ->
         async.map all, (array, cb) ->
-            issues.filter array, opts.size_label, (err, filtered, total) ->
+            issues.filter array, (err, filtered, total) ->
                 cb err, [ filtered, total ]
         , (err, [ open, closed ]) ->
             return cb err if err
@@ -29,8 +29,12 @@ module.exports = (opts, cb) ->
             return cb 'No matching issues found' if open[1] + closed[1] is 0
             # Save the open/closed on us first.
             opts.issues =
-                closed: { 'points': closed[1], 'data': closed[0] }
-                open:   { 'points': open[1],   'data': open[0]   }
+                'closed': { 'points': closed[1], 'data': closed[0] }
+                'open':   { 'points': open[1],   'data': open[0]   }
+            # Do we need to move the milestone start date?
+            if (start = closed[0][0].closed_at) < opts.milestone.created_at
+                opts.milestone.created_at = start
+
             cb null
     
     # Create actual and ideal lines & render.

@@ -4,10 +4,13 @@ config = require '../models/config'
 module.exports =
     
     # A graph of closed issues.
+    # `collection`: issues
+    # `created_at`: milestone start date
+    # `total`:      total number of points (open & closed issues)
     'actual': (collection, created_at, total, cb) ->
         head = [ {
-            date: new Date(created_at)
-            points: total
+            'date': new Date created_at
+            'points': total
         } ]
         
         min = +Infinity ; max = -Infinity
@@ -20,9 +23,9 @@ module.exports =
             max = size if size > max
 
             # Dropping points remaining.
-            _.extend {}, issue,
-                date: new Date(closed_at)
-                points: total -= size
+            issue.date = new Date closed_at
+            issue.points = total -= size
+            issue
         
         # Now add a radius in a range (will be used for a circle).
         range = d3.scale.linear().domain([ min, max ]).range([ 5, 8 ])
@@ -125,14 +128,14 @@ module.exports =
         # Get available space.    
         { height, width } = document.querySelector('#chart').getBoundingClientRect()
 
-        margin = { top: 30, right: 30, bottom: 40, left: 50 }
+        margin = { 'top': 30, 'right': 30, 'bottom': 40, 'left': 50 }
         width -= margin.left + margin.right
         height -= margin.top + margin.bottom
 
         # Scales.
         x = d3.time.scale().range([ 0, width ])
         y = d3.scale.linear().range([ height, 0 ])
-        
+
         # Axes.
         xAxis = d3.svg.axis().scale(x)
         .orient("bottom")
@@ -225,9 +228,8 @@ module.exports =
 
         # Show when we closed an issue.
         svg.selectAll("a.issue")
-        .data(actual[1...]) # skip the starting point
+        .data(actual.slice(1)) # skip the starting point
         .enter()
-        
         # A wrapping link.
         .append('svg:a')
         .attr("xlink:href", ({ html_url }) -> html_url )

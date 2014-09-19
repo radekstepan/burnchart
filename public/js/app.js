@@ -72,7 +72,7 @@
             "milestone": ["closed_issues", "created_at", "description", "due_on", "number", "open_issues", "title", "updated_at"]
           },
           "chart": {
-            "off_days": [6, 7],
+            "off_days": [],
             "datetime": /^(\d{4}-\d{2}-\d{2})T(.*)/,
             "size_label": /^size (\d+)$/,
             "location": /^#!((\/[^\/]+){2,3})$/,
@@ -175,8 +175,8 @@
           var head, max, min, range, rest;
           head = [
             {
-              date: new Date(created_at),
-              points: total
+              'date': new Date(created_at),
+              'points': total
             }
           ];
           min = +Infinity;
@@ -190,10 +190,9 @@
             if (size > max) {
               max = size;
             }
-            return _.extend({}, issue, {
-              date: new Date(closed_at),
-              points: total -= size
-            });
+            issue.date = new Date(closed_at);
+            issue.points = total -= size;
+            return issue;
           });
           range = d3.scale.linear().domain([min, max]).range([5, 8]);
           rest = _.map(rest, function(issue) {
@@ -296,10 +295,10 @@
           document.querySelector('#svg').innerHTML = '';
           _ref = document.querySelector('#chart').getBoundingClientRect(), height = _ref.height, width = _ref.width;
           margin = {
-            top: 30,
-            right: 30,
-            bottom: 40,
-            left: 50
+            'top': 30,
+            'right': 30,
+            'bottom': 40,
+            'left': 50
           };
           width -= margin.left + margin.right;
           height -= margin.top + margin.bottom;
@@ -445,7 +444,7 @@
           };
           return async.parallel([_.partial(one_status, 'open'), _.partial(one_status, 'closed')], cb);
         },
-        'filter': function(collection, regex, cb) {
+        'filter': function(collection, cb) {
           var filtered, total;
           total = 0;
           switch (config.get('chart.points')) {
@@ -464,7 +463,7 @@
                 }
                 issue.size = _.reduce(labels, function(sum, label) {
                   var matches;
-                  if (!(matches = label.name.match(regex))) {
+                  if (!(matches = label.name.match(config.get('chart.size_label')))) {
                     return sum;
                   }
                   return sum += parseInt(matches[1]);
@@ -565,11 +564,11 @@
             return issues.get_all(opts, cb);
           }, function(all, cb) {
             return async.map(all, function(array, cb) {
-              return issues.filter(array, opts.size_label, function(err, filtered, total) {
+              return issues.filter(array, function(err, filtered, total) {
                 return cb(err, [filtered, total]);
               });
             }, function(err, _arg) {
-              var closed, open;
+              var closed, open, start;
               open = _arg[0], closed = _arg[1];
               if (err) {
                 return cb(err);
@@ -578,15 +577,18 @@
                 return cb('No matching issues found');
               }
               opts.issues = {
-                closed: {
+                'closed': {
                   'points': closed[1],
                   'data': closed[0]
                 },
-                open: {
+                'open': {
                   'points': open[1],
                   'data': open[0]
                 }
               };
+              if ((start = closed[0][0].closed_at) < opts.milestone.created_at) {
+                opts.milestone.created_at = start;
+              }
               return cb(null);
             });
           }, function(cb) {
@@ -793,7 +795,7 @@
     // showChart.mustache
     root.require.register('burnchart/src/templates/pages/showChart.js', function(exports, require, module) {
     
-      module.exports = ["<div id=\"content\" class=\"wrap\">","    <div id=\"chart\">","        <div id=\"tooltip\"></div>","        <div id=\"svg\"></div>","    </div>","</div>"].join("\n");
+      module.exports = ["<div id=\"content\" class=\"wrap\">","    <div id=\"chart\">","        <div id=\"svg\"></div>","    </div>","</div>"].join("\n");
     });
 
     // projects.mustache
