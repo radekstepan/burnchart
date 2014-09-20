@@ -16,7 +16,7 @@
                             <td>
                                 <div class="progress">
                                     <span class="percent">{{Math.floor(format.progress(closed_issues, open_issues))}}%</span>
-                                    <span class="due">due {{format.fromNow(due_on)}}</span>
+                                    <span class="due">{{format.due(due_on)}}</span>
                                     <div class="outer bar">
                                         <div class="inner bar {{format.onTime(this)}}" style="width:{{format.progress(closed_issues, open_issues)}}%"></div>
                                     </div>

@@ -486,52 +486,45 @@
       
     });
 
-    // milestones.coffee
-    root.require.register('burnchart/src/modules/milestones.js', function(exports, require, module) {
+    // milestone.coffee
+    root.require.register('burnchart/src/modules/milestone.js', function(exports, require, module) {
     
       var request;
       
       request = require('./request');
       
-      module.exports = function(repo, cb) {
-        var parse;
-        parse = function(data) {
-          if (data.description) {
-            data.description = marked(data.description).slice(3, -5);
-          }
-          return data;
-        };
-        if (repo.milestone) {
-          return request.oneMilestone(repo, repo.milestone, function(err, m) {
-            if (err) {
-              return cb(err);
-            }
-            if (m.open_issues + m.closed_issues === 0) {
-              return cb(null, "No issues for milestone `" + m.title + "`");
-            }
-            m = parse(m);
-            return cb(null, null, m);
-          });
-        } else {
-          return request.allMilestones(repo, function(err, data) {
-            var m;
-            if (err) {
-              return cb(err);
-            }
-            if (!data.length) {
-              return cb(null, "No open milestones for repo " + repo.path);
-            }
-            m = data[0];
-            m = _.rest(data, {
-              'due_on': null
+      module.exports = {
+        get: function(repo, cb) {
+          if (repo.milestone) {
+            return request.oneMilestone(repo, repo.milestone, function(err, m) {
+              if (err) {
+                return cb(err);
+              }
+              if (m.open_issues + m.closed_issues === 0) {
+                return cb(null, "No issues for milestone `" + m.title + "`");
+              }
+              return cb(null, null, m);
             });
-            m = m[0] ? m[0] : data[0];
-            if (m.open_issues + m.closed_issues === 0) {
-              return cb(null, "No issues for milestone `" + m.title + "`");
-            }
-            m = parse(m);
-            return cb(null, null, m);
-          });
+          } else {
+            return request.allMilestones(repo, function(err, data) {
+              var m;
+              if (err) {
+                return cb(err);
+              }
+              if (!data.length) {
+                return cb(null, "No open milestones for repo " + repo.path);
+              }
+              m = data[0];
+              m = _.rest(data, {
+                'due_on': null
+              });
+              m = m[0] ? m[0] : data[0];
+              if (m.open_issues + m.closed_issues === 0) {
+                return cb(null, "No issues for milestone `" + m.title + "`");
+              }
+              return cb(null, null, m);
+            });
+          }
         }
       };
       
@@ -540,9 +533,7 @@
     // project.coffee
     root.require.register('burnchart/src/modules/project.js', function(exports, require, module) {
     
-      var chart, issues, milestones;
-      
-      milestones = require('./milestones');
+      var chart, issues;
       
       issues = require('./issues');
       
@@ -551,17 +542,6 @@
       module.exports = function(opts, cb) {
         return async.waterfall([
           function(cb) {
-            return milestones(opts, function(err, warn, milestone) {
-              if (err) {
-                return cb(err);
-              }
-              if (warn) {
-                return cb(warn);
-              }
-              opts.milestone = milestone;
-              return cb(null);
-            });
-          }, function(cb) {
             return issues.get_all(opts, cb);
           }, function(all, cb) {
             return async.map(all, function(array, cb) {
@@ -790,19 +770,19 @@
     // index.mustache
     root.require.register('burnchart/src/templates/pages/index.js', function(exports, require, module) {
     
-      module.exports = ["<div id=\"title\">","    <div class=\"wrap\">","        <h2>Disposable Project</h2>","        <span class=\"milestone\">Milestone 1.0</span>","        <p class=\"description\">The one where we deliver all that we promised.</p>","    </div>","</div>","","<div id=\"content\" class=\"wrap\">","    <Hero/>","    <Projects/>","</div>"].join("\n");
+      module.exports = ["<div id=\"content\" class=\"wrap\">","    <Hero/>","    <Projects/>","</div>"].join("\n");
     });
 
     // showChart.mustache
     root.require.register('burnchart/src/templates/pages/showChart.js', function(exports, require, module) {
     
-      module.exports = ["<div id=\"content\" class=\"wrap\">","    <div id=\"chart\">","        <div id=\"svg\"></div>","    </div>","</div>"].join("\n");
+      module.exports = ["<div id=\"title\">","    <div class=\"wrap\">","        <h2 class=\"title\">{{ milestone.title }}</h2>","        <span class=\"sub\">{{ format.due(milestone.due_on) }}</span>","        <p class=\"description\">{{{ format.markdown(milestone.description) }}}</p>","    </div>","</div>","","<div id=\"content\" class=\"wrap\">","    <div id=\"chart\">","        <div id=\"svg\"></div>","    </div>","</div>"].join("\n");
     });
 
     // projects.mustache
     root.require.register('burnchart/src/templates/projects.js', function(exports, require, module) {
     
-      module.exports = ["{{#projects.list.length}}","    <div id=\"projects\">","        <div class=\"header\">","            <a href=\"#\" class=\"sort\"><span class=\"icon sort-alphabet\"></span> Sorted by priority</a>","            <h2>Projects</h2>","        </div>","","        <table>","            {{#projects.list}}","                {{#milestones}}","                    <tr>","                        <td><a class=\"repo\">{{owner}}/{{name}}</a></td>","                            <td>","                                <a class=\"milestone\" href=\"#chart/{{owner}}/{{name}}/{{number}}\">{{ title }}</a>","                            </td>","                            <td>","                                <div class=\"progress\">","                                    <span class=\"percent\">{{Math.floor(format.progress(closed_issues, open_issues))}}%</span>","                                    <span class=\"due\">due {{format.fromNow(due_on)}}</span>","                                    <div class=\"outer bar\">","                                        <div class=\"inner bar {{format.onTime(this)}}\" style=\"width:{{format.progress(closed_issues, open_issues)}}%\"></div>","                                    </div>","                                </div>","                            </td>","                    </tr>","                {{/milestones}}","            {{/projects.list}}","","        <!--","            <tr>","                <td><a class=\"repo\" href=\"#\">radekstepan/disposable</a></td>","                <td><span class=\"milestone\">Milestone 1.0 <span class=\"icon down-open\"></span></td>","                <td>","                    <div class=\"progress\">","                        <span class=\"percent\">40%</span>","                        <span class=\"due\">due on Friday</span>","                        <div class=\"outer bar\">","                            <div class=\"inner bar red\" style=\"width:40%\"></div>","                        </div>","                    </div>","                </td>","            </tr>","            <tr class=\"done\">","                <td><a class=\"repo\" href=\"#\">radekstepan/burnchart</a></td>","                <td><span class=\"milestone\">Beta Milestone <span class=\"icon down-open\"></span></a></td>","                <td>","                    <div class=\"progress\">","                        <span class=\"percent\">100%</span>","                        <span class=\"due\">due tomorrow</span>","                        <div class=\"outer bar\">","                            <div class=\"inner bar green\" style=\"width:100%\"></div>","                        </div>","                    </div>","                </td>","            </tr>","            <tr>","                <td><a class=\"repo\" href=\"#\">intermine/intermine</a></td>","                <td><span class=\"milestone\">Emma Release 96 <span class=\"icon down-open\"></span></a></td>","                <td>","                    <div class=\"progress\">","                        <span class=\"percent\">27%</span>","                        <span class=\"due\">due in 2 weeks</span>","                        <div class=\"outer bar\">","                            <div class=\"inner bar red\" style=\"width:27%\"></div>","                        </div>","                    </div>","                </td>","            </tr>","            <tr>","                <td><a class=\"repo\" href=\"#\">microsoft/windows</a></td>","                <td><span class=\"milestone\">RC 9 <span class=\"icon down-open\"></span></a></td>","                <td>","                    <div class=\"progress\">","                        <span class=\"percent\">90%</span>","                        <span class=\"due red\">overdue by a month</span>","                        <div class=\"outer bar\">","                            <div class=\"inner bar red\" style=\"width:90%\"></div>","                        </div>","                    </div>","                </td>","            </tr>","        -->","        </table>","","        <div class=\"footer\">","            <a href=\"#\"><span class=\"icon cog\"></span> Edit</a>","        </div>","    </div>","{{/projects.list}}"].join("\n");
+      module.exports = ["{{#projects.list.length}}","    <div id=\"projects\">","        <div class=\"header\">","            <a href=\"#\" class=\"sort\"><span class=\"icon sort-alphabet\"></span> Sorted by priority</a>","            <h2>Projects</h2>","        </div>","","        <table>","            {{#projects.list}}","                {{#milestones}}","                    <tr>","                        <td><a class=\"repo\">{{owner}}/{{name}}</a></td>","                            <td>","                                <a class=\"milestone\" href=\"#chart/{{owner}}/{{name}}/{{number}}\">{{ title }}</a>","                            </td>","                            <td>","                                <div class=\"progress\">","                                    <span class=\"percent\">{{Math.floor(format.progress(closed_issues, open_issues))}}%</span>","                                    <span class=\"due\">{{format.due(due_on)}}</span>","                                    <div class=\"outer bar\">","                                        <div class=\"inner bar {{format.onTime(this)}}\" style=\"width:{{format.progress(closed_issues, open_issues)}}%\"></div>","                                    </div>","                                </div>","                            </td>","                    </tr>","                {{/milestones}}","            {{/projects.list}}","","        <!--","            <tr>","                <td><a class=\"repo\" href=\"#\">radekstepan/disposable</a></td>","                <td><span class=\"milestone\">Milestone 1.0 <span class=\"icon down-open\"></span></td>","                <td>","                    <div class=\"progress\">","                        <span class=\"percent\">40%</span>","                        <span class=\"due\">due on Friday</span>","                        <div class=\"outer bar\">","                            <div class=\"inner bar red\" style=\"width:40%\"></div>","                        </div>","                    </div>","                </td>","            </tr>","            <tr class=\"done\">","                <td><a class=\"repo\" href=\"#\">radekstepan/burnchart</a></td>","                <td><span class=\"milestone\">Beta Milestone <span class=\"icon down-open\"></span></a></td>","                <td>","                    <div class=\"progress\">","                        <span class=\"percent\">100%</span>","                        <span class=\"due\">due tomorrow</span>","                        <div class=\"outer bar\">","                            <div class=\"inner bar green\" style=\"width:100%\"></div>","                        </div>","                    </div>","                </td>","            </tr>","            <tr>","                <td><a class=\"repo\" href=\"#\">intermine/intermine</a></td>","                <td><span class=\"milestone\">Emma Release 96 <span class=\"icon down-open\"></span></a></td>","                <td>","                    <div class=\"progress\">","                        <span class=\"percent\">27%</span>","                        <span class=\"due\">due in 2 weeks</span>","                        <div class=\"outer bar\">","                            <div class=\"inner bar red\" style=\"width:27%\"></div>","                        </div>","                    </div>","                </td>","            </tr>","            <tr>","                <td><a class=\"repo\" href=\"#\">microsoft/windows</a></td>","                <td><span class=\"milestone\">RC 9 <span class=\"icon down-open\"></span></a></td>","                <td>","                    <div class=\"progress\">","                        <span class=\"percent\">90%</span>","                        <span class=\"due red\">overdue by a month</span>","                        <div class=\"outer bar\">","                            <div class=\"inner bar red\" style=\"width:90%\"></div>","                        </div>","                    </div>","                </td>","            </tr>","        -->","        </table>","","        <div class=\"footer\">","            <a href=\"#\"><span class=\"icon cog\"></span> Edit</a>","        </div>","    </div>","{{/projects.list}}"].join("\n");
     });
 
     // date.coffee
@@ -834,7 +814,13 @@
         }),
         'fromNow': _.memoize(function(jsonDate) {
           return moment(new Date(jsonDate)).fromNow();
-        })
+        }),
+        'due': function(jsonDate) {
+          return ['due', this.fromNow(jsonDate)].join(' ');
+        },
+        'markdown': function(markup) {
+          return marked(markup);
+        }
       };
       
     });
@@ -986,15 +972,40 @@
     // showChart.coffee
     root.require.register('burnchart/src/views/pages/showChart.js', function(exports, require, module) {
     
-      var project;
+      var format, milestone, project;
+      
+      milestone = require('../../modules/milestone');
       
       project = require('../../modules/project');
+      
+      format = require('../../utils/format');
       
       module.exports = Ractive.extend({
         'template': require('../../templates/pages/showChart'),
         'adapt': [Ractive.adaptors.Ractive],
+        'data': {
+          format: format
+        },
         init: function() {
-          return project(this.get('route'));
+          var route,
+            _this = this;
+          route = this.get('route');
+          return milestone.get(route, function(err, warn, obj) {
+            if (err) {
+              throw err;
+            }
+            if (warn) {
+              throw warn;
+            }
+            _this.set('milestone', obj);
+            route.milestone = obj;
+            return project(route, function(err) {
+              if (err) {
+                throw err;
+              }
+              return console.log('Done');
+            });
+          });
         }
       });
       

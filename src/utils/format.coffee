@@ -19,6 +19,14 @@ module.exports =
 
         [ 'red', 'green' ][ +(points > time) ]
 
-    # When is this milestone due?
+    # Time from now.
     'fromNow': _.memoize (jsonDate) ->
         moment(new Date(jsonDate)).fromNow()
+
+    # When is a milestone due?
+    'due': (jsonDate) ->
+        [ 'due', @fromNow jsonDate ].join(' ')
+
+    # Markdown formatting.
+    'markdown': (markup) ->
+        marked markup

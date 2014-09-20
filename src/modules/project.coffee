@@ -1,21 +1,12 @@
 #!/usr/bin/env coffee
-milestones = require './milestones'
-issues     = require './issues'
-chart      = require './chart'
+issues    = require './issues'
+chart     = require './chart'
 
 # Setup a project and render it.
 module.exports = (opts, cb) ->
 
-    # Resolve the milestone.
-    async.waterfall [ (cb) ->
-        milestones opts, (err, warn, milestone) ->
-            return cb err if err
-            return cb warn if warn
-            opts.milestone = milestone
-            cb null
-
     # Get all issues.
-    (cb) ->
+    async.waterfall [ (cb) ->
         issues.get_all opts, cb
     
     # Filter them to labeled ones.
