@@ -13,39 +13,41 @@ GitHub Burndown Chart as a service. Public repos are free, for private access au
 - [x] show all issues as [one size](https://github.com/radekstepan/github-burndown-chart/issues/46)
 - [x] use `localStorage` to save project names
 
-### Extras
+### The 20%
 
+- [ ] calculate left margin based on the total number of points text width
+- [ ] work for `mbostock/d3`
 - [ ] Do not show login/logged-in state when we are still fetching that information from Firebase
 - [ ] Handle 404 on routes; from catch all check if '/' or go 404 controller
 - [ ] Variable document.title on different pages
+- [ ] Validate repo input and show a loading sign of sorts
+- [ ] Check that we have not run out of requests to make
+- [ ] Show loading sign on top of [browser window](https://github.com/buunguyen/topbar) which is unobtrusive enough we can show it immediately.
+- [ ] show a countdown clock towards the end of the milestone or show overdue
+- [x] allow people to go straight to a URL that fetches the repo, if public, for them; to demo our app without adding a repo (add it behind the scenes); *req* cache repos
+- [x] closed issues can be moved to a newly created milestone, this messes up the chart since we assume milestone is created first!
+
+### Extras
+
 - [ ] In add a project form autocomplete on my username, orgs I am member of and repos I have access to
 - [ ] Someone might create a public repo, add it to the system and switch it to private; need to check repo priviledges at runtime; or when asking for auth, one would choose either public OR public/private, but this could get confusign.
 - [ ] Make sure the padding fits throughout the interface; we have user-select on elements.
-- [ ] Validate repo input and show a loading sign of sorts
-- [ ] When fetching repo say if no perms to access or does not exist
 - [ ] Check location.hash is supported
 - [ ] Have an app wide of triggering a URL and have named routes too
-- [ ] Check that we have not run out of requests to make
-- [ ] Deal with running out of GH API requests
-- [ ] Since persistence is async, deal with the flicker (show laoding?) when we are still getting data
 - [ ] On page load get all the latest data regardless of `time_ago`
-- [ ] Show loading sign on top of [browser window](https://github.com/buunguyen/topbar) which is unobtrusive enough we can show it immediately.
 - [ ] rotate between percentage progress and points left
 - [ ] be able to config options through UI that currently have to be hardcoded in config
 - [ ] cache repos in `localStorage` for those that do not use GitHub login
-- [ ] allow people to go straight to a URL that fetches the repo, if public, for them; to demo our app without adding a repo (add it behind the scenes); *req* cache repos
-- [ ] choose your own strategy for naming issues, e.g. all issues are one size
 - [ ] choose your own theme
 - [ ] custom milestone start dates
 - [ ] show burndown chart for all milestones
 - [ ] handle Enterprise editions of GH (signed up in gh dev program)
 - [ ] auto-update the chart (with delay when no activity) when logged-in
-- [ ] show a countdown clock towards the end of the milestone or show overdue
 - [ ] add weekly velocity across all projects and a bar chart to that effect
 - [ ] show a little lightning and a number for today's velocity
 - [ ] show burnchart only for your tasks; this would be a second category of projects & tasks in the dashboard
 - [ ] show an overall text-based status like: all projects on time etc.
-- [ ] until GH fix milestone start date then provide an option to specify it (either do that on GH server or locally)
+- [ ] until GH fix milestone start date then provide an option to specify it (either do that on GH server or locally); for example a text like this: `starts: 09-10-2014` in the description which we provide regex for
 - [ ] work on mobile devices
 - [ ] show velocity number for each member of the team in the corner of the layout
 - [ ] show velocity for all team members and how it progresses through time
@@ -54,7 +56,6 @@ GitHub Burndown Chart as a service. Public repos are free, for private access au
 - [ ] allow people to submit suggestions via GitHub Issues
 - [ ] find a way where, as a group, we can share repo data by trusting the other repo members that use our platform
 - [ ] support Jira & Gitlab
-- [x] closed issues can be moved to a newly created milestone, this messes up the chart since we assume milestone is created first!
 
 ## Notes
 

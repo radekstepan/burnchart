@@ -40042,7 +40042,7 @@ if (typeof exports === 'object') {
             "datetime": /^(\d{4}-\d{2}-\d{2})T(.*)/,
             "size_label": /^size (\d+)$/,
             "location": /^#!((\/[^\/]+){2,3})$/,
-            "points": 'ALL_ONE_SIZE'
+            "points": 'LABELS'
           }
         }
       });
