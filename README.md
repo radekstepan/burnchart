@@ -15,8 +15,7 @@ GitHub Burndown Chart as a service. Public repos are free, for private access au
 
 ### The 20%
 
-- [ ] progress needs to be calculated based on strategy even on homepage
-- [ ] be able to go back to homepage
+- [ ] progress needs to be calculated based on strategy even on homepage, then sort the milestones based on priority
 - [ ] calculate left margin based on the total number of points text width
 - [ ] Do not show login/logged-in state when we are still fetching that information from Firebase
 - [ ] Handle 404 on routes; from catch all check if '/' or go 404 controller
@@ -25,6 +24,7 @@ GitHub Burndown Chart as a service. Public repos are free, for private access au
 - [ ] Check that we have not run out of requests to make
 - [ ] Show loading sign on top of [browser window](https://github.com/buunguyen/topbar) which is unobtrusive enough we can show it immediately.
 - [ ] show a countdown clock towards the end of the milestone or show overdue
+- [x] be able to go back to homepage
 - [x] deal with no due date milestones - always on track
 - [x] show title on the chart page
 - [x] work for `mbostock/d3`

@@ -460,8 +460,9 @@ ul li{display:inline-block}
 .icon{margin-right:4px}
 .wrap{width:800px;margin:0 auto}
 #head{background:#c1041c;height:64px;}
-#head h1{font-size:26px;margin:0;padding:10px 24px;line-height:44px;height:44px;background:#77000e;display:inline-block;color:#c1041c;}
-#head h1 .icon{margin:0}
+#head h1{font-size:26px;margin:0;padding:10px 24px;line-height:44px;height:44px;background:#77000e;display:inline-block;}
+#head h1 a{color:#c1041c;}
+#head h1 a .icon{margin:0}
 #head .q{position:relative;display:inline-block;margin:13px 20px 0 20px;vertical-align:top;}
 #head .q .icon{position:absolute;color:#c1041c;}
 #head .q .icon.search{top:8px;left:12px}
@@ -509,7 +510,7 @@ ul li{display:inline-block}
 #content #projects table tr td .progress .bar.red{background:#c1041c}
 #content #projects table tr td .progress .bar.green{background:#00b361}
 #content #projects table tr td .progress .due.red{color:#c1041c;font-weight:bold}
-#content #projects table tr td:first-child a{color:#3e4457;font-weight:bold}
+#content #projects table tr td:first-child{color:#3e4457;font-weight:bold}
 #content #projects table tr:nth-child(2) td{background:#fefefe}
 #content #projects table tr:last-child td{border:0}
 #content #projects table tr.done td{background:#ebf6f1;}
