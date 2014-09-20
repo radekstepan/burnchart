@@ -1,3 +1,5 @@
+config = require '../models/config'
+
 module.exports =
 
     # Progress in percentages.
@@ -6,6 +8,9 @@ module.exports =
 
     # Is a milestone on time?
     'onTime': _.memoize (milestone) ->
+        # Milestones with no due date are always on track.
+        return 'green' unless milestone.due_on
+
         # Progress in points.
         points = @progress milestone.closed_issues, milestone.open_issues
 
@@ -18,6 +23,8 @@ module.exports =
         time = @progress b - a, c - b
 
         [ 'red', 'green' ][ +(points > time) ]
+    , (m) -> # resolver
+        [ m.created_at, m.number ].join '/'
 
     # Time from now.
     'fromNow': _.memoize (jsonDate) ->
@@ -25,6 +32,7 @@ module.exports =
 
     # When is a milestone due?
     'due': (jsonDate) ->
+        return '&nbsp;' unless jsonDate
         [ 'due', @fromNow jsonDate ].join(' ')
 
     # Markdown formatting.
