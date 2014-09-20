@@ -12,7 +12,10 @@ module.exports =
             results = []
             # One pageful fetch (next pages in series).
             do fetch_page = (page = 1) ->
-                request.allIssues opts, { state, page }, (err, data) ->
+                request.allIssues opts, {
+                    'milestone': opts.milestone.number,
+                    state, page
+                }, (err, data) ->
                     # Errors?
                     return cb err if err
                     # Empty?
@@ -38,7 +41,7 @@ module.exports =
         # Which point counting mode are we in?
         switch config.get 'chart.points'
             # All issues are the same size
-            when 'ALL_ONE_SIZE'
+            when 'ONE_SIZE'
                 total    = collection.length
                 filtered = _.map collection, (issue) ->
                     issue.size = 1

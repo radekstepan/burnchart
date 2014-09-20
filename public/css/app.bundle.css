@@ -471,7 +471,7 @@ ul li{display:inline-block}
 #head ul li{margin-left:30px}
 #head a{color:#e0808d;font-weight:bold;}
 #head a.active,#head a:hover{color:#fff}
-#head .right{float:right;margin-right:20px;line-height:64px;}
+#head .right{float:right;margin-right:20px;line-height:64px;color:#e0808d;}
 #head .right a{-webkit-border-radius:2px;border-radius:2px;background:#ffbb2a;color:#c1041c;padding:11px 20px}
 #title{border-bottom:3px solid #f3f4f8;}
 #title h2{border-bottom:3px solid #aaafbf;margin:30px 0 -3px 0;display:inline-block;padding-bottom:20px}

@@ -16,7 +16,6 @@ GitHub Burndown Chart as a service. Public repos are free, for private access au
 ### The 20%
 
 - [ ] calculate left margin based on the total number of points text width
-- [ ] work for `mbostock/d3`
 - [ ] Do not show login/logged-in state when we are still fetching that information from Firebase
 - [ ] Handle 404 on routes; from catch all check if '/' or go 404 controller
 - [ ] Variable document.title on different pages
@@ -24,6 +23,7 @@ GitHub Burndown Chart as a service. Public repos are free, for private access au
 - [ ] Check that we have not run out of requests to make
 - [ ] Show loading sign on top of [browser window](https://github.com/buunguyen/topbar) which is unobtrusive enough we can show it immediately.
 - [ ] show a countdown clock towards the end of the milestone or show overdue
+- [x] work for `mbostock/d3`
 - [x] allow people to go straight to a URL that fetches the repo, if public, for them; to demo our app without adding a repo (add it behind the scenes); *req* cache repos
 - [x] closed issues can be moved to a newly created milestone, this messes up the chart since we assume milestone is created first!
 
@@ -56,6 +56,11 @@ GitHub Burndown Chart as a service. Public repos are free, for private access au
 - [ ] allow people to submit suggestions via GitHub Issues
 - [ ] find a way where, as a group, we can share repo data by trusting the other repo members that use our platform
 - [ ] support Jira & Gitlab
+- [ ] when fetching subsequent updates, fetch only the last page of issues since some repos are large (2.5MB & 19 pages for `mbostock/d3`); actually that is for all issues, not milestone constrained. So only an issue if we want to see a burnchart for all the issues for a repo
+- [ ] move tests from `radekstepan/github-burndown-chart`
+- [ ] if all issue circles are close to each other, make a "master circle" that amalgamates all the issues into one large circle, makes for a prettier view
+- [ ] tell people if they have no due date
+- [ ] make better x-axis date display, otherwise we see all 1s.
 
 ## Notes
 
@@ -67,6 +72,7 @@ GitHub Burndown Chart as a service. Public repos are free, for private access au
 - workers: using a free instance of IronWorker and assuming 5s runtime each time gives us a poll every 6 minutes. Zapier would poll every 15 minutes but already integrates Stripe and FB.
 - worst case scenario I provide even Small Business plan for free and provide a better experience
 - $2.5 Node.js PaaS via Gandi with promo code `PAASLAUNCH-C50E-B077-A317`.
+- let people vote on features they want to see fast: [tally.tl](http://tally.tl/).
 
 
 ## Plans

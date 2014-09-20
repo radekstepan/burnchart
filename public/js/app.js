@@ -76,7 +76,7 @@
             "datetime": /^(\d{4}-\d{2}-\d{2})T(.*)/,
             "size_label": /^size (\d+)$/,
             "location": /^#!((\/[^\/]+){2,3})$/,
-            "points": 'LABELS'
+            "points": 'ONE_SIZE'
           }
         }
       });
@@ -425,6 +425,7 @@
             results = [];
             return (fetch_page = function(page) {
               return request.allIssues(opts, {
+                'milestone': opts.milestone.number,
                 state: state,
                 page: page
               }, function(err, data) {
@@ -448,7 +449,7 @@
           var filtered, total;
           total = 0;
           switch (config.get('chart.points')) {
-            case 'ALL_ONE_SIZE':
+            case 'ONE_SIZE':
               total = collection.length;
               filtered = _.map(collection, function(issue) {
                 issue.size = 1;

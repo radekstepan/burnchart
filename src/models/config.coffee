@@ -30,4 +30,4 @@ module.exports = new Model
             # How do we specify which user/repo/(milestone) we want?
             "location": /^#!((\/[^\/]+){2,3})$/
             # Process all issues as one size or use labels.
-            "points": 'LABELS'
+            "points": 'ONE_SIZE'
