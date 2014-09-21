@@ -40755,7 +40755,7 @@ if (typeof exports === 'object') {
     // showChart.mustache
     root.require.register('burnchart/src/templates/pages/showChart.js', function(exports, require, module) {
     
-      module.exports = ["<div id=\"title\">","    <div class=\"wrap\">","        <h2 class=\"title\">{{ milestone.title }}</h2>","        <span class=\"sub\">{{{ format.due(milestone.due_on) }}}</span>","        <p class=\"description\">{{{ format.markdown(milestone.description) }}}</p>","    </div>","</div>","","<div id=\"content\" class=\"wrap\">","    <div id=\"chart\">","        <div id=\"svg\"></div>","    </div>","</div>"].join("\n");
+      module.exports = ["<div id=\"title\">","    <div class=\"wrap\">","        <h2 class=\"title\">{{ format.title(milestone.title) }}</h2>","        <span class=\"sub\">{{{ format.due(milestone.due_on) }}}</span>","        <p class=\"description\">{{{ format.markdown(milestone.description) }}}</p>","    </div>","</div>","","<div id=\"content\" class=\"wrap\">","    <div id=\"chart\">","        <div id=\"svg\"></div>","    </div>","</div>"].join("\n");
     });
 
     // projects.mustache
@@ -40811,6 +40811,13 @@ if (typeof exports === 'object') {
         },
         'markdown': function(markup) {
           return marked(markup);
+        },
+        'title': function(text) {
+          if (text.toLowerCase().indexOf('milestone') > -1) {
+            return text;
+          } else {
+            return ['Milestone', text].join(' ');
+          }
         }
       };
       

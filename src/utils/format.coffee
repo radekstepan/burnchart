@@ -38,3 +38,10 @@ module.exports =
     # Markdown formatting.
     'markdown': (markup) ->
         marked markup
+
+    # Format milestone title.
+    'title': (text) ->
+        if text.toLowerCase().indexOf('milestone') > -1
+            text
+        else
+            [ 'Milestone', text ].join(' ')
