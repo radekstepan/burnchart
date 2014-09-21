@@ -12,6 +12,9 @@ module.exports = Ractive.extend
 
     init: ->
         route = @get 'route'
+        
+        document.title = "#{route.owner}/#{route.name}"
+
         milestone.get route, (err, warn, obj) =>
             throw err if err
             throw warn if warn

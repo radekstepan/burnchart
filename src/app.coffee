@@ -3,25 +3,9 @@
     'models/projects'
 ] )
 
+
+Router = require './modules/router'
 Header = require './views/header'
-
-mediator = require './modules/mediator'
-
-el = '#page'
-
-route = (page, req, evt) ->
-    document.title = 'BurnChart: GitHub Burndown Chart as a Service'
-    Page = require "./views/pages/#{page}"
-    new Page { el, 'data': { 'route': req.params } }
-
-router =
-    '':                              _.partial route, 'index'
-    'project/add':                   _.partial route, 'addProject'
-    'chart/:owner/:name/:milestone': _.partial route, 'showChart'
-    # TODO: remove in production.
-    'reset':       ->
-        mediator.fire '!projects/clear'
-        window.location.hash = '#'
 
 App = Ractive.extend
     
@@ -30,7 +14,6 @@ App = Ractive.extend
     'components': { Header }
 
     init: ->
-        # Init the routes.
-        Grapnel.listen router        
+        new Router()
 
 module.exports = new App()

@@ -9,3 +9,6 @@ module.exports = Ractive.extend
     'components': { Hero, Projects }
 
     'data': { format }
+
+    init: ->
+        document.title = 'BurnChart: GitHub Burndown Chart as a Service'

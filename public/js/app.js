@@ -7,7 +7,7 @@
     // app.coffee
     root.require.register('burnchart/src/app.js', function(exports, require, module) {
     
-      var App, Header, el, key, mediator, route, router, _i, _len, _ref;
+      var App, Header, Router, key, _i, _len, _ref;
       
       _ref = ['utils/mixins', 'models/projects'];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
@@ -15,33 +15,9 @@
         require("./" + key);
       }
       
+      Router = require('./modules/router');
+      
       Header = require('./views/header');
-      
-      mediator = require('./modules/mediator');
-      
-      el = '#page';
-      
-      route = function(page, req, evt) {
-        var Page;
-        document.title = 'BurnChart: GitHub Burndown Chart as a Service';
-        Page = require("./views/pages/" + page);
-        return new Page({
-          el: el,
-          'data': {
-            'route': req.params
-          }
-        });
-      };
-      
-      router = {
-        '': _.partial(route, 'index'),
-        'project/add': _.partial(route, 'addProject'),
-        'chart/:owner/:name/:milestone': _.partial(route, 'showChart'),
-        'reset': function() {
-          mediator.fire('!projects/clear');
-          return window.location.hash = '#';
-        }
-      };
       
       App = Ractive.extend({
         'template': require('./templates/layout'),
@@ -49,7 +25,7 @@
           Header: Header
         },
         init: function() {
-          return Grapnel.listen(router);
+          return new Router();
         }
       });
       
@@ -743,6 +719,43 @@
       
     });
 
+    // router.coffee
+    root.require.register('burnchart/src/modules/router.js', function(exports, require, module) {
+    
+      var el, mediator, route, router;
+      
+      mediator = require('./mediator');
+      
+      el = '#page';
+      
+      route = function(page, req, evt) {
+        var Page;
+        Page = require("../views/pages/" + page);
+        return new Page({
+          el: el,
+          'data': {
+            'route': req.params
+          }
+        });
+      };
+      
+      router = {
+        '': _.partial(route, 'index'),
+        'project/add': _.partial(route, 'addProject'),
+        'chart/:owner/:name/:milestone': _.partial(route, 'showChart'),
+        'reset': function() {
+          mediator.fire('!projects/clear');
+          return window.location.hash = '#';
+        }
+      };
+      
+      module.exports = function() {
+        Grapnel.listen(router);
+        return router;
+      };
+      
+    });
+
     // header.mustache
     root.require.register('burnchart/src/templates/header.js', function(exports, require, module) {
     
@@ -776,7 +789,7 @@
     // showChart.mustache
     root.require.register('burnchart/src/templates/pages/showChart.js', function(exports, require, module) {
     
-      module.exports = ["<div id=\"title\">","    <div class=\"wrap\">","        <h2 class=\"title\">{{ milestone.title }}</h2>","        <span class=\"sub\">{{ format.due(milestone.due_on) }}</span>","        <p class=\"description\">{{{ format.markdown(milestone.description) }}}</p>","    </div>","</div>","","<div id=\"content\" class=\"wrap\">","    <div id=\"chart\">","        <div id=\"svg\"></div>","    </div>","</div>"].join("\n");
+      module.exports = ["<div id=\"title\">","    <div class=\"wrap\">","        <h2 class=\"title\">{{ milestone.title }}</h2>","        <span class=\"sub\">{{{ format.due(milestone.due_on) }}}</span>","        <p class=\"description\">{{{ format.markdown(milestone.description) }}}</p>","    </div>","</div>","","<div id=\"content\" class=\"wrap\">","    <div id=\"chart\">","        <div id=\"svg\"></div>","    </div>","</div>"].join("\n");
     });
 
     // projects.mustache
@@ -938,6 +951,7 @@
         'adapt': [Ractive.adaptors.Ractive],
         init: function() {
           var autocomplete;
+          document.title = 'Add a new project';
           autocomplete = function(value) {};
           this.observe('value', _.debounce(autocomplete, 200), {
             'init': false
@@ -976,6 +990,9 @@
         },
         'data': {
           format: format
+        },
+        init: function() {
+          return document.title = 'BurnChart: GitHub Burndown Chart as a Service';
         }
       });
       
@@ -1002,6 +1019,7 @@
           var route,
             _this = this;
           route = this.get('route');
+          document.title = "" + route.owner + "/" + route.name;
           return milestone.get(route, function(err, warn, obj) {
             if (err) {
               throw err;
