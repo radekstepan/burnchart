@@ -15,6 +15,7 @@ GitHub Burndown Chart as a service. Public repos are free, for private access au
 
 ### The 20%
 
+- [ ] landing page for the project and put message on my repo
 - [ ] Handle [404](https://www.firebase.com/docs/hosting/guide/url-redirects-rewrites.html#section-404) on routes; from catch all check if '/' or go 404 controller
 - [ ] allow `pushState` when [Firebase hosted](https://www.firebase.com/docs/hosting/guide/url-redirects-rewrites.html#section-rewrites)
 - [ ] progress needs to be calculated based on strategy even on homepage, then sort the milestones based on priority
