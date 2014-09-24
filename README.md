@@ -12,9 +12,11 @@ GitHub Burndown Chart as a service. Public repos are free, for private access au
 - [x] show burnchart for that project milestone
 - [x] show all issues as [one size](https://github.com/radekstepan/github-burndown-chart/issues/46)
 - [x] use `localStorage` to save project names
+- [ ] show a milestones page where we see a table ala projects but for only one project
 
 ### The 20%
 
+- [ ] visiting a chart page saves the project if it isn't saved already
 - [ ] landing page for the project and put message on my repo
 - [ ] Handle [404](https://www.firebase.com/docs/hosting/guide/url-redirects-rewrites.html#section-404) on routes; from catch all check if '/' or go 404 controller
 - [ ] allow `pushState` when [Firebase hosted](https://www.firebase.com/docs/hosting/guide/url-redirects-rewrites.html#section-rewrites)
