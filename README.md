@@ -76,7 +76,7 @@ GitHub Burndown Chart as a service. Public repos are free, for private access au
 
 ## Notes
 
-- *payment gateways* in Canada: [Shopify](http://www.shopify.com/payment-gateways/canada), [Chargify](http://chargify.com/payment-gateways/) list
+- *payment gateways* in Canada: [Shopify](http://www.shopify.com/payment-gateways/canada), [Chargify](http://chargify.com/payment-gateways/) list; I get free processing on first $1000 with [Stripe](https://education.github.com/pack/offers)
 - start people on a *Community* plan showing them a comparison table to upgrade to a better offering
 - community (open source, local storage), business (private repos, firebase)
 - keep discussion going via [gitter](http://gitter.im)
