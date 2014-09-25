@@ -37,6 +37,7 @@ GitHub Burndown Chart as a service. Public repos are free, for private access au
 - [x] work for `mbostock/d3`
 - [x] allow people to go straight to a URL that fetches the repo, if public, for them; to demo our app without adding a repo (add it behind the scenes); *req* cache repos
 - [x] closed issues can be moved to a newly created milestone, this messes up the chart since we assume milestone is created first!
+- [ ] highlight for a moment recently changed milestone
 
 ### Extras
 
