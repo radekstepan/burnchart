@@ -20,7 +20,7 @@ module.exports = Ractive.extend
 
     # Switch loading icon with app icon.
     mediator.on '!app/loading', (ya) =>
-      @set 'icon', if ya then 'spin4' else 'fire-station'
+      @set 'icon', if ya then 'spinner1' else 'fire-station'
 
   'components': { Icons }
 

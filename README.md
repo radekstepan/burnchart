@@ -16,6 +16,7 @@ GitHub Burndown Chart as a service. Public repos are free, for private access au
 
 ### The 20%
 
+- [ ] need to show status (receiving information etc.) per repo
 - [ ] provide a documentation site
 - [ ] visiting a chart page saves the project if it isn't saved already
 - [ ] landing page for the project and put message on my repo
@@ -32,6 +33,7 @@ GitHub Burndown Chart as a service. Public repos are free, for private access au
 - [ ] show a countdown clock towards the end of the milestone or show overdue
 - [ ] highlight for a moment recently changed milestone
 - [ ] smooth animation when transitioning between icons and notifications
+- [ ] show logged-in state only after it is known
 - [x] format milestone titles prepending "Milestone" word if appropriate
 - [x] Variable document.title on different pages
 - [x] be able to go back to homepage
@@ -43,6 +45,7 @@ GitHub Burndown Chart as a service. Public repos are free, for private access au
 
 ### Extras
 
+- [ ] highlight changes from past fetch
 - [ ] In add a project form autocomplete on my username, orgs I am member of and repos I have access to
 - [ ] Someone might create a public repo, add it to the system and switch it to private; need to check repo priviledges at runtime; or when asking for auth, one would choose either public OR public/private, but this could get confusign.
 - [ ] Make sure the padding fits throughout the interface; we have user-select on elements.
@@ -99,6 +102,7 @@ GitHub Burndown Chart as a service. Public repos are free, for private access au
 
 ### Business
 
+- you need to pay for a license to use the app for business purposes
 - repos, milestones saved remotely
 - auto-update with new information
 - private repos

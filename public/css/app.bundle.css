@@ -410,8 +410,7 @@ table {
 @font-face{font-family:'Fontello';src:url("../fonts/fontello.eot?74672344");src:url("../fonts/fontello.eot?74672344#iefix") format('embedded-opentype'),url("../fonts/fontello.woff?74672344") format('woff'),url("../fonts/fontello.ttf?74672344") format('truetype'),url("../fonts/fontello.svg?74672344#fontello") format('svg');font-weight:normal;font-style:normal}
 
 .icon{vertical-align:middle;font-family:"Fontello";font-style:normal;font-weight:normal;speak:none;display:inline-block;text-decoration:inherit;text-align:center;font-variant:normal;text-transform:none;}
-.icon.spin6{-webkit-animation:spin 2s infinite linear;-moz-animation:spin 2s infinite linear;-o-animation:spin 2s infinite linear;-ms-animation:spin 2s infinite linear;animation:spin 2s infinite linear}
-.icon.spin4{-webkit-animation:spin 2s infinite linear;-moz-animation:spin 2s infinite linear;-o-animation:spin 2s infinite linear;-ms-animation:spin 2s infinite linear;animation:spin 2s infinite linear}
+.icon.spin6,.icon.spin4,.icon.spinner1{-webkit-animation:spin 2s infinite linear;-moz-animation:spin 2s infinite linear;-o-animation:spin 2s infinite linear;-ms-animation:spin 2s infinite linear;animation:spin 2s infinite linear}
 @-moz-keyframes spin{0%{-moz-transform:rotate(0)}
 100%{-moz-transform:rotate(360deg)}
 }@-webkit-keyframes spin{0%{-webkit-transform:rotate(0)}

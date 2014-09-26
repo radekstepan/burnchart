@@ -40914,7 +40914,7 @@ if (typeof exports === 'object') {
             });
           });
           return mediator.on('!app/loading', function(ya) {
-            return _this.set('icon', ya ? 'spin4' : 'fire-station');
+            return _this.set('icon', ya ? 'spinner1' : 'fire-station');
           });
         },
         'components': {
@@ -40967,7 +40967,8 @@ if (typeof exports === 'object') {
         'down-open': '\e807',
         'spin6': '\e808',
         'megaphone': '\e809',
-        'spin4': '\e80a'
+        'spin4': '\e80a',
+        'spinner1': '\e80b'
       };
       
       module.exports = Ractive.extend({
