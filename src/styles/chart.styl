@@ -1,95 +1,95 @@
 @import 'nib'
 
 // color definitions
-$closed      = #4DAF7C
-$opened      = #E55F3A
-$grey        = #CACACA
-$brown       = #64584C
+$closed    = #4DAF7C
+$opened    = #E55F3A
+$grey    = #CACACA
+$brown     = #64584C
 $background1 = #D7BCAB
 $background2 = #CC9485
 
 // where D3 renders to
 #chart
-    height: 300px
-    position: relative
+  height: 300px
+  position: relative
 
-    // position will be adjusted dynamically
-    #tooltip
-        position: absolute
-        top: 0
-        left: 0
+  // position will be adjusted dynamically
+  #tooltip
+    position: absolute
+    top: 0
+    left: 0
 
-    svg
-        path
-            &.line
-                fill: none
-                stroke-width: 1px
-                clip-path: url(#clip)
+  svg
+    path
+      &.line
+        fill: none
+        stroke-width: 1px
+        clip-path: url(#clip)
 
-                // actual progress
-                &.actual
-                    stroke: $brown
-                    stroke-width: 3px
+        // actual progress
+        &.actual
+          stroke: $brown
+          stroke-width: 3px
 
-                // ideal velocity throughout the sprint
-                &.ideal
-                    stroke: $grey
-                    stroke-width: 3px
+        // ideal velocity throughout the sprint
+        &.ideal
+          stroke: $grey
+          stroke-width: 3px
 
-                // trend of actual issue closures
-                &.trendline
-                    stroke: $brown
-                    stroke-width: 1.5px
-                    stroke-dasharray: 5,5
+        // trend of actual issue closures
+        &.trendline
+          stroke: $brown
+          stroke-width: 1.5px
+          stroke-dasharray: 5,5
 
-        // right now
-        line
-            &.today
-                stroke: $grey
-                stroke-width: 1px
-                shape-rendering: crispEdges
-                stroke-dasharray: 5,5
+    // right now
+    line
+      &.today
+        stroke: $grey
+        stroke-width: 1px
+        shape-rendering: crispEdges
+        stroke-dasharray: 5,5
 
-        // represents one issue closed
-        circle
-            fill: $brown
-            // make it easier to click
-            stroke: transparent
-            stroke-width: 15px
-            cursor: pointer
+    // represents one issue closed
+    circle
+      fill: $brown
+      // make it easier to click
+      stroke: transparent
+      stroke-width: 15px
+      cursor: pointer
 
-        // axes...
-        .axis
-            shape-rendering: crispEdges
-            
-            line
-                stroke: rgba($grey, 0.25)
-                shape-rendering: crispEdges
+    // axes...
+    .axis
+      shape-rendering: crispEdges
+      
+      line
+        stroke: rgba($grey, 0.25)
+        shape-rendering: crispEdges
 
-            text
-                font-weight: bold
-                fill: $grey
+      text
+        font-weight: bold
+        fill: $grey
 
-            path
-                display: none
+      path
+        display: none
 
 // tooltips
 .d3-tip
-    margin-top: -10px
-    font-size: 11px
-    padding: 8px 10px 7px 10px
-    text-align: center
-    background: rgba(0,0,0,0.75)
-    color: #fff
-    border-radius: 3px
+  margin-top: -10px
+  font-size: 11px
+  padding: 8px 10px 7px 10px
+  text-align: center
+  background: rgba(0,0,0,0.75)
+  color: #fff
+  border-radius: 3px
 
-    &:after
-        width: 100%
-        color: rgba(0,0,0,0.8)
-        content: "\25BC"
-        position: absolute
+  &:after
+    width: 100%
+    color: rgba(0,0,0,0.8)
+    content: "\25BC"
+    position: absolute
 
-    &.n:after
-        margin: -3px 0 0 0
-        top: 100%
-        left: 0
+  &.n:after
+    margin: -3px 0 0 0
+    top: 100%
+    left: 0

@@ -1,10 +1,13 @@
 mediator = require '../modules/mediator'
 projects = require '../models/projects'
+Icons    = require './icons'
 
 module.exports = Ractive.extend
 
-    'template': require '../templates/hero'
+  'template': require '../templates/hero'
 
-    'data': { projects }
+  'data': { projects }
 
-    'adapt': [ Ractive.adaptors.Ractive ]
+  'components': { Icons }
+
+  'adapt': [ Ractive.adaptors.Ractive ]

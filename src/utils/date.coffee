@@ -1,2 +1,2 @@
 module.exports =
-    now: -> new Date().toJSON()
+  now: -> new Date().toJSON()

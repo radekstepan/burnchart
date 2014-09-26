@@ -6,6 +6,7 @@ build:
 	grunt
 
 watch:
+	grunt
 	grunt watch
 
 serve:

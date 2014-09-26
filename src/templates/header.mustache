@@ -1,23 +1,26 @@
 <div id="head">
-    <div class="right">
-        {{#user.displayName}}
-            {{user.displayName}} logged in
-        {{else}}
-            <a class="github" on-click="!login"><span class="icon github"></span> Sign In</a>
-        {{/user.displayName}}
-    </div>
+  <div class="right">
+    {{#user.displayName}}
+      {{user.displayName}} logged in
+    {{else}}
+      <a class="github" on-click="!login"><Icons icon="github"/> Sign In</a>
+    {{/user.displayName}}
+  </div>
 
-    <h1><a href="#"><span class="icon fire-station"></span></a></h1>
+  <a id="icon" href="#">
+    <Icons icon="{{icon}}"/>
+  </a>
 
-    <div class="q">
-        <span class="icon search"></span>
-        <span class="icon down-open"></span>
-        <input type="text" placeholder="Jump to...">
-    </div>
+  <div class="q">
+    <Icons icon="search"/>
+    <Icons icon="down-open"/>
+    <input type="text" placeholder="Jump to...">
+  </div>
 
-    <ul>
-        <li><a href="#project/add" class="add"><span class="icon plus-circled"></span> Add a Project</a></li>
-        <li><a href="#" class="faq">FAQ</a></li>
-        <li><a href="#reset">DB Reset</a></li>
-    </ul>
+  <ul>
+    <li><a href="#project/add" class="add"><Icons icon="plus-circled"/> Add a Project</a></li>
+    <li><a href="#" class="faq">FAQ</a></li>
+    <li><a href="#reset">DB Reset</a></li>
+    <li><a href="#notify">Notify</a></li>
+  </ul>
 </div>

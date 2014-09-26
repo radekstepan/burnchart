@@ -1,6 +1,6 @@
 ( require "./#{key}" for key in [
-    'utils/mixins'
-    'models/projects'
+  'utils/mixins'
+  'models/projects'
 ] )
 
 
@@ -8,12 +8,12 @@ Router = require './modules/router'
 Header = require './views/header'
 
 App = Ractive.extend
-    
-    'template': require './templates/layout'
+  
+  'template': require './templates/layout'
 
-    'components': { Header }
+  'components': { Header }
 
-    init: ->
-        new Router()
+  init: ->
+    new Router()
 
 module.exports = new App()

@@ -1,72 +1,35 @@
 @import 'nib'
 
 .icon
-    vertical-align: middle
+  vertical-align: middle
+  font-family: "Fontello"
+  font-style: normal
+  font-weight: normal
+  speak: none
 
-    &:before
-        font-family: "Fontello"
-        font-style: normal
-        font-weight: normal
-        speak: none
+  display: inline-block
+  text-decoration: inherit
+  text-align: center
 
-        display: inline-block
-        text-decoration: inherit
-        text-align: center
+  /* For safety - reset parent styles, that can break glyph codes */
+  font-variant: normal
+  text-transform: none
 
-        /* For safety - reset parent styles, that can break glyph codes */
-        font-variant: normal
-        text-transform: none
-         
-        /* fix buttons height, for twitter bootstrap */
-        line-height: 1em
+  &.spin6
+    animation: spin 2s infinite linear
 
-    &.cog
-        &:before
-            content: '\e800'
-
-    &.search
-        &:before
-            content: '\e801'
-
-    &.github
-        &:before
-            content: '\e802'
-
-    &.address
-        &:before
-            content: '\e803'
-
-    &.plus-circled
-        &:before
-            content: '\e804'
-
-    &.fire-station
-        &:before
-            content: '\e805'
-
-    &.sort-alphabet
-        &:before
-            content: '\e806'
-
-    &.down-open
-        &:before
-            content: '\e807'
-
-    &.spin6
-        animation: spin 2s infinite linear
-
-        &:before
-            content: '\e808'
+  &.spin4
+    animation: spin 2s infinite linear
 
 @-moz-keyframes spin {
-    from { -moz-transform: rotate(0deg) }
-    to { -moz-transform: rotate(360deg) }
+  from { -moz-transform: rotate(0deg) }
+  to { -moz-transform: rotate(360deg) }
 }
 @-webkit-keyframes spin {
-    from { -webkit-transform: rotate(0deg) }
-    to { -webkit-transform: rotate(360deg) }
+  from { -webkit-transform: rotate(0deg) }
+  to { -webkit-transform: rotate(360deg) }
 }
 @keyframes spin {
-    from { transform:rotate(0deg) }
-    to { transform:rotate(360deg) }
+  from { transform:rotate(0deg) }
+  to { transform:rotate(360deg) }
 }

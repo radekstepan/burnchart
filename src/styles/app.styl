@@ -7,321 +7,316 @@ $strong_color = #C1041C
 $highlight_color = #FFBB2A
 
 body
-    color: #3E4457
-    font-family: $sans_serif_font
+  color: #3E4457
+  font-family: $sans_serif_font
 
 a
-    text-decoration: none
-    color: #AAAFBF
-    cursor: pointer
+  text-decoration: none
+  color: #AAAFBF
+  cursor: pointer
 
 h1, h2, h3, p
-    margin: 0
+  margin: 0
 
 ul
-    list-style-type: none
-    margin: 0
-    padding: 0
+  list-style-type: none
+  margin: 0
+  padding: 0
 
-    li
-        display: inline-block
-
-.icon
-    margin-right: 4px
+  li
+    display: inline-block
 
 .wrap
-    width: 800px
-    margin: 0 auto
+  width: 800px
+  margin: 0 auto
 
 #head
-    background: $strong_color
-    height: 64px
+  background: $strong_color
+  height: 64px
 
-    h1
-        font-size: 26px
-        margin: 0
-        padding: 10px 24px
-        line-height: 44px
-        height: 44px
-        background: #77000E
-        display: inline-block
+  #icon
+    font-size: 26px
+    margin: 0
+    padding: 10px 0
+    line-height: 44px
+    height: 44px
+    width: 74px
+    background: #77000E
+    display: inline-block
+    color: $strong_color
+    margin: 0
+    text-align: center
 
-        a
-            color: $strong_color
+  .q
+    position: relative
+    display: inline-block
+    margin: 13px 20px 0 20px
+    vertical-align: top
 
-            .icon
-                margin: 0
+    .icon
+      position: absolute
+      color: $strong_color
 
-    .q
-        position: relative
-        display: inline-block
-        margin: 13px 20px 0 20px
-        vertical-align: top
+      &.search
+        top: 8px
+        left: 12px
 
-        .icon
-            position: absolute
-            color: $strong_color
+      &.down-open
+        top: 8px
+        right: 12px
 
-            &.search
-                top: 8px
-                left: 12px
+    input
+      background: #77000E
+      border: 0
+      padding: 10px 12px 10px 36px
+      font-size: 14px
+      border-radius: 2px
+      color: #FFF
+      width: 220px
 
-            &.down-open
-                top: 8px
-                right: 12px
+  ul
+    display: inline-block
 
-        input
-            background: #77000E
-            border: 0
-            padding: 10px 12px 10px 36px
-            font-size: 14px
-            border-radius: 2px
-            color: #FFF
-            width: 220px
+    li
+      margin-left: 30px
 
-    ul
-        display: inline-block
+  a
+    color: #E0808D
+    font-weight: bold
 
-        li
-            margin-left: 30px
+    &.active, &:hover
+      color: #FFF
+
+  .right
+    float: right
+    margin-right: 20px
+    line-height: 64px
+    color: #E0808D
 
     a
-        color: #E0808D
-        font-weight: bold
-
-        &.active, &:hover
-            color: #FFF
-
-    .right
-        float: right
-        margin-right: 20px
-        line-height: 64px
-        color: #E0808D
-
-        a
-            border-radius: 2px
-            background: $highlight_color
-            color: $strong_color
-            padding: 11px 20px
+      border-radius: 2px
+      background: $highlight_color
+      color: $strong_color
+      padding: 11px 20px
 
 #title
-    border-bottom: 3px solid #F3F4F8
+  border-bottom: 3px solid #F3F4F8
 
-    .title
-        border-bottom: 3px solid #AAAFBF
-        margin: 30px 0 -3px 0
-        display: inline-block
-        padding-bottom: 20px
+  .title
+    border-bottom: 3px solid #AAAFBF
+    margin: 30px 0 -3px 0
+    display: inline-block
+    padding-bottom: 20px
 
-    .sub
-        font-size: 16px
-        font-weight: bold
-        margin: 0 20px
+  .sub
+    font-size: 16px
+    font-weight: bold
+    margin: 0 20px
 
-    .description
-        display: inline-block
-        font-family: $serif_font
-        white-space: nowrap
-        color: #B1B6C4
+  .description
+    display: inline-block
+    font-family: $serif_font
+    white-space: nowrap
+    color: #B1B6C4
 
 #content
-    padding: 20px
-    margin-top: 20px
+  padding: 20px
+  margin-top: 20px
 
-    #hero
-        background: url('../img/hires/2.jpg') center
-        background-size: cover
-        border-radius: 2px
-        margin-bottom: 30px
+  #hero
+    background: url('../img/hires/2.jpg') center
+    background-size: cover
+    border-radius: 2px
+    margin-bottom: 30px
 
-        .content
-            border-radius: 2px
+    .content
+      border-radius: 2px
+      color: #FFF
+      padding: 30px
+      background: rgba(#000, 30%)
+      box-shadow: inset 0 1px 2px rgba(#000, 20%)
+
+      h2
+        margin-bottom: 20px
+        margin-left: 140px
+
+      p
+        font-family: $serif_font
+        font-size: 18px
+        line-height: 24px
+        margin-left: 140px
+        text-align: justify
+        text-justify: inter-word
+
+      .address
+        font-size: 120px
+        float: left
+
+      .cta
+        text-align: center
+        margin-top: 10px
+
+        a
+          font-family: $serif_font
+          padding: 11px 20px
+          border-radius: 2px
+          display: inline-block
+          margin: 0 4px
+
+          &.primary
+            font-weight: bold
+            background: $strong_color
             color: #FFF
-            padding: 30px
-            background: rgba(#000, 30%)
-            box-shadow: inset 0 1px 2px rgba(#000, 20%)
+          
+          &.secondary
+            background: #FFF
+            color: $strong_color
 
-            h2
-                margin-bottom: 20px
-                margin-left: 140px
+  #add
+    h2
+      color: #3E4457
 
-            p
-                font-family: $serif_font
-                font-size: 18px
-                line-height: 24px
-                margin-left: 140px
-                text-align: justify
-                text-justify: inter-word
+    p
+      font-family: $serif_font
+      color: #B1B6C4
+      margin-top: 10px
+      line-height: 20px
+      text-align: justify
+      text-justify: inter-word
 
-            .address
-                font-size: 120px
-                float: left
+      a
+        color: #3E4457
 
-            .cta
-                text-align: center
-                margin-top: 10px
+    .form
+      margin-top: 20px
+      
+      table
+        width: 100%
 
-                a
-                    font-family: $serif_font
-                    padding: 11px 20px
-                    border-radius: 2px
-                    display: inline-block
-                    margin: 0 4px
+        tr
+          td
+            &:first-child
+              width: 100%
 
-                    &.primary
-                        font-weight: bold
-                        background: $strong_color
-                        color: #FFF
-                    
-                    &.secondary
-                        background: #FFF
-                        color: $strong_color
+      input
+        box-sizing: border-box
+        padding: 10px
+        width: 100%
+        border-radius: 2px 0 0 2px
+        border: 1px solid #DDE1ED
+        border-right: 0
+        box-shadow: inset 0 1px 2px rgba(#000, 20%)
 
-    #add
-        h2
-            color: #3E4457
+      a
+        margin-left: -2px
+        font-family: $serif_font
+        padding: 11px 20px
+        border-radius: 0 2px 2px 0
+        display: inline-block
+        font-weight: bold
+        background: $strong_color
+        color: #FFF
 
-        p
-            font-family: $serif_font
-            color: #B1B6C4
-            margin-top: 10px
-            line-height: 20px
-            text-align: justify
-            text-justify: inter-word
+  #projects
+    border: 1px solid #CDCECF
+    border-radius: 2px
 
-            a
-                color: #3E4457
+    h2
+      color: #3E4457
+      display: inline-block
 
-        .form
-            margin-top: 20px
-            
-            table
-                width: 100%
+    .sort
+      float: right
+      line-height: 30px
 
-                tr
-                    td
-                        &:first-child
-                            width: 100%
+    table
+      width: 100%
 
-            input
-                box-sizing: border-box
-                padding: 10px
-                width: 100%
-                border-radius: 2px 0 0 2px
-                border: 1px solid #DDE1ED
-                border-right: 0
+      tr         
+        td
+          background: #FCFCFC
+          padding: 20px 30px
+          border-bottom: 1px solid #EAECF2
+
+          .milestone
+            .icon
+              font-size: 10px
+              margin: 0
+
+          .progress
+            width: 200px
+
+            .percent, .due
+              color: darken(#C1C4D0, 20%)
+              font-size: 13px
+
+            .percent
+              float: right
+
+            .bar
+              border-radius: 4px
+              background: #EAECF2
+              height: 10px
+              width: 100%
+
+              &.inner
                 box-shadow: inset 0 1px 2px rgba(#000, 20%)
 
-            a
-                margin-left: -2px
-                font-family: $serif_font
-                padding: 11px 20px
-                border-radius: 0 2px 2px 0
-                display: inline-block
-                font-weight: bold
+              &.red
                 background: $strong_color
-                color: #FFF
 
-    #projects
-        border: 1px solid #CDCECF
-        border-radius: 2px
+              &.green
+                background: #00B361
 
-        h2
+            .due
+              &.red
+                color: $strong_color
+                font-weight: bold
+
+          &:first-child
             color: #3E4457
-            display: inline-block
+            font-weight: bold
 
-        .sort
-            float: right
-            line-height: 30px
+        &:nth-child(2)
+          td
+            background: lighten(#FCFCFC, 60%)
 
-        table
-            width: 100%
+        &:last-child
+          td
+            border: 0
 
-            tr               
-                td
-                    background: #FCFCFC
-                    padding: 20px 30px
-                    border-bottom: 1px solid #EAECF2
+        &.done
+          td
+            background: #EBF6F1
 
-                    .milestone
-                        .icon
-                            font-size: 10px
-                            margin: 0
+            .milestone, .percent, .due
+              color: #00B361
 
-                    .progress
-                        width: 200px
+    .header, .footer
+      padding: 20px 30px
 
-                        .percent, .due
-                            color: darken(#C1C4D0, 20%)
-                            font-size: 13px
+    .header
+      box-shadow: 0 1px 2px rgba(#DDE1ED, 50%)
+      margin-bottom: 2px
+      border-bottom: 1px solid #DDE1ED
 
-                        .percent
-                            float: right
+      a
+        font-family: $serif_font
 
-                        .bar
-                            border-radius: 4px
-                            background: #EAECF2
-                            height: 10px
-                            width: 100%
+    .footer
+      background: #F9FAFB
+      color: #AAAFBF
+      box-shadow: inset 0 1px 2px rgba(#DDE1ED, 20%)
+      border-top: 1px solid #DDE1ED
+      text-align: right
+      font-family: $serif_font
 
-                            &.inner
-                                box-shadow: inset 0 1px 2px rgba(#000, 20%)
-
-                            &.red
-                                background: $strong_color
-
-                            &.green
-                                background: #00B361
-
-                        .due
-                            &.red
-                                color: $strong_color
-                                font-weight: bold
-
-                    &:first-child
-                        color: #3E4457
-                        font-weight: bold
-
-                &:nth-child(2)
-                    td
-                        background: lighten(#FCFCFC, 60%)
-
-                &:last-child
-                    td
-                        border: 0
-
-                &.done
-                    td
-                        background: #EBF6F1
-
-                        .milestone, .percent, .due
-                            color: #00B361
-
-        .header, .footer
-            padding: 20px 30px
-
-        .header
-            box-shadow: 0 1px 2px rgba(#DDE1ED, 50%)
-            margin-bottom: 2px
-            border-bottom: 1px solid #DDE1ED
-
-            a
-                font-family: $serif_font
-
-        .footer
-            background: #F9FAFB
-            color: #AAAFBF
-            box-shadow: inset 0 1px 2px rgba(#DDE1ED, 20%)
-            border-top: 1px solid #DDE1ED
-            text-align: right
-            font-family: $serif_font
-
-            .icon
-                color: #AAAFBF
+      .icon
+        color: #AAAFBF
 
 #footer
-    border-top: 1px solid #F3F4F8
-    text-align: center
-    padding: 30px
-    margin-top: 30px
-    font-family: $serif_font
+  border-top: 1px solid #F3F4F8
+  text-align: center
+  padding: 30px
+  margin-top: 30px
+  font-family: $serif_font
