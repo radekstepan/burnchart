@@ -16,6 +16,7 @@ GitHub Burndown Chart as a service. Public repos are free, for private access au
 
 ### The 20%
 
+- [ ] provide a documentation site
 - [ ] visiting a chart page saves the project if it isn't saved already
 - [ ] landing page for the project and put message on my repo
 - [ ] Handle [404](https://www.firebase.com/docs/hosting/guide/url-redirects-rewrites.html#section-404) on routes; from catch all check if '/' or go 404 controller
@@ -76,7 +77,7 @@ GitHub Burndown Chart as a service. Public repos are free, for private access au
 
 ## Notes
 
-- *payment gateways* in Canada: [Shopify](http://www.shopify.com/payment-gateways/canada), [Chargify](http://chargify.com/payment-gateways/) list
+- *payment gateways* in Canada: [Shopify](http://www.shopify.com/payment-gateways/canada), [Chargify](http://chargify.com/payment-gateways/) list; I get free processing on first $1000 with [Stripe](https://education.github.com/pack/offers)
 - start people on a *Community* plan showing them a comparison table to upgrade to a better offering
 - community (open source, local storage), business (private repos, firebase)
 - keep discussion going via [gitter](http://gitter.im)
@@ -85,7 +86,7 @@ GitHub Burndown Chart as a service. Public repos are free, for private access au
 - worst case scenario I provide even Small Business plan for free and provide a better experience
 - $2.5 Node.js PaaS via Gandi with promo code `PAASLAUNCH-C50E-B077-A317`.
 - let people vote on features they want to see fast: [tally.tl](http://tally.tl/).
-
+- use [readme.io](https://readme.io/) for documentation
 
 ## Plans
 
