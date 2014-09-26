@@ -6,12 +6,13 @@
 
 Router = require './modules/router'
 Header = require './views/header'
+Notify = require './views/notify'
 
 App = Ractive.extend
   
   'template': require './templates/layout'
 
-  'components': { Header }
+  'components': { Header, Notify }
 
   init: ->
     new Router()

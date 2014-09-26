@@ -30,6 +30,39 @@ ul
   width: 800px
   margin: 0 auto
 
+#notify
+  position: fixed
+  top: -68px // hide from view
+  z-index: 1
+  width: 100%
+  background: #FCFCFC
+  color: #AAAFBF
+  border-top: 3px solid #AAAFBF
+  border-bottom: 1px solid #F3F4F8
+
+  &.success
+    border-top-color: #00B361
+    color: #00B361
+
+  &.warn
+    border-top-color: #EA9712
+    color: #EA9712
+
+  &.alert
+    border-top-color: $strong_color
+    color: $strong_color
+
+  .icon, p
+    display: inline-block
+
+  .icon
+    font-size: 26px
+    padding: 18px
+    width: 38px
+
+  p
+    margin-right: 10px
+
 #head
   background: $strong_color
   height: 64px

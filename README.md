@@ -31,7 +31,7 @@ GitHub Burndown Chart as a service. Public repos are free, for private access au
 - [ ] Show loading sign on top of [browser window](https://github.com/buunguyen/topbar) which is unobtrusive enough we can show it immediately.
 - [ ] show a countdown clock towards the end of the milestone or show overdue
 - [ ] highlight for a moment recently changed milestone
-- [ ] smooth animation when transitioning between icons
+- [ ] smooth animation when transitioning between icons and notifications
 - [x] format milestone titles prepending "Milestone" word if appropriate
 - [x] Variable document.title on different pages
 - [x] be able to go back to homepage

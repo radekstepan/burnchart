@@ -1,5 +1,4 @@
 mediator = require './mediator'
-state    = require '../models/state'
 
 el = '#page'
 
@@ -16,8 +15,9 @@ router =
     mediator.fire '!projects/clear'
     window.location.hash = '#'
   'notify': ->
+    mediator.fire '!app/loading', yes
+    mediator.fire '!app/notify', 'You did something real good', 'warn'
     window.location.hash = '#'
-    state.set 'loading', yes
 
 module.exports = ->
   # Init the routes.

@@ -39978,7 +39978,7 @@ if (typeof exports === 'object') {
     // app.coffee
     root.require.register('burnchart/src/app.js', function(exports, require, module) {
     
-      var App, Header, Router, key, _i, _len, _ref;
+      var App, Header, Notify, Router, key, _i, _len, _ref;
       
       _ref = ['utils/mixins', 'models/projects'];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
@@ -39990,10 +39990,13 @@ if (typeof exports === 'object') {
       
       Header = require('./views/header');
       
+      Notify = require('./views/notify');
+      
       App = Ractive.extend({
         'template': require('./templates/layout'),
         'components': {
-          Header: Header
+          Header: Header,
+          Notify: Notify
         },
         init: function() {
           return new Router();
@@ -40084,21 +40087,6 @@ if (typeof exports === 'object') {
           return mediator.on('!projects/clear', function() {
             return _this.set('list', []);
           });
-        }
-      });
-      
-    });
-
-    // state.coffee
-    root.require.register('burnchart/src/models/state.js', function(exports, require, module) {
-    
-      var Model;
-      
-      Model = require('../utils/model');
-      
-      module.exports = new Model({
-        'data': {
-          'loading': false
         }
       });
       
@@ -40708,11 +40696,9 @@ if (typeof exports === 'object') {
     // router.coffee
     root.require.register('burnchart/src/modules/router.js', function(exports, require, module) {
     
-      var el, mediator, route, router, state;
+      var el, mediator, route, router;
       
       mediator = require('./mediator');
-      
-      state = require('../models/state');
       
       el = '#page';
       
@@ -40736,8 +40722,9 @@ if (typeof exports === 'object') {
           return window.location.hash = '#';
         },
         'notify': function() {
-          window.location.hash = '#';
-          return state.set('loading', true);
+          mediator.fire('!app/loading', true);
+          mediator.fire('!app/notify', 'You did something real good', 'warn');
+          return window.location.hash = '#';
         }
       };
       
@@ -40769,13 +40756,13 @@ if (typeof exports === 'object') {
     // layout.mustache
     root.require.register('burnchart/src/templates/layout.js', function(exports, require, module) {
     
-      module.exports = ["<Header/>","","<div id=\"page\">","  <!-- content loaded from a router -->","</div>","","<div id=\"footer\">","  <div class=\"wrap\">","    &copy; 2012-2014 <a href=\"http://cloudfi.re\">Cloudfire Systems</a>","  </div>","</div>"].join("\n");
+      module.exports = ["<Notify/>","<Header/>","","<div id=\"page\">","  <!-- content loaded from a router -->","</div>","","<div id=\"footer\">","  <div class=\"wrap\">","    &copy; 2012-2014 <a href=\"http://cloudfi.re\">Cloudfire Systems</a>","  </div>","</div>"].join("\n");
     });
 
     // notify.mustache
     root.require.register('burnchart/src/templates/notify.js', function(exports, require, module) {
     
-      module.exports = ["<Icon icon=\"megaphone\"/>","<p>You have some interesting news in your inbox. Go <a href=\"#\">check it out</a> now.</p>"].join("\n");
+      module.exports = ["{{#text}}","  <div id=\"notify\" class=\"{{type}}\" style=\"top:{{-top}}px\">","    <Icons icon=\"megaphone\"/>","    <p>{{text}}</p>","  </div>","{{/text}}"].join("\n");
     });
 
     // addProject.mustache
@@ -40901,15 +40888,13 @@ if (typeof exports === 'object') {
     // header.coffee
     root.require.register('burnchart/src/views/header.js', function(exports, require, module) {
     
-      var Icons, firebase, mediator, state, user;
+      var Icons, firebase, mediator, user;
       
       firebase = require('../modules/firebase');
       
       mediator = require('../modules/mediator');
       
       user = require('../models/user');
-      
-      state = require('../models/state');
       
       Icons = require('./icons');
       
@@ -40928,8 +40913,8 @@ if (typeof exports === 'object') {
               }
             });
           });
-          return state.observe('loading', function(val) {
-            return _this.set('icon', val ? 'spin4' : 'fire-station');
+          return mediator.on('!app/loading', function(ya) {
+            return _this.set('icon', ya ? 'spin4' : 'fire-station');
           });
         },
         'components': {
@@ -40998,6 +40983,54 @@ if (typeof exports === 'object') {
             }
           });
         }
+      });
+      
+    });
+
+    // notify.coffee
+    root.require.register('burnchart/src/views/notify.js', function(exports, require, module) {
+    
+      var HEIGHT, Icons, mediator;
+      
+      mediator = require('../modules/mediator');
+      
+      Icons = require('./icons');
+      
+      HEIGHT = 68;
+      
+      module.exports = Ractive.extend({
+        'template': require('../templates/notify'),
+        'data': {
+          'top': HEIGHT
+        },
+        init: function() {
+          var _this = this;
+          return mediator.on('!app/notify', function(text, type) {
+            if (type == null) {
+              type = '';
+            }
+            _this.set({
+              text: text,
+              type: type
+            });
+            _this.animate('top', 0, {
+              'easing': d3.ease('bounce'),
+              'duration': 800
+            });
+            return _.delay(function() {
+              return _this.animate('top', HEIGHT, {
+                'easing': d3.ease('back'),
+                'complete': function() {
+                  return _this.set('text', null);
+                }
+              });
+            }, 5e3);
+          });
+        },
+        'components': {
+          Icons: Icons
+        },
+        'adapt': [Ractive.adaptors.Ractive]
       });
       
     });

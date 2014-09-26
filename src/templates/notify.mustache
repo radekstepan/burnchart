@@ -1,2 +1,6 @@
-<Icon icon="megaphone"/>
-<p>You have some interesting news in your inbox. Go <a href="#">check it out</a> now.</p>
+{{#text}}
+  <div id="notify" class="{{type}}" style="top:{{-top}}px">
+    <Icons icon="megaphone"/>
+    <p>{{text}}</p>
+  </div>
+{{/text}}

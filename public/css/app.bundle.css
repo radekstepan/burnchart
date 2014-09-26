@@ -449,6 +449,13 @@ h1,h2,h3,p{margin:0}
 ul{list-style-type:none;margin:0;padding:0;}
 ul li{display:inline-block}
 .wrap{width:800px;margin:0 auto}
+#notify{position:fixed;top:-68px;z-index:1;width:100%;background:#fcfcfc;color:#aaafbf;border-top:3px solid #aaafbf;border-bottom:1px solid #f3f4f8;}
+#notify.success{border-top-color:#00b361;color:#00b361}
+#notify.warn{border-top-color:#ea9712;color:#ea9712}
+#notify.alert{border-top-color:#c1041c;color:#c1041c}
+#notify .icon,#notify p{display:inline-block}
+#notify .icon{font-size:26px;padding:18px;width:38px}
+#notify p{margin-right:10px}
 #head{background:#c1041c;height:64px;}
 #head #icon{font-size:26px;margin:0;padding:10px 0;line-height:44px;height:44px;width:74px;background:#77000e;display:inline-block;color:#c1041c;margin:0;text-align:center}
 #head .q{position:relative;display:inline-block;margin:13px 20px 0 20px;vertical-align:top;}
