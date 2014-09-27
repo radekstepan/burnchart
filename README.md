@@ -16,6 +16,12 @@ GitHub Burndown Chart as a service. Public repos are free, for private access au
 
 ### The 20%
 
+- [ ] on system-wide notifications show a button that takes us to the index unless we are on index
+- [ ] mediator `!app/notify/edit` will edit the current notification
+- [ ] slide topbar up a bit on hover so that the user can click the menu
+- [ ] landing/index page needs to show (hero box) immediately
+- [ ] logged-in state slides into view independent of page loading
+- [ ] have a queue for loading that calls back (emits a mediator message) when it is empty and emits another one when we are busy; wrap each async operations in this doing a `cb` when we are done with 1
 - [ ] verify that project exists on project page when fetching it remotely (add behind the scenes)
 - [ ] need to show status (receiving information etc.) per repo
 - [ ] provide a documentation site
@@ -47,6 +53,7 @@ GitHub Burndown Chart as a service. Public repos are free, for private access au
 
 ### Extras
 
+- [ ] show animated lines when drawing the chart
 - [ ] highlight changes from past fetch
 - [ ] In add a project form autocomplete on my username, orgs I am member of and repos I have access to
 - [ ] Someone might create a public repo, add it to the system and switch it to private; need to check repo priviledges at runtime; or when asking for auth, one would choose either public OR public/private, but this could get confusign.
