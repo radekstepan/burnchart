@@ -7,7 +7,7 @@
     // app.coffee
     root.require.register('burnchart/src/app.js', function(exports, require, module) {
     
-      var App, Header, Notify, Router, key, _i, _len, _ref;
+      var App, Header, Notify, key, router, _i, _len, _ref;
       
       _ref = ['utils/mixins', 'models/projects'];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
@@ -15,11 +15,11 @@
         require("./" + key);
       }
       
-      Router = require('./modules/router');
-      
       Header = require('./views/header');
       
       Notify = require('./views/notify');
+      
+      router = require('./modules/router');
       
       App = Ractive.extend({
         'template': require('./templates/layout'),
@@ -28,7 +28,7 @@
           Notify: Notify
         },
         init: function() {
-          return new Router();
+          return router.init('/');
         }
       });
       
@@ -744,7 +744,7 @@
         });
       };
       
-      router = Router({
+      module.exports = window.router = router = Router({
         '/': _.partial(route, 'index'),
         '/new/project': _.partial(route, 'new'),
         '/:owner/:name': _.partial(route, 'project'),
@@ -755,15 +755,13 @@
         },
         '/notify': function() {
           mediator.fire('!app/loading', true);
-          mediator.fire('!app/notify', 'You did something real good', 'warn');
+          mediator.fire('!app/notify', {
+            'text': 'You have some interesting news in your inbox. Go check it out now.',
+            'type': 'warn'
+          });
           return window.location.hash = '#';
         }
       });
-      
-      module.exports = function() {
-        router.init('/');
-        return router;
-      };
       
     });
 
@@ -791,10 +789,16 @@
       module.exports = ["<Notify/>","<Header/>","","<div id=\"page\">","  <!-- content loaded from a router -->","</div>","","<div id=\"footer\">","  <div class=\"wrap\">","    &copy; 2012-2014 <a href=\"http://cloudfi.re\">Cloudfire Systems</a>","  </div>","</div>"].join("\n");
     });
 
+    // milestones.mustache
+    root.require.register('burnchart/src/templates/milestones.js', function(exports, require, module) {
+    
+      module.exports = ["{{#milestones.length}}","  <div id=\"projects\">","    <div class=\"header\">","      <a href=\"#\" class=\"sort\"><Icons icon=\"sort-alphabet\"/> Sorted by priority</a>","      <h2>Milestones</h2>","    </div>","","    <table>","      {{#milestones}}","        <tr>","          <td>","            <a class=\"milestone\" href=\"#{{owner}}/{{name}}/{{number}}\">{{ title }}</a>","          </td>","          <td style=\"width:1%\">","            <div class=\"progress\">","              <span class=\"percent\">{{Math.floor(format.progress(closed_issues, open_issues))}}%</span>","              <span class=\"due\">{{{ format.due(due_on) }}}</span>","              <div class=\"outer bar\">","                <div class=\"inner bar {{format.onTime(this)}}\" style=\"width:{{format.progress(closed_issues, open_issues)}}%\"></div>","              </div>","            </div>","          </td>","        </tr>","      {{/milestones}}","    </table>","","    <div class=\"footer\">","      <a href=\"#\"><Icons icon=\"cog\"/> Edit</a>","    </div>","  </div>","{{/milestones.length}}"].join("\n");
+    });
+
     // notify.mustache
     root.require.register('burnchart/src/templates/notify.js', function(exports, require, module) {
     
-      module.exports = ["{{#text}}","  <div id=\"notify\" class=\"{{type}}\" style=\"top:{{-top}}px\">","    <Icons icon=\"megaphone\"/>","    <p>{{text}}</p>","  </div>","{{/text}}"].join("\n");
+      module.exports = ["{{#text}}","  {{#system}}","    <div id=\"notify\" class=\"{{type}} system\" style=\"top:{{top}}%\">","      <Icons icon=\"{{icon}}\"/>","      <p>{{text}}</p>","    </div>","  {{else}}","    <div id=\"notify\" class=\"{{type}}\" style=\"top:{{-top}}px\">","      <Icons icon=\"{{icon}}\"/>","      <p>{{text}}</p>","    </div>","  {{/system}}","{{/text}}"].join("\n");
     });
 
     // chart.mustache
@@ -818,13 +822,13 @@
     // project.mustache
     root.require.register('burnchart/src/templates/pages/project.js', function(exports, require, module) {
     
-      module.exports = ["<div id=\"title\">","  <div class=\"wrap\">","    <h2 class=\"title\">radekstepan/disposable</h2>","  </div>","</div>","","<div id=\"content\" class=\"wrap\">","  Project milestones go here","</div>"].join("\n");
+      module.exports = ["<div id=\"title\">","  <div class=\"wrap\">","    <h2 class=\"title\">{{route.join('/')}}</h2>","  </div>","</div>","","<div id=\"content\" class=\"wrap\">","  <Milestones owner=\"{{route[0]}}\" name=\"{{route[1]}}\"/>","</div>"].join("\n");
     });
 
     // projects.mustache
     root.require.register('burnchart/src/templates/projects.js', function(exports, require, module) {
     
-      module.exports = ["{{#projects.list.length}}","  <div id=\"projects\">","    <div class=\"header\">","      <a href=\"#\" class=\"sort\"><Icons icon=\"sort-alphabet\"/> Sorted by priority</a>","      <h2>Projects</h2>","    </div>","","    <table>","      {{#projects.list}}","        {{#milestones}}","          <tr>","            <td class=\"repo\">","              <a class=\"project\" href=\"#{{owner}}/{{name}}\">{{owner}}/{{name}}</a>","            </td>","            <td>","              <a class=\"milestone\" href=\"#{{owner}}/{{name}}/{{number}}\">{{ title }}</a>","            </td>","            <td>","              <div class=\"progress\">","                <span class=\"percent\">{{Math.floor(format.progress(closed_issues, open_issues))}}%</span>","                <span class=\"due\">{{{ format.due(due_on) }}}</span>","                <div class=\"outer bar\">","                  <div class=\"inner bar {{format.onTime(this)}}\" style=\"width:{{format.progress(closed_issues, open_issues)}}%\"></div>","                </div>","              </div>","            </td>","          </tr>","        {{/milestones}}","      {{/projects.list}}","","    <!--","      <tr>","        <td><a class=\"repo\" href=\"#\">radekstepan/disposable</a></td>","        <td><span class=\"milestone\">Milestone 1.0 <span class=\"icon down-open\"></span></td>","        <td>","          <div class=\"progress\">","            <span class=\"percent\">40%</span>","            <span class=\"due\">due on Friday</span>","            <div class=\"outer bar\">","              <div class=\"inner bar red\" style=\"width:40%\"></div>","            </div>","          </div>","        </td>","      </tr>","      <tr class=\"done\">","        <td><a class=\"repo\" href=\"#\">radekstepan/burnchart</a></td>","        <td><span class=\"milestone\">Beta Milestone <span class=\"icon down-open\"></span></a></td>","        <td>","          <div class=\"progress\">","            <span class=\"percent\">100%</span>","            <span class=\"due\">due tomorrow</span>","            <div class=\"outer bar\">","              <div class=\"inner bar green\" style=\"width:100%\"></div>","            </div>","          </div>","        </td>","      </tr>","      <tr>","        <td><a class=\"repo\" href=\"#\">intermine/intermine</a></td>","        <td><span class=\"milestone\">Emma Release 96 <span class=\"icon down-open\"></span></a></td>","        <td>","          <div class=\"progress\">","            <span class=\"percent\">27%</span>","            <span class=\"due\">due in 2 weeks</span>","            <div class=\"outer bar\">","              <div class=\"inner bar red\" style=\"width:27%\"></div>","            </div>","          </div>","        </td>","      </tr>","      <tr>","        <td><a class=\"repo\" href=\"#\">microsoft/windows</a></td>","        <td><span class=\"milestone\">RC 9 <span class=\"icon down-open\"></span></a></td>","        <td>","          <div class=\"progress\">","            <span class=\"percent\">90%</span>","            <span class=\"due red\">overdue by a month</span>","            <div class=\"outer bar\">","              <div class=\"inner bar red\" style=\"width:90%\"></div>","            </div>","          </div>","        </td>","      </tr>","    -->","    </table>","","    <div class=\"footer\">","      <a href=\"#\"><Icons icon=\"cog\"/> Edit</a>","    </div>","  </div>","{{/projects.list}}"].join("\n");
+      module.exports = ["{{#projects.list.length}}","  <div id=\"projects\">","    <div class=\"header\">","      <a href=\"#\" class=\"sort\"><Icons icon=\"sort-alphabet\"/> Sorted by priority</a>","      <h2>Projects</h2>","    </div>","","    <table>","      {{#projects.list}}","        {{#milestones}}","          <tr>","            <td class=\"repo\">","              <a class=\"project\" href=\"#{{owner}}/{{name}}\">{{owner}}/{{name}}</a>","            </td>","            <td>","              <a class=\"milestone\" href=\"#{{owner}}/{{name}}/{{number}}\">{{ title }}</a>","            </td>","            <td style=\"width:1%\">","              <div class=\"progress\">","                <span class=\"percent\">{{Math.floor(format.progress(closed_issues, open_issues))}}%</span>","                <span class=\"due\">{{{ format.due(due_on) }}}</span>","                <div class=\"outer bar\">","                  <div class=\"inner bar {{format.onTime(this)}}\" style=\"width:{{format.progress(closed_issues, open_issues)}}%\"></div>","                </div>","              </div>","            </td>","          </tr>","        {{/milestones}}","      {{/projects.list}}","    </table>","","    <div class=\"footer\">","      <a href=\"#\"><Icons icon=\"cog\"/> Edit</a>","    </div>","  </div>","{{/projects.list.length}}","","<!--","  <tr>","    <td><a class=\"repo\" href=\"#\">radekstepan/disposable</a></td>","    <td><span class=\"milestone\">Milestone 1.0 <span class=\"icon down-open\"></span></td>","    <td>","      <div class=\"progress\">","        <span class=\"percent\">40%</span>","        <span class=\"due\">due on Friday</span>","        <div class=\"outer bar\">","          <div class=\"inner bar red\" style=\"width:40%\"></div>","        </div>","      </div>","    </td>","  </tr>","  <tr class=\"done\">","    <td><a class=\"repo\" href=\"#\">radekstepan/burnchart</a></td>","    <td><span class=\"milestone\">Beta Milestone <span class=\"icon down-open\"></span></a></td>","    <td>","      <div class=\"progress\">","        <span class=\"percent\">100%</span>","        <span class=\"due\">due tomorrow</span>","        <div class=\"outer bar\">","          <div class=\"inner bar green\" style=\"width:100%\"></div>","        </div>","      </div>","    </td>","  </tr>","  <tr>","    <td><a class=\"repo\" href=\"#\">intermine/intermine</a></td>","    <td><span class=\"milestone\">Emma Release 96 <span class=\"icon down-open\"></span></a></td>","    <td>","      <div class=\"progress\">","        <span class=\"percent\">27%</span>","        <span class=\"due\">due in 2 weeks</span>","        <div class=\"outer bar\">","          <div class=\"inner bar red\" style=\"width:27%\"></div>","        </div>","      </div>","    </td>","  </tr>","  <tr>","    <td><a class=\"repo\" href=\"#\">microsoft/windows</a></td>","    <td><span class=\"milestone\">RC 9 <span class=\"icon down-open\"></span></a></td>","    <td>","      <div class=\"progress\">","        <span class=\"percent\">90%</span>","        <span class=\"due red\">overdue by a month</span>","        <div class=\"outer bar\">","          <div class=\"inner bar red\" style=\"width:90%\"></div>","        </div>","      </div>","    </td>","  </tr>","-->"].join("\n");
     });
 
     // date.coffee
@@ -1026,6 +1030,33 @@
       
     });
 
+    // milestones.coffee
+    root.require.register('burnchart/src/views/milestones.js', function(exports, require, module) {
+    
+      var Icons, mediator, projects;
+      
+      mediator = require('../modules/mediator');
+      
+      projects = require('../models/projects');
+      
+      Icons = require('./icons');
+      
+      module.exports = Ractive.extend({
+        'template': require('../templates/milestones'),
+        'components': {
+          Icons: Icons
+        },
+        'adapt': [Ractive.adaptors.Ractive],
+        init: function() {
+          return this.set('milestones', _.filter(projects.get('list'), {
+            'owner': this.get('owner'),
+            'name': this.get('name')
+          }));
+        }
+      });
+      
+    });
+
     // notify.coffee
     root.require.register('burnchart/src/views/notify.js', function(exports, require, module) {
     
@@ -1043,16 +1074,20 @@
           'top': HEIGHT
         },
         init: function() {
-          var _this = this;
-          return mediator.on('!app/notify', function(text, type) {
-            if (type == null) {
-              type = '';
-            }
-            _this.set({
-              text: text,
-              type: type
-            });
-            _this.animate('top', 0, {
+          var defaults,
+            _this = this;
+          defaults = {
+            'text': '',
+            'type': '',
+            'system': false,
+            'icon': 'megaphone'
+          };
+          return mediator.on('!app/notify', function(opts) {
+            var pos;
+            opts = _.defaults(opts, defaults);
+            _this.set(opts);
+            pos = [0, 50][+opts.system];
+            _this.animate('top', pos, {
               'easing': d3.ease('bounce'),
               'duration': 800
             });
@@ -1190,30 +1225,18 @@
     // project.coffee
     root.require.register('burnchart/src/views/pages/project.js', function(exports, require, module) {
     
-      var Hero, Projects, format;
+      var Milestones;
       
-      Hero = require('../hero');
-      
-      Projects = require('../projects');
-      
-      format = require('../../utils/format');
+      Milestones = require('../milestones');
       
       module.exports = Ractive.extend({
         'template': require('../../templates/pages/project'),
         'components': {
-          Hero: Hero,
-          Projects: Projects
-        },
-        'data': {
-          format: format
+          Milestones: Milestones
         },
         init: function() {
-          var name, owner, route, _ref;
+          var name, owner, _ref;
           _ref = this.get('route'), owner = _ref[0], name = _ref[1];
-          route = {
-            owner: owner,
-            name: name
-          };
           return document.title = "" + owner + "/" + name;
         }
       });

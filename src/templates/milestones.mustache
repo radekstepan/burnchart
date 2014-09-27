@@ -1,0 +1,31 @@
+{{#milestones.length}}
+  <div id="projects">
+    <div class="header">
+      <a href="#" class="sort"><Icons icon="sort-alphabet"/> Sorted by priority</a>
+      <h2>Milestones</h2>
+    </div>
+
+    <table>
+      {{#milestones}}
+        <tr>
+          <td>
+            <a class="milestone" href="#{{owner}}/{{name}}/{{number}}">{{ title }}</a>
+          </td>
+          <td style="width:1%">
+            <div class="progress">
+              <span class="percent">{{Math.floor(format.progress(closed_issues, open_issues))}}%</span>
+              <span class="due">{{{ format.due(due_on) }}}</span>
+              <div class="outer bar">
+                <div class="inner bar {{format.onTime(this)}}" style="width:{{format.progress(closed_issues, open_issues)}}%"></div>
+              </div>
+            </div>
+          </td>
+        </tr>
+      {{/milestones}}
+    </table>
+
+    <div class="footer">
+      <a href="#"><Icons icon="cog"/> Edit</a>
+    </div>
+  </div>
+{{/milestones.length}}

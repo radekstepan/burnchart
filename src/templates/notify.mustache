@@ -1,6 +1,13 @@
 {{#text}}
-  <div id="notify" class="{{type}}" style="top:{{-top}}px">
-    <Icons icon="megaphone"/>
-    <p>{{text}}</p>
-  </div>
+  {{#system}}
+    <div id="notify" class="{{type}} system" style="top:{{top}}%">
+      <Icons icon="{{icon}}"/>
+      <p>{{text}}</p>
+    </div>
+  {{else}}
+    <div id="notify" class="{{type}}" style="top:{{-top}}px">
+      <Icons icon="{{icon}}"/>
+      <p>{{text}}</p>
+    </div>
+  {{/system}}
 {{/text}}

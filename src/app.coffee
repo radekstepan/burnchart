@@ -4,9 +4,9 @@
 ] )
 
 
-Router = require './modules/router'
 Header = require './views/header'
 Notify = require './views/notify'
+router = require './modules/router'
 
 App = Ractive.extend
   
@@ -15,6 +15,6 @@ App = Ractive.extend
   'components': { Header, Notify }
 
   init: ->
-    new Router()
+    router.init '/'
 
 module.exports = new App()

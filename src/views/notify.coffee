@@ -11,18 +11,35 @@ module.exports = Ractive.extend
     'top': HEIGHT
 
   init: ->
-    # Save the notify text on us.
-    mediator.on '!app/notify', (text, type='') =>
-      @set { text, type }
-      @animate 'top', 0,      # slide to view
+    defaults =
+      'text': ''
+      'type': ''
+      'system': no
+      'icon': 'megaphone'
+
+    # Animate.
+    # type:   alert/warn/success
+    # system: yes/no
+    mediator.on '!app/notify', (opts) =>
+      opts = _.defaults opts, defaults
+
+      # Set the text.
+      @set opts
+      # Which position to slide to?
+      pos = [ 0, 50 ][ +opts.system ] # 0px or 50% from top
+      # Slide into view.
+      @animate 'top', pos,
         'easing': d3.ease('bounce')
         'duration': 800
       _.delay =>
-        @animate 'top', HEIGHT,  # slide out of view
+        # Slide out of the view.
+        @animate 'top', HEIGHT,
           'easing': d3.ease('back')
           'complete': =>
-            @set 'text', null # reset
-      , 5e3 # ttl
+            # Reset the text when all is done.
+            @set 'text', null
+      # Ttl.
+      , 5e3
 
   'components': { Icons }
 

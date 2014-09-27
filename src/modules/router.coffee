@@ -6,7 +6,7 @@ route = (page, args...) ->
   Page = require "../views/pages/#{page}"
   new Page { el, 'data': { 'route': args } }
 
-router = Router
+module.exports = window.router = router = Router
   '/':                        _.partial route, 'index'
   '/new/project':             _.partial route, 'new'
   '/:owner/:name':            _.partial route, 'project'
@@ -17,10 +17,7 @@ router = Router
     window.location.hash = '#'
   '/notify': ->
     mediator.fire '!app/loading', yes
-    mediator.fire '!app/notify', 'You did something real good', 'warn'
+    mediator.fire '!app/notify',
+      'text': 'You have some interesting news in your inbox. Go check it out now.'
+      'type': 'warn'
     window.location.hash = '#'
-
-module.exports = ->
-  # Init the routes.
-  router.init '/'
-  router

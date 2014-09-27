@@ -1,17 +1,12 @@
-Hero     = require '../hero'
-Projects = require '../projects'
-format   = require '../../utils/format'
+Milestones = require '../milestones'
 
 module.exports = Ractive.extend
 
   'template': require '../../templates/pages/project'
 
-  'components': { Hero, Projects }
-
-  'data': { format }
+  'components': { Milestones }
 
   init: ->
     [ owner, name ] = @get 'route'
-    route = { owner, name }
     
     document.title = "#{owner}/#{name}"

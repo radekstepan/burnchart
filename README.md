@@ -16,6 +16,7 @@ GitHub Burndown Chart as a service. Public repos are free, for private access au
 
 ### The 20%
 
+- [ ] verify that project exists on project page when fetching it remotely (add behind the scenes)
 - [ ] need to show status (receiving information etc.) per repo
 - [ ] provide a documentation site
 - [ ] visiting a chart page saves the project if it isn't saved already
@@ -34,6 +35,7 @@ GitHub Burndown Chart as a service. Public repos are free, for private access au
 - [ ] highlight for a moment recently changed milestone
 - [ ] smooth animation when transitioning between icons and notifications
 - [ ] show logged-in state only after it is known
+- [x] how does a message look like when we have an error and nothing to render?
 - [x] format milestone titles prepending "Milestone" word if appropriate
 - [x] Variable document.title on different pages
 - [x] be able to go back to homepage

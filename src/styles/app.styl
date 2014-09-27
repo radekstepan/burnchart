@@ -40,6 +40,13 @@ ul
   border-top: 3px solid #AAAFBF
   border-bottom: 1px solid #F3F4F8
 
+  // system-wide notification
+  &.system
+    top: 0%  // hide from view
+    left: 50%
+    transform: translateX(-50%) translateY(-50%)
+    width: 500px
+
   &.success
     border-top-color: #00B361
     color: #00B361
@@ -53,15 +60,17 @@ ul
     color: $strong_color
 
   .icon, p
-    display: inline-block
+    display: block
 
   .icon
     font-size: 26px
     padding: 18px
     width: 38px
+    float: left
 
   p
-    margin-right: 10px
+    padding: 20px 20px 20px 74px
+    text-align: justify
 
 #head
   background: $strong_color
