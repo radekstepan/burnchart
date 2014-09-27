@@ -3,7 +3,7 @@ user     = require '../../models/user'
 
 module.exports = Ractive.extend
 
-  'template': require '../../templates/pages/addProject'
+  'template': require '../../templates/pages/new'
 
   'data': { 'value': 'radekstepan/disposable', user }
 

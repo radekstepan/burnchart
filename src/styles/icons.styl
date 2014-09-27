@@ -15,7 +15,7 @@
   font-variant: normal
   text-transform: none
 
-  &.spin6, &.spin4, &.spinner1
+  &[class^='spin'], &[class*=' spin']
     animation: spin 2s infinite linear
 
 @-moz-keyframes spin {

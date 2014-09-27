@@ -725,40 +725,43 @@
     // router.coffee
     root.require.register('burnchart/src/modules/router.js', function(exports, require, module) {
     
-      var el, mediator, route, router;
+      var el, mediator, route, router,
+        __slice = [].slice;
       
       mediator = require('./mediator');
       
       el = '#page';
       
-      route = function(page, req, evt) {
-        var Page;
+      route = function() {
+        var Page, args, page;
+        page = arguments[0], args = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
         Page = require("../views/pages/" + page);
         return new Page({
           el: el,
           'data': {
-            'route': req.params
+            'route': args
           }
         });
       };
       
-      router = {
-        '': _.partial(route, 'index'),
-        'project/add': _.partial(route, 'addProject'),
-        'chart/:owner/:name/:milestone': _.partial(route, 'showChart'),
-        'reset': function() {
+      router = Router({
+        '/': _.partial(route, 'index'),
+        '/new/project': _.partial(route, 'new'),
+        '/:owner/:name': _.partial(route, 'project'),
+        '/:owner/:name/:milestone': _.partial(route, 'chart'),
+        '/reset': function() {
           mediator.fire('!projects/clear');
           return window.location.hash = '#';
         },
-        'notify': function() {
+        '/notify': function() {
           mediator.fire('!app/loading', true);
           mediator.fire('!app/notify', 'You did something real good', 'warn');
           return window.location.hash = '#';
         }
-      };
+      });
       
       module.exports = function() {
-        Grapnel.listen(router);
+        router.init('/');
         return router;
       };
       
@@ -767,13 +770,13 @@
     // header.mustache
     root.require.register('burnchart/src/templates/header.js', function(exports, require, module) {
     
-      module.exports = ["<div id=\"head\">","  <div class=\"right\">","    {{#user.displayName}}","      {{user.displayName}} logged in","    {{else}}","      <a class=\"github\" on-click=\"!login\"><Icons icon=\"github\"/> Sign In</a>","    {{/user.displayName}}","  </div>","","  <a id=\"icon\" href=\"#\">","    <Icons icon=\"{{icon}}\"/>","  </a>","","  <div class=\"q\">","    <Icons icon=\"search\"/>","    <Icons icon=\"down-open\"/>","    <input type=\"text\" placeholder=\"Jump to...\">","  </div>","","  <ul>","    <li><a href=\"#project/add\" class=\"add\"><Icons icon=\"plus-circled\"/> Add a Project</a></li>","    <li><a href=\"#\" class=\"faq\">FAQ</a></li>","    <li><a href=\"#reset\">DB Reset</a></li>","    <li><a href=\"#notify\">Notify</a></li>","  </ul>","</div>"].join("\n");
+      module.exports = ["<div id=\"head\">","  <div class=\"right\">","    {{#user.displayName}}","      {{user.displayName}} logged in","    {{else}}","      <a class=\"github\" on-click=\"!login\"><Icons icon=\"github\"/> Sign In</a>","    {{/user.displayName}}","  </div>","","  <a id=\"icon\" href=\"#\">","    <Icons icon=\"{{icon}}\"/>","  </a>","","  <div class=\"q\">","    <Icons icon=\"search\"/>","    <Icons icon=\"down-open\"/>","    <input type=\"text\" placeholder=\"Jump to...\">","  </div>","","  <ul>","    <li><a href=\"#new/project\" class=\"add\"><Icons icon=\"plus-circled\"/> Add a Project</a></li>","    <li><a href=\"#\" class=\"faq\">FAQ</a></li>","    <li><a href=\"#reset\">DB Reset</a></li>","    <li><a href=\"#notify\">Notify</a></li>","  </ul>","</div>"].join("\n");
     });
 
     // hero.mustache
     root.require.register('burnchart/src/templates/hero.js', function(exports, require, module) {
     
-      module.exports = ["{{^projects.list}}","  <div id=\"hero\">","    <div class=\"content\">","      <Icons icon=\"address\"/>","      <h2>See your project progress</h2>","      <p>Not sure where to start? Just add a demo repo to see a chart. There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable.</p>","      <div class=\"cta\">","        <a href=\"#project/add\" class=\"primary\"><Icons icon=\"plus-circled\"/> Add your project</a>","        <a href=\"#\" class=\"secondary\">Read the Guide</a>","      </div>","    </div>","  </div>","{{/projects.list}}"].join("\n");
+      module.exports = ["{{^projects.list}}","  <div id=\"hero\">","    <div class=\"content\">","      <Icons icon=\"address\"/>","      <h2>See your project progress</h2>","      <p>Not sure where to start? Just add a demo repo to see a chart. There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable.</p>","      <div class=\"cta\">","        <a href=\"#new/project\" class=\"primary\"><Icons icon=\"plus-circled\"/> Add your project</a>","        <a href=\"#\" class=\"secondary\">Read the Guide</a>","      </div>","    </div>","  </div>","{{/projects.list}}"].join("\n");
     });
 
     // icons.mustache
@@ -794,10 +797,10 @@
       module.exports = ["{{#text}}","  <div id=\"notify\" class=\"{{type}}\" style=\"top:{{-top}}px\">","    <Icons icon=\"megaphone\"/>","    <p>{{text}}</p>","  </div>","{{/text}}"].join("\n");
     });
 
-    // addProject.mustache
-    root.require.register('burnchart/src/templates/pages/addProject.js', function(exports, require, module) {
+    // chart.mustache
+    root.require.register('burnchart/src/templates/pages/chart.js', function(exports, require, module) {
     
-      module.exports = ["<div id=\"content\" class=\"wrap\">","  <div id=\"add\">","    <div class=\"header\">","      <h2>Add a Project</h2>","      <p>Type in the name of the repository as you would normally. If you'd like to add a private GitHub project, <a href=\"#\">Sign In</a> first.</p>","    </div>","","    <div class=\"form\">","      <table>","        <tr>","          <td>","            <input type=\"text\" placeholder=\"user/repo\" autocomplete=\"off\" value=\"{{value}}\">","          </td>","          <td>","            <a on-click=\"submit\">Add</a>","          </td>","        </tr>","      </table>","    </div>","  </div>","</div>"].join("\n");
+      module.exports = ["<div id=\"title\">","  <div class=\"wrap\">","    <h2 class=\"title\">{{ format.title(milestone.title) }}</h2>","    <span class=\"sub\">{{{ format.due(milestone.due_on) }}}</span>","    <p class=\"description\">{{{ format.markdown(milestone.description) }}}</p>","  </div>","</div>","","<div id=\"content\" class=\"wrap\">","  <div id=\"chart\">","    <div id=\"svg\"></div>","  </div>","</div>"].join("\n");
     });
 
     // index.mustache
@@ -806,16 +809,22 @@
       module.exports = ["<div id=\"content\" class=\"wrap\">","  <Hero/>","  <Projects/>","</div>"].join("\n");
     });
 
-    // showChart.mustache
-    root.require.register('burnchart/src/templates/pages/showChart.js', function(exports, require, module) {
+    // new.mustache
+    root.require.register('burnchart/src/templates/pages/new.js', function(exports, require, module) {
     
-      module.exports = ["<div id=\"title\">","  <div class=\"wrap\">","    <h2 class=\"title\">{{ format.title(milestone.title) }}</h2>","    <span class=\"sub\">{{{ format.due(milestone.due_on) }}}</span>","    <p class=\"description\">{{{ format.markdown(milestone.description) }}}</p>","  </div>","</div>","","<div id=\"content\" class=\"wrap\">","  <div id=\"chart\">","    <div id=\"svg\"></div>","  </div>","</div>"].join("\n");
+      module.exports = ["<div id=\"content\" class=\"wrap\">","  <div id=\"add\">","    <div class=\"header\">","      <h2>Add a Project</h2>","      <p>Type in the name of the repository as you would normally. If you'd like to add a private GitHub project, <a href=\"#\">Sign In</a> first.</p>","    </div>","","    <div class=\"form\">","      <table>","        <tr>","          <td>","            <input type=\"text\" placeholder=\"user/repo\" autocomplete=\"off\" value=\"{{value}}\">","          </td>","          <td>","            <a on-click=\"submit\">Add</a>","          </td>","        </tr>","      </table>","    </div>","  </div>","</div>"].join("\n");
+    });
+
+    // project.mustache
+    root.require.register('burnchart/src/templates/pages/project.js', function(exports, require, module) {
+    
+      module.exports = ["<div id=\"title\">","  <div class=\"wrap\">","    <h2 class=\"title\">radekstepan/disposable</h2>","  </div>","</div>","","<div id=\"content\" class=\"wrap\">","  Project milestones go here","</div>"].join("\n");
     });
 
     // projects.mustache
     root.require.register('burnchart/src/templates/projects.js', function(exports, require, module) {
     
-      module.exports = ["{{#projects.list.length}}","  <div id=\"projects\">","    <div class=\"header\">","      <a href=\"#\" class=\"sort\"><Icons icon=\"sort-alphabet\"/> Sorted by priority</a>","      <h2>Projects</h2>","    </div>","","    <table>","      {{#projects.list}}","        {{#milestones}}","          <tr>","            <td class=\"repo\">{{owner}}/{{name}}</td>","              <td>","                <a class=\"milestone\" href=\"#chart/{{owner}}/{{name}}/{{number}}\">{{ title }}</a>","              </td>","              <td>","                <div class=\"progress\">","                  <span class=\"percent\">{{Math.floor(format.progress(closed_issues, open_issues))}}%</span>","                  <span class=\"due\">{{{ format.due(due_on) }}}</span>","                  <div class=\"outer bar\">","                    <div class=\"inner bar {{format.onTime(this)}}\" style=\"width:{{format.progress(closed_issues, open_issues)}}%\"></div>","                  </div>","                </div>","              </td>","          </tr>","        {{/milestones}}","      {{/projects.list}}","","    <!--","      <tr>","        <td><a class=\"repo\" href=\"#\">radekstepan/disposable</a></td>","        <td><span class=\"milestone\">Milestone 1.0 <span class=\"icon down-open\"></span></td>","        <td>","          <div class=\"progress\">","            <span class=\"percent\">40%</span>","            <span class=\"due\">due on Friday</span>","            <div class=\"outer bar\">","              <div class=\"inner bar red\" style=\"width:40%\"></div>","            </div>","          </div>","        </td>","      </tr>","      <tr class=\"done\">","        <td><a class=\"repo\" href=\"#\">radekstepan/burnchart</a></td>","        <td><span class=\"milestone\">Beta Milestone <span class=\"icon down-open\"></span></a></td>","        <td>","          <div class=\"progress\">","            <span class=\"percent\">100%</span>","            <span class=\"due\">due tomorrow</span>","            <div class=\"outer bar\">","              <div class=\"inner bar green\" style=\"width:100%\"></div>","            </div>","          </div>","        </td>","      </tr>","      <tr>","        <td><a class=\"repo\" href=\"#\">intermine/intermine</a></td>","        <td><span class=\"milestone\">Emma Release 96 <span class=\"icon down-open\"></span></a></td>","        <td>","          <div class=\"progress\">","            <span class=\"percent\">27%</span>","            <span class=\"due\">due in 2 weeks</span>","            <div class=\"outer bar\">","              <div class=\"inner bar red\" style=\"width:27%\"></div>","            </div>","          </div>","        </td>","      </tr>","      <tr>","        <td><a class=\"repo\" href=\"#\">microsoft/windows</a></td>","        <td><span class=\"milestone\">RC 9 <span class=\"icon down-open\"></span></a></td>","        <td>","          <div class=\"progress\">","            <span class=\"percent\">90%</span>","            <span class=\"due red\">overdue by a month</span>","            <div class=\"outer bar\">","              <div class=\"inner bar red\" style=\"width:90%\"></div>","            </div>","          </div>","        </td>","      </tr>","    -->","    </table>","","    <div class=\"footer\">","      <a href=\"#\"><Icons icon=\"cog\"/> Edit</a>","    </div>","  </div>","{{/projects.list}}"].join("\n");
+      module.exports = ["{{#projects.list.length}}","  <div id=\"projects\">","    <div class=\"header\">","      <a href=\"#\" class=\"sort\"><Icons icon=\"sort-alphabet\"/> Sorted by priority</a>","      <h2>Projects</h2>","    </div>","","    <table>","      {{#projects.list}}","        {{#milestones}}","          <tr>","            <td class=\"repo\">","              <a class=\"project\" href=\"#{{owner}}/{{name}}\">{{owner}}/{{name}}</a>","            </td>","            <td>","              <a class=\"milestone\" href=\"#{{owner}}/{{name}}/{{number}}\">{{ title }}</a>","            </td>","            <td>","              <div class=\"progress\">","                <span class=\"percent\">{{Math.floor(format.progress(closed_issues, open_issues))}}%</span>","                <span class=\"due\">{{{ format.due(due_on) }}}</span>","                <div class=\"outer bar\">","                  <div class=\"inner bar {{format.onTime(this)}}\" style=\"width:{{format.progress(closed_issues, open_issues)}}%\"></div>","                </div>","              </div>","            </td>","          </tr>","        {{/milestones}}","      {{/projects.list}}","","    <!--","      <tr>","        <td><a class=\"repo\" href=\"#\">radekstepan/disposable</a></td>","        <td><span class=\"milestone\">Milestone 1.0 <span class=\"icon down-open\"></span></td>","        <td>","          <div class=\"progress\">","            <span class=\"percent\">40%</span>","            <span class=\"due\">due on Friday</span>","            <div class=\"outer bar\">","              <div class=\"inner bar red\" style=\"width:40%\"></div>","            </div>","          </div>","        </td>","      </tr>","      <tr class=\"done\">","        <td><a class=\"repo\" href=\"#\">radekstepan/burnchart</a></td>","        <td><span class=\"milestone\">Beta Milestone <span class=\"icon down-open\"></span></a></td>","        <td>","          <div class=\"progress\">","            <span class=\"percent\">100%</span>","            <span class=\"due\">due tomorrow</span>","            <div class=\"outer bar\">","              <div class=\"inner bar green\" style=\"width:100%\"></div>","            </div>","          </div>","        </td>","      </tr>","      <tr>","        <td><a class=\"repo\" href=\"#\">intermine/intermine</a></td>","        <td><span class=\"milestone\">Emma Release 96 <span class=\"icon down-open\"></span></a></td>","        <td>","          <div class=\"progress\">","            <span class=\"percent\">27%</span>","            <span class=\"due\">due in 2 weeks</span>","            <div class=\"outer bar\">","              <div class=\"inner bar red\" style=\"width:27%\"></div>","            </div>","          </div>","        </td>","      </tr>","      <tr>","        <td><a class=\"repo\" href=\"#\">microsoft/windows</a></td>","        <td><span class=\"milestone\">RC 9 <span class=\"icon down-open\"></span></a></td>","        <td>","          <div class=\"progress\">","            <span class=\"percent\">90%</span>","            <span class=\"due red\">overdue by a month</span>","            <div class=\"outer bar\">","              <div class=\"inner bar red\" style=\"width:90%\"></div>","            </div>","          </div>","        </td>","      </tr>","    -->","    </table>","","    <div class=\"footer\">","      <a href=\"#\"><Icons icon=\"cog\"/> Edit</a>","    </div>","  </div>","{{/projects.list}}"].join("\n");
     });
 
     // date.coffee
@@ -1065,37 +1074,47 @@
       
     });
 
-    // addProject.coffee
-    root.require.register('burnchart/src/views/pages/addProject.js', function(exports, require, module) {
+    // chart.coffee
+    root.require.register('burnchart/src/views/pages/chart.js', function(exports, require, module) {
     
-      var mediator, user;
+      var format, milestone, project;
       
-      mediator = require('../../modules/mediator');
+      milestone = require('../../modules/milestone');
       
-      user = require('../../models/user');
+      project = require('../../modules/project');
+      
+      format = require('../../utils/format');
       
       module.exports = Ractive.extend({
-        'template': require('../../templates/pages/addProject'),
-        'data': {
-          'value': 'radekstepan/disposable',
-          user: user
-        },
+        'template': require('../../templates/pages/chart'),
         'adapt': [Ractive.adaptors.Ractive],
+        'data': {
+          format: format
+        },
         init: function() {
-          var autocomplete;
-          document.title = 'Add a new project';
-          autocomplete = function(value) {};
-          this.observe('value', _.debounce(autocomplete, 200), {
-            'init': false
-          });
-          return this.on('submit', function() {
-            var name, owner, _ref;
-            _ref = this.get('value').split('/'), owner = _ref[0], name = _ref[1];
-            return mediator.fire('!projects/add', {
-              owner: owner,
-              name: name
-            }, function() {
-              return window.location.hash = '#';
+          var name, owner, route, _ref,
+            _this = this;
+          _ref = this.get('route'), owner = _ref[0], name = _ref[1], milestone = _ref[2];
+          route = {
+            owner: owner,
+            name: name,
+            milestone: milestone
+          };
+          document.title = "" + owner + "/" + name + "/" + milestone;
+          return milestone.get(route, function(err, warn, obj) {
+            if (err) {
+              throw err;
+            }
+            if (warn) {
+              throw warn;
+            }
+            _this.set('milestone', obj);
+            route.milestone = obj;
+            return project(route, function(err) {
+              if (err) {
+                throw err;
+              }
+              return console.log('Done');
             });
           });
         }
@@ -1130,44 +1149,72 @@
       
     });
 
-    // showChart.coffee
-    root.require.register('burnchart/src/views/pages/showChart.js', function(exports, require, module) {
+    // new.coffee
+    root.require.register('burnchart/src/views/pages/new.js', function(exports, require, module) {
     
-      var format, milestone, project;
+      var mediator, user;
       
-      milestone = require('../../modules/milestone');
+      mediator = require('../../modules/mediator');
       
-      project = require('../../modules/project');
+      user = require('../../models/user');
+      
+      module.exports = Ractive.extend({
+        'template': require('../../templates/pages/new'),
+        'data': {
+          'value': 'radekstepan/disposable',
+          user: user
+        },
+        'adapt': [Ractive.adaptors.Ractive],
+        init: function() {
+          var autocomplete;
+          document.title = 'Add a new project';
+          autocomplete = function(value) {};
+          this.observe('value', _.debounce(autocomplete, 200), {
+            'init': false
+          });
+          return this.on('submit', function() {
+            var name, owner, _ref;
+            _ref = this.get('value').split('/'), owner = _ref[0], name = _ref[1];
+            return mediator.fire('!projects/add', {
+              owner: owner,
+              name: name
+            }, function() {
+              return window.location.hash = '#';
+            });
+          });
+        }
+      });
+      
+    });
+
+    // project.coffee
+    root.require.register('burnchart/src/views/pages/project.js', function(exports, require, module) {
+    
+      var Hero, Projects, format;
+      
+      Hero = require('../hero');
+      
+      Projects = require('../projects');
       
       format = require('../../utils/format');
       
       module.exports = Ractive.extend({
-        'template': require('../../templates/pages/showChart'),
-        'adapt': [Ractive.adaptors.Ractive],
+        'template': require('../../templates/pages/project'),
+        'components': {
+          Hero: Hero,
+          Projects: Projects
+        },
         'data': {
           format: format
         },
         init: function() {
-          var route,
-            _this = this;
-          route = this.get('route');
-          document.title = "" + route.owner + "/" + route.name;
-          return milestone.get(route, function(err, warn, obj) {
-            if (err) {
-              throw err;
-            }
-            if (warn) {
-              throw warn;
-            }
-            _this.set('milestone', obj);
-            route.milestone = obj;
-            return project(route, function(err) {
-              if (err) {
-                throw err;
-              }
-              return console.log('Done');
-            });
-          });
+          var name, owner, route, _ref;
+          _ref = this.get('route'), owner = _ref[0], name = _ref[1];
+          route = {
+            owner: owner,
+            name: name
+          };
+          return document.title = "" + owner + "/" + name;
         }
       });
       

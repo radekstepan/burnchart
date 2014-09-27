@@ -9,19 +9,21 @@
       {{#projects.list}}
         {{#milestones}}
           <tr>
-            <td class="repo">{{owner}}/{{name}}</td>
-              <td>
-                <a class="milestone" href="#chart/{{owner}}/{{name}}/{{number}}">{{ title }}</a>
-              </td>
-              <td>
-                <div class="progress">
-                  <span class="percent">{{Math.floor(format.progress(closed_issues, open_issues))}}%</span>
-                  <span class="due">{{{ format.due(due_on) }}}</span>
-                  <div class="outer bar">
-                    <div class="inner bar {{format.onTime(this)}}" style="width:{{format.progress(closed_issues, open_issues)}}%"></div>
-                  </div>
+            <td class="repo">
+              <a class="project" href="#{{owner}}/{{name}}">{{owner}}/{{name}}</a>
+            </td>
+            <td>
+              <a class="milestone" href="#{{owner}}/{{name}}/{{number}}">{{ title }}</a>
+            </td>
+            <td>
+              <div class="progress">
+                <span class="percent">{{Math.floor(format.progress(closed_issues, open_issues))}}%</span>
+                <span class="due">{{{ format.due(due_on) }}}</span>
+                <div class="outer bar">
+                  <div class="inner bar {{format.onTime(this)}}" style="width:{{format.progress(closed_issues, open_issues)}}%"></div>
                 </div>
-              </td>
+              </div>
+            </td>
           </tr>
         {{/milestones}}
       {{/projects.list}}

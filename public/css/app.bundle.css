@@ -410,7 +410,7 @@ table {
 @font-face{font-family:'Fontello';src:url("../fonts/fontello.eot?74672344");src:url("../fonts/fontello.eot?74672344#iefix") format('embedded-opentype'),url("../fonts/fontello.woff?74672344") format('woff'),url("../fonts/fontello.ttf?74672344") format('truetype'),url("../fonts/fontello.svg?74672344#fontello") format('svg');font-weight:normal;font-style:normal}
 
 .icon{vertical-align:middle;font-family:"Fontello";font-style:normal;font-weight:normal;speak:none;display:inline-block;text-decoration:inherit;text-align:center;font-variant:normal;text-transform:none;}
-.icon.spin6,.icon.spin4,.icon.spinner1{-webkit-animation:spin 2s infinite linear;-moz-animation:spin 2s infinite linear;-o-animation:spin 2s infinite linear;-ms-animation:spin 2s infinite linear;animation:spin 2s infinite linear}
+.icon[class^='spin'],.icon[class*=' spin']{-webkit-animation:spin 2s infinite linear;-moz-animation:spin 2s infinite linear;-o-animation:spin 2s infinite linear;-ms-animation:spin 2s infinite linear;animation:spin 2s infinite linear}
 @-moz-keyframes spin{0%{-moz-transform:rotate(0)}
 100%{-moz-transform:rotate(360deg)}
 }@-webkit-keyframes spin{0%{-webkit-transform:rotate(0)}
@@ -495,6 +495,7 @@ ul li{display:inline-block}
 #content #projects .sort{float:right;line-height:30px}
 #content #projects table{width:100%;}
 #content #projects table tr td{background:#fcfcfc;padding:20px 30px;border-bottom:1px solid #eaecf2;}
+#content #projects table tr td .project{color:inherit}
 #content #projects table tr td .milestone .icon{font-size:10px;margin:0}
 #content #projects table tr td .progress{width:200px;}
 #content #projects table tr td .progress .percent,#content #projects table tr td .progress .due{color:#9399ad;font-size:13px}

@@ -21241,242 +21241,6 @@ var h=new fb.simplelogin.client(a,d,e,f);return{setApiHost:function(a){fb.simple
 fb.simplelogin.util.validation.validateCallback("FirebaseSimpleLogin.createUser",3,e,!0);return h.createUser(a,d,e)},changePassword:function(a,d,e,f){fb.simplelogin.util.validation.validateArgCount("FirebaseSimpleLogin.changePassword",3,4,arguments.length);fb.simplelogin.util.validation.validateCallback("FirebaseSimpleLogin.changePassword",4,f,!0);return h.changePassword(a,d,e,f)},removeUser:function(a,d,e){fb.simplelogin.util.validation.validateArgCount("FirebaseSimpleLogin.removeUser",2,3,arguments.length);
 fb.simplelogin.util.validation.validateCallback("FirebaseSimpleLogin.removeUser",3,e,!0);return h.removeUser(a,d,e)},sendPasswordResetEmail:function(a,d){fb.simplelogin.util.validation.validateArgCount("FirebaseSimpleLogin.sendPasswordResetEmail",1,2,arguments.length);fb.simplelogin.util.validation.validateCallback("FirebaseSimpleLogin.sendPasswordResetEmail",2,d,!0);return h.sendPasswordResetEmail(a,d)}}};goog.exportSymbol("FirebaseSimpleLogin",FirebaseSimpleLogin);FirebaseSimpleLogin.onOpen=function(a){fb.simplelogin.client.onOpen(a)};
 goog.exportProperty(FirebaseSimpleLogin,"onOpen",FirebaseSimpleLogin.onOpen);FirebaseSimpleLogin.VERSION=fb.simplelogin.client.VERSION();})();
-;/****
- * Grapnel.js
- * https://github.com/EngineeringMode/Grapnel.js
- *
- * @author Greg Sabia Tucker
- * @link http://artificer.io
- * @version 0.4.2
- *
- * Released under MIT License. See LICENSE.txt or http://opensource.org/licenses/MIT
-*/
-
-(function(root){
-
-    function Grapnel(){
-        "use strict";
-
-        var self = this; // Scope reference
-        this.events = {}; // Event Listeners
-        this.params = []; // Named parameters
-        this.state = null; // Event state
-        this.version = '0.4.2'; // Version
-        // Anchor
-        this.anchor = {
-            defaultHash : window.location.hash,
-            get : function(){
-                return (window.location.hash) ? window.location.hash.split('#')[1] : '';
-            },
-            set : function(anchor){
-                window.location.hash = (!anchor) ? '' : anchor;
-                return self;
-            },
-            clear : function(){
-                return this.set(false);
-            },
-            reset : function(){
-                return this.set(this.defaultHash);
-            }
-        }
-        /**
-         * ForEach workaround
-         *
-         * @param {Array} to iterate
-         * @param {Function} callback
-        */
-        this._forEach = function(a, callback){
-            if(typeof Array.prototype.forEach === 'function') return Array.prototype.forEach.call(a, callback);
-            // Replicate forEach()
-            return function(c, next){
-                for(var i=0, n = this.length; i<n; ++i){
-                    c.call(next, this[i], i, this);
-                }
-            }.call(a, callback);
-        }
-        /**
-         * Fire an event listener
-         *
-         * @param {String} event
-         * @param {Mixed} [attributes] Parameters that will be applied to event listener
-         * @return self
-        */
-        this.trigger = function(event){
-            var params = Array.prototype.slice.call(arguments, 1);
-            // Call matching events
-            if(this.events[event]){
-                this._forEach(this.events[event], function(fn){
-                    fn.apply(self, params);
-                });
-            }
-
-            return this;
-        }
-        // Check current hash change event -- if one exists already, add it to the queue
-        if(typeof window.onhashchange === 'function') this.on('hashchange', window.onhashchange);
-        /**
-         * Hash change event
-         * TODO: increase browser compatibility. "window.onhashchange" can be supplemented in older browsers with setInterval()
-        */
-        window.onhashchange = function(){
-            self.trigger('hashchange');
-        }
-
-        return this.trigger('initialized');
-    }
-    /**
-     * Create a RegExp Route from a string
-     * This is the heart of the router and I've made it as small as possible!
-     *
-     * @param {String} Path of route
-     * @param {Array} Array of keys to fill
-     * @param {Bool} Case sensitive comparison
-     * @param {Bool} Strict mode
-    */
-    Grapnel.regexRoute = function(path, keys, sensitive, strict){
-        if(path instanceof RegExp) return path;
-        if(path instanceof Array) path = '(' + path.join('|') + ')';
-        // Build route RegExp
-        path = path.concat(strict ? '' : '/?')
-            .replace(/\/\(/g, '(?:/')
-            .replace(/\+/g, '__plus__')
-            .replace(/(\/)?(\.)?:(\w+)(?:(\(.*?\)))?(\?)?/g, function(_, slash, format, key, capture, optional){
-                keys.push({ name : key, optional : !!optional });
-                slash = slash || '';
-
-                return '' + (optional ? '' : slash) + '(?:' + (optional ? slash : '') + (format || '') + (capture || (format && '([^/.]+?)' || '([^/]+?)')) + ')' + (optional || '');
-            })
-            .replace(/([\/.])/g, '\\$1')
-            .replace(/__plus__/g, '(.+)')
-            .replace(/\*/g, '(.*)');
-
-        return new RegExp('^' + path + '$', sensitive ? '' : 'i');
-    }
-    /**
-     * Add an action and handler
-     *
-     * @param {String|RegExp} action name
-     * @param {Function} callback
-     * @return self
-    */
-    Grapnel.prototype.get = Grapnel.prototype.add = function(route, handler){
-        var self = this,
-            keys = [],
-            regex = Grapnel.regexRoute(route, keys);
-
-        var invoke = function(){
-            // If action is instance of RegEx, match the action
-            var match = self.anchor.get().match(regex);
-            // Test matches against current action
-            if(match){
-                // Match found
-                var event = {
-                    route : route,
-                    value : self.anchor.get(),
-                    handler : handler,
-                    params : self.params,
-                    regex : match,
-                    propagateEvent : true,
-                    previousState : self.state,
-                    preventDefault : function(){
-                        this.propagateEvent = false;
-                    }
-                }
-                // Trigger main event
-                self.trigger('match', event);
-                // Continue?
-                if(!event.propagateEvent) return self;
-                // Save new state
-                self.state = event;
-                // Callback
-                var req = { params : {}, keys : keys, matches : event.regex.slice(1) };
-                // Build parameters
-                self._forEach(req.matches, function(value, i){
-                    var key = (keys[i] && keys[i].name) ? keys[i].name : i;
-                    // Parameter key will be its key or the iteration index. This is useful if a wildcard (*) is matched
-                    req.params[key] = (value) ? decodeURIComponent(value) : undefined;
-                });
-                // Call handler
-                handler.call(self, req, event);
-            }
-            // Returns self
-            return self;
-        }
-        // Invoke and add listeners -- this uses less code
-        return invoke().on('initialized hashchange', invoke);
-    }
-    /**
-     * Add an event listener
-     *
-     * @param {String|Array} event
-     * @param {Function} callback
-     * @return self
-    */
-    Grapnel.prototype.on = Grapnel.prototype.bind = function(event, handler){
-        var self = this,
-            events = event.split(' ');
-
-        this._forEach(events, function(event){
-            if(self.events[event]){
-                self.events[event].push(handler);
-            }else{
-                self.events[event] = [handler];
-            }
-        });
-
-        return this;
-    }
-    /**
-     * Call Grapnel().router constructor for backwards compatibility
-     *
-     * @return {self} Router
-    */
-    Grapnel.Router = Grapnel.prototype.router = Grapnel;
-    /**
-     * Allow context
-     *
-     * @param {String} Route context
-     * @return {Function} Adds route to context
-    */
-    Grapnel.prototype.context = function(context){
-        var self = this;
-
-        return function(value, callback){
-            var prefix = (context.slice(-1) !== '/') ? context + '/' : context,
-                pattern = prefix + value;
-
-            return self.get.call(self, pattern, callback);
-        }
-    }
-    /**
-     * Create routes based on an object
-     *
-     * @param {Object} Routes
-     * @return {self} Router
-    */
-    Grapnel.listen = function(routes){
-        // Return a new Grapnel instance
-        return (function(){
-            // TODO: Accept multi-level routes
-            for(var key in routes){
-                this.get.call(this, key, routes[key]);
-            }
-
-            return this;
-        }).call(new Grapnel());
-    }
-    // Window or module?
-    if('function' === typeof root.define){
-        root.define(function(require){
-            return Grapnel;
-        });
-    }else if('object' === typeof exports){
-        exports.Grapnel = Grapnel;
-    }else{
-        root.Grapnel = Grapnel;
-    }
-
-}).call({}, window);
 ;;(function(){
 
 /**
@@ -39969,7 +39733,725 @@ if (typeof exports === 'object') {
 }).call(function() {
   return this || (typeof window !== 'undefined' ? window : global);
 }());
-;// Concat modules and export them as an app.
+;
+
+//
+// Generated on Fri Dec 27 2013 12:02:11 GMT-0500 (EST) by Nodejitsu, Inc (Using Codesurgeon).
+// Version 1.2.2
+//
+
+(function (exports) {
+
+/*
+ * browser.js: Browser specific functionality for director.
+ *
+ * (C) 2011, Nodejitsu Inc.
+ * MIT LICENSE
+ *
+ */
+
+if (!Array.prototype.filter) {
+  Array.prototype.filter = function(filter, that) {
+    var other = [], v;
+    for (var i = 0, n = this.length; i < n; i++) {
+      if (i in this && filter.call(that, v = this[i], i, this)) {
+        other.push(v);
+      }
+    }
+    return other;
+  };
+}
+
+if (!Array.isArray){
+  Array.isArray = function(obj) {
+    return Object.prototype.toString.call(obj) === '[object Array]';
+  };
+}
+
+var dloc = document.location;
+
+function dlocHashEmpty() {
+  // Non-IE browsers return '' when the address bar shows '#'; Director's logic
+  // assumes both mean empty.
+  return dloc.hash === '' || dloc.hash === '#';
+}
+
+var listener = {
+  mode: 'modern',
+  hash: dloc.hash,
+  history: false,
+
+  check: function () {
+    var h = dloc.hash;
+    if (h != this.hash) {
+      this.hash = h;
+      this.onHashChanged();
+    }
+  },
+
+  fire: function () {
+    if (this.mode === 'modern') {
+      this.history === true ? window.onpopstate() : window.onhashchange();
+    }
+    else {
+      this.onHashChanged();
+    }
+  },
+
+  init: function (fn, history) {
+    var self = this;
+    this.history = history;
+
+    if (!Router.listeners) {
+      Router.listeners = [];
+    }
+
+    function onchange(onChangeEvent) {
+      for (var i = 0, l = Router.listeners.length; i < l; i++) {
+        Router.listeners[i](onChangeEvent);
+      }
+    }
+
+    //note IE8 is being counted as 'modern' because it has the hashchange event
+    if ('onhashchange' in window && (document.documentMode === undefined
+      || document.documentMode > 7)) {
+      // At least for now HTML5 history is available for 'modern' browsers only
+      if (this.history === true) {
+        // There is an old bug in Chrome that causes onpopstate to fire even
+        // upon initial page load. Since the handler is run manually in init(),
+        // this would cause Chrome to run it twise. Currently the only
+        // workaround seems to be to set the handler after the initial page load
+        // http://code.google.com/p/chromium/issues/detail?id=63040
+        setTimeout(function() {
+          window.onpopstate = onchange;
+        }, 500);
+      }
+      else {
+        window.onhashchange = onchange;
+      }
+      this.mode = 'modern';
+    }
+    else {
+      //
+      // IE support, based on a concept by Erik Arvidson ...
+      //
+      var frame = document.createElement('iframe');
+      frame.id = 'state-frame';
+      frame.style.display = 'none';
+      document.body.appendChild(frame);
+      this.writeFrame('');
+
+      if ('onpropertychange' in document && 'attachEvent' in document) {
+        document.attachEvent('onpropertychange', function () {
+          if (event.propertyName === 'location') {
+            self.check();
+          }
+        });
+      }
+
+      window.setInterval(function () { self.check(); }, 50);
+
+      this.onHashChanged = onchange;
+      this.mode = 'legacy';
+    }
+
+    Router.listeners.push(fn);
+
+    return this.mode;
+  },
+
+  destroy: function (fn) {
+    if (!Router || !Router.listeners) {
+      return;
+    }
+
+    var listeners = Router.listeners;
+
+    for (var i = listeners.length - 1; i >= 0; i--) {
+      if (listeners[i] === fn) {
+        listeners.splice(i, 1);
+      }
+    }
+  },
+
+  setHash: function (s) {
+    // Mozilla always adds an entry to the history
+    if (this.mode === 'legacy') {
+      this.writeFrame(s);
+    }
+
+    if (this.history === true) {
+      window.history.pushState({}, document.title, s);
+      // Fire an onpopstate event manually since pushing does not obviously
+      // trigger the pop event.
+      this.fire();
+    } else {
+      dloc.hash = (s[0] === '/') ? s : '/' + s;
+    }
+    return this;
+  },
+
+  writeFrame: function (s) {
+    // IE support...
+    var f = document.getElementById('state-frame');
+    var d = f.contentDocument || f.contentWindow.document;
+    d.open();
+    d.write("<script>_hash = '" + s + "'; onload = parent.listener.syncHash;<script>");
+    d.close();
+  },
+
+  syncHash: function () {
+    // IE support...
+    var s = this._hash;
+    if (s != dloc.hash) {
+      dloc.hash = s;
+    }
+    return this;
+  },
+
+  onHashChanged: function () {}
+};
+
+var Router = exports.Router = function (routes) {
+  if (!(this instanceof Router)) return new Router(routes);
+
+  this.params   = {};
+  this.routes   = {};
+  this.methods  = ['on', 'once', 'after', 'before'];
+  this.scope    = [];
+  this._methods = {};
+
+  this._insert = this.insert;
+  this.insert = this.insertEx;
+
+  this.historySupport = (window.history != null ? window.history.pushState : null) != null
+
+  this.configure();
+  this.mount(routes || {});
+};
+
+Router.prototype.init = function (r) {
+  var self = this;
+  this.handler = function(onChangeEvent) {
+    var newURL = onChangeEvent && onChangeEvent.newURL || window.location.hash;
+    var url = self.history === true ? self.getPath() : newURL.replace(/.*#/, '');
+    self.dispatch('on', url.charAt(0) === '/' ? url : '/' + url);
+  };
+
+  listener.init(this.handler, this.history);
+
+  if (this.history === false) {
+    if (dlocHashEmpty() && r) {
+      dloc.hash = r;
+    } else if (!dlocHashEmpty()) {
+      self.dispatch('on', '/' + dloc.hash.replace(/^(#\/|#|\/)/, ''));
+    }
+  }
+  else {
+    var routeTo = dlocHashEmpty() && r ? r : !dlocHashEmpty() ? dloc.hash.replace(/^#/, '') : null;
+    if (routeTo) {
+      window.history.replaceState({}, document.title, routeTo);
+    }
+
+    // Router has been initialized, but due to the chrome bug it will not
+    // yet actually route HTML5 history state changes. Thus, decide if should route.
+    if (routeTo || this.run_in_init === true) {
+      this.handler();
+    }
+  }
+
+  return this;
+};
+
+Router.prototype.explode = function () {
+  var v = this.history === true ? this.getPath() : dloc.hash;
+  if (v.charAt(1) === '/') { v=v.slice(1) }
+  return v.slice(1, v.length).split("/");
+};
+
+Router.prototype.setRoute = function (i, v, val) {
+  var url = this.explode();
+
+  if (typeof i === 'number' && typeof v === 'string') {
+    url[i] = v;
+  }
+  else if (typeof val === 'string') {
+    url.splice(i, v, s);
+  }
+  else {
+    url = [i];
+  }
+
+  listener.setHash(url.join('/'));
+  return url;
+};
+
+//
+// ### function insertEx(method, path, route, parent)
+// #### @method {string} Method to insert the specific `route`.
+// #### @path {Array} Parsed path to insert the `route` at.
+// #### @route {Array|function} Route handlers to insert.
+// #### @parent {Object} **Optional** Parent "routes" to insert into.
+// insert a callback that will only occur once per the matched route.
+//
+Router.prototype.insertEx = function(method, path, route, parent) {
+  if (method === "once") {
+    method = "on";
+    route = function(route) {
+      var once = false;
+      return function() {
+        if (once) return;
+        once = true;
+        return route.apply(this, arguments);
+      };
+    }(route);
+  }
+  return this._insert(method, path, route, parent);
+};
+
+Router.prototype.getRoute = function (v) {
+  var ret = v;
+
+  if (typeof v === "number") {
+    ret = this.explode()[v];
+  }
+  else if (typeof v === "string"){
+    var h = this.explode();
+    ret = h.indexOf(v);
+  }
+  else {
+    ret = this.explode();
+  }
+
+  return ret;
+};
+
+Router.prototype.destroy = function () {
+  listener.destroy(this.handler);
+  return this;
+};
+
+Router.prototype.getPath = function () {
+  var path = window.location.pathname;
+  if (path.substr(0, 1) !== '/') {
+    path = '/' + path;
+  }
+  return path;
+};
+function _every(arr, iterator) {
+  for (var i = 0; i < arr.length; i += 1) {
+    if (iterator(arr[i], i, arr) === false) {
+      return;
+    }
+  }
+}
+
+function _flatten(arr) {
+  var flat = [];
+  for (var i = 0, n = arr.length; i < n; i++) {
+    flat = flat.concat(arr[i]);
+  }
+  return flat;
+}
+
+function _asyncEverySeries(arr, iterator, callback) {
+  if (!arr.length) {
+    return callback();
+  }
+  var completed = 0;
+  (function iterate() {
+    iterator(arr[completed], function(err) {
+      if (err || err === false) {
+        callback(err);
+        callback = function() {};
+      } else {
+        completed += 1;
+        if (completed === arr.length) {
+          callback();
+        } else {
+          iterate();
+        }
+      }
+    });
+  })();
+}
+
+function paramifyString(str, params, mod) {
+  mod = str;
+  for (var param in params) {
+    if (params.hasOwnProperty(param)) {
+      mod = params[param](str);
+      if (mod !== str) {
+        break;
+      }
+    }
+  }
+  return mod === str ? "([._a-zA-Z0-9-]+)" : mod;
+}
+
+function regifyString(str, params) {
+  var matches, last = 0, out = "";
+  while (matches = str.substr(last).match(/[^\w\d\- %@&]*\*[^\w\d\- %@&]*/)) {
+    last = matches.index + matches[0].length;
+    matches[0] = matches[0].replace(/^\*/, "([_.()!\\ %@&a-zA-Z0-9-]+)");
+    out += str.substr(0, matches.index) + matches[0];
+  }
+  str = out += str.substr(last);
+  var captures = str.match(/:([^\/]+)/ig), capture, length;
+  if (captures) {
+    length = captures.length;
+    for (var i = 0; i < length; i++) {
+      capture = captures[i];
+      if (capture.slice(0, 2) === "::") {
+        str = capture.slice(1);
+      } else {
+        str = str.replace(capture, paramifyString(capture, params));
+      }
+    }
+  }
+  return str;
+}
+
+function terminator(routes, delimiter, start, stop) {
+  var last = 0, left = 0, right = 0, start = (start || "(").toString(), stop = (stop || ")").toString(), i;
+  for (i = 0; i < routes.length; i++) {
+    var chunk = routes[i];
+    if (chunk.indexOf(start, last) > chunk.indexOf(stop, last) || ~chunk.indexOf(start, last) && !~chunk.indexOf(stop, last) || !~chunk.indexOf(start, last) && ~chunk.indexOf(stop, last)) {
+      left = chunk.indexOf(start, last);
+      right = chunk.indexOf(stop, last);
+      if (~left && !~right || !~left && ~right) {
+        var tmp = routes.slice(0, (i || 1) + 1).join(delimiter);
+        routes = [ tmp ].concat(routes.slice((i || 1) + 1));
+      }
+      last = (right > left ? right : left) + 1;
+      i = 0;
+    } else {
+      last = 0;
+    }
+  }
+  return routes;
+}
+
+Router.prototype.configure = function(options) {
+  options = options || {};
+  for (var i = 0; i < this.methods.length; i++) {
+    this._methods[this.methods[i]] = true;
+  }
+  this.recurse = options.recurse || this.recurse || false;
+  this.async = options.async || false;
+  this.delimiter = options.delimiter || "/";
+  this.strict = typeof options.strict === "undefined" ? true : options.strict;
+  this.notfound = options.notfound;
+  this.resource = options.resource;
+  this.history = options.html5history && this.historySupport || false;
+  this.run_in_init = this.history === true && options.run_handler_in_init !== false;
+  this.every = {
+    after: options.after || null,
+    before: options.before || null,
+    on: options.on || null
+  };
+  return this;
+};
+
+Router.prototype.param = function(token, matcher) {
+  if (token[0] !== ":") {
+    token = ":" + token;
+  }
+  var compiled = new RegExp(token, "g");
+  this.params[token] = function(str) {
+    return str.replace(compiled, matcher.source || matcher);
+  };
+};
+
+Router.prototype.on = Router.prototype.route = function(method, path, route) {
+  var self = this;
+  if (!route && typeof path == "function") {
+    route = path;
+    path = method;
+    method = "on";
+  }
+  if (Array.isArray(path)) {
+    return path.forEach(function(p) {
+      self.on(method, p, route);
+    });
+  }
+  if (path.source) {
+    path = path.source.replace(/\\\//ig, "/");
+  }
+  if (Array.isArray(method)) {
+    return method.forEach(function(m) {
+      self.on(m.toLowerCase(), path, route);
+    });
+  }
+  path = path.split(new RegExp(this.delimiter));
+  path = terminator(path, this.delimiter);
+  this.insert(method, this.scope.concat(path), route);
+};
+
+Router.prototype.dispatch = function(method, path, callback) {
+  var self = this, fns = this.traverse(method, path, this.routes, ""), invoked = this._invoked, after;
+  this._invoked = true;
+  if (!fns || fns.length === 0) {
+    this.last = [];
+    if (typeof this.notfound === "function") {
+      this.invoke([ this.notfound ], {
+        method: method,
+        path: path
+      }, callback);
+    }
+    return false;
+  }
+  if (this.recurse === "forward") {
+    fns = fns.reverse();
+  }
+  function updateAndInvoke() {
+    self.last = fns.after;
+    self.invoke(self.runlist(fns), self, callback);
+  }
+  after = this.every && this.every.after ? [ this.every.after ].concat(this.last) : [ this.last ];
+  if (after && after.length > 0 && invoked) {
+    if (this.async) {
+      this.invoke(after, this, updateAndInvoke);
+    } else {
+      this.invoke(after, this);
+      updateAndInvoke();
+    }
+    return true;
+  }
+  updateAndInvoke();
+  return true;
+};
+
+Router.prototype.invoke = function(fns, thisArg, callback) {
+  var self = this;
+  var apply;
+  if (this.async) {
+    apply = function(fn, next) {
+      if (Array.isArray(fn)) {
+        return _asyncEverySeries(fn, apply, next);
+      } else if (typeof fn == "function") {
+        fn.apply(thisArg, fns.captures.concat(next));
+      }
+    };
+    _asyncEverySeries(fns, apply, function() {
+      if (callback) {
+        callback.apply(thisArg, arguments);
+      }
+    });
+  } else {
+    apply = function(fn) {
+      if (Array.isArray(fn)) {
+        return _every(fn, apply);
+      } else if (typeof fn === "function") {
+        return fn.apply(thisArg, fns.captures || []);
+      } else if (typeof fn === "string" && self.resource) {
+        self.resource[fn].apply(thisArg, fns.captures || []);
+      }
+    };
+    _every(fns, apply);
+  }
+};
+
+Router.prototype.traverse = function(method, path, routes, regexp, filter) {
+  var fns = [], current, exact, match, next, that;
+  function filterRoutes(routes) {
+    if (!filter) {
+      return routes;
+    }
+    function deepCopy(source) {
+      var result = [];
+      for (var i = 0; i < source.length; i++) {
+        result[i] = Array.isArray(source[i]) ? deepCopy(source[i]) : source[i];
+      }
+      return result;
+    }
+    function applyFilter(fns) {
+      for (var i = fns.length - 1; i >= 0; i--) {
+        if (Array.isArray(fns[i])) {
+          applyFilter(fns[i]);
+          if (fns[i].length === 0) {
+            fns.splice(i, 1);
+          }
+        } else {
+          if (!filter(fns[i])) {
+            fns.splice(i, 1);
+          }
+        }
+      }
+    }
+    var newRoutes = deepCopy(routes);
+    newRoutes.matched = routes.matched;
+    newRoutes.captures = routes.captures;
+    newRoutes.after = routes.after.filter(filter);
+    applyFilter(newRoutes);
+    return newRoutes;
+  }
+  if (path === this.delimiter && routes[method]) {
+    next = [ [ routes.before, routes[method] ].filter(Boolean) ];
+    next.after = [ routes.after ].filter(Boolean);
+    next.matched = true;
+    next.captures = [];
+    return filterRoutes(next);
+  }
+  for (var r in routes) {
+    if (routes.hasOwnProperty(r) && (!this._methods[r] || this._methods[r] && typeof routes[r] === "object" && !Array.isArray(routes[r]))) {
+      current = exact = regexp + this.delimiter + r;
+      if (!this.strict) {
+        exact += "[" + this.delimiter + "]?";
+      }
+      match = path.match(new RegExp("^" + exact));
+      if (!match) {
+        continue;
+      }
+      if (match[0] && match[0] == path && routes[r][method]) {
+        next = [ [ routes[r].before, routes[r][method] ].filter(Boolean) ];
+        next.after = [ routes[r].after ].filter(Boolean);
+        next.matched = true;
+        next.captures = match.slice(1);
+        if (this.recurse && routes === this.routes) {
+          next.push([ routes.before, routes.on ].filter(Boolean));
+          next.after = next.after.concat([ routes.after ].filter(Boolean));
+        }
+        return filterRoutes(next);
+      }
+      next = this.traverse(method, path, routes[r], current);
+      if (next.matched) {
+        if (next.length > 0) {
+          fns = fns.concat(next);
+        }
+        if (this.recurse) {
+          fns.push([ routes[r].before, routes[r].on ].filter(Boolean));
+          next.after = next.after.concat([ routes[r].after ].filter(Boolean));
+          if (routes === this.routes) {
+            fns.push([ routes["before"], routes["on"] ].filter(Boolean));
+            next.after = next.after.concat([ routes["after"] ].filter(Boolean));
+          }
+        }
+        fns.matched = true;
+        fns.captures = next.captures;
+        fns.after = next.after;
+        return filterRoutes(fns);
+      }
+    }
+  }
+  return false;
+};
+
+Router.prototype.insert = function(method, path, route, parent) {
+  var methodType, parentType, isArray, nested, part;
+  path = path.filter(function(p) {
+    return p && p.length > 0;
+  });
+  parent = parent || this.routes;
+  part = path.shift();
+  if (/\:|\*/.test(part) && !/\\d|\\w/.test(part)) {
+    part = regifyString(part, this.params);
+  }
+  if (path.length > 0) {
+    parent[part] = parent[part] || {};
+    return this.insert(method, path, route, parent[part]);
+  }
+  if (!part && !path.length && parent === this.routes) {
+    methodType = typeof parent[method];
+    switch (methodType) {
+     case "function":
+      parent[method] = [ parent[method], route ];
+      return;
+     case "object":
+      parent[method].push(route);
+      return;
+     case "undefined":
+      parent[method] = route;
+      return;
+    }
+    return;
+  }
+  parentType = typeof parent[part];
+  isArray = Array.isArray(parent[part]);
+  if (parent[part] && !isArray && parentType == "object") {
+    methodType = typeof parent[part][method];
+    switch (methodType) {
+     case "function":
+      parent[part][method] = [ parent[part][method], route ];
+      return;
+     case "object":
+      parent[part][method].push(route);
+      return;
+     case "undefined":
+      parent[part][method] = route;
+      return;
+    }
+  } else if (parentType == "undefined") {
+    nested = {};
+    nested[method] = route;
+    parent[part] = nested;
+    return;
+  }
+  throw new Error("Invalid route context: " + parentType);
+};
+
+
+
+Router.prototype.extend = function(methods) {
+  var self = this, len = methods.length, i;
+  function extend(method) {
+    self._methods[method] = true;
+    self[method] = function() {
+      var extra = arguments.length === 1 ? [ method, "" ] : [ method ];
+      self.on.apply(self, extra.concat(Array.prototype.slice.call(arguments)));
+    };
+  }
+  for (i = 0; i < len; i++) {
+    extend(methods[i]);
+  }
+};
+
+Router.prototype.runlist = function(fns) {
+  var runlist = this.every && this.every.before ? [ this.every.before ].concat(_flatten(fns)) : _flatten(fns);
+  if (this.every && this.every.on) {
+    runlist.push(this.every.on);
+  }
+  runlist.captures = fns.captures;
+  runlist.source = fns.source;
+  return runlist;
+};
+
+Router.prototype.mount = function(routes, path) {
+  if (!routes || typeof routes !== "object" || Array.isArray(routes)) {
+    return;
+  }
+  var self = this;
+  path = path || [];
+  if (!Array.isArray(path)) {
+    path = path.split(self.delimiter);
+  }
+  function insertOrMount(route, local) {
+    var rename = route, parts = route.split(self.delimiter), routeType = typeof routes[route], isRoute = parts[0] === "" || !self._methods[parts[0]], event = isRoute ? "on" : rename;
+    if (isRoute) {
+      rename = rename.slice((rename.match(new RegExp("^" + self.delimiter)) || [ "" ])[0].length);
+      parts.shift();
+    }
+    if (isRoute && routeType === "object" && !Array.isArray(routes[route])) {
+      local = local.concat(parts);
+      self.mount(routes[route], local);
+      return;
+    }
+    if (isRoute) {
+      local = local.concat(rename.split(self.delimiter));
+      local = terminator(local, self.delimiter);
+    }
+    self.insert(event, local, routes[route]);
+  }
+  for (var route in routes) {
+    if (routes.hasOwnProperty(route)) {
+      insertOrMount(route, path.slice(0));
+    }
+  }
+};
+
+
+
+}(typeof exports === "object" ? exports : window));;// Concat modules and export them as an app.
 (function(root) {
 
   // All our modules will use global require.
@@ -40696,40 +41178,43 @@ if (typeof exports === 'object') {
     // router.coffee
     root.require.register('burnchart/src/modules/router.js', function(exports, require, module) {
     
-      var el, mediator, route, router;
+      var el, mediator, route, router,
+        __slice = [].slice;
       
       mediator = require('./mediator');
       
       el = '#page';
       
-      route = function(page, req, evt) {
-        var Page;
+      route = function() {
+        var Page, args, page;
+        page = arguments[0], args = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
         Page = require("../views/pages/" + page);
         return new Page({
           el: el,
           'data': {
-            'route': req.params
+            'route': args
           }
         });
       };
       
-      router = {
-        '': _.partial(route, 'index'),
-        'project/add': _.partial(route, 'addProject'),
-        'chart/:owner/:name/:milestone': _.partial(route, 'showChart'),
-        'reset': function() {
+      router = Router({
+        '/': _.partial(route, 'index'),
+        '/new/project': _.partial(route, 'new'),
+        '/:owner/:name': _.partial(route, 'project'),
+        '/:owner/:name/:milestone': _.partial(route, 'chart'),
+        '/reset': function() {
           mediator.fire('!projects/clear');
           return window.location.hash = '#';
         },
-        'notify': function() {
+        '/notify': function() {
           mediator.fire('!app/loading', true);
           mediator.fire('!app/notify', 'You did something real good', 'warn');
           return window.location.hash = '#';
         }
-      };
+      });
       
       module.exports = function() {
-        Grapnel.listen(router);
+        router.init('/');
         return router;
       };
       
@@ -40738,13 +41223,13 @@ if (typeof exports === 'object') {
     // header.mustache
     root.require.register('burnchart/src/templates/header.js', function(exports, require, module) {
     
-      module.exports = ["<div id=\"head\">","  <div class=\"right\">","    {{#user.displayName}}","      {{user.displayName}} logged in","    {{else}}","      <a class=\"github\" on-click=\"!login\"><Icons icon=\"github\"/> Sign In</a>","    {{/user.displayName}}","  </div>","","  <a id=\"icon\" href=\"#\">","    <Icons icon=\"{{icon}}\"/>","  </a>","","  <div class=\"q\">","    <Icons icon=\"search\"/>","    <Icons icon=\"down-open\"/>","    <input type=\"text\" placeholder=\"Jump to...\">","  </div>","","  <ul>","    <li><a href=\"#project/add\" class=\"add\"><Icons icon=\"plus-circled\"/> Add a Project</a></li>","    <li><a href=\"#\" class=\"faq\">FAQ</a></li>","    <li><a href=\"#reset\">DB Reset</a></li>","    <li><a href=\"#notify\">Notify</a></li>","  </ul>","</div>"].join("\n");
+      module.exports = ["<div id=\"head\">","  <div class=\"right\">","    {{#user.displayName}}","      {{user.displayName}} logged in","    {{else}}","      <a class=\"github\" on-click=\"!login\"><Icons icon=\"github\"/> Sign In</a>","    {{/user.displayName}}","  </div>","","  <a id=\"icon\" href=\"#\">","    <Icons icon=\"{{icon}}\"/>","  </a>","","  <div class=\"q\">","    <Icons icon=\"search\"/>","    <Icons icon=\"down-open\"/>","    <input type=\"text\" placeholder=\"Jump to...\">","  </div>","","  <ul>","    <li><a href=\"#new/project\" class=\"add\"><Icons icon=\"plus-circled\"/> Add a Project</a></li>","    <li><a href=\"#\" class=\"faq\">FAQ</a></li>","    <li><a href=\"#reset\">DB Reset</a></li>","    <li><a href=\"#notify\">Notify</a></li>","  </ul>","</div>"].join("\n");
     });
 
     // hero.mustache
     root.require.register('burnchart/src/templates/hero.js', function(exports, require, module) {
     
-      module.exports = ["{{^projects.list}}","  <div id=\"hero\">","    <div class=\"content\">","      <Icons icon=\"address\"/>","      <h2>See your project progress</h2>","      <p>Not sure where to start? Just add a demo repo to see a chart. There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable.</p>","      <div class=\"cta\">","        <a href=\"#project/add\" class=\"primary\"><Icons icon=\"plus-circled\"/> Add your project</a>","        <a href=\"#\" class=\"secondary\">Read the Guide</a>","      </div>","    </div>","  </div>","{{/projects.list}}"].join("\n");
+      module.exports = ["{{^projects.list}}","  <div id=\"hero\">","    <div class=\"content\">","      <Icons icon=\"address\"/>","      <h2>See your project progress</h2>","      <p>Not sure where to start? Just add a demo repo to see a chart. There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable.</p>","      <div class=\"cta\">","        <a href=\"#new/project\" class=\"primary\"><Icons icon=\"plus-circled\"/> Add your project</a>","        <a href=\"#\" class=\"secondary\">Read the Guide</a>","      </div>","    </div>","  </div>","{{/projects.list}}"].join("\n");
     });
 
     // icons.mustache
@@ -40765,10 +41250,10 @@ if (typeof exports === 'object') {
       module.exports = ["{{#text}}","  <div id=\"notify\" class=\"{{type}}\" style=\"top:{{-top}}px\">","    <Icons icon=\"megaphone\"/>","    <p>{{text}}</p>","  </div>","{{/text}}"].join("\n");
     });
 
-    // addProject.mustache
-    root.require.register('burnchart/src/templates/pages/addProject.js', function(exports, require, module) {
+    // chart.mustache
+    root.require.register('burnchart/src/templates/pages/chart.js', function(exports, require, module) {
     
-      module.exports = ["<div id=\"content\" class=\"wrap\">","  <div id=\"add\">","    <div class=\"header\">","      <h2>Add a Project</h2>","      <p>Type in the name of the repository as you would normally. If you'd like to add a private GitHub project, <a href=\"#\">Sign In</a> first.</p>","    </div>","","    <div class=\"form\">","      <table>","        <tr>","          <td>","            <input type=\"text\" placeholder=\"user/repo\" autocomplete=\"off\" value=\"{{value}}\">","          </td>","          <td>","            <a on-click=\"submit\">Add</a>","          </td>","        </tr>","      </table>","    </div>","  </div>","</div>"].join("\n");
+      module.exports = ["<div id=\"title\">","  <div class=\"wrap\">","    <h2 class=\"title\">{{ format.title(milestone.title) }}</h2>","    <span class=\"sub\">{{{ format.due(milestone.due_on) }}}</span>","    <p class=\"description\">{{{ format.markdown(milestone.description) }}}</p>","  </div>","</div>","","<div id=\"content\" class=\"wrap\">","  <div id=\"chart\">","    <div id=\"svg\"></div>","  </div>","</div>"].join("\n");
     });
 
     // index.mustache
@@ -40777,16 +41262,22 @@ if (typeof exports === 'object') {
       module.exports = ["<div id=\"content\" class=\"wrap\">","  <Hero/>","  <Projects/>","</div>"].join("\n");
     });
 
-    // showChart.mustache
-    root.require.register('burnchart/src/templates/pages/showChart.js', function(exports, require, module) {
+    // new.mustache
+    root.require.register('burnchart/src/templates/pages/new.js', function(exports, require, module) {
     
-      module.exports = ["<div id=\"title\">","  <div class=\"wrap\">","    <h2 class=\"title\">{{ format.title(milestone.title) }}</h2>","    <span class=\"sub\">{{{ format.due(milestone.due_on) }}}</span>","    <p class=\"description\">{{{ format.markdown(milestone.description) }}}</p>","  </div>","</div>","","<div id=\"content\" class=\"wrap\">","  <div id=\"chart\">","    <div id=\"svg\"></div>","  </div>","</div>"].join("\n");
+      module.exports = ["<div id=\"content\" class=\"wrap\">","  <div id=\"add\">","    <div class=\"header\">","      <h2>Add a Project</h2>","      <p>Type in the name of the repository as you would normally. If you'd like to add a private GitHub project, <a href=\"#\">Sign In</a> first.</p>","    </div>","","    <div class=\"form\">","      <table>","        <tr>","          <td>","            <input type=\"text\" placeholder=\"user/repo\" autocomplete=\"off\" value=\"{{value}}\">","          </td>","          <td>","            <a on-click=\"submit\">Add</a>","          </td>","        </tr>","      </table>","    </div>","  </div>","</div>"].join("\n");
+    });
+
+    // project.mustache
+    root.require.register('burnchart/src/templates/pages/project.js', function(exports, require, module) {
+    
+      module.exports = ["<div id=\"title\">","  <div class=\"wrap\">","    <h2 class=\"title\">radekstepan/disposable</h2>","  </div>","</div>","","<div id=\"content\" class=\"wrap\">","  Project milestones go here","</div>"].join("\n");
     });
 
     // projects.mustache
     root.require.register('burnchart/src/templates/projects.js', function(exports, require, module) {
     
-      module.exports = ["{{#projects.list.length}}","  <div id=\"projects\">","    <div class=\"header\">","      <a href=\"#\" class=\"sort\"><Icons icon=\"sort-alphabet\"/> Sorted by priority</a>","      <h2>Projects</h2>","    </div>","","    <table>","      {{#projects.list}}","        {{#milestones}}","          <tr>","            <td class=\"repo\">{{owner}}/{{name}}</td>","              <td>","                <a class=\"milestone\" href=\"#chart/{{owner}}/{{name}}/{{number}}\">{{ title }}</a>","              </td>","              <td>","                <div class=\"progress\">","                  <span class=\"percent\">{{Math.floor(format.progress(closed_issues, open_issues))}}%</span>","                  <span class=\"due\">{{{ format.due(due_on) }}}</span>","                  <div class=\"outer bar\">","                    <div class=\"inner bar {{format.onTime(this)}}\" style=\"width:{{format.progress(closed_issues, open_issues)}}%\"></div>","                  </div>","                </div>","              </td>","          </tr>","        {{/milestones}}","      {{/projects.list}}","","    <!--","      <tr>","        <td><a class=\"repo\" href=\"#\">radekstepan/disposable</a></td>","        <td><span class=\"milestone\">Milestone 1.0 <span class=\"icon down-open\"></span></td>","        <td>","          <div class=\"progress\">","            <span class=\"percent\">40%</span>","            <span class=\"due\">due on Friday</span>","            <div class=\"outer bar\">","              <div class=\"inner bar red\" style=\"width:40%\"></div>","            </div>","          </div>","        </td>","      </tr>","      <tr class=\"done\">","        <td><a class=\"repo\" href=\"#\">radekstepan/burnchart</a></td>","        <td><span class=\"milestone\">Beta Milestone <span class=\"icon down-open\"></span></a></td>","        <td>","          <div class=\"progress\">","            <span class=\"percent\">100%</span>","            <span class=\"due\">due tomorrow</span>","            <div class=\"outer bar\">","              <div class=\"inner bar green\" style=\"width:100%\"></div>","            </div>","          </div>","        </td>","      </tr>","      <tr>","        <td><a class=\"repo\" href=\"#\">intermine/intermine</a></td>","        <td><span class=\"milestone\">Emma Release 96 <span class=\"icon down-open\"></span></a></td>","        <td>","          <div class=\"progress\">","            <span class=\"percent\">27%</span>","            <span class=\"due\">due in 2 weeks</span>","            <div class=\"outer bar\">","              <div class=\"inner bar red\" style=\"width:27%\"></div>","            </div>","          </div>","        </td>","      </tr>","      <tr>","        <td><a class=\"repo\" href=\"#\">microsoft/windows</a></td>","        <td><span class=\"milestone\">RC 9 <span class=\"icon down-open\"></span></a></td>","        <td>","          <div class=\"progress\">","            <span class=\"percent\">90%</span>","            <span class=\"due red\">overdue by a month</span>","            <div class=\"outer bar\">","              <div class=\"inner bar red\" style=\"width:90%\"></div>","            </div>","          </div>","        </td>","      </tr>","    -->","    </table>","","    <div class=\"footer\">","      <a href=\"#\"><Icons icon=\"cog\"/> Edit</a>","    </div>","  </div>","{{/projects.list}}"].join("\n");
+      module.exports = ["{{#projects.list.length}}","  <div id=\"projects\">","    <div class=\"header\">","      <a href=\"#\" class=\"sort\"><Icons icon=\"sort-alphabet\"/> Sorted by priority</a>","      <h2>Projects</h2>","    </div>","","    <table>","      {{#projects.list}}","        {{#milestones}}","          <tr>","            <td class=\"repo\">","              <a class=\"project\" href=\"#{{owner}}/{{name}}\">{{owner}}/{{name}}</a>","            </td>","            <td>","              <a class=\"milestone\" href=\"#{{owner}}/{{name}}/{{number}}\">{{ title }}</a>","            </td>","            <td>","              <div class=\"progress\">","                <span class=\"percent\">{{Math.floor(format.progress(closed_issues, open_issues))}}%</span>","                <span class=\"due\">{{{ format.due(due_on) }}}</span>","                <div class=\"outer bar\">","                  <div class=\"inner bar {{format.onTime(this)}}\" style=\"width:{{format.progress(closed_issues, open_issues)}}%\"></div>","                </div>","              </div>","            </td>","          </tr>","        {{/milestones}}","      {{/projects.list}}","","    <!--","      <tr>","        <td><a class=\"repo\" href=\"#\">radekstepan/disposable</a></td>","        <td><span class=\"milestone\">Milestone 1.0 <span class=\"icon down-open\"></span></td>","        <td>","          <div class=\"progress\">","            <span class=\"percent\">40%</span>","            <span class=\"due\">due on Friday</span>","            <div class=\"outer bar\">","              <div class=\"inner bar red\" style=\"width:40%\"></div>","            </div>","          </div>","        </td>","      </tr>","      <tr class=\"done\">","        <td><a class=\"repo\" href=\"#\">radekstepan/burnchart</a></td>","        <td><span class=\"milestone\">Beta Milestone <span class=\"icon down-open\"></span></a></td>","        <td>","          <div class=\"progress\">","            <span class=\"percent\">100%</span>","            <span class=\"due\">due tomorrow</span>","            <div class=\"outer bar\">","              <div class=\"inner bar green\" style=\"width:100%\"></div>","            </div>","          </div>","        </td>","      </tr>","      <tr>","        <td><a class=\"repo\" href=\"#\">intermine/intermine</a></td>","        <td><span class=\"milestone\">Emma Release 96 <span class=\"icon down-open\"></span></a></td>","        <td>","          <div class=\"progress\">","            <span class=\"percent\">27%</span>","            <span class=\"due\">due in 2 weeks</span>","            <div class=\"outer bar\">","              <div class=\"inner bar red\" style=\"width:27%\"></div>","            </div>","          </div>","        </td>","      </tr>","      <tr>","        <td><a class=\"repo\" href=\"#\">microsoft/windows</a></td>","        <td><span class=\"milestone\">RC 9 <span class=\"icon down-open\"></span></a></td>","        <td>","          <div class=\"progress\">","            <span class=\"percent\">90%</span>","            <span class=\"due red\">overdue by a month</span>","            <div class=\"outer bar\">","              <div class=\"inner bar red\" style=\"width:90%\"></div>","            </div>","          </div>","        </td>","      </tr>","    -->","    </table>","","    <div class=\"footer\">","      <a href=\"#\"><Icons icon=\"cog\"/> Edit</a>","    </div>","  </div>","{{/projects.list}}"].join("\n");
     });
 
     // date.coffee
@@ -41036,37 +41527,47 @@ if (typeof exports === 'object') {
       
     });
 
-    // addProject.coffee
-    root.require.register('burnchart/src/views/pages/addProject.js', function(exports, require, module) {
+    // chart.coffee
+    root.require.register('burnchart/src/views/pages/chart.js', function(exports, require, module) {
     
-      var mediator, user;
+      var format, milestone, project;
       
-      mediator = require('../../modules/mediator');
+      milestone = require('../../modules/milestone');
       
-      user = require('../../models/user');
+      project = require('../../modules/project');
+      
+      format = require('../../utils/format');
       
       module.exports = Ractive.extend({
-        'template': require('../../templates/pages/addProject'),
-        'data': {
-          'value': 'radekstepan/disposable',
-          user: user
-        },
+        'template': require('../../templates/pages/chart'),
         'adapt': [Ractive.adaptors.Ractive],
+        'data': {
+          format: format
+        },
         init: function() {
-          var autocomplete;
-          document.title = 'Add a new project';
-          autocomplete = function(value) {};
-          this.observe('value', _.debounce(autocomplete, 200), {
-            'init': false
-          });
-          return this.on('submit', function() {
-            var name, owner, _ref;
-            _ref = this.get('value').split('/'), owner = _ref[0], name = _ref[1];
-            return mediator.fire('!projects/add', {
-              owner: owner,
-              name: name
-            }, function() {
-              return window.location.hash = '#';
+          var name, owner, route, _ref,
+            _this = this;
+          _ref = this.get('route'), owner = _ref[0], name = _ref[1], milestone = _ref[2];
+          route = {
+            owner: owner,
+            name: name,
+            milestone: milestone
+          };
+          document.title = "" + owner + "/" + name + "/" + milestone;
+          return milestone.get(route, function(err, warn, obj) {
+            if (err) {
+              throw err;
+            }
+            if (warn) {
+              throw warn;
+            }
+            _this.set('milestone', obj);
+            route.milestone = obj;
+            return project(route, function(err) {
+              if (err) {
+                throw err;
+              }
+              return console.log('Done');
             });
           });
         }
@@ -41101,44 +41602,72 @@ if (typeof exports === 'object') {
       
     });
 
-    // showChart.coffee
-    root.require.register('burnchart/src/views/pages/showChart.js', function(exports, require, module) {
+    // new.coffee
+    root.require.register('burnchart/src/views/pages/new.js', function(exports, require, module) {
     
-      var format, milestone, project;
+      var mediator, user;
       
-      milestone = require('../../modules/milestone');
+      mediator = require('../../modules/mediator');
       
-      project = require('../../modules/project');
+      user = require('../../models/user');
+      
+      module.exports = Ractive.extend({
+        'template': require('../../templates/pages/new'),
+        'data': {
+          'value': 'radekstepan/disposable',
+          user: user
+        },
+        'adapt': [Ractive.adaptors.Ractive],
+        init: function() {
+          var autocomplete;
+          document.title = 'Add a new project';
+          autocomplete = function(value) {};
+          this.observe('value', _.debounce(autocomplete, 200), {
+            'init': false
+          });
+          return this.on('submit', function() {
+            var name, owner, _ref;
+            _ref = this.get('value').split('/'), owner = _ref[0], name = _ref[1];
+            return mediator.fire('!projects/add', {
+              owner: owner,
+              name: name
+            }, function() {
+              return window.location.hash = '#';
+            });
+          });
+        }
+      });
+      
+    });
+
+    // project.coffee
+    root.require.register('burnchart/src/views/pages/project.js', function(exports, require, module) {
+    
+      var Hero, Projects, format;
+      
+      Hero = require('../hero');
+      
+      Projects = require('../projects');
       
       format = require('../../utils/format');
       
       module.exports = Ractive.extend({
-        'template': require('../../templates/pages/showChart'),
-        'adapt': [Ractive.adaptors.Ractive],
+        'template': require('../../templates/pages/project'),
+        'components': {
+          Hero: Hero,
+          Projects: Projects
+        },
         'data': {
           format: format
         },
         init: function() {
-          var route,
-            _this = this;
-          route = this.get('route');
-          document.title = "" + route.owner + "/" + route.name;
-          return milestone.get(route, function(err, warn, obj) {
-            if (err) {
-              throw err;
-            }
-            if (warn) {
-              throw warn;
-            }
-            _this.set('milestone', obj);
-            route.milestone = obj;
-            return project(route, function(err) {
-              if (err) {
-                throw err;
-              }
-              return console.log('Done');
-            });
-          });
+          var name, owner, route, _ref;
+          _ref = this.get('route'), owner = _ref[0], name = _ref[1];
+          route = {
+            owner: owner,
+            name: name
+          };
+          return document.title = "" + owner + "/" + name;
         }
       });
       

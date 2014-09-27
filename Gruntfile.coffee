@@ -35,7 +35,6 @@ module.exports = (grunt) ->
                     'vendor/ractive-adaptor/adaptor.js'
                     'vendor/firebase/firebase.js'
                     'vendor/firebase-simple-login/firebase-simple-login.js'
-                    'vendor/grapnel/src/grapnel.js'
                     'vendor/superagent/superagent.js'
                     'vendor/localforage/dist/localforage.js'
                     'vendor/async/lib/async.js'
@@ -43,6 +42,7 @@ module.exports = (grunt) ->
                     'vendor/d3/d3.js'
                     'vendor/d3-tip/index.js'
                     'vendor/marked/lib/marked.js'
+                    'vendor/director/build/director.js'
                     # Our app.
                     'public/js/app.js'
                 ]
