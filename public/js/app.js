@@ -1074,15 +1074,16 @@
           'top': HEIGHT
         },
         init: function() {
-          var defaults,
+          var defaults, hide, show,
             _this = this;
           defaults = {
             'text': '',
             'type': '',
             'system': false,
-            'icon': 'megaphone'
+            'icon': 'megaphone',
+            'ttl': 5e3
           };
-          return mediator.on('!app/notify', function(opts) {
+          show = function(opts) {
             var pos;
             opts = _.defaults(opts, defaults);
             _this.set(opts);
@@ -1091,15 +1092,21 @@
               'easing': d3.ease('bounce'),
               'duration': 800
             });
-            return _.delay(function() {
-              return _this.animate('top', HEIGHT, {
-                'easing': d3.ease('back'),
-                'complete': function() {
-                  return _this.set('text', null);
-                }
-              });
-            }, 5e3);
-          });
+            if (!opts.ttl) {
+              return;
+            }
+            return _.delay(hide, opts.ttl);
+          };
+          hide = function() {
+            return _this.animate('top', HEIGHT, {
+              'easing': d3.ease('back'),
+              'complete': function() {
+                return _this.set('text', null);
+              }
+            });
+          };
+          mediator.on('!app/notify', show);
+          return mediator.on('!app/notify/hide', hide);
         },
         'components': {
           Icons: Icons
