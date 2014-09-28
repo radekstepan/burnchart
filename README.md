@@ -6,16 +6,9 @@ GitHub Burndown Chart as a service. Public repos are free, for private access au
 
 ## Tasks
 
-### MVP - Community Plan
-
-- [x] show a list of projects and their milestones with progress & due date
-- [x] show burnchart for that project milestone
-- [x] show all issues as [one size](https://github.com/radekstepan/github-burndown-chart/issues/46)
-- [x] use `localStorage` to save project names
-- [ ] show a milestones page where we see a table ala projects but for only one project
-
 ### The 20%
 
+- [ ] allow user to close topbar messages
 - [ ] verify that project exists on project page when fetching it remotely (add behind the scenes)
 - [ ] need to show status (receiving information etc.) per repo
 - [ ] provide a documentation site
@@ -35,15 +28,8 @@ GitHub Burndown Chart as a service. Public repos are free, for private access au
 - [ ] highlight for a moment recently changed milestone
 - [ ] smooth animation when transitioning between icons and notifications
 - [ ] show logged-in state only after it is known
-- [x] how does a message look like when we have an error and nothing to render?
-- [x] format milestone titles prepending "Milestone" word if appropriate
-- [x] Variable document.title on different pages
-- [x] be able to go back to homepage
-- [x] deal with no due date milestones - always on track
-- [x] show title on the chart page
-- [x] work for `mbostock/d3`
-- [x] allow people to go straight to a URL that fetches the repo, if public, for them; to demo our app without adding a repo (add it behind the scenes); *req* cache repos
-- [x] closed issues can be moved to a newly created milestone, this messes up the chart since we assume milestone is created first!
+- [ ] trigger success topbar when we have completed a milestone on chart page; show plain when we are behind
+- [ ] on chart page show a little progress bar in the title
 
 ### Extras
 
@@ -80,6 +66,8 @@ GitHub Burndown Chart as a service. Public repos are free, for private access au
 - [ ] if all issue circles are close to each other, make a "master circle" that amalgamates all the issues into one large circle, makes for a prettier view
 - [ ] tell people if they have no due date
 - [ ] make better x-axis date display, otherwise we see all 1s.
+- [ ] some [fun loading messages](http://www.gamefaqs.com/pc/561176-simcity-4/faqs/22135) from Sim City.
+- [ ] show number of tasks, points, days left just like in Assembly
 
 ## Notes
 
