@@ -16,6 +16,7 @@ GitHub Burndown Chart as a service. Public repos are free, for private access au
 
 ### The 20%
 
+- [ ] deal with Firebase timing out, are we still logged-in?
 - [ ] on system-wide notifications show a button that takes us to the index unless we are on index
 - [ ] mediator `!app/notify/edit` will edit the current notification
 - [ ] slide topbar up a bit on hover so that the user can click the menu
