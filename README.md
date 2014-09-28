@@ -13,6 +13,7 @@ GitHub Burndown Chart as a service. Public repos are free, for private access au
 - [x] show all issues as [one size](https://github.com/radekstepan/github-burndown-chart/issues/46)
 - [x] use `localStorage` to save project names
 - [ ] show a milestones page where we see a table ala projects but for only one project
+- [ ] create ui sketches for all app states
 
 ### The 20%
 
