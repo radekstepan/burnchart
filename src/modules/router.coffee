@@ -1,4 +1,5 @@
 mediator = require './mediator'
+system   = require '../models/system'
 
 el = '#page'
 
@@ -15,9 +16,14 @@ module.exports = window.router = router = Router
   '/reset': ->
     mediator.fire '!projects/clear'
     window.location.hash = '#'
+  # Fake loading & notification.
   '/notify': ->
-    mediator.fire '!app/loading', yes
+    done = do system.async
+    
     mediator.fire '!app/notify',
-      'text': 'You have some interesting news in your inbox. Go check it out now.'
-      'type': 'warn'
+      'text':   'You have some interesting news in your inbox. Go check it out now.'
+      'type':   'warn'
+      'system': yes
     window.location.hash = '#'
+
+    _.delay done, 3e3

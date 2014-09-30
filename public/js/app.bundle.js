@@ -40574,6 +40574,39 @@ Router.prototype.mount = function(routes, path) {
       
     });
 
+    // system.coffee
+    root.require.register('burnchart/src/models/system.js', function(exports, require, module) {
+    
+      var Model, async, counter, mediator, system;
+      
+      mediator = require('../modules/mediator');
+      
+      Model = require('../utils/model');
+      
+      system = new Model({
+        'data': {
+          'loading': false
+        }
+      });
+      
+      counter = 0;
+      
+      async = function() {
+        counter += 1;
+        system.set('loading', true);
+        return function() {
+          counter -= 1;
+          return system.set('loading', +counter);
+        };
+      };
+      
+      module.exports = {
+        system: system,
+        async: async
+      };
+      
+    });
+
     // user.coffee
     root.require.register('burnchart/src/models/user.js', function(exports, require, module) {
     
@@ -41178,10 +41211,12 @@ Router.prototype.mount = function(routes, path) {
     // router.coffee
     root.require.register('burnchart/src/modules/router.js', function(exports, require, module) {
     
-      var el, mediator, route, router,
+      var el, mediator, route, router, system,
         __slice = [].slice;
       
       mediator = require('./mediator');
+      
+      system = require('../models/system');
       
       el = '#page';
       
@@ -41207,12 +41242,15 @@ Router.prototype.mount = function(routes, path) {
           return window.location.hash = '#';
         },
         '/notify': function() {
-          mediator.fire('!app/loading', true);
+          var done;
+          done = system.async();
           mediator.fire('!app/notify', {
             'text': 'You have some interesting news in your inbox. Go check it out now.',
-            'type': 'warn'
+            'type': 'warn',
+            'system': true
           });
-          return window.location.hash = '#';
+          window.location.hash = '#';
+          return _.delay(done, 3e3);
         }
       });
       
@@ -41383,11 +41421,11 @@ Router.prototype.mount = function(routes, path) {
     // header.coffee
     root.require.register('burnchart/src/views/header.js', function(exports, require, module) {
     
-      var Icons, firebase, mediator, user;
+      var Icons, firebase, system, user;
+      
+      system = require('../models/system').system;
       
       firebase = require('../modules/firebase');
-      
-      mediator = require('../modules/mediator');
       
       user = require('../models/user');
       
@@ -41408,7 +41446,7 @@ Router.prototype.mount = function(routes, path) {
               }
             });
           });
-          return mediator.on('!app/loading', function(ya) {
+          return system.observe('loading', function(ya) {
             return _this.set('icon', ya ? 'spinner1' : 'fire-station');
           });
         },
@@ -41572,7 +41610,9 @@ Router.prototype.mount = function(routes, path) {
     // chart.coffee
     root.require.register('burnchart/src/views/pages/chart.js', function(exports, require, module) {
     
-      var format, milestone, project;
+      var format, milestone, project, system;
+      
+      system = require('../../models/system');
       
       milestone = require('../../modules/milestone');
       
@@ -41609,7 +41649,6 @@ Router.prototype.mount = function(routes, path) {
               if (err) {
                 throw err;
               }
-              return console.log('Done');
             });
           });
         }

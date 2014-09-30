@@ -2,6 +2,8 @@
 
 ##Release: MVP
 
+- [ ] create a 500/400/loading system messages
+- [ ] slide top menu on page load too
 - [ ] allow user to close topbar messages
 - [ ] deal with Firebase timing out, are we still logged-in?
 - [ ] on system-wide notifications show a button that takes us to the index unless we are on index
@@ -9,7 +11,6 @@
 - [ ] slide topbar up a bit on hover so that the user can click the menu
 - [ ] landing/index page needs to show (hero box) immediately
 - [ ] logged-in state slides into view independent of page loading
-- [ ] have a queue for loading that calls back (emits a mediator message) when it is empty and emits another one when we are busy; wrap each async operations in this doing a `cb` when we are done with 1
 - [ ] verify that project exists on project page when fetching it remotely (add behind the scenes)
 - [ ] need to show status (receiving information etc.) per repo
 - [ ] provide a documentation site

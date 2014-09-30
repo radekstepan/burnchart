@@ -1,7 +1,7 @@
-firebase = require '../modules/firebase'
-mediator = require '../modules/mediator'
-user     = require '../models/user'
-Icons    = require './icons'
+{ system } = require '../models/system'
+firebase   = require '../modules/firebase'
+user       = require '../models/user'
+Icons      = require './icons'
 
 module.exports = Ractive.extend
 
@@ -19,7 +19,7 @@ module.exports = Ractive.extend
         throw err if err
 
     # Switch loading icon with app icon.
-    mediator.on '!app/loading', (ya) =>
+    system.observe 'loading', (ya) =>
       @set 'icon', if ya then 'spinner1' else 'fire-station'
 
   'components': { Icons }

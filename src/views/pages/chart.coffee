@@ -1,3 +1,4 @@
+system    = require '../../models/system'
 milestone = require '../../modules/milestone'
 project   = require '../../modules/project'
 format    = require '../../utils/format'
@@ -25,4 +26,3 @@ module.exports = Ractive.extend
 
       project route, (err) ->
         throw err if err
-        console.log 'Done'
