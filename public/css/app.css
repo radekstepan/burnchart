@@ -42,11 +42,13 @@ ul{list-style-type:none;margin:0;padding:0;}
 ul li{display:inline-block}
 .wrap{width:800px;margin:0 auto}
 #notify{position:fixed;top:-68px;z-index:1;width:100%;background:#fcfcfc;color:#aaafbf;border-top:3px solid #aaafbf;border-bottom:1px solid #f3f4f8;}
+#notify .close{float:right;font-size:16px;padding:22px;cursor:pointer;}
+#notify .close:before{content:"\d7";display:block}
 #notify.system{top:0%;left:50%;-webkit-transform:translateX(-50%) translateY(-50%);-moz-transform:translateX(-50%) translateY(-50%);-o-transform:translateX(-50%) translateY(-50%);-ms-transform:translateX(-50%) translateY(-50%);transform:translateX(-50%) translateY(-50%);width:500px;}
 #notify.system p{padding-top:20px}
-#notify.success{border-top-color:#00b361;color:#00b361}
-#notify.warn{border-top-color:#ea9712;color:#ea9712}
-#notify.alert{border-top-color:#c1041c;color:#c1041c}
+#notify.success,#notify.ok,#notify.good{border-top-color:#00b361;color:#00b361}
+#notify.warn,#notify.trouble{border-top-color:#ea9712;color:#ea9712}
+#notify.alert,#notify.bad,#notify.fucked{border-top-color:#c1041c;color:#c1041c}
 #notify .icon,#notify p{display:block}
 #notify .icon{font-size:26px;padding:18px;width:38px;float:left}
 #notify p{padding:22px 20px 20px 74px;text-align:justify}

@@ -21,9 +21,8 @@ module.exports = window.router = router = Router
     done = do system.async
     
     mediator.fire '!app/notify',
-      'text':   'You have some interesting news in your inbox. Go check it out now.'
-      'type':   'warn'
-      'system': yes
+      'text': 'You have some interesting news in your inbox. Go check it out now.'
+      'type': 'warn'
     window.location.hash = '#'
 
     _.delay done, 3e3

@@ -11,6 +11,8 @@ module.exports = Ractive.extend
     'top': HEIGHT
 
   init: ->
+    hidden = yes
+
     defaults =
       'text': ''
       'type': ''
@@ -19,13 +21,11 @@ module.exports = Ractive.extend
       'ttl':  5e3
 
     # Show a notification.
-    # type:   alert/warn/success
-    # system: yes/no
     show = (opts) =>
-      opts = _.defaults opts, defaults
-
-      # Set the text.
-      @set opts
+      hidden = no
+      
+      # Set the opts.
+      @set opts = _.defaults opts, defaults
       # Which position to slide to?
       pos = [ 0, 50 ][ +opts.system ] # 0px or 50% from top
       # Slide into view.
@@ -41,6 +41,9 @@ module.exports = Ractive.extend
 
     # Hide a notification.
     hide = =>
+      return if hidden
+      hidden = yes
+
       @animate 'top', HEIGHT,
         'easing': d3.ease('back')
         'complete': =>
@@ -50,6 +53,9 @@ module.exports = Ractive.extend
     # On outside messages.
     mediator.on '!app/notify', show
     mediator.on '!app/notify/hide', hide
+
+    # Close us prematurely...
+    @on 'close', hide
 
   'components': { Icons }
 

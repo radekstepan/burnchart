@@ -40,6 +40,16 @@ ul
   border-top: 3px solid #AAAFBF
   border-bottom: 1px solid #F3F4F8
 
+  .close
+    float: right
+    font-size: 16px
+    padding: 22px
+    cursor: pointer
+    
+    &:before
+      content: "\d7"
+      display: block
+
   // system-wide notification
   &.system
     top: 0%  // hide from view
@@ -50,15 +60,15 @@ ul
     p
       padding-top: 20px
 
-  &.success
+  &.success, &.ok, &.good
     border-top-color: #00B361
     color: #00B361
 
-  &.warn
+  &.warn, &.trouble
     border-top-color: #EA9712
     color: #EA9712
 
-  &.alert
+  &.alert, &.bad, &.fucked
     border-top-color: $strong_color
     color: $strong_color
 

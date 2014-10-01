@@ -4,7 +4,6 @@
 
 - [ ] create a 500/400/loading system messages
 - [ ] slide top menu on page load too
-- [ ] allow user to close topbar messages
 - [ ] deal with Firebase timing out, are we still logged-in?
 - [ ] on system-wide notifications show a button that takes us to the index unless we are on index
 - [ ] mediator `!app/notify/edit` will edit the current notification
@@ -32,6 +31,7 @@
 - [ ] show logged-in state only after it is known
 - [ ] trigger success topbar when we have completed a milestone on chart page; show plain when we are behind
 - [ ] on chart page show a little progress bar in the title
+- [ ] use tap plugin for Ractive
 
 ##Future Releases
 

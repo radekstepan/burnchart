@@ -793,8 +793,7 @@
           done = system.async();
           mediator.fire('!app/notify', {
             'text': 'You have some interesting news in your inbox. Go check it out now.',
-            'type': 'warn',
-            'system': true
+            'type': 'warn'
           });
           window.location.hash = '#';
           return _.delay(done, 3e3);
@@ -836,7 +835,7 @@
     // notify.mustache
     root.require.register('burnchart/src/templates/notify.js', function(exports, require, module) {
     
-      module.exports = ["{{#text}}","  {{#system}}","    <div id=\"notify\" class=\"{{type}} system\" style=\"top:{{top}}%\">","      <Icons icon=\"{{icon}}\"/>","      <p>{{text}}</p>","    </div>","  {{else}}","    <div id=\"notify\" class=\"{{type}}\" style=\"top:{{-top}}px\">","      <Icons icon=\"{{icon}}\"/>","      <p>{{text}}</p>","    </div>","  {{/system}}","{{/text}}"].join("\n");
+      module.exports = ["{{#text}}","  {{#system}}","    <div id=\"notify\" class=\"{{type}} system\" style=\"top:{{top}}%\">","      <Icons icon=\"{{icon}}\"/>","      <p>{{text}}</p>","    </div>","  {{else}}","    <div id=\"notify\" class=\"{{type}}\" style=\"top:{{-top}}px\">","      <span class=\"close\" on-click=\"close\" />","      <Icons icon=\"{{icon}}\"/>","      <p>{{text}}</p>","    </div>","  {{/system}}","{{/text}}"].join("\n");
     });
 
     // chart.mustache
@@ -1112,8 +1111,9 @@
           'top': HEIGHT
         },
         init: function() {
-          var defaults, hide, show,
+          var defaults, hidden, hide, show,
             _this = this;
+          hidden = true;
           defaults = {
             'text': '',
             'type': '',
@@ -1123,8 +1123,8 @@
           };
           show = function(opts) {
             var pos;
-            opts = _.defaults(opts, defaults);
-            _this.set(opts);
+            hidden = false;
+            _this.set(opts = _.defaults(opts, defaults));
             pos = [0, 50][+opts.system];
             _this.animate('top', pos, {
               'easing': d3.ease('bounce'),
@@ -1136,6 +1136,10 @@
             return _.delay(hide, opts.ttl);
           };
           hide = function() {
+            if (hidden) {
+              return;
+            }
+            hidden = true;
             return _this.animate('top', HEIGHT, {
               'easing': d3.ease('back'),
               'complete': function() {
@@ -1144,7 +1148,8 @@
             });
           };
           mediator.on('!app/notify', show);
-          return mediator.on('!app/notify/hide', hide);
+          mediator.on('!app/notify/hide', hide);
+          return this.on('close', hide);
         },
         'components': {
           Icons: Icons

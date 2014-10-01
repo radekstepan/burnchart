@@ -6,6 +6,7 @@
     </div>
   {{else}}
     <div id="notify" class="{{type}}" style="top:{{-top}}px">
+      <span class="close" on-click="close" />
       <Icons icon="{{icon}}"/>
       <p>{{text}}</p>
     </div>
