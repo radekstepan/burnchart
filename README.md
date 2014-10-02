@@ -9,7 +9,7 @@ GitHub Burndown Chart as a service. Public repos are free, for private access au
 - *payment gateways* in Canada: [Shopify](http://www.shopify.com/payment-gateways/canada), [Chargify](http://chargify.com/payment-gateways/) list; I get free processing on first $1000 with [Stripe](https://education.github.com/pack/offers)
 - start people on a *Community* plan showing them a comparison table to upgrade to a better offering
 - community (open source, local storage), business (private repos, firebase)
-- keep discussion going via [gitter](http://gitter.im)
+- keep discussion going via [gitter](http://gitter.im) or have people comment from the app via [helpful](https://helpful.io/)
 - [credit card form](http://designmodo.com/ux-credit-card-payment-form/) ux from Designmodo
 - workers: using a free instance of IronWorker and assuming 5s runtime each time gives us a poll every 6 minutes. Zapier would poll every 15 minutes but already integrates Stripe and FB.
 - worst case scenario I provide even Small Business plan for free and provide a better experience
