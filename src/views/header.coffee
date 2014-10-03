@@ -12,12 +12,13 @@ module.exports = Ractive.extend
     # Default app icon.
     'icon': 'fire-station'
 
-  init: ->
+  onconstruct: ->
     # Login user.
     @on '!login', ->
       firebase.login (err) ->
         throw err if err
 
+  onrender: ->
     # Switch loading icon with app icon.
     system.observe 'loading', (ya) =>
       @set 'icon', if ya then 'spinner1' else 'fire-station'

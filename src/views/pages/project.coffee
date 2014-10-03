@@ -6,7 +6,7 @@ module.exports = Ractive.extend
 
   'components': { Milestones }
 
-  init: ->
+  onrender: ->
     [ owner, name ] = @get 'route'
     
     document.title = "#{owner}/#{name}"

@@ -1,10 +1,10 @@
-# burnchart.io
+#burnchart.io
 
-## Concept
+##Concept
 
 GitHub Burndown Chart as a service. Public repos are free, for private access auth via GitHub and pay.
 
-## Notes
+##Notes
 
 - *payment gateways* in Canada: [Shopify](http://www.shopify.com/payment-gateways/canada), [Chargify](http://chargify.com/payment-gateways/) list; I get free processing on first $1000 with [Stripe](https://education.github.com/pack/offers)
 - start people on a *Community* plan showing them a comparison table to upgrade to a better offering
@@ -17,15 +17,15 @@ GitHub Burndown Chart as a service. Public repos are free, for private access au
 - let people vote on features they want to see fast: [tally.tl](http://tally.tl/).
 - use [readme.io](https://readme.io/) for documentation
 
-## Plans
+##Plans
 
-### Community
+###Community
 
 - your repos are saved locally
 - no auto-updates to milestones, everything fetched on page load
 - no private repos
 
-### Business
+###Business
 
 - you need to pay for a license to use the app for business purposes
 - repos, milestones saved remotely

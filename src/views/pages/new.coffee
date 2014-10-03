@@ -9,7 +9,7 @@ module.exports = Ractive.extend
 
   'adapt': [ Ractive.adaptors.Ractive ]
 
-  init: ->
+  onrender: ->
     document.title = 'Add a new project'
 
     # TODO: autocomplete on our username if we are logged in or based

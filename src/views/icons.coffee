@@ -21,7 +21,7 @@ module.exports = Ractive.extend
 
   'isolated': yes
 
-  init: ->
+  onrender: ->
     @observe 'icon', (icon) ->
       if icon and hex = codes[icon]
         @set 'code', utils.hexToDecimal hex

@@ -11,7 +11,7 @@ module.exports = Ractive.extend
 
   'data': { format }
 
-  init: ->
+  onrender: ->
     [ owner, name, milestone ] = @get 'route'
     route = { owner, name, milestone }
     

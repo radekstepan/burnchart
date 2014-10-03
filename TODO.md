@@ -2,7 +2,7 @@
 
 ##Release: MVP
 
-- [ ] upgrade to Ractive [0.6.0](https://github.com/ractivejs/ractive/blob/dev/CHANGELOG.md)
+- [x] upgrade to Ractive [0.6.0](https://github.com/ractivejs/ractive/blob/dev/CHANGELOG.md)
 - [ ] create a 500/400/loading system messages
 - [ ] slide top menu on page load too
 - [ ] deal with Firebase timing out, are we still logged-in?

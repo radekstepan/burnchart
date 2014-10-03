@@ -14,7 +14,7 @@ App = Ractive.extend
 
   'components': { Header, Notify }
 
-  init: ->
+  onrender: ->
     router.init '/'
 
 module.exports = new App()

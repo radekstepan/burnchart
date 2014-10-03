@@ -10,5 +10,5 @@ module.exports = Ractive.extend
 
   'data': { format }
 
-  init: ->
-    document.title = 'BurnChart: GitHub Burndown Chart as a Service'
+  onrender: ->
+    document.title = 'Burnchart: GitHub Burndown Chart as a Service'

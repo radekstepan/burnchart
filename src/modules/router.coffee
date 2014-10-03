@@ -7,7 +7,7 @@ route = (page, args...) ->
   Page = require "../views/pages/#{page}"
   new Page { el, 'data': { 'route': args } }
 
-module.exports = window.router = router = Router
+routes =
   '/':                        _.partial route, 'index'
   '/new/project':             _.partial route, 'new'
   '/:owner/:name':            _.partial route, 'project'
@@ -26,3 +26,7 @@ module.exports = window.router = router = Router
     window.location.hash = '#'
 
     _.delay done, 3e3
+
+# Flatiron Director router.
+module.exports = Router(routes).configure
+  'strict': no # allow trailing slashes

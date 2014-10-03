@@ -27,7 +27,7 @@
           Header: Header,
           Notify: Notify
         },
-        init: function() {
+        onrender: function() {
           return router.init('/');
         }
       });
@@ -83,38 +83,43 @@
         'data': {
           'list': []
         },
-        init: function() {
-          var _this = this;
-          localforage.getItem('projects', function(projects) {
-            if (projects == null) {
-              projects = [];
+        load: function(projects) {
+          if (projects == null) {
+            projects = [];
+          }
+          return async.each(projects, function(project, cb) {
+            return mediator.fire('!projects/add', project);
+          }, function(err) {
+            if (err) {
+              throw err;
             }
-            return async.each(projects, function(project, cb) {
-              return mediator.fire('!projects/add', project);
-            }, function(err) {
-              if (err) {
-                throw err;
-              }
-            });
           });
-          this.observe('list', function(projects) {
+        },
+        add: function(repo, add) {
+          var _this = this;
+          return request.allMilestones(repo, function(err, res) {
+            var milestones;
+            if (err) {
+              return done(err);
+            }
+            milestones = _.pluckMany(res, config.get('fields.milestone'));
+            _this.push('list', _.merge(repo, {
+              milestones: milestones
+            }));
+            return done();
+          });
+        },
+        clear: function() {
+          return this.set('list', []);
+        },
+        onconstruct: function() {
+          localforage.getItem('projects', _.bind(this.load, this));
+          mediator.on('!projects/add', _.bind(this.add, this));
+          return mediator.on('!projects/clear', _.bind(this.clear, this));
+        },
+        onrender: function() {
+          return this.observe('list', function(projects) {
             return localforage.setItem('projects', projects);
-          });
-          mediator.on('!projects/add', function(repo, done) {
-            return request.allMilestones(repo, function(err, res) {
-              var milestones;
-              if (err) {
-                return done(err);
-              }
-              milestones = _.pluckMany(res, config.get('fields.milestone'));
-              _this.push('list', _.merge(repo, {
-                milestones: milestones
-              }));
-              return done();
-            });
-          });
-          return mediator.on('!projects/clear', function() {
-            return _this.set('list', []);
           });
         }
       });
@@ -758,7 +763,7 @@
     // router.coffee
     root.require.register('burnchart/src/modules/router.js', function(exports, require, module) {
     
-      var el, mediator, route, router, system,
+      var el, mediator, route, routes, system,
         __slice = [].slice;
       
       mediator = require('./mediator');
@@ -779,7 +784,7 @@
         });
       };
       
-      module.exports = window.router = router = Router({
+      routes = {
         '/': _.partial(route, 'index'),
         '/new/project': _.partial(route, 'new'),
         '/:owner/:name': _.partial(route, 'project'),
@@ -798,6 +803,10 @@
           window.location.hash = '#';
           return _.delay(done, 3e3);
         }
+      };
+      
+      module.exports = Router(routes).configure({
+        'strict': false
       });
       
     });
@@ -983,15 +992,17 @@
           'user': user,
           'icon': 'fire-station'
         },
-        init: function() {
-          var _this = this;
-          this.on('!login', function() {
+        onconstruct: function() {
+          return this.on('!login', function() {
             return firebase.login(function(err) {
               if (err) {
                 throw err;
               }
             });
           });
+        },
+        onrender: function() {
+          var _this = this;
           return system.observe('loading', function(ya) {
             return _this.set('icon', ya ? 'spinner1' : 'fire-station');
           });
@@ -1053,7 +1064,7 @@
       module.exports = Ractive.extend({
         'template': require('../templates/icons'),
         'isolated': true,
-        init: function() {
+        onrender: function() {
           return this.observe('icon', function(icon) {
             var hex;
             if (icon && (hex = codes[icon])) {
@@ -1084,7 +1095,7 @@
           Icons: Icons
         },
         'adapt': [Ractive.adaptors.Ractive],
-        init: function() {
+        onconstruct: function() {
           return this.set('milestones', _.filter(projects.get('list'), {
             'owner': this.get('owner'),
             'name': this.get('name')
@@ -1108,48 +1119,47 @@
       module.exports = Ractive.extend({
         'template': require('../templates/notify'),
         'data': {
-          'top': HEIGHT
-        },
-        init: function() {
-          var defaults, hidden, hide, show,
-            _this = this;
-          hidden = true;
-          defaults = {
+          'top': HEIGHT,
+          'hidden': true,
+          'defaults': {
             'text': '',
             'type': '',
             'system': false,
             'icon': 'megaphone',
             'ttl': 5e3
-          };
-          show = function(opts) {
-            var pos;
-            hidden = false;
-            _this.set(opts = _.defaults(opts, defaults));
-            pos = [0, 50][+opts.system];
-            _this.animate('top', pos, {
-              'easing': d3.ease('bounce'),
-              'duration': 800
-            });
-            if (!opts.ttl) {
-              return;
+          }
+        },
+        show: function(opts) {
+          var pos;
+          this.set('hidden', false);
+          this.set(opts = _.defaults(opts, this.data.defaults));
+          pos = [0, 50][+opts.system];
+          this.animate('top', pos, {
+            'easing': d3.ease('bounce'),
+            'duration': 800
+          });
+          if (!opts.ttl) {
+            return;
+          }
+          return _.delay(_.bind(this.hide, this), opts.ttl);
+        },
+        hide: function() {
+          var _this = this;
+          if (this.data.hidden) {
+            return;
+          }
+          this.set('hidden', true);
+          return this.animate('top', HEIGHT, {
+            'easing': d3.ease('back'),
+            'complete': function() {
+              return _this.set('text', null);
             }
-            return _.delay(hide, opts.ttl);
-          };
-          hide = function() {
-            if (hidden) {
-              return;
-            }
-            hidden = true;
-            return _this.animate('top', HEIGHT, {
-              'easing': d3.ease('back'),
-              'complete': function() {
-                return _this.set('text', null);
-              }
-            });
-          };
-          mediator.on('!app/notify', show);
-          mediator.on('!app/notify/hide', hide);
-          return this.on('close', hide);
+          });
+        },
+        onconstruct: function() {
+          mediator.on('!app/notify', _.bind(this.show, this));
+          mediator.on('!app/notify/hide', _.bind(this.hide, this));
+          return this.on('close', this.hide);
         },
         'components': {
           Icons: Icons
@@ -1178,7 +1188,7 @@
         'data': {
           format: format
         },
-        init: function() {
+        onrender: function() {
           var name, owner, route, _ref,
             _this = this;
           _ref = this.get('route'), owner = _ref[0], name = _ref[1], milestone = _ref[2];
@@ -1228,8 +1238,8 @@
         'data': {
           format: format
         },
-        init: function() {
-          return document.title = 'BurnChart: GitHub Burndown Chart as a Service';
+        onrender: function() {
+          return document.title = 'Burnchart: GitHub Burndown Chart as a Service';
         }
       });
       
@@ -1251,7 +1261,7 @@
           user: user
         },
         'adapt': [Ractive.adaptors.Ractive],
-        init: function() {
+        onrender: function() {
           var autocomplete;
           document.title = 'Add a new project';
           autocomplete = function(value) {};
@@ -1285,7 +1295,7 @@
         'components': {
           Milestones: Milestones
         },
-        init: function() {
+        onrender: function() {
           var name, owner, _ref;
           _ref = this.get('route'), owner = _ref[0], name = _ref[1];
           return document.title = "" + owner + "/" + name;

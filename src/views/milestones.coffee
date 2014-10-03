@@ -10,7 +10,7 @@ module.exports = Ractive.extend
 
   'adapt': [ Ractive.adaptors.Ractive ]
 
-  init: ->
+  onconstruct: ->
     @set 'milestones', _.filter projects.get('list'),
       'owner': @get 'owner'
       'name':  @get 'name'
