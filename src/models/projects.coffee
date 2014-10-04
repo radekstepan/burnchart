@@ -17,7 +17,7 @@ module.exports = new Model
     , (err) ->
       throw err if err
 
-  add: (repo, add) ->
+  add: (repo, done) ->
     # TODO: warn when we are adding an existing repo (or
     #  silently go to index again).
 

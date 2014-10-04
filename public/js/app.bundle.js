@@ -41004,7 +41004,7 @@ Router.prototype.mount = function(routes, path) {
             }
           });
         },
-        add: function(repo, add) {
+        add: function(repo, done) {
           var _this = this;
           return request.allMilestones(repo, function(err, res) {
             var milestones;
@@ -41772,7 +41772,7 @@ Router.prototype.mount = function(routes, path) {
     // new.mustache
     root.require.register('burnchart/src/templates/pages/new.js', function(exports, require, module) {
     
-      module.exports = ["<div id=\"content\" class=\"wrap\">","  <div id=\"add\">","    <div class=\"header\">","      <h2>Add a Project</h2>","      <p>Type in the name of the repository as you would normally. If you'd like to add a private GitHub project, <a href=\"#\">Sign In</a> first.</p>","    </div>","","    <div class=\"form\">","      <table>","        <tr>","          <td>","            <input type=\"text\" placeholder=\"user/repo\" autocomplete=\"off\" value=\"{{value}}\">","          </td>","          <td>","            <a on-click=\"submit\">Add</a>","          </td>","        </tr>","      </table>","    </div>","  </div>","</div>"].join("\n");
+      module.exports = ["<div id=\"content\" class=\"wrap\">","  <div id=\"add\">","    <div class=\"header\">","      <h2>Add a Project</h2>","      <p>Type in the name of the repository as you would normally. If you'd like to add a private GitHub project, <a href=\"#\">Sign In</a> first.</p>","    </div>","","    <div class=\"form\">","      <table>","        <tr>","          <td>","            <input type=\"text\" placeholder=\"user/repo\" autocomplete=\"off\" value=\"{{value}}\" on-keyup=\"submit:{{value}}\">","          </td>","          <td>","            <a on-click=\"submit:{{value}}\">Add</a>","          </td>","        </tr>","      </table>","    </div>","  </div>","</div>"].join("\n");
     });
 
     // project.mustache
@@ -41844,6 +41844,21 @@ Router.prototype.mount = function(routes, path) {
         },
         hexToDecimal: function(hex) {
           return parseInt(hex, 16);
+        }
+      };
+      
+    });
+
+    // key.coffee
+    root.require.register('burnchart/src/utils/key.js', function(exports, require, module) {
+    
+      module.exports = {
+        is: function(evt) {
+          var _ref;
+          return (_ref = evt.original.type) === 'keyup' || _ref === 'keydown';
+        },
+        isEnter: function(evt) {
+          return evt.original.which === 13;
         }
       };
       
@@ -42158,11 +42173,15 @@ Router.prototype.mount = function(routes, path) {
     // new.coffee
     root.require.register('burnchart/src/views/pages/new.js', function(exports, require, module) {
     
-      var mediator, user;
+      var key, mediator, system, user;
       
       mediator = require('../../modules/mediator');
       
+      system = require('../../models/system');
+      
       user = require('../../models/user');
+      
+      key = require('../../utils/key');
       
       module.exports = Ractive.extend({
         'template': require('../../templates/pages/new'),
@@ -42171,6 +42190,25 @@ Router.prototype.mount = function(routes, path) {
           user: user
         },
         'adapt': [Ractive.adaptors.Ractive],
+        submit: function(evt, value) {
+          var done, name, owner, _ref;
+          if (key.is(evt) && !key.isEnter(evt)) {
+            return;
+          }
+          _ref = value.split('/'), owner = _ref[0], name = _ref[1];
+          done = system.async();
+          return mediator.fire('!projects/add', {
+            owner: owner,
+            name: name
+          }, function(err) {
+            done();
+            mediator.fire('!app/notify', {
+              'text': err || ("Project " + value + " saved."),
+              'type': err ? 'error' : 'success'
+            });
+            return window.location.hash = '#';
+          });
+        },
         onrender: function() {
           var autocomplete;
           document.title = 'Add a new project';
@@ -42178,16 +42216,8 @@ Router.prototype.mount = function(routes, path) {
           this.observe('value', _.debounce(autocomplete, 200), {
             'init': false
           });
-          return this.on('submit', function() {
-            var name, owner, _ref;
-            _ref = this.get('value').split('/'), owner = _ref[0], name = _ref[1];
-            return mediator.fire('!projects/add', {
-              owner: owner,
-              name: name
-            }, function() {
-              return window.location.hash = '#';
-            });
-          });
+          this.el.querySelector('input').focus();
+          return this.on('submit', this.submit);
         }
       });
       

@@ -9,10 +9,10 @@
       <table>
         <tr>
           <td>
-            <input type="text" placeholder="user/repo" autocomplete="off" value="{{value}}">
+            <input type="text" placeholder="user/repo" autocomplete="off" value="{{value}}" on-keyup="submit:{{value}}">
           </td>
           <td>
-            <a on-click="submit">Add</a>
+            <a on-click="submit:{{value}}">Add</a>
           </td>
         </tr>
       </table>

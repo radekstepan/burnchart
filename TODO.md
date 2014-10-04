@@ -2,36 +2,57 @@
 
 ##Release: MVP
 
-- [ ] create a 500/400/loading system messages
-- [ ] deal with Firebase timing out, are we still logged-in?
-- [ ] mediator `!app/notify/edit` will edit the current notification
-- [ ] verify that project exists on project page when fetching it remotely (add behind the scenes)
-- [ ] need to show status (receiving information etc.) per repo
-- [ ] provide a documentation site
-- [ ] visiting a chart page saves the project if it isn't saved already
-- [ ] landing page for the project and put message on my repo
-- [ ] Handle [404](https://www.firebase.com/docs/hosting/guide/url-redirects-rewrites.html#section-404) on routes; from catch all check if '/' or go 404 controller
-- [ ] allow `pushState` when [Firebase hosted](https://www.firebase.com/docs/hosting/guide/url-redirects-rewrites.html#section-rewrites)
+###GitHub
+
 - [ ] progress needs to be calculated based on strategy even on homepage, then sort the milestones based on priority
-- [ ] calculate left margin based on the total number of points text width
-- [ ] Do not show login/logged-in state when we are still fetching that information from Firebase
+
+###Notifications
+
+- [ ] create a 500/400/loading system messages
+- [ ] mediator `!app/notify/edit` will edit the current notification
+- [ ] need to show status (receiving information etc.) per repo
+
+###Error Handling
+
+- [ ] verify that project exists on project page when fetching it remotely (add behind the scenes)
+- [ ] deal with Firebase timing out, are we still logged-in?
+- [ ] visiting a chart page saves the project if it isn't saved already
+- [ ] Check that we have not run out of requests to make
+- [ ] can we get more than 1 notification at a time?
+- [x] Validate repo input and show a loading sign of sorts
+
+###Bugs
+
 - [ ] local storage is getting reset
 - [ ] a bit of a freeze when fetching `mbostock/d3`
-- [ ] Validate repo input and show a loading sign of sorts
-- [ ] Check that we have not run out of requests to make
-- [ ] Show loading sign on top of [browser window](https://github.com/buunguyen/topbar) which is unobtrusive enough we can show it immediately.
+
+###Docs
+
+- [ ] landing page for the project and put message on my repo
+- [ ] provide a documentation site
+
+###Routing
+
+- [ ] Handle [404](https://www.firebase.com/docs/hosting/guide/url-redirects-rewrites.html#section-404) on routes; from catch all check if '/' or go 404 controller
+- [ ] allow `pushState` when [Firebase hosted](https://www.firebase.com/docs/hosting/guide/url-redirects-rewrites.html#section-rewrites)
+
+###Style
+
+- [ ] focus on form fields style
+- [ ] switch off user select on buttons
+
+###Misc
+
+- [ ] show hero box or projects with a fade in and only when known
+- [ ] calculate left margin based on the total number of points text width
 - [ ] show a countdown clock towards the end of the milestone or show overdue
-- [ ] highlight for a moment recently changed milestone
-- [ ] smooth animation when transitioning between icons and notifications
-- [ ] show logged-in state only after it is known
 - [ ] trigger success topbar when we have completed a milestone on chart page; show plain when we are behind
 - [ ] on chart page show a little progress bar in the title
 - [ ] use tap plugin for Ractive
-- [x] logged-in state fade into view independent of page loading
-- [x] upgrade to Ractive [0.6.0](https://github.com/ractivejs/ractive/blob/dev/CHANGELOG.md)
 
 ##Future Releases
 
+- [ ] smooth animation when transitioning between icons and notifications
 - [ ] show animated lines when drawing the chart
 - [ ] highlight changes from past fetch
 - [ ] In add a project form autocomplete on my username, orgs I am member of and repos I have access to

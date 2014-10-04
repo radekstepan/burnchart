@@ -1,5 +1,7 @@
 mediator = require '../../modules/mediator'
+system   = require '../../models/system'
 user     = require '../../models/user'
+key      = require '../../utils/key'
 
 module.exports = Ractive.extend
 
@@ -8,6 +10,26 @@ module.exports = Ractive.extend
   'data': { 'value': 'radekstepan/disposable', user }
 
   'adapt': [ Ractive.adaptors.Ractive ]
+
+  # Listen to Enter keypress or Submit button click.
+  submit: (evt, value) ->
+    return if key.is(evt) and not key.isEnter(evt)
+
+    [ owner, name ] = value.split('/')
+
+    done = do system.async
+
+    # Save repo.
+    mediator.fire '!projects/add', { owner, name }, (err) ->
+      do done
+
+      mediator.fire '!app/notify',
+        'text': err or "Project #{value} saved."
+        'type': if err then 'error' else 'success'
+
+      # Redirect to the dashboard.
+      # TODO: trigger a named route
+      window.location.hash = '#'
 
   onrender: ->
     document.title = 'Add a new project'
@@ -18,14 +40,7 @@ module.exports = Ractive.extend
 
     @observe 'value', _.debounce(autocomplete, 200), { 'init': no }
 
-    # TODO: focus on the input field
+    # Focus on the input field.
+    do @el.querySelector('input').focus
 
-    # TODO: listen to Enter keypress.
-    @on 'submit', ->
-      [ owner, name ] = @get('value').split('/')
-
-      # TODO: save repo & persist.
-      mediator.fire '!projects/add', { owner, name }, ->
-        # Redirect to the dashboard.
-        # TODO: trigger a named route
-        window.location.hash = '#'
+    @on 'submit', @submit

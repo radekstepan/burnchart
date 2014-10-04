@@ -12,15 +12,14 @@ module.exports = Ractive.extend
     'hidden': yes
     'defaults':
       'text': ''
-      'type': ''
+      'type': '' # bland grey style
       'system': no
       'icon': 'megaphone'
       'ttl':  5e3
 
   # Show a notification.
   show: (opts) ->
-    @set 'hidden', no
-    
+    @set 'hidden', no    
     # Set the opts.
     @set opts = _.defaults opts, @data.defaults
     # Which position to slide to?
