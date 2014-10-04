@@ -2,6 +2,12 @@
 
 ##Release: MVP
 
+###Main
+
+1. Load projects from `localStorage`. If we are on *Project* or *Chart* page, add it behind the scenes.
+2. Now we fetch all milestones for our repo if we don't have any cached already. This calculates the points for each milestone. *The first two steps can happen on a Router level*
+3. Continue with page-specific actions.
+
 ###GitHub
 
 - [ ] progress needs to be calculated based on strategy even on homepage, then sort the milestones based on priority
@@ -10,26 +16,25 @@
 
 - [ ] create a 500/400/loading system messages
 - [ ] mediator `!app/notify/edit` will edit the current notification
-- [ ] need to show status (receiving information etc.) per repo
+- [ ] need to show status (receiving information etc.) per repo with little warning triangle when we get 400/500 on milestones
 
 ###Error Handling
 
 - [ ] verify that project exists on project page when fetching it remotely (add behind the scenes)
 - [ ] deal with Firebase timing out, are we still logged-in?
 - [ ] visiting a chart page saves the project if it isn't saved already
-- [ ] Check that we have not run out of requests to make
+- [ ] check that we have not run out of requests to make
 - [ ] can we get more than 1 notification at a time?
-- [x] Validate repo input and show a loading sign of sorts
 
 ###Bugs
 
-- [ ] local storage is getting reset
+- [ ] `localStorage` is getting reset
 - [ ] a bit of a freeze when fetching `mbostock/d3`
 
 ###Docs
 
-- [ ] landing page for the project and put message on my repo
-- [ ] provide a documentation site
+- [ ] landing page for the project and put message on `github-burndown-chart` repo
+- [ ] provide a documentation site (because we ref it from hero)
 
 ###Routing
 
@@ -39,20 +44,25 @@
 ###Style
 
 - [ ] focus on form fields style
-- [ ] switch off user select on buttons
+- [ ] switch off `user-select` on buttons
 
 ###Misc
 
+- [ ] implement search box that quickly takes you to a chart (and may hide "pro actions")
 - [ ] show hero box or projects with a fade in and only when known
 - [ ] calculate left margin based on the total number of points text width
 - [ ] show a countdown clock towards the end of the milestone or show overdue
 - [ ] trigger success topbar when we have completed a milestone on chart page; show plain when we are behind
 - [ ] on chart page show a little progress bar in the title
-- [ ] use tap plugin for Ractive
+- [ ] use tap plugin for `Ractive`
 - [ ] the app bundle (albeit uncompressed) clocks in at 1.5MB, reduce the size (d3 is huge)
+- [ ] make tests work again
+- [ ] use minified builds in production
+- [ ] move project to Assembly
 
 ##Future Releases
 
+- [ ] when watching, only build changed files and then concat them to make builds much faster
 - [ ] smooth animation when transitioning between icons and notifications
 - [ ] show animated lines when drawing the chart
 - [ ] highlight changes from past fetch
