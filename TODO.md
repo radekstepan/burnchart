@@ -49,6 +49,7 @@
 - [ ] trigger success topbar when we have completed a milestone on chart page; show plain when we are behind
 - [ ] on chart page show a little progress bar in the title
 - [ ] use tap plugin for Ractive
+- [ ] the app bundle (albeit uncompressed) clocks in at 1.5MB, reduce the size (d3 is huge)
 
 ##Future Releases
 
