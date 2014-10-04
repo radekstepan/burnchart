@@ -389,6 +389,7 @@
           var _this = this;
           this.client = new Firebase("https://" + (config.get('firebase')) + ".firebaseio.com");
           this.auth = new FirebaseSimpleLogin(this.client, function(err, obj) {
+            user.set('loaded', true);
             if (err || !obj) {
               return _this.authCb(err);
             }
@@ -814,7 +815,7 @@
     // header.mustache
     root.require.register('burnchart/src/templates/header.js', function(exports, require, module) {
     
-      module.exports = ["<div id=\"head\">","  <div class=\"right\">","    {{#user.displayName}}","      {{user.displayName}} logged in","    {{else}}","      <a class=\"github\" on-click=\"!login\"><Icons icon=\"github\"/> Sign In</a>","    {{/user.displayName}}","  </div>","","  <a id=\"icon\" href=\"#\">","    <Icons icon=\"{{icon}}\"/>","  </a>","","  <div class=\"q\">","    <Icons icon=\"search\"/>","    <Icons icon=\"down-open\"/>","    <input type=\"text\" placeholder=\"Jump to...\">","  </div>","","  <ul>","    <li><a href=\"#new/project\" class=\"add\"><Icons icon=\"plus-circled\"/> Add a Project</a></li>","    <li><a href=\"#\" class=\"faq\">FAQ</a></li>","    <li><a href=\"#reset\">DB Reset</a></li>","    <li><a href=\"#notify\">Notify</a></li>","  </ul>","</div>"].join("\n");
+      module.exports = ["<div id=\"head\">","  {{#with user}}","    {{#loaded}}","      <div class=\"right\" intro=\"fade\">","        {{#displayName}}","          {{displayName}} logged in","        {{else}}","          <a class=\"github\" on-click=\"!login\"><Icons icon=\"github\"/> Sign In</a>","        {{/displayName}}","      </div>","    {{/loaded}}","  {{/with}}","","  <a id=\"icon\" href=\"#\">","    <Icons icon=\"{{icon}}\"/>","  </a>","","  <div class=\"q\">","    <Icons icon=\"search\"/>","    <Icons icon=\"down-open\"/>","    <input type=\"text\" placeholder=\"Jump to...\">","  </div>","","  <ul>","    <li><a href=\"#new/project\" class=\"add\"><Icons icon=\"plus-circled\"/> Add a Project</a></li>","    <li><a href=\"#\" class=\"faq\">FAQ</a></li>","    <li><a href=\"#reset\">DB Reset</a></li>","    <li><a href=\"#notify\">Notify</a></li>","  </ul>","</div>"].join("\n");
     });
 
     // hero.mustache

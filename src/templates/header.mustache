@@ -1,11 +1,15 @@
 <div id="head">
-  <div class="right">
-    {{#user.displayName}}
-      {{user.displayName}} logged in
-    {{else}}
-      <a class="github" on-click="!login"><Icons icon="github"/> Sign In</a>
-    {{/user.displayName}}
-  </div>
+  {{#with user}}
+    {{#loaded}}
+      <div class="right" intro="fade">
+        {{#displayName}}
+          {{displayName}} logged in
+        {{else}}
+          <a class="github" on-click="!login"><Icons icon="github"/> Sign In</a>
+        {{/displayName}}
+      </div>
+    {{/loaded}}
+  {{/with}}
 
   <a id="icon" href="#">
     <Icons icon="{{icon}}"/>

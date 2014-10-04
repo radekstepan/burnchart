@@ -10,6 +10,8 @@ class Class
     
     # Check if we have a user in session.
     @auth = new FirebaseSimpleLogin @client, (err, obj) =>
+      user.set 'loaded', yes
+
       return @authCb err if err or not obj
 
       # Save user.
