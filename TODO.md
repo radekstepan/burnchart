@@ -4,7 +4,7 @@
 
 ###Main
 
-1. Load projects from `localStorage`. If we are on *Project* or *Chart* page, add it behind the scenes.
+1. Load projects from `localStorage` (use sync). If we are on *Project* or *Chart* page, add it behind the scenes.
 2. Now we fetch all milestones for our repo if we don't have any cached already. This calculates the points for each milestone. *The first two steps can happen on a Router level*
 3. Continue with page-specific actions.
 
@@ -17,6 +17,7 @@
 - [ ] create a 500/400/loading system messages
 - [ ] mediator `!app/notify/edit` will edit the current notification
 - [ ] need to show status (receiving information etc.) per repo with little warning triangle when we get 400/500 on milestones
+- [ ] handle multiple notifications, for example success on closed milestone and then show a different chart or add a project
 
 ###Error Handling
 
@@ -25,6 +26,7 @@
 - [ ] visiting a chart page saves the project if it isn't saved already
 - [ ] check that we have not run out of requests to make
 - [ ] can we get more than 1 notification at a time?
+- [ ] save in memory only if no `localStorage`, warn about that
 
 ###Bugs
 
@@ -48,6 +50,7 @@
 
 ###Misc
 
+- [ ] vendor module so we can proxy require all `window` libs
 - [ ] implement search box that quickly takes you to a chart (and may hide "pro actions")
 - [ ] show hero box or projects with a fade in and only when known
 - [ ] calculate left margin based on the total number of points text width
@@ -55,13 +58,14 @@
 - [ ] trigger success topbar when we have completed a milestone on chart page; show plain when we are behind
 - [ ] on chart page show a little progress bar in the title
 - [ ] use tap plugin for `Ractive`
-- [ ] the app bundle (albeit uncompressed) clocks in at 1.5MB, reduce the size (d3 is huge)
+- [ ] the app bundle (albeit uncompressed) clocks in at 1.5MB, reduce the size (`d3` is huge, `localForage` not nedded)
 - [ ] make tests work again
 - [ ] use minified builds in production
 - [ ] move project to Assembly
 
 ##Future Releases
 
+- [ ] desktop app via `node-gyp`
 - [ ] when watching, only build changed files and then concat them to make builds much faster
 - [ ] smooth animation when transitioning between icons and notifications
 - [ ] show animated lines when drawing the chart
