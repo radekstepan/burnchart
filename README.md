@@ -17,6 +17,7 @@ GitHub Burndown Chart as a service. Public repos are free, for private access au
 - let people vote on features they want to see fast: [tally.tl](http://tally.tl/).
 - use [readme.io](https://readme.io/) for documentation
 - have people pay outright or call me instead telling me what they'll use it for and they will get 6 months free; the idea is to get feedback from them; also, if they want to leave/close account/have not used app in a while, give them more free months for their feedback on how to make the app better; feedback is more important than money in early stages
+- send handwritten thank you cards to the first customers
 
 ##Plans
 
