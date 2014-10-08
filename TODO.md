@@ -4,9 +4,10 @@
 
 ###Main
 
+1. Switch to [ractive-ractive](https://github.com/rstacruz/ractive-ractive) and use [proxied events](http://docs.ractivejs.org/latest/components#events).
 1. Load projects from `localStorage` (use sync). If we are on *Project* or *Chart* page, add it behind the scenes.
-2. Now we fetch all milestones for our repo if we don't have any cached already. This calculates the points for each milestone. *The first two steps can happen on a Router level*
-3. Continue with page-specific actions.
+1. Now we fetch all milestones for our repo if we don't have any cached already. This calculates the points for each milestone. *The first two steps can happen on a Router level*
+1. Continue with page-specific actions.
 
 ###GitHub
 
