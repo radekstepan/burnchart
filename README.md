@@ -16,21 +16,26 @@ GitHub Burndown Chart as a service. Public repos are free, for private access au
 - $2.5 Node.js PaaS via Gandi with promo code `PAASLAUNCH-C50E-B077-A317`.
 - let people vote on features they want to see fast: [tally.tl](http://tally.tl/).
 - use [readme.io](https://readme.io/) for documentation
-- have people pay outright or call me instead telling me what they'll use it for and they will get 6 months free; the idea is to get feedback from them; also, if they want to leave/close account/have not used app in a while, give them more free months for their feedback on how to make the app better; feedback is more important than money in early stages
 - send handwritten thank you cards to the first customers
 - use [DigitalOcean](https://www.digitalocean.com/) as a GitHub Student (@bath.edu email) to get $100 in platform credits which translates to 20 months on the slowest (fast enough) dyno
 
 ##Plans
 
-###Community
+###Community Plan
 
 - your repos are saved locally
 - no auto-updates to milestones, everything fetched on page load
 - no private repos
 
-###Business
+###Business Plan
 
 - you need to pay for a license to use the app for business purposes
 - repos, milestones saved remotely
 - auto-update with new information
 - private repos
+
+###Free Forever Business Plan
+
+Let me call you every 3 months to ask how you are doing, how you are using the software, what can I improve, and you will get 3 months usage for free. The idea is to keep in touch with the most loyal customers, to hear them say how great/shabby the app is. If they don't want to talk they can always pay for the Business Plan.
+
+If someone stops using the app, send them an email asking them for a good time to call so I can make things right. They would get 3 months usage as well.

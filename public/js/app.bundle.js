@@ -21249,150 +21249,205 @@
 	Ractive.transitions.fade = fade;
 
 }));
-;// Ractive adaptor plugin
-// =======================
-//
-// This plugin allows you to have several Ractive instances sharing
-// a single model, without using any third party libraries.
-//
-// Usage:
-//
-//     var ractiveOne = new Ractive({
-//       el: 'one',
-//       template: templateOne
-//     });
-//
-//     var ractiveTwo = new Ractive({
-//       el: 'two',
-//       template: templateTwo,
-//       data: ractiveOne,
-//       adaptors: [ 'Ractive' ]
-//     });
-//
-// Changes to either Ractive will be reflected in both.
+;;(function (root, factory) {
 
-(function ( global, factory ) {
+  if (typeof define === 'function' && define.amd) {
+    define(['ractive'], factory);
+  } else if (typeof exports === 'object') {
+    module.exports = factory(require('ractive'));
+  } else {
+    factory(root.Ractive);
+  }
 
-    'use strict';
+}(this, function (Ractive) {
 
-    // CommonJS/Modules.
-    if ( typeof module !== 'undefined' && module.exports && typeof require === 'function' ) {
-        factory( require( 'ractive' ) );
+  var Adaptor = Ractive.adaptors.Ractive = {
+    filter: filter,
+    wrap: wrap
+  };
+
+  /*
+   * Advanced options:
+   * You can adjust these settings via `Ractive.adaptors.Ractive.maxKeyLength`
+   * and so on. There's usually no need to do that, but it may be good for
+   * optimizing tests.
+   */
+
+  Adaptor.fireWrapEvents = true;
+  Adaptor.maxKeyLength = 2048;
+
+  /*
+   * Check if the child is an Ractive instance.
+   *
+   * Also, if this key has been wrapped before, don't rewrap it. (Happens on
+   * deeply-nested values, and .reset() for some reason.)
+   */
+
+  function filter (child, keypath, parent) {
+    if (!(child instanceof Ractive))
+      return false;
+
+    if (parent &&
+        parent._ractiveWraps &&
+        parent._ractiveWraps[keypath])
+      return false;
+
+    return true;
+  }
+
+  /*
+   * Global write lock.
+   * This prevents infinite loops from happening where a parent will set a
+   * value on the child, and the child will attempt to write back to the
+   * parent, and so on.
+   */
+
+  var locked = Adaptor.locked = {};
+
+  function lock (key, fn) {
+    if (locked[key]) return;
+    try {
+      locked[key] = true;
+      return fn();
+    } finally {
+      delete locked[key];
     }
+  }
 
-    // AMD.
-    else if ( typeof define === 'function' && define.amd ) {
-        define([ 'ractive' ], factory );
-    }
+  /*
+   * Returns a wrapped Adaptor for Ractive.
+   * See: http://docs.ractivejs.org/latest/writing-adaptor-plugins
+   */
 
-    // Browser global.
-    else if ( global.Ractive ) {
-        factory( global.Ractive );
-    }
+  function wrap (parent, child, keypath, prefixer) {
+    setup();
 
-    else {
-        throw new Error( 'Could not find Ractive! It must be loaded before the ractive-adaptor-ractive plugin' );
-    }
-
-}( typeof window !== 'undefined' ? window : this, function ( Ractive ) {
-
-    'use strict';
-
-    if ( !Ractive ) {
-        throw new Error( 'Could not find Ractive! Check your paths config' );
-    }
-
-    var Wrapper;
-
-    // Save under this path.
-    Ractive.adaptors.Ractive = {
-        filter: function ( object ) {
-            return object instanceof Ractive;
-        },
-        wrap: function ( ractive, otherRactive, keypath, prefixer ) {
-            return new Wrapper( ractive, otherRactive, keypath, prefixer );
-        }
+    return {
+      get: get,
+      set: set,
+      reset: reset,
+      teardown: teardown
     };
 
-    Wrapper = function ( ractive, otherRactive, keypath, prefixer ) {
-        var wrapper = this;
+    /*
+     * Initializes the adaptor. Performs a few tricks:
+     *
+     * [1] If the child has its own Ractive instances, recurse upwards. This
+     * will do `parent.set('child.grandchild', instance)` so that the
+     * `parent` can listen to the grandchild.
+     */
 
-        // The original Ractive.
-        this.otherRactive = otherRactive;
+    function setup () {
+      checkForRecursion();
+      markAsWrapped();
+      parent.set(prefixer(get())); // [1]
+      child.on('change', onChange);
 
-        // Listen them `change`.
-        this.changeHandler = otherRactive.on( 'change', function ( changeHash ) {
-            // Only set if we are not setting them.
-            if (wrapper.otherSetting) {
-                return;
-            }
-            wrapper.setting = true;
-            ractive.set( prefixer( changeHash ) );
-            wrapper.setting = false;
+      if (Adaptor.fireWrapEvents) {
+        child.fire('wrap', parent, keypath);
+        parent.fire('wrapchild', child, keypath);
+      }
+    }
+
+    function teardown () {
+      delete parent._ractiveWraps[keypath];
+      child.off('change', onChange);
+
+      if (Adaptor.fireWrapEvents) {
+        child.fire('unwrap', parent, keypath);
+        parent.fire('unwrapchild', child, keypath);
+      }
+    }
+
+    /*
+     * Propagate changes from child to parent.
+     * We well break it apart into key/vals and set those individually because
+     * some values may be locked.
+     */
+
+    function onChange (updates) {
+      each(updates, function (value, key) {
+        lock(child._guid + key, function () {
+          parent.set(keypath + '.' + key, value);
         });
+      });
+    }
 
-        // Listen them `reset`.
-        this.resetHandler = otherRactive.on( 'reset', function ( newData ) {
-            // Only set if we are not setting them.
-            if (wrapper.otherSetting) {
-                return;
-            }
-            wrapper.setting = true;
-            ractive.update( keypath );
-            wrapper.setting = false;
-        });
+    /*
+     * Returns all attributes of the child, including computed properties.
+     * See: https://github.com/ractivejs/ractive/issues/1250
+     */
 
-        // The opposite of a prefixer, setting properties on one level "up".
-        // https://github.com/ractivejs/ractive/blob/ccbe31bbfc488e780c8ffbea9c8b17cad6bc1c52/src/viewmodel/prototype/adapt.js#L52-L67
-        var defixer = function( changeHash ) {
-            var obj = {}, key;
-            for (key in changeHash) {
-                // TODO: this is probably not complete!
-                obj[ key.split('.').slice(1).join('.') ] = changeHash[ key ];
-            }
-            return obj;
-        }
+    function get () {
+      // Optimization: if there are no computed properties, returning all
+      // non-computed data should suffice.
+      if (!child.computed) return child.get();
 
-        // Listen to our changes. In two-way binding DOM events do not go through
-        //  `set` but trigger a `change` event.
-        ractive.on('change', function( changeHash ) {
-            wrapper.otherSetting = true;
-            otherRactive.set(defixer(changeHash));
-            wrapper.otherSetting = false;
-        });
-    };
+      var re = {};
+      
+      each(child.get(), function (val, key) {
+        re[key] = val;
+      });
 
-    Wrapper.prototype = {
-        // Returns the value at keypath or all data.
-        get: function () {
-            return this.otherRactive.get();
-        },
-        // Updates data notifying observers of affected keypaths.
-        set: function ( keypath, value ) {
-            // Only set if the we didn't originate the change.
-            if (!this.setting) {
-                this.otherRactive.set( keypath, value );
-            }
-        },
-        // Resets the entire ractive.data object.
-        reset: function ( object ) {
-            if (this.setting) {
-                return;
-            }
+      each(child.computed, function (_, key) {
+        if (typeof re[key] === 'undefined')
+          re[key] = child.get(key);
+      });
 
-            if ( object instanceof Ractive || typeof object !== 'object' ) {
-                return false;
-            }
+      return re;
+    }
 
-            this.otherRactive.reset( object );
-        },
-        // Unrenders this Ractive instance, removing any event handlers that
-        //  were bound automatically by Ractive.
-        teardown: function () {
-            this.changeHandler.cancel();
-            this.resetHandler.cancel();
-        }
-    };
+    function set (key, value) {
+      lock(child._guid + key, function () {
+        child.set(key, value);
+      });
+    }
+
+    /*
+     * Allow setting values by passing a POJO to .set(), for instance,
+     * `.set('child', { ... })`. If anything else is passed onto .set()
+     * (like another Ractive instance, or another adaptor'able), destroy
+     * this wrapper.
+     */
+
+    function reset (object) {
+      if (object && object.constructor === Object) {
+        child.set(object);
+      } else {
+        return false;
+      }
+    }
+
+    /*
+     * Die on recursion.
+     * Keypath will look like 'child.sub.parent.child.sub.parent' ad nauseum.
+     */
+
+    function checkForRecursion () {
+      if (keypath && keypath.length > Adaptor.maxKeyLength)
+        throw new Error("Keypath too long (possible circular dependency)");
+    }
+
+    /*
+     * Let future wrappers know what we have wrapped Ractive instances.
+     * This value is used on `filter()`.
+     */
+
+    function markAsWrapped () {
+      if (!parent._ractiveWraps) parent._ractiveWraps = {};
+      parent._ractiveWraps[keypath] = child;
+    }
+  }
+
+  /*
+   * Cross-browser forEach helper
+   */
+
+  function each (obj, fn) {
+    for (var key in obj) {
+      if (obj.hasOwnProperty(key)) fn(obj[key], key);
+    }
+  }
 
 }));
 ;/* Firebase v1.0.21 */ (function() {var h,aa=this;function n(a){return void 0!==a}function ba(){}function ca(a){a.sb=function(){return a.md?a.md:a.md=new a}}
