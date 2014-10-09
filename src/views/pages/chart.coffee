@@ -5,6 +5,8 @@ format    = require '../../utils/format'
 
 module.exports = Ractive.extend
 
+  'name': 'views/pages/chart'
+
   'template': require '../../templates/pages/chart'
 
   'adapt': [ Ractive.adaptors.Ractive ]
@@ -12,9 +14,11 @@ module.exports = Ractive.extend
   'data': { format }
 
   onrender: ->
+    return
+
     [ owner, name, milestone ] = @get 'route'
     route = { owner, name, milestone }
-    
+  
     document.title = "#{owner}/#{name}/#{milestone}"
 
     milestone.get route, (err, warn, obj) =>

@@ -22,7 +22,7 @@
       router = require('./modules/router');
       
       App = Ractive.extend({
-        'template': require('./templates/layout'),
+        'template': require('./templates/app'),
         'components': {
           Header: Header,
           Notify: Notify
@@ -44,6 +44,7 @@
       Model = require('../utils/model');
       
       module.exports = new Model({
+        'name': 'models/config',
         "data": {
           "firebase": "burnchart",
           "provider": "github",
@@ -80,46 +81,31 @@
       user = require('./user');
       
       module.exports = new Model({
-        'data': {
-          'list': []
+        'name': 'models/projects',
+        find: function(project) {
+          return _.find(this.data.list, project);
         },
-        load: function(projects) {
-          if (projects == null) {
-            projects = [];
+        exists: function() {
+          return !!this.find.apply(this, arguments);
+        },
+        add: function(project) {
+          if (!this.exists(project)) {
+            return this.push('list', project);
           }
-          return async.each(projects, function(project, cb) {
-            return mediator.fire('!projects/add', project);
-          }, function(err) {
-            if (err) {
-              throw err;
-            }
-          });
-        },
-        add: function(repo, done) {
-          var _this = this;
-          return request.allMilestones(repo, function(err, res) {
-            var milestones;
-            if (err) {
-              return done(err);
-            }
-            milestones = _.pluckMany(res, config.get('fields.milestone'));
-            _this.push('list', _.merge(repo, {
-              milestones: milestones
-            }));
-            return done();
-          });
         },
         clear: function() {
           return this.set('list', []);
         },
         onconstruct: function() {
-          localforage.getItem('projects', _.bind(this.load, this));
           mediator.on('!projects/add', _.bind(this.add, this));
           return mediator.on('!projects/clear', _.bind(this.clear, this));
         },
         onrender: function() {
+          this.set('list', lscache.get('projects') || []);
           return this.observe('list', function(projects) {
-            return localforage.setItem('projects', projects);
+            return lscache.set('projects', _.pluckMany(projects, ['owner', 'name']));
+          }, {
+            'init': false
           });
         }
       });
@@ -136,6 +122,7 @@
       Model = require('../utils/model');
       
       system = new Model({
+        'name': 'models/system',
         'data': {
           'loading': false
         }
@@ -169,6 +156,7 @@
       Model = require('../utils/model');
       
       module.exports = new Model({
+        'name': 'models/user',
         'data': {
           'provider': "local",
           'id': "0",
@@ -500,7 +488,11 @@
     // mediator.coffee
     root.require.register('burnchart/src/modules/mediator.js', function(exports, require, module) {
     
-      module.exports = new Ractive();
+      var Mediator;
+      
+      Mediator = Ractive.extend({});
+      
+      module.exports = new Mediator();
       
     });
 
@@ -523,26 +515,12 @@
               }
               return cb(null, null, m);
             });
-          } else {
-            return request.allMilestones(repo, function(err, data) {
-              var m;
-              if (err) {
-                return cb(err);
-              }
-              if (!data.length) {
-                return cb(null, "No open milestones for repo " + repo.path);
-              }
-              m = data[0];
-              m = _.rest(data, {
-                'due_on': null
-              });
-              m = m[0] ? m[0] : data[0];
-              if (m.open_issues + m.closed_issues === 0) {
-                return cb(null, "No issues for milestone `" + m.title + "`");
-              }
-              return cb(null, null, m);
-            });
           }
+        },
+        getAll: function(repo, cb) {
+          return request.allMilestones(repo, function(err, data) {
+            return cb(err, null, data);
+          });
         }
       };
       
@@ -764,7 +742,7 @@
     // router.coffee
     root.require.register('burnchart/src/modules/router.js', function(exports, require, module) {
     
-      var el, mediator, route, routes, system,
+      var addProject, c, el, mediator, route, routes, system, view,
         __slice = [].slice;
       
       mediator = require('./mediator');
@@ -773,11 +751,37 @@
       
       el = '#page';
       
+      addProject = function(page, owner, name) {
+        return mediator.fire('!projects/add', {
+          owner: owner,
+          name: name
+        });
+      };
+      
+      c = function(name, fns) {
+        var fn, _i, _len, _results;
+        if (fns == null) {
+          fns = [];
+        }
+        _results = [];
+        for (_i = 0, _len = fns.length; _i < _len; _i++) {
+          fn = fns[_i];
+          _results.push(_.partial(fn, name));
+        }
+        return _results;
+      };
+      
+      view = null;
+      
       route = function() {
         var Page, args, page;
         page = arguments[0], args = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
+        if (view != null) {
+          view.teardown();
+        }
+        mediator.fire('!app/notify/hide');
         Page = require("../views/pages/" + page);
-        return new Page({
+        return view = new Page({
           el: el,
           'data': {
             'route': args
@@ -786,10 +790,10 @@
       };
       
       routes = {
-        '/': _.partial(route, 'index'),
-        '/new/project': _.partial(route, 'new'),
-        '/:owner/:name': _.partial(route, 'project'),
-        '/:owner/:name/:milestone': _.partial(route, 'chart'),
+        '/': c('index', [route]),
+        '/new/project': c('new', [route]),
+        '/:owner/:name': c('project', [addProject, route]),
+        '/:owner/:name/:milestone': c('chart', [addProject, route]),
         '/reset': function() {
           mediator.fire('!projects/clear');
           return window.location.hash = '#';
@@ -807,9 +811,18 @@
       };
       
       module.exports = Router(routes).configure({
-        'strict': false
+        'strict': false,
+        notfound: function() {
+          throw 404;
+        }
       });
       
+    });
+
+    // app.mustache
+    root.require.register('burnchart/src/templates/app.js', function(exports, require, module) {
+    
+      module.exports = ["<div id=\"app\">","  <Notify/>","  <Header/>","","  <div id=\"page\">","    <!-- content loaded from a router -->","  </div>","","  <div id=\"footer\">","    <div class=\"wrap\">","      &copy; 2012-2014 <a href=\"http://cloudfi.re\">Cloudfire Systems</a>","    </div>","  </div>","</div>"].join("\n");
     });
 
     // header.mustache
@@ -830,16 +843,10 @@
       module.exports = ["{{#code}}","  <span class=\"icon {{icon}}\">{{{ '&#' + code + ';' }}}</span>","{{/code}}"].join("\n");
     });
 
-    // layout.mustache
-    root.require.register('burnchart/src/templates/layout.js', function(exports, require, module) {
-    
-      module.exports = ["<Notify/>","<Header/>","","<div id=\"page\">","  <!-- content loaded from a router -->","</div>","","<div id=\"footer\">","  <div class=\"wrap\">","    &copy; 2012-2014 <a href=\"http://cloudfi.re\">Cloudfire Systems</a>","  </div>","</div>"].join("\n");
-    });
-
     // milestones.mustache
     root.require.register('burnchart/src/templates/milestones.js', function(exports, require, module) {
     
-      module.exports = ["{{#milestones.length}}","  <div id=\"projects\">","    <div class=\"header\">","      <a href=\"#\" class=\"sort\"><Icons icon=\"sort-alphabet\"/> Sorted by priority</a>","      <h2>Milestones</h2>","    </div>","","    <table>","      {{#milestones}}","        <tr>","          <td>","            <a class=\"milestone\" href=\"#{{owner}}/{{name}}/{{number}}\">{{ title }}</a>","          </td>","          <td style=\"width:1%\">","            <div class=\"progress\">","              <span class=\"percent\">{{Math.floor(format.progress(closed_issues, open_issues))}}%</span>","              <span class=\"due\">{{{ format.due(due_on) }}}</span>","              <div class=\"outer bar\">","                <div class=\"inner bar {{format.onTime(this)}}\" style=\"width:{{format.progress(closed_issues, open_issues)}}%\"></div>","              </div>","            </div>","          </td>","        </tr>","      {{/milestones}}","    </table>","","    <div class=\"footer\">","      <a href=\"#\"><Icons icon=\"cog\"/> Edit</a>","    </div>","  </div>","{{/milestones.length}}"].join("\n");
+      module.exports = ["<div id=\"projects\">","  <div class=\"header\">","    <a href=\"#\" class=\"sort\"><Icons icon=\"sort-alphabet\"/> Sorted by priority</a>","    <h2>Milestones</h2>","  </div>","","  <table>","    {{#project.milestones}}","      <tr>","        <td>","          <a class=\"milestone\" href=\"#{{project.owner}}/{{project.name}}/{{number}}\">{{ title }}</a>","        </td>","        <td style=\"width:1%\">","          <div class=\"progress\">","            <span class=\"percent\">{{Math.floor(format.progress(closed_issues, open_issues))}}%</span>","            <span class=\"due\">{{{ format.due(due_on) }}}</span>","            <div class=\"outer bar\">","              <div class=\"inner bar {{format.onTime(this)}}\" style=\"width:{{format.progress(closed_issues, open_issues)}}%\"></div>","            </div>","          </div>","        </td>","      </tr>","    {{/project.milestones}}","  </table>","","  <div class=\"footer\">","    <a href=\"#\"><Icons icon=\"cog\"/> Edit</a>","  </div>","</div>"].join("\n");
     });
 
     // notify.mustache
@@ -869,7 +876,7 @@
     // project.mustache
     root.require.register('burnchart/src/templates/pages/project.js', function(exports, require, module) {
     
-      module.exports = ["<div id=\"title\">","  <div class=\"wrap\">","    <h2 class=\"title\">{{route.join('/')}}</h2>","  </div>","</div>","","<div id=\"content\" class=\"wrap\">","  <Milestones owner=\"{{route[0]}}\" name=\"{{route[1]}}\"/>","</div>"].join("\n");
+      module.exports = ["{{#ready}}","  <div id=\"title\">","    <div class=\"wrap\">","      <h2 class=\"title\">{{route.join('/')}}</h2>","    </div>","  </div>","","  <div id=\"content\" class=\"wrap\">","    <Milestones project=\"{{project}}\"/>","  </div>","{{/ready}}"].join("\n");
     });
 
     // projects.mustache
@@ -1003,11 +1010,16 @@
       Icons = require('./icons');
       
       module.exports = Ractive.extend({
+        'name': 'views/header',
         'template': require('../templates/header'),
         'data': {
           'user': user,
           'icon': 'fire-station'
         },
+        'components': {
+          Icons: Icons
+        },
+        'adapt': [Ractive.adaptors.Ractive],
         onconstruct: function() {
           return this.on('!login', function() {
             return firebase.login(function(err) {
@@ -1022,11 +1034,7 @@
           return system.observe('loading', function(ya) {
             return _this.set('icon', ya ? 'spinner1' : 'fire-station');
           });
-        },
-        'components': {
-          Icons: Icons
-        },
-        'adapt': [Ractive.adaptors.Ractive]
+        }
       });
       
     });
@@ -1043,6 +1051,7 @@
       Icons = require('./icons');
       
       module.exports = Ractive.extend({
+        'name': 'views/hero',
         'template': require('../templates/hero'),
         'data': {
           projects: projects
@@ -1078,6 +1087,7 @@
       };
       
       module.exports = Ractive.extend({
+        'name': 'views/icons',
         'template': require('../templates/icons'),
         'isolated': true,
         onrender: function() {
@@ -1106,17 +1116,12 @@
       Icons = require('./icons');
       
       module.exports = Ractive.extend({
+        'name': 'views/milestones',
         'template': require('../templates/milestones'),
         'components': {
           Icons: Icons
         },
-        'adapt': [Ractive.adaptors.Ractive],
-        onconstruct: function() {
-          return this.set('milestones', _.filter(projects.get('list'), {
-            'owner': this.get('owner'),
-            'name': this.get('name')
-          }));
-        }
+        'adapt': [Ractive.adaptors.Ractive]
       });
       
     });
@@ -1133,6 +1138,7 @@
       HEIGHT = 68;
       
       module.exports = Ractive.extend({
+        'name': 'views/notify',
         'template': require('../templates/notify'),
         'data': {
           'top': HEIGHT,
@@ -1145,6 +1151,10 @@
             'ttl': 5e3
           }
         },
+        'components': {
+          Icons: Icons
+        },
+        'adapt': [Ractive.adaptors.Ractive],
         show: function(opts) {
           var pos;
           this.set('hidden', false);
@@ -1176,11 +1186,7 @@
           mediator.on('!app/notify', _.bind(this.show, this));
           mediator.on('!app/notify/hide', _.bind(this.hide, this));
           return this.on('close', this.hide);
-        },
-        'components': {
-          Icons: Icons
-        },
-        'adapt': [Ractive.adaptors.Ractive]
+        }
       });
       
     });
@@ -1199,6 +1205,7 @@
       format = require('../../utils/format');
       
       module.exports = Ractive.extend({
+        'name': 'views/pages/chart',
         'template': require('../../templates/pages/chart'),
         'adapt': [Ractive.adaptors.Ractive],
         'data': {
@@ -1207,6 +1214,7 @@
         onrender: function() {
           var name, owner, route, _ref,
             _this = this;
+          return;
           _ref = this.get('route'), owner = _ref[0], name = _ref[1], milestone = _ref[2];
           route = {
             owner: owner,
@@ -1246,6 +1254,7 @@
       format = require('../../utils/format');
       
       module.exports = Ractive.extend({
+        'name': 'views/pages/index',
         'template': require('../../templates/pages/index'),
         'components': {
           Hero: Hero,
@@ -1275,6 +1284,7 @@
       key = require('../../utils/key');
       
       module.exports = Ractive.extend({
+        'name': 'views/pages/new',
         'template': require('../../templates/pages/new'),
         'data': {
           'value': 'radekstepan/disposable',
@@ -1317,19 +1327,66 @@
     // project.coffee
     root.require.register('burnchart/src/views/pages/project.js', function(exports, require, module) {
     
-      var Milestones;
+      var Milestones, mediator, milestone, projects, system;
       
       Milestones = require('../milestones');
       
+      projects = require('../../models/projects');
+      
+      system = require('../../models/system');
+      
+      milestone = require('../../modules/milestone');
+      
+      mediator = require('../../modules/mediator');
+      
       module.exports = Ractive.extend({
+        'name': 'views/pages/project',
         'template': require('../../templates/pages/project'),
         'components': {
           Milestones: Milestones
         },
+        'data': {
+          'ready': false
+        },
         onrender: function() {
-          var name, owner, _ref;
+          var done, name, owner, project, _ref,
+            _this = this;
           _ref = this.get('route'), owner = _ref[0], name = _ref[1];
-          return document.title = "" + owner + "/" + name;
+          document.title = "" + owner + "/" + name;
+          this.set('project', project = projects.find({
+            owner: owner,
+            name: name
+          }));
+          if (!project) {
+            throw 500;
+          }
+          if (project.milestones) {
+            return this.set('ready', true);
+          }
+          done = system.async();
+          return milestone.getAll(project, function(err, warn, list) {
+            done();
+            if (err) {
+              return mediator.fire('!app/notify', {
+                'text': err.toString(),
+                'type': 'alert',
+                'system': true,
+                'ttl': null
+              });
+            }
+            if (warn) {
+              return mediator.fire('!app/notify', {
+                'text': warn.toString(),
+                'type': 'warn',
+                'system': true,
+                'ttl': null
+              });
+            }
+            return _this.set({
+              'project.milestones': list,
+              'ready': true
+            });
+          });
         }
       });
       
@@ -1347,6 +1404,7 @@
       Icons = require('./icons');
       
       module.exports = Ractive.extend({
+        'name': 'views/projects',
         'template': require('../templates/projects'),
         'data': {
           projects: projects

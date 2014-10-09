@@ -4,6 +4,8 @@ Icons    = require './icons'
 
 module.exports = Ractive.extend
 
+  'name': 'views/projects'
+
   'template': require '../templates/projects'
 
   'data': { projects }

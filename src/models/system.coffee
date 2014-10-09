@@ -3,6 +3,9 @@ Model    = require '../utils/model'
 
 # System state.
 system = new Model
+  
+  'name': 'models/system'
+
   'data':
     'loading': no
 

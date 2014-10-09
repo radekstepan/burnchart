@@ -4,6 +4,8 @@ Model    = require '../utils/model'
 # Currently logged-in user.
 module.exports = new Model
 
+  'name': 'models/user'
+
   # Default to a local user.
   'data':
     'provider':  "local"

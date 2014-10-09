@@ -442,7 +442,9 @@ table {
 .d3-tip:after{width:100%;color:rgba(0,0,0,0.8);content:"\25BC";position:absolute}
 .d3-tip.n:after{margin:-3px 0 0 0;top:100%;left:0}
 
+html,body{margin:0;padding:0;height:100%}
 body{color:#3e4457;font-family:'MuseoSans500Regular',sans-serif}
+#app{position:relative;height:auto !important;min-height:100%}
 a{text-decoration:none;color:#aaafbf;cursor:pointer}
 h1,h2,h3,p{margin:0}
 ul{list-style-type:none;margin:0;padding:0;}
@@ -519,4 +521,4 @@ ul li{display:inline-block}
 #content #projects .header a{font-family:'MuseoSlab500Regular',serif}
 #content #projects .footer{background:#f9fafb;color:#aaafbf;-webkit-box-shadow:inset 0 1px 2px rgba(221,225,237,0.2);box-shadow:inset 0 1px 2px rgba(221,225,237,0.2);border-top:1px solid #dde1ed;text-align:right;font-family:'MuseoSlab500Regular',serif;}
 #content #projects .footer .icon{color:#aaafbf}
-#footer{border-top:1px solid #f3f4f8;text-align:center;padding:30px;margin-top:30px;font-family:'MuseoSlab500Regular',serif}
+#footer{position:absolute;width:100%;bottom:0;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;border-top:1px solid #f3f4f8;text-align:center;padding:30px;margin-top:30px;font-family:'MuseoSlab500Regular',serif}

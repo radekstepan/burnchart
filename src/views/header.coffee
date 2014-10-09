@@ -5,6 +5,8 @@ Icons      = require './icons'
 
 module.exports = Ractive.extend
 
+  'name': 'views/header'
+
   'template': require '../templates/header'
 
   'data':
@@ -12,6 +14,10 @@ module.exports = Ractive.extend
     # Default app icon.
     'icon': 'fire-station'
 
+  'components': { Icons }
+
+  'adapt': [ Ractive.adaptors.Ractive ]
+  
   onconstruct: ->
     # Login user.
     @on '!login', ->
@@ -22,7 +28,3 @@ module.exports = Ractive.extend
     # Switch loading icon with app icon.
     system.observe 'loading', (ya) =>
       @set 'icon', if ya then 'spinner1' else 'fire-station'
-
-  'components': { Icons }
-
-  'adapt': [ Ractive.adaptors.Ractive ]

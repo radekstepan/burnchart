@@ -7,44 +7,30 @@ user     = require './user'
 
 module.exports = new Model
 
-  'data':
-    'list': []
+  'name': 'models/projects'
 
-  load: (projects=[]) ->
-    # Fetch milestones for each of these projects.
-    async.each projects, (project, cb) ->
-      mediator.fire '!projects/add', project
-    , (err) ->
-      throw err if err
+  find: (project) ->
+    _.find @data.list, project
 
-  add: (repo, done) ->
-    # TODO: warn when we are adding an existing repo (or
-    #  silently go to index again).
+  exists: ->
+    !!@find.apply @, arguments
 
-    # Fetch milestones (which validates repo too).
-    request.allMilestones repo, (err, res) =>
-      return done err if err
-
-      # Pluck these fields for milestones.
-      milestones = _.pluckMany res, config.get('fields.milestone')
-
-      # Push to the stack.
-      @push 'list', _.merge repo, { milestones }
-
-      # Call back.
-      do done
+  # Push to the stack unless it exists already.
+  add: (project) ->
+    @push 'list', project unless @exists project
 
   clear: ->
     @set 'list', []
 
   onconstruct: ->
-    # Initialize with items stored locally.
-    localforage.getItem 'projects', _.bind @load, @
-
-    mediator.on '!projects/add',   _.bind @add, @
-    mediator.on '!projects/clear', _.bind @clear, @
+    mediator.on '!projects/add',    _.bind @add, @
+    mediator.on '!projects/clear',  _.bind @clear, @
 
   onrender: ->
-    # Persist projects in local storage.
+    # Init the projects.
+    @set 'list', lscache.get('projects') or []
+
+    # Persist projects in local storage (sans milestones).
     @observe 'list', (projects) ->
-      localforage.setItem 'projects', projects
+      lscache.set 'projects', _.pluckMany projects, [ 'owner', 'name' ]
+    , 'init': no

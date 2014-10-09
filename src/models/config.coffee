@@ -2,6 +2,8 @@ Model = require '../utils/model'
 
 module.exports = new Model
 
+  'name': 'models/config'
+
   "data":
     # Firebase app name.
     "firebase": "burnchart"

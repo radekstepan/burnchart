@@ -37,7 +37,7 @@ module.exports = (grunt) ->
                     'vendor/firebase/firebase.js'
                     'vendor/firebase-simple-login/firebase-simple-login.js'
                     'vendor/superagent/superagent.js'
-                    'vendor/localforage/dist/localforage.js'
+                    'vendor/lscache/lscache.js'
                     'vendor/async/lib/async.js'
                     'vendor/moment/moment.js'
                     'vendor/d3/d3.js'

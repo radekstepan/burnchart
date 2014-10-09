@@ -4,6 +4,8 @@ format   = require '../../utils/format'
 
 module.exports = Ractive.extend
 
+  'name': 'views/pages/index'
+
   'template': require '../../templates/pages/index'
 
   'components': { Hero, Projects }

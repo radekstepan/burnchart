@@ -5,6 +5,8 @@ key      = require '../../utils/key'
 
 module.exports = Ractive.extend
 
+  'name': 'views/pages/new'
+
   'template': require '../../templates/pages/new'
 
   'data': { 'value': 'radekstepan/disposable', user }

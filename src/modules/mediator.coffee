@@ -1,1 +1,3 @@
-module.exports = new Ractive()
+Mediator = Ractive.extend {}
+
+module.exports = new Mediator()

@@ -6,9 +6,19 @@ $sans_serif_font = 'MuseoSans500Regular', sans-serif
 $strong_color = #C1041C
 $highlight_color = #FFBB2A
 
+html, body
+  margin: 0
+  padding: 0
+  height: 100%
+
 body
   color: #3E4457
   font-family: $sans_serif_font
+
+#app
+  position: relative
+  height: auto !important
+  min-height: 100%
 
 a
   text-decoration: none
@@ -373,6 +383,10 @@ ul
         color: #AAAFBF
 
 #footer
+  position: absolute
+  width: 100%
+  bottom: 0
+  box-sizing: border-box
   border-top: 1px solid #F3F4F8
   text-align: center
   padding: 30px

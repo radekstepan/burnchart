@@ -4,8 +4,7 @@
 
 ###Main
 
-1. Load projects from `localStorage` (use sync). If we are on *Project* or *Chart* page, add it behind the scenes.
-1. Now we fetch all milestones for our repo if we don't have any cached already. This calculates the points for each milestone. *The first two steps can happen on a Router level*
+1. Now we fetch all milestones for our repo if we don't have any cached already. This calculates the points for each milestone.
 1. Continue with page-specific actions.
 
 ###GitHub

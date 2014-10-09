@@ -1,9 +1,11 @@
-<div id="title">
-  <div class="wrap">
-    <h2 class="title">{{route.join('/')}}</h2>
+{{#ready}}
+  <div id="title">
+    <div class="wrap">
+      <h2 class="title">{{route.join('/')}}</h2>
+    </div>
   </div>
-</div>
 
-<div id="content" class="wrap">
-  <Milestones owner="{{route[0]}}" name="{{route[1]}}"/>
-</div>
+  <div id="content" class="wrap">
+    <Milestones project="{{project}}"/>
+  </div>
+{{/ready}}

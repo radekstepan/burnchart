@@ -9,7 +9,6 @@
     "ractive-ractive": "rstacruz/ractive-ractive",
     "firebase": "~1.0.21",
     "firebase-simple-login": "~1.6.3",
-    "localforage": "~0.9.2",
     "superagent": "~0.19.0",
     "async": "~0.9.0",
     "moment": "~2.8.3",
@@ -17,6 +16,7 @@
     "d3-tip": "~0.6.5",
     "marked": "~0.3.2",
     "director": "~1.2.2",
-    "ractive-transitions-fade": "~0.1.2"
+    "ractive-transitions-fade": "~0.1.2",
+    "lscache": "~1.0.2"
   }
 }

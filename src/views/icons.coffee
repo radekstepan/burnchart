@@ -17,6 +17,8 @@ codes =
 
 module.exports = Ractive.extend
 
+  'name': 'views/icons'
+
   'template': require '../templates/icons'
 
   'isolated': yes

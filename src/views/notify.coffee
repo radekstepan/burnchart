@@ -5,6 +5,8 @@ HEIGHT = 68 # height of div in px
 
 module.exports = Ractive.extend
 
+  'name': 'views/notify'
+
   'template': require '../templates/notify'
 
   'data':
@@ -17,6 +19,10 @@ module.exports = Ractive.extend
       'icon': 'megaphone'
       'ttl':  5e3
 
+  'components': { Icons }
+
+  'adapt': [ Ractive.adaptors.Ractive ]
+  
   # Show a notification.
   show: (opts) ->
     @set 'hidden', no    
@@ -53,7 +59,3 @@ module.exports = Ractive.extend
 
     # Close us prematurely...
     @on 'close', @hide
-
-  'components': { Icons }
-
-  'adapt': [ Ractive.adaptors.Ractive ]
