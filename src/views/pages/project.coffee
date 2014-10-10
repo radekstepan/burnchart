@@ -1,9 +1,12 @@
 Milestones = require '../milestones'
 
-projects  = require '../../models/projects'
-system    = require '../../models/system'
-milestone = require '../../modules/milestone'
-mediator  = require '../../modules/mediator'
+projects   = require '../../models/projects'
+system     = require '../../models/system'
+config     = require '../../models/config'
+milestones = require '../../modules/milestone'
+issues     = require '../../modules/issues'
+mediator   = require '../../modules/mediator'
+format     = require '../../utils/format'
 
 module.exports = Ractive.extend
 
@@ -33,24 +36,61 @@ module.exports = Ractive.extend
     # We are loading the milestones then.
     done = do system.async
 
-    milestone.getAll project, (err, warn, list) =>
-      do done
+    milestones.getAll project, (err, warn, list) =>
+      if err or warn
+        do done
 
-      return mediator.fire '!app/notify', {
-        'text': do err.toString
-        'type': 'alert'
-        'system': yes
-        'ttl': null
-      } if err
+        return mediator.fire '!app/notify', {
+          'text': do err.toString
+          'type': 'alert'
+          'system': yes
+          'ttl': null
+        } if err
 
-      return mediator.fire '!app/notify', {
-        'text': do warn.toString
-        'type': 'warn'
-        'system': yes
-        'ttl': null
-      } if warn
+        return mediator.fire '!app/notify', {
+          'text': do warn.toString
+          'type': 'warn'
+          'system': yes
+          'ttl': null
+        } if warn
 
-      # Save the milestones.
-      @set
-        'project.milestones': list
-        'ready': yes
+      # Calculate progress in all milestones.
+      switch config.data.chart.points
+        when 'ONE_SIZE'
+          list = _.map list, (m) ->
+            m.progress = format.progress m.closed_issues, m.open_issues
+            m.on_time  = format.onTime m
+            m.due      = format.due m.due_on
+            m
+
+          # Now we are done.
+          do done
+
+          # Save the milestones.
+          @set
+            'project.milestones': list
+            'ready': yes
+        
+        when 'LABELS'
+          # We need to fetch all issues per milestone.
+          async.map list, (m, cb) ->
+            issues.get_all _.extend(project, { 'milestone': m }), (err, arr) ->
+              return cb err if err
+              issues.filter arr, (err, filtered, total) ->
+                console.log filtered, total
+
+          , (err, list) ->
+            # Now we are done.
+            do done
+
+            return mediator.fire '!app/notify', {
+              'text': do err.toString
+              'type': 'alert'
+              'system': yes
+              'ttl': null
+            } if err
+
+            # Save the milestones.
+            @set
+              'project.milestones': list
+              'ready': yes

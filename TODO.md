@@ -2,11 +2,6 @@
 
 ##Release: MVP
 
-###Main
-
-1. Now we fetch all milestones for our repo if we don't have any cached already. This calculates the points for each milestone.
-1. Continue with page-specific actions.
-
 ###GitHub
 
 - [ ] progress needs to be calculated based on strategy even on homepage, then sort the milestones based on priority
@@ -46,9 +41,11 @@
 
 - [ ] focus on form fields style
 - [ ] switch off `user-select` on buttons
+- [ ] make async pages transition so that there is no "jumping" on the page
 
 ###Misc
 
+- [ ] calculate by how many % are we late/on time so we can sort the milestones in projects
 - [ ] vendor module so we can proxy require all `window` libs
 - [ ] implement search box that quickly takes you to a chart (and may hide "pro actions")
 - [ ] show hero box or projects with a fade in and only when known
@@ -61,6 +58,7 @@
 - [ ] make tests work again
 - [ ] use minified builds in production
 - [ ] move project to Assembly
+- [ ] make the names consistent, reuse code, template etc.
 
 ##Future Releases
 

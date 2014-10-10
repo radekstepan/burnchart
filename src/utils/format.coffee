@@ -11,9 +11,6 @@ module.exports =
     # Milestones with no due date are always on track.
     return 'green' unless milestone.due_on
 
-    # Progress in points.
-    points = @progress milestone.closed_issues, milestone.open_issues
-
     # Calculate the progress in days.
     a = +new Date milestone.created_at
     b = +new Date
@@ -22,7 +19,7 @@ module.exports =
     # Progress in time.
     time = @progress b - a, c - b
 
-    [ 'red', 'green' ][ +(points > time) ]
+    [ 'red', 'green' ][ +(milestone.progress > time) ]
   , (m) -> # resolver
     [ m.created_at, m.number ].join '/'
 

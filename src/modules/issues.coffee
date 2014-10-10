@@ -11,7 +11,7 @@ module.exports =
       # Concat them here.
       results = []
       # One pageful fetch (next pages in series).
-      do fetch_page = (page = 1) ->
+      do fetch_page = (page=1) ->
         request.allIssues opts, {
           'milestone': opts.milestone.number,
           state, page

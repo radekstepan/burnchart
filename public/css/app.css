@@ -71,47 +71,48 @@ ul li{display:inline-block}
 #title .title{border-bottom:3px solid #aaafbf;margin:30px 0 -3px 0;display:inline-block;padding-bottom:20px}
 #title .sub{font-size:16px;font-weight:bold;margin:0 20px}
 #title .description{display:inline-block;font-family:'MuseoSlab500Regular',serif;white-space:nowrap;color:#b1b6c4}
-#content{padding:20px;margin-top:20px;}
-#content #hero{background:url("../img/hires/2.jpg") center;-webkit-background-size:cover;-moz-background-size:cover;background-size:cover;-webkit-border-radius:2px;border-radius:2px;margin-bottom:30px;}
-#content #hero .content{-webkit-border-radius:2px;border-radius:2px;color:#fff;padding:30px;background:rgba(0,0,0,0.3);-webkit-box-shadow:inset 0 1px 2px rgba(0,0,0,0.2);box-shadow:inset 0 1px 2px rgba(0,0,0,0.2);}
-#content #hero .content h2{margin-bottom:20px;margin-left:140px}
-#content #hero .content p{font-family:'MuseoSlab500Regular',serif;font-size:18px;line-height:24px;margin-left:140px;text-align:justify;text-justify:inter-word}
-#content #hero .content .address{font-size:120px;float:left}
-#content #hero .content .cta{text-align:center;margin-top:10px;}
-#content #hero .content .cta a{font-family:'MuseoSlab500Regular',serif;padding:11px 20px;-webkit-border-radius:2px;border-radius:2px;display:inline-block;margin:0 4px;}
-#content #hero .content .cta a.primary{font-weight:bold;background:#c1041c;color:#fff}
-#content #hero .content .cta a.secondary{background:#fff;color:#c1041c}
-#content #add h2{color:#3e4457}
-#content #add p{font-family:'MuseoSlab500Regular',serif;color:#b1b6c4;margin-top:10px;line-height:20px;text-align:justify;text-justify:inter-word;}
-#content #add p a{color:#3e4457}
-#content #add .form{margin-top:20px;}
-#content #add .form table{width:100%;}
-#content #add .form table tr td:first-child{width:100%}
-#content #add .form input{-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;padding:10px;width:100%;-webkit-border-radius:2px 0 0 2px;border-radius:2px 0 0 2px;border:1px solid #dde1ed;border-right:0;-webkit-box-shadow:inset 0 1px 2px rgba(0,0,0,0.2);box-shadow:inset 0 1px 2px rgba(0,0,0,0.2)}
-#content #add .form a{margin-left:-2px;font-family:'MuseoSlab500Regular',serif;padding:11px 20px;-webkit-border-radius:0 2px 2px 0;border-radius:0 2px 2px 0;display:inline-block;font-weight:bold;background:#c1041c;color:#fff}
-#content #projects{border:1px solid #cdcecf;-webkit-border-radius:2px;border-radius:2px;}
-#content #projects h2{color:#3e4457;display:inline-block}
-#content #projects .sort{float:right;line-height:30px}
-#content #projects table{width:100%;}
-#content #projects table tr td{background:#fcfcfc;padding:20px 30px;border-bottom:1px solid #eaecf2;}
-#content #projects table tr td .project{color:inherit}
-#content #projects table tr td .milestone .icon{font-size:10px;margin:0}
-#content #projects table tr td .progress{width:200px;}
-#content #projects table tr td .progress .percent,#content #projects table tr td .progress .due{color:#9399ad;font-size:13px}
-#content #projects table tr td .progress .percent{float:right}
-#content #projects table tr td .progress .bar{-webkit-border-radius:4px;border-radius:4px;background:#eaecf2;height:10px;width:100%;}
-#content #projects table tr td .progress .bar.inner{-webkit-box-shadow:inset 0 1px 2px rgba(0,0,0,0.2);box-shadow:inset 0 1px 2px rgba(0,0,0,0.2)}
-#content #projects table tr td .progress .bar.red{background:#c1041c}
-#content #projects table tr td .progress .bar.green{background:#00b361}
-#content #projects table tr td .progress .due.red{color:#c1041c;font-weight:bold}
-#content #projects table tr td:first-child{color:#3e4457;font-weight:bold}
-#content #projects table tr:nth-child(2) td{background:#fefefe}
-#content #projects table tr:last-child td{border:0}
-#content #projects table tr.done td{background:#ebf6f1;}
-#content #projects table tr.done td .milestone,#content #projects table tr.done td .percent,#content #projects table tr.done td .due{color:#00b361}
-#content #projects .header,#content #projects .footer{padding:20px 30px}
-#content #projects .header{-webkit-box-shadow:0 1px 2px rgba(221,225,237,0.5);box-shadow:0 1px 2px rgba(221,225,237,0.5);margin-bottom:2px;border-bottom:1px solid #dde1ed;}
-#content #projects .header a{font-family:'MuseoSlab500Regular',serif}
-#content #projects .footer{background:#f9fafb;color:#aaafbf;-webkit-box-shadow:inset 0 1px 2px rgba(221,225,237,0.2);box-shadow:inset 0 1px 2px rgba(221,225,237,0.2);border-top:1px solid #dde1ed;text-align:right;font-family:'MuseoSlab500Regular',serif;}
-#content #projects .footer .icon{color:#aaafbf}
+#page{padding-bottom:80px;}
+#page #content{padding:20px;margin-top:20px;}
+#page #content #hero{background:url("../img/hires/2.jpg") center;-webkit-background-size:cover;-moz-background-size:cover;background-size:cover;-webkit-border-radius:2px;border-radius:2px;margin-bottom:30px;}
+#page #content #hero .content{-webkit-border-radius:2px;border-radius:2px;color:#fff;padding:30px;background:rgba(0,0,0,0.3);-webkit-box-shadow:inset 0 1px 2px rgba(0,0,0,0.2);box-shadow:inset 0 1px 2px rgba(0,0,0,0.2);}
+#page #content #hero .content h2{margin-bottom:20px;margin-left:140px}
+#page #content #hero .content p{font-family:'MuseoSlab500Regular',serif;font-size:18px;line-height:24px;margin-left:140px;text-align:justify;text-justify:inter-word}
+#page #content #hero .content .address{font-size:120px;float:left}
+#page #content #hero .content .cta{text-align:center;margin-top:10px;}
+#page #content #hero .content .cta a{font-family:'MuseoSlab500Regular',serif;padding:11px 20px;-webkit-border-radius:2px;border-radius:2px;display:inline-block;margin:0 4px;}
+#page #content #hero .content .cta a.primary{font-weight:bold;background:#c1041c;color:#fff}
+#page #content #hero .content .cta a.secondary{background:#fff;color:#c1041c}
+#page #content #add h2{color:#3e4457}
+#page #content #add p{font-family:'MuseoSlab500Regular',serif;color:#b1b6c4;margin-top:10px;line-height:20px;text-align:justify;text-justify:inter-word;}
+#page #content #add p a{color:#3e4457}
+#page #content #add .form{margin-top:20px;}
+#page #content #add .form table{width:100%;}
+#page #content #add .form table tr td:first-child{width:100%}
+#page #content #add .form input{-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;padding:10px;width:100%;-webkit-border-radius:2px 0 0 2px;border-radius:2px 0 0 2px;border:1px solid #dde1ed;border-right:0;-webkit-box-shadow:inset 0 1px 2px rgba(0,0,0,0.2);box-shadow:inset 0 1px 2px rgba(0,0,0,0.2)}
+#page #content #add .form a{margin-left:-2px;font-family:'MuseoSlab500Regular',serif;padding:11px 20px;-webkit-border-radius:0 2px 2px 0;border-radius:0 2px 2px 0;display:inline-block;font-weight:bold;background:#c1041c;color:#fff}
+#page #content #projects{border:1px solid #cdcecf;-webkit-border-radius:2px;border-radius:2px;}
+#page #content #projects h2{color:#3e4457;display:inline-block}
+#page #content #projects .sort{float:right;line-height:30px}
+#page #content #projects table{width:100%;}
+#page #content #projects table tr td{background:#fcfcfc;padding:20px 30px;border-bottom:1px solid #eaecf2;}
+#page #content #projects table tr td .project{color:inherit}
+#page #content #projects table tr td .milestone .icon{font-size:10px;margin:0}
+#page #content #projects table tr td .progress{width:200px;}
+#page #content #projects table tr td .progress .percent,#page #content #projects table tr td .progress .due{color:#9399ad;font-size:13px}
+#page #content #projects table tr td .progress .percent{float:right}
+#page #content #projects table tr td .progress .bar{-webkit-border-radius:4px;border-radius:4px;background:#eaecf2;height:10px;width:100%;}
+#page #content #projects table tr td .progress .bar.inner{-webkit-box-shadow:inset 0 1px 2px rgba(0,0,0,0.2);box-shadow:inset 0 1px 2px rgba(0,0,0,0.2)}
+#page #content #projects table tr td .progress .bar.red{background:#c1041c}
+#page #content #projects table tr td .progress .bar.green{background:#00b361}
+#page #content #projects table tr td .progress .due.red{color:#c1041c;font-weight:bold}
+#page #content #projects table tr td:first-child{color:#3e4457;font-weight:bold}
+#page #content #projects table tr:nth-child(2) td{background:#fefefe}
+#page #content #projects table tr:last-child td{border:0}
+#page #content #projects table tr.done td{background:#ebf6f1;}
+#page #content #projects table tr.done td .milestone,#page #content #projects table tr.done td .percent,#page #content #projects table tr.done td .due{color:#00b361}
+#page #content #projects .header,#page #content #projects .footer{padding:20px 30px}
+#page #content #projects .header{-webkit-box-shadow:0 1px 2px rgba(221,225,237,0.5);box-shadow:0 1px 2px rgba(221,225,237,0.5);margin-bottom:2px;border-bottom:1px solid #dde1ed;}
+#page #content #projects .header a{font-family:'MuseoSlab500Regular',serif}
+#page #content #projects .footer{background:#f9fafb;color:#aaafbf;-webkit-box-shadow:inset 0 1px 2px rgba(221,225,237,0.2);box-shadow:inset 0 1px 2px rgba(221,225,237,0.2);border-top:1px solid #dde1ed;text-align:right;font-family:'MuseoSlab500Regular',serif;}
+#page #content #projects .footer .icon{color:#aaafbf}
 #footer{position:absolute;width:100%;bottom:0;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;border-top:1px solid #f3f4f8;text-align:center;padding:30px;margin-top:30px;font-family:'MuseoSlab500Regular',serif}

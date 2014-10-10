@@ -12,10 +12,10 @@
         </td>
         <td style="width:1%">
           <div class="progress">
-            <span class="percent">{{Math.floor(format.progress(closed_issues, open_issues))}}%</span>
-            <span class="due">{{{ format.due(due_on) }}}</span>
+            <span class="percent">{{Math.floor(progress)}}%</span>
+            <span class="due">{{{ due }}}</span>
             <div class="outer bar">
-              <div class="inner bar {{format.onTime(this)}}" style="width:{{format.progress(closed_issues, open_issues)}}%"></div>
+              <div class="inner bar {{on_time}}" style="width:{{progress}}%"></div>
             </div>
           </div>
         </td>

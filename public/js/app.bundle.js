@@ -39104,7 +39104,7 @@ Router.prototype.mount = function(routes, path) {
             "datetime": /^(\d{4}-\d{2}-\d{2})T(.*)/,
             "size_label": /^size (\d+)$/,
             "location": /^#!((\/[^\/]+){2,3})$/,
-            "points": 'ONE_SIZE'
+            "points": 'LABELS'
           }
         }
       });
@@ -39894,7 +39894,7 @@ Router.prototype.mount = function(routes, path) {
     // milestones.mustache
     root.require.register('burnchart/src/templates/milestones.js', function(exports, require, module) {
     
-      module.exports = ["<div id=\"projects\">","  <div class=\"header\">","    <a href=\"#\" class=\"sort\"><Icons icon=\"sort-alphabet\"/> Sorted by priority</a>","    <h2>Milestones</h2>","  </div>","","  <table>","    {{#project.milestones}}","      <tr>","        <td>","          <a class=\"milestone\" href=\"#{{project.owner}}/{{project.name}}/{{number}}\">{{ title }}</a>","        </td>","        <td style=\"width:1%\">","          <div class=\"progress\">","            <span class=\"percent\">{{Math.floor(format.progress(closed_issues, open_issues))}}%</span>","            <span class=\"due\">{{{ format.due(due_on) }}}</span>","            <div class=\"outer bar\">","              <div class=\"inner bar {{format.onTime(this)}}\" style=\"width:{{format.progress(closed_issues, open_issues)}}%\"></div>","            </div>","          </div>","        </td>","      </tr>","    {{/project.milestones}}","  </table>","","  <div class=\"footer\">","    <a href=\"#\"><Icons icon=\"cog\"/> Edit</a>","  </div>","</div>"].join("\n");
+      module.exports = ["<div id=\"projects\">","  <div class=\"header\">","    <a href=\"#\" class=\"sort\"><Icons icon=\"sort-alphabet\"/> Sorted by priority</a>","    <h2>Milestones</h2>","  </div>","","  <table>","    {{#project.milestones}}","      <tr>","        <td>","          <a class=\"milestone\" href=\"#{{project.owner}}/{{project.name}}/{{number}}\">{{ title }}</a>","        </td>","        <td style=\"width:1%\">","          <div class=\"progress\">","            <span class=\"percent\">{{Math.floor(progress)}}%</span>","            <span class=\"due\">{{{ due }}}</span>","            <div class=\"outer bar\">","              <div class=\"inner bar {{on_time}}\" style=\"width:{{progress}}%\"></div>","            </div>","          </div>","        </td>","      </tr>","    {{/project.milestones}}","  </table>","","  <div class=\"footer\">","    <a href=\"#\"><Icons icon=\"cog\"/> Edit</a>","  </div>","</div>"].join("\n");
     });
 
     // notify.mustache
@@ -39924,7 +39924,7 @@ Router.prototype.mount = function(routes, path) {
     // project.mustache
     root.require.register('burnchart/src/templates/pages/project.js', function(exports, require, module) {
     
-      module.exports = ["{{#ready}}","  <div id=\"title\">","    <div class=\"wrap\">","      <h2 class=\"title\">{{route.join('/')}}</h2>","    </div>","  </div>","","  <div id=\"content\" class=\"wrap\">","    <Milestones project=\"{{project}}\"/>","  </div>","{{/ready}}"].join("\n");
+      module.exports = ["<div intro=\"fade\">","  {{#ready}}","    <div id=\"title\">","      <div class=\"wrap\">","        <h2 class=\"title\">{{route.join('/')}}</h2>","      </div>","    </div>","","    <div id=\"content\" class=\"wrap\">","      <Milestones project=\"{{project}}\"/>","    </div>","  {{/ready}}","</div>"].join("\n");
     });
 
     // projects.mustache
@@ -39956,16 +39956,15 @@ Router.prototype.mount = function(routes, path) {
           return 100 * (a / (b + a));
         }),
         'onTime': _.memoize(function(milestone) {
-          var a, b, c, points, time;
+          var a, b, c, time;
           if (!milestone.due_on) {
             return 'green';
           }
-          points = this.progress(milestone.closed_issues, milestone.open_issues);
           a = +new Date(milestone.created_at);
           b = +(new Date);
           c = +new Date(milestone.due_on);
           time = this.progress(b - a, c - b);
-          return ['red', 'green'][+(points > time)];
+          return ['red', 'green'][+(milestone.progress > time)];
         }, function(m) {
           return [m.created_at, m.number].join('/');
         }),
@@ -40375,7 +40374,7 @@ Router.prototype.mount = function(routes, path) {
     // project.coffee
     root.require.register('burnchart/src/views/pages/project.js', function(exports, require, module) {
     
-      var Milestones, mediator, milestone, projects, system;
+      var Milestones, config, format, issues, mediator, milestones, projects, system;
       
       Milestones = require('../milestones');
       
@@ -40383,9 +40382,15 @@ Router.prototype.mount = function(routes, path) {
       
       system = require('../../models/system');
       
-      milestone = require('../../modules/milestone');
+      config = require('../../models/config');
+      
+      milestones = require('../../modules/milestone');
+      
+      issues = require('../../modules/issues');
       
       mediator = require('../../modules/mediator');
+      
+      format = require('../../utils/format');
       
       module.exports = Ractive.extend({
         'name': 'views/pages/project',
@@ -40412,28 +40417,67 @@ Router.prototype.mount = function(routes, path) {
             return this.set('ready', true);
           }
           done = system.async();
-          return milestone.getAll(project, function(err, warn, list) {
-            done();
-            if (err) {
-              return mediator.fire('!app/notify', {
-                'text': err.toString(),
-                'type': 'alert',
-                'system': true,
-                'ttl': null
-              });
+          return milestones.getAll(project, function(err, warn, list) {
+            if (err || warn) {
+              done();
+              if (err) {
+                return mediator.fire('!app/notify', {
+                  'text': err.toString(),
+                  'type': 'alert',
+                  'system': true,
+                  'ttl': null
+                });
+              }
+              if (warn) {
+                return mediator.fire('!app/notify', {
+                  'text': warn.toString(),
+                  'type': 'warn',
+                  'system': true,
+                  'ttl': null
+                });
+              }
             }
-            if (warn) {
-              return mediator.fire('!app/notify', {
-                'text': warn.toString(),
-                'type': 'warn',
-                'system': true,
-                'ttl': null
-              });
+            switch (config.data.chart.points) {
+              case 'ONE_SIZE':
+                list = _.map(list, function(m) {
+                  m.progress = format.progress(m.closed_issues, m.open_issues);
+                  m.on_time = format.onTime(m);
+                  m.due = format.due(m.due_on);
+                  return m;
+                });
+                done();
+                return _this.set({
+                  'project.milestones': list,
+                  'ready': true
+                });
+              case 'LABELS':
+                return async.map(list, function(m, cb) {
+                  return issues.get_all(_.extend(project, {
+                    'milestone': m
+                  }), function(err, arr) {
+                    if (err) {
+                      return cb(err);
+                    }
+                    return issues.filter(arr, function(err, filtered, total) {
+                      return console.log(filtered, total);
+                    });
+                  });
+                }, function(err, list) {
+                  done();
+                  if (err) {
+                    return mediator.fire('!app/notify', {
+                      'text': err.toString(),
+                      'type': 'alert',
+                      'system': true,
+                      'ttl': null
+                    });
+                  }
+                  return this.set({
+                    'project.milestones': list,
+                    'ready': true
+                  });
+                });
             }
-            return _this.set({
-              'project.milestones': list,
-              'ready': true
-            });
           });
         }
       });
