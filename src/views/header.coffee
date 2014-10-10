@@ -1,5 +1,5 @@
 { system } = require '../models/system'
-firebase   = require '../modules/firebase'
+firebase   = require '../models/firebase'
 user       = require '../models/user'
 Icons      = require './icons'
 

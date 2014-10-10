@@ -2,45 +2,6 @@
 
 ##Release: MVP
 
-###Main
-
-- [ ] reorg code into its own little modules; have a consistent naming strategy, get an inspiration somewhere and stick to t
-
-For `LABELS` strategy:
-
-- [ ] the page says whether we need to know progress for a particular milestone, all of them, all projects.
-- [ ] based on previous fetch all issues
-- [ ] determine the total issues size of a milestone and the closed issues size
-- [ ] save this information on the milestone
-
-For `ONE_SIZE` stŕategy:
-
-- [ ] we need not fetch all issues, progress is determined based on `open_issues` and `closed_issues` keys
-
-For both strategies:
-
-- [ ] based on the page we are at (chart), we may need to fetch issues for a milestone, do that
-
-```coffeescript
-{
-  'name': 'radekstepan'
-  'owner': 'disposable'
-  'milestones': [
-    {
-      'issues':
-        'open':
-          'github': obj
-          'size': 15 # in points be it LABELS or ONE_SIZE
-        'closed':
-          'size': 7
-          'github': obj
-      'progress': 0.66
-      'github': obj
-    }
-  ]
-}
-```
-
 ###GitHub
 
 - [ ] progress needs to be calculated based on strategy even on homepage, then sort the milestones based on priority
@@ -60,6 +21,7 @@ For both strategies:
 - [ ] check that we have not run out of requests to make
 - [ ] can we get more than 1 notification at a time?
 - [ ] save in memory only if no `localStorage`, warn about that
+- [ ] what if milestone does not match our strategy?
 
 ###Bugs
 

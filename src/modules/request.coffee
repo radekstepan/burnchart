@@ -18,40 +18,40 @@ defaults =
 module.exports =
   
   # Get a repo.
-  'repo': (repo, cb) ->
+  repo: ({ owner, name }, cb) ->
     data = _.defaults
-      'path':   "/repos/#{repo.owner}/#{repo.name}"
-      'headers':  headers user.get('token')
+      'path':   "/repos/#{owner}/#{name}"
+      'headers':  headers user.data.token
     , defaults.github
 
     request data, cb
 
   # Get all open milestones.
-  'allMilestones': (repo, cb) ->     
+  allMilestones: ({ owner, name }, cb) ->     
     data = _.defaults
-      'path':   "/repos/#{repo.owner}/#{repo.name}/milestones"
+      'path':   "/repos/#{owner}/#{name}/milestones"
       'query':  { 'state': 'open', 'sort': 'due_date', 'direction': 'asc' }
-      'headers':  headers user.get('token')
+      'headers':  headers user.data.token
     , defaults.github
 
     request data, cb
   
   # Get one open milestone.
-  'oneMilestone': (repo, number, cb) ->    
+  oneMilestone: ({ owner, name, milestone }, cb) ->    
     data = _.defaults
-      'path':   "/repos/#{repo.owner}/#{repo.name}/milestones/#{number}"
+      'path':   "/repos/#{owner}/#{name}/milestones/#{milestone}"
       'query':  { 'state': 'open', 'sort': 'due_date', 'direction': 'asc' }
-      'headers':  headers user.get('token')
+      'headers':  headers user.data.token
     , defaults.github
 
     request data, cb
 
   # Get all issues for a state.
-  'allIssues': (repo, query, cb) ->     
+  allIssues: ({ owner, name, milestone }, query, cb) ->     
     data = _.defaults
-      'path':   "/repos/#{repo.owner}/#{repo.name}/issues"
-      'query':  _.extend query, { 'per_page': '100' }
-      'headers':  headers user.get('token')
+      'path':   "/repos/#{owner}/#{name}/issues"
+      'query':  _.extend query, { milestone, 'per_page': '100' }
+      'headers':  headers user.data.token
     , defaults.github
 
     request data, cb

@@ -39104,8 +39104,53 @@ Router.prototype.mount = function(routes, path) {
             "datetime": /^(\d{4}-\d{2}-\d{2})T(.*)/,
             "size_label": /^size (\d+)$/,
             "location": /^#!((\/[^\/]+){2,3})$/,
-            "points": 'LABELS'
+            "points": 'ONE_SIZE'
           }
+        }
+      });
+      
+    });
+
+    // firebase.coffee
+    root.require.register('burnchart/src/models/firebase.js', function(exports, require, module) {
+    
+      var Model, config, user;
+      
+      Model = require('../utils/model');
+      
+      user = require('./user');
+      
+      config = require('./config');
+      
+      module.exports = new Model({
+        'name': 'models/firebase',
+        auth: function() {
+          throw 'Not overriden';
+        },
+        login: function(cb) {
+          return this.auth.login(config.data.provider, {
+            'rememberMe': true,
+            'scope': 'public_repo'
+          });
+        },
+        logout: function() {
+          var _ref;
+          if ((_ref = this.auth) != null) {
+            _ref.logout;
+          }
+          return user.reset();
+        },
+        onrender: function() {
+          var client,
+            _this = this;
+          this.set('client', client = new Firebase("https://" + config.data.firebase + ".firebaseio.com"));
+          return this.auth = new FirebaseSimpleLogin(client, function(err, obj) {
+            user.set('loaded', true);
+            if (err || !obj) {
+              throw err;
+            }
+            return user.set(obj);
+          });
         }
       });
       
@@ -39216,133 +39261,14 @@ Router.prototype.mount = function(routes, path) {
     });
 
     // chart.coffee
-    root.require.register('burnchart/src/modules/chart.js', function(exports, require, module) {
+    root.require.register('burnchart/src/modules/draw/chart.js', function(exports, require, module) {
     
-      var config,
-        __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
+      var config;
       
       config = require('../models/config');
       
       module.exports = {
-        'actual': function(collection, created_at, total, cb) {
-          var head, max, min, range, rest;
-          head = [
-            {
-              'date': new Date(created_at),
-              'points': total
-            }
-          ];
-          min = +Infinity;
-          max = -Infinity;
-          rest = _.map(collection, function(issue) {
-            var closed_at, size;
-            size = issue.size, closed_at = issue.closed_at;
-            if (size < min) {
-              min = size;
-            }
-            if (size > max) {
-              max = size;
-            }
-            issue.date = new Date(closed_at);
-            issue.points = total -= size;
-            return issue;
-          });
-          range = d3.scale.linear().domain([min, max]).range([5, 8]);
-          rest = _.map(rest, function(issue) {
-            issue.radius = range(issue.size);
-            return issue;
-          });
-          return cb(null, [].concat(head, rest));
-        },
-        'ideal': function(a, b, total, cb) {
-          var cutoff, d, days, length, m, now, once, velocity, y, _ref, _ref1;
-          if (b < a) {
-            _ref = [a, b], b = _ref[0], a = _ref[1];
-          }
-          _ref1 = _.map(a.match(config.get('chart.datetime'))[1].split('-'), function(v) {
-            return parseInt(v);
-          }), y = _ref1[0], m = _ref1[1], d = _ref1[2];
-          cutoff = new Date(b);
-          days = [];
-          length = 0;
-          (once = function(inc) {
-            var day, day_of;
-            day = new Date(y, m - 1, d + inc);
-            if (!(day_of = day.getDay())) {
-              day_of = 7;
-            }
-            if (__indexOf.call(config.get('chart.off_days'), day_of) >= 0) {
-              days.push({
-                date: day,
-                off_day: true
-              });
-            } else {
-              length += 1;
-              days.push({
-                date: day
-              });
-            }
-            if (!(day > cutoff)) {
-              return once(inc + 1);
-            }
-          })(0);
-          velocity = total / (length - 1);
-          days = _.map(days, function(day, i) {
-            day.points = total;
-            if (days[i] && !days[i].off_day) {
-              total -= velocity;
-            }
-            return day;
-          });
-          if ((now = new Date()) > cutoff) {
-            days.push({
-              date: now,
-              points: 0
-            });
-          }
-          return cb(null, days);
-        },
-        'trendline': function(actual, created_at, due_on) {
-          var a, b, b1, c1, e, fn, intercept, l, last, slope, start, values;
-          start = +actual[0].date;
-          values = _.map(actual, function(_arg) {
-            var date, points;
-            date = _arg.date, points = _arg.points;
-            return [+date - start, points];
-          });
-          last = actual[actual.length - 1];
-          values.push([+new Date() - start, last.points]);
-          b1 = 0;
-          e = 0;
-          c1 = 0;
-          a = (l = values.length) * _.reduce(values, function(sum, _arg) {
-            var a, b;
-            a = _arg[0], b = _arg[1];
-            b1 += a;
-            e += b;
-            c1 += Math.pow(a, 2);
-            return sum + (a * b);
-          }, 0);
-          slope = (a - (b1 * e)) / ((l * c1) - (Math.pow(b1, 2)));
-          intercept = (e - (slope * b1)) / l;
-          fn = function(x) {
-            return slope * x + intercept;
-          };
-          created_at = new Date(created_at);
-          due_on = due_on ? new Date(due_on) : new Date();
-          a = created_at - start;
-          b = due_on - start;
-          return [
-            {
-              date: created_at,
-              points: fn(a)
-            }, {
-              date: due_on,
-              points: fn(b)
-            }
-          ];
-        },
-        'render': function(_arg, cb) {
+        render: function(_arg, cb) {
           var actual, height, ideal, line, m, mAxis, margin, svg, tooltip, trendline, width, x, xAxis, y, yAxis, _ref;
           actual = _arg[0], ideal = _arg[1], trendline = _arg[2];
           document.querySelector('#svg').innerHTML = '';
@@ -39411,75 +39337,183 @@ Router.prototype.mount = function(routes, path) {
       
     });
 
-    // firebase.coffee
-    root.require.register('burnchart/src/modules/firebase.js', function(exports, require, module) {
+    // line.coffee
+    root.require.register('burnchart/src/modules/draw/line.js', function(exports, require, module) {
     
-      var Class, config, user;
+      var __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
       
-      user = require('../models/user');
-      
-      config = require('../models/config');
-      
-      Class = (function() {
-        function Class() {
-          var _this = this;
-          this.client = new Firebase("https://" + (config.get('firebase')) + ".firebaseio.com");
-          this.auth = new FirebaseSimpleLogin(this.client, function(err, obj) {
-            user.set('loaded', true);
-            if (err || !obj) {
-              return _this.authCb(err);
+      module.exports = {
+        actual: function(collection, created_at, total, cb) {
+          var head, max, min, range, rest;
+          head = [
+            {
+              'date': new Date(created_at),
+              'points': total
             }
-            return user.set(obj);
+          ];
+          min = +Infinity;
+          max = -Infinity;
+          rest = _.map(collection, function(issue) {
+            var closed_at, size;
+            size = issue.size, closed_at = issue.closed_at;
+            if (size < min) {
+              min = size;
+            }
+            if (size > max) {
+              max = size;
+            }
+            issue.date = new Date(closed_at);
+            issue.points = total -= size;
+            return issue;
           });
+          range = d3.scale.linear().domain([min, max]).range([5, 8]);
+          rest = _.map(rest, function(issue) {
+            issue.radius = range(issue.size);
+            return issue;
+          });
+          return cb(null, [].concat(head, rest));
+        },
+        ideal: function(a, b, total, cb) {
+          var cutoff, d, days, length, m, now, once, velocity, y, _ref, _ref1;
+          if (b < a) {
+            _ref = [a, b], b = _ref[0], a = _ref[1];
+          }
+          _ref1 = _.map(a.match(config.get('chart.datetime'))[1].split('-'), function(v) {
+            return parseInt(v);
+          }), y = _ref1[0], m = _ref1[1], d = _ref1[2];
+          cutoff = new Date(b);
+          days = [];
+          length = 0;
+          (once = function(inc) {
+            var day, day_of;
+            day = new Date(y, m - 1, d + inc);
+            if (!(day_of = day.getDay())) {
+              day_of = 7;
+            }
+            if (__indexOf.call(config.get('chart.off_days'), day_of) >= 0) {
+              days.push({
+                date: day,
+                off_day: true
+              });
+            } else {
+              length += 1;
+              days.push({
+                date: day
+              });
+            }
+            if (!(day > cutoff)) {
+              return once(inc + 1);
+            }
+          })(0);
+          velocity = total / (length - 1);
+          days = _.map(days, function(day, i) {
+            day.points = total;
+            if (days[i] && !days[i].off_day) {
+              total -= velocity;
+            }
+            return day;
+          });
+          if ((now = new Date()) > cutoff) {
+            days.push({
+              date: now,
+              points: 0
+            });
+          }
+          return cb(null, days);
+        },
+        trend: function(actual, created_at, due_on) {
+          var a, b, b1, c1, e, fn, intercept, l, last, slope, start, values;
+          start = +actual[0].date;
+          values = _.map(actual, function(_arg) {
+            var date, points;
+            date = _arg.date, points = _arg.points;
+            return [+date - start, points];
+          });
+          last = actual[actual.length - 1];
+          values.push([+new Date() - start, last.points]);
+          b1 = 0;
+          e = 0;
+          c1 = 0;
+          a = (l = values.length) * _.reduce(values, function(sum, _arg) {
+            var a, b;
+            a = _arg[0], b = _arg[1];
+            b1 += a;
+            e += b;
+            c1 += Math.pow(a, 2);
+            return sum + (a * b);
+          }, 0);
+          slope = (a - (b1 * e)) / ((l * c1) - (Math.pow(b1, 2)));
+          intercept = (e - (slope * b1)) / l;
+          fn = function(x) {
+            return slope * x + intercept;
+          };
+          created_at = new Date(created_at);
+          due_on = due_on ? new Date(due_on) : new Date();
+          a = created_at - start;
+          b = due_on - start;
+          return [
+            {
+              date: created_at,
+              points: fn(a)
+            }, {
+              date: due_on,
+              points: fn(b)
+            }
+          ];
         }
-      
-        Class.prototype.authCb = function() {};
-      
-        Class.prototype.login = function(cb) {
-          if (!this.client) {
-            return cb('Client is not setup');
-          }
-          this.authCb = cb;
-          return this.auth.login(config.get('provider'), {
-            'rememberMe': true,
-            'scope': 'public_repo'
-          });
-        };
-      
-        Class.prototype.logout = function() {
-          var _ref;
-          if ((_ref = this.auth) != null) {
-            _ref.logout;
-          }
-          return user.reset();
-        };
-      
-        return Class;
-      
-      })();
-      
-      module.exports = new Class();
+      };
       
     });
 
     // issues.coffee
-    root.require.register('burnchart/src/modules/issues.js', function(exports, require, module) {
+    root.require.register('burnchart/src/modules/github/issues.js', function(exports, require, module) {
     
       var config, request;
       
-      config = require('../models/config');
+      config = require('../../models/config');
       
-      request = require('./request');
+      request = require('../request');
       
       module.exports = {
-        'get_all': function(opts, cb) {
-          var one_status;
-          one_status = function(state, cb) {
-            var fetch_page, results;
+        fetchAll: function(repo, cb) {
+          var calcSize, oneStatus;
+          calcSize = function(list, cb) {
+            var size;
+            switch (config.data.chart.points) {
+              case 'ONE_SIZE':
+                size = list.length;
+                return cb(null, {
+                  list: list,
+                  size: size
+                });
+              case 'LABELS':
+                size = 0;
+                list = _.filter(list, function(issue) {
+                  var labels;
+                  if (!(labels = issue.labels)) {
+                    return false;
+                  }
+                  issue.size = _.reduce(labels, function(sum, label) {
+                    var matches;
+                    if (!(matches = label.name.match(config.data.chart.size_label))) {
+                      return sum;
+                    }
+                    return sum += parseInt(matches[1]);
+                  }, 0);
+                  size += issue.size;
+                  return !!issue.size;
+                });
+                return cb(null, {
+                  list: list,
+                  size: size
+                });
+            }
+          };
+          oneStatus = function(state, cb) {
+            var fetchPage, results;
             results = [];
-            return (fetch_page = function(page) {
-              return request.allIssues(opts, {
-                'milestone': opts.milestone.number,
+            return (fetchPage = function(page) {
+              return request.allIssues(repo, {
                 state: state,
                 page: page
               }, function(err, data) {
@@ -39493,42 +39527,33 @@ Router.prototype.mount = function(routes, path) {
                 if (data.length < 100) {
                   return cb(null, results);
                 }
-                return fetch_page(page + 1);
+                return fetchPage(page + 1);
               });
             })(1);
           };
-          return async.parallel([_.partial(one_status, 'open'), _.partial(one_status, 'closed')], cb);
-        },
-        'filter': function(collection, cb) {
-          var filtered, total;
-          total = 0;
-          switch (config.get('chart.points')) {
-            case 'ONE_SIZE':
-              total = collection.length;
-              filtered = _.map(collection, function(issue) {
-                issue.size = 1;
-                return issue;
-              });
-              break;
-            case 'LABELS':
-              filtered = _.filter(collection, function(issue) {
-                var labels;
-                if (!(labels = issue.labels)) {
-                  return false;
-                }
-                issue.size = _.reduce(labels, function(sum, label) {
-                  var matches;
-                  if (!(matches = label.name.match(config.get('chart.size_label')))) {
-                    return sum;
-                  }
-                  return sum += parseInt(matches[1]);
-                }, 0);
-                total += issue.size;
-                return !!issue.size;
-              });
-          }
-          return cb(null, filtered, total);
+          return async.parallel([_.partial(async.waterfall, [_.partial(oneStatus, 'open'), calcSize]), _.partial(async.waterfall, [_.partial(oneStatus, 'closed'), calcSize])], function(err, _arg) {
+            var closed, open;
+            open = _arg[0], closed = _arg[1];
+            return cb(err, {
+              open: open,
+              closed: closed
+            });
+          });
         }
+      };
+      
+    });
+
+    // milestone.coffee
+    root.require.register('burnchart/src/modules/github/milestone.js', function(exports, require, module) {
+    
+      var request;
+      
+      request = require('../request');
+      
+      module.exports = {
+        'fetch': request.oneMilestone,
+        'fetchAll': request.allMilestones
       };
       
     });
@@ -39544,90 +39569,10 @@ Router.prototype.mount = function(routes, path) {
       
     });
 
-    // milestone.coffee
-    root.require.register('burnchart/src/modules/milestone.js', function(exports, require, module) {
-    
-      var request;
-      
-      request = require('./request');
-      
-      module.exports = {
-        get: function(repo, cb) {
-          if (repo.milestone) {
-            return request.oneMilestone(repo, repo.milestone, function(err, m) {
-              if (err) {
-                return cb(err);
-              }
-              if (m.open_issues + m.closed_issues === 0) {
-                return cb(null, "No issues for milestone `" + m.title + "`");
-              }
-              return cb(null, null, m);
-            });
-          }
-        },
-        getAll: function(repo, cb) {
-          return request.allMilestones(repo, function(err, data) {
-            return cb(err, null, data);
-          });
-        }
-      };
-      
-    });
-
     // project.coffee
     root.require.register('burnchart/src/modules/project.js', function(exports, require, module) {
     
-      var chart, issues;
       
-      issues = require('./issues');
-      
-      chart = require('./chart');
-      
-      module.exports = function(opts, cb) {
-        return async.waterfall([
-          function(cb) {
-            return issues.get_all(opts, cb);
-          }, function(all, cb) {
-            return async.map(all, function(array, cb) {
-              return issues.filter(array, function(err, filtered, total) {
-                return cb(err, [filtered, total]);
-              });
-            }, function(err, _arg) {
-              var closed, open, start;
-              open = _arg[0], closed = _arg[1];
-              if (err) {
-                return cb(err);
-              }
-              if (open[1] + closed[1] === 0) {
-                return cb('No matching issues found');
-              }
-              opts.issues = {
-                'closed': {
-                  'points': closed[1],
-                  'data': closed[0]
-                },
-                'open': {
-                  'points': open[1],
-                  'data': open[0]
-                }
-              };
-              if ((start = closed[0][0].closed_at) < opts.milestone.created_at) {
-                opts.milestone.created_at = start;
-              }
-              return cb(null);
-            });
-          }, function(cb) {
-            var total;
-            total = opts.issues.open.points + opts.issues.closed.points;
-            return async.parallel([_.partial(chart.actual, opts.issues.closed.data, opts.milestone.created_at, total), _.partial(chart.ideal, opts.milestone.created_at, opts.milestone.due_on, total)], function(err, values) {
-              if (values[0].length) {
-                values.push(chart.trendline(values[0], opts.milestone.created_at, opts.milestone.due_on));
-              }
-              return chart.render(values, cb);
-            });
-          }
-        ], cb);
-      };
       
     });
 
@@ -39658,48 +39603,53 @@ Router.prototype.mount = function(routes, path) {
       };
       
       module.exports = {
-        'repo': function(repo, cb) {
-          var data;
+        repo: function(_arg, cb) {
+          var data, name, owner;
+          owner = _arg.owner, name = _arg.name;
           data = _.defaults({
-            'path': "/repos/" + repo.owner + "/" + repo.name,
-            'headers': headers(user.get('token'))
+            'path': "/repos/" + owner + "/" + name,
+            'headers': headers(user.data.token)
           }, defaults.github);
           return request(data, cb);
         },
-        'allMilestones': function(repo, cb) {
-          var data;
+        allMilestones: function(_arg, cb) {
+          var data, name, owner;
+          owner = _arg.owner, name = _arg.name;
           data = _.defaults({
-            'path': "/repos/" + repo.owner + "/" + repo.name + "/milestones",
+            'path': "/repos/" + owner + "/" + name + "/milestones",
             'query': {
               'state': 'open',
               'sort': 'due_date',
               'direction': 'asc'
             },
-            'headers': headers(user.get('token'))
+            'headers': headers(user.data.token)
           }, defaults.github);
           return request(data, cb);
         },
-        'oneMilestone': function(repo, number, cb) {
-          var data;
+        oneMilestone: function(_arg, cb) {
+          var data, milestone, name, owner;
+          owner = _arg.owner, name = _arg.name, milestone = _arg.milestone;
           data = _.defaults({
-            'path': "/repos/" + repo.owner + "/" + repo.name + "/milestones/" + number,
+            'path': "/repos/" + owner + "/" + name + "/milestones/" + milestone,
             'query': {
               'state': 'open',
               'sort': 'due_date',
               'direction': 'asc'
             },
-            'headers': headers(user.get('token'))
+            'headers': headers(user.data.token)
           }, defaults.github);
           return request(data, cb);
         },
-        'allIssues': function(repo, query, cb) {
-          var data;
+        allIssues: function(_arg, query, cb) {
+          var data, milestone, name, owner;
+          owner = _arg.owner, name = _arg.name, milestone = _arg.milestone;
           data = _.defaults({
-            'path': "/repos/" + repo.owner + "/" + repo.name + "/issues",
+            'path': "/repos/" + owner + "/" + name + "/issues",
             'query': _.extend(query, {
+              milestone: milestone,
               'per_page': '100'
             }),
-            'headers': headers(user.get('token'))
+            'headers': headers(user.data.token)
           }, defaults.github);
           return request(data, cb);
         }
@@ -39894,7 +39844,7 @@ Router.prototype.mount = function(routes, path) {
     // milestones.mustache
     root.require.register('burnchart/src/templates/milestones.js', function(exports, require, module) {
     
-      module.exports = ["<div id=\"projects\">","  <div class=\"header\">","    <a href=\"#\" class=\"sort\"><Icons icon=\"sort-alphabet\"/> Sorted by priority</a>","    <h2>Milestones</h2>","  </div>","","  <table>","    {{#project.milestones}}","      <tr>","        <td>","          <a class=\"milestone\" href=\"#{{project.owner}}/{{project.name}}/{{number}}\">{{ title }}</a>","        </td>","        <td style=\"width:1%\">","          <div class=\"progress\">","            <span class=\"percent\">{{Math.floor(progress)}}%</span>","            <span class=\"due\">{{{ due }}}</span>","            <div class=\"outer bar\">","              <div class=\"inner bar {{on_time}}\" style=\"width:{{progress}}%\"></div>","            </div>","          </div>","        </td>","      </tr>","    {{/project.milestones}}","  </table>","","  <div class=\"footer\">","    <a href=\"#\"><Icons icon=\"cog\"/> Edit</a>","  </div>","</div>"].join("\n");
+      module.exports = ["<div id=\"projects\">","  <div class=\"header\">","    <a href=\"#\" class=\"sort\"><Icons icon=\"sort-alphabet\"/> Sorted by priority</a>","    <h2>Milestones</h2>","  </div>","","  <table>","    {{#project.milestones}}","      <tr>","        <td>","          <a class=\"milestone\" href=\"#{{project.owner}}/{{project.name}}/{{number}}\">{{ title }}</a>","        </td>","        <td style=\"width:1%\">","          <div class=\"progress\">","            <span class=\"percent\">{{Math.floor(format.progress(issues.closed.size, issues.open.size))}}%</span>","            <span class=\"due\">{{{ format.due(due_on) }}}</span>","            <div class=\"outer bar\">","              <div class=\"inner bar {{format.onTime(number, due_on, created_at, issues.closed.size, issues.open.size)}}\" style=\"width:{{format.progress(issues.closed.size, issues.open.size)}}%\"></div>","            </div>","          </div>","        </td>","      </tr>","    {{/project.milestones}}","  </table>","","  <div class=\"footer\">","    <a href=\"#\"><Icons icon=\"cog\"/> Edit</a>","  </div>","</div>"].join("\n");
     });
 
     // notify.mustache
@@ -39947,26 +39897,26 @@ Router.prototype.mount = function(routes, path) {
     // format.coffee
     root.require.register('burnchart/src/utils/format.js', function(exports, require, module) {
     
-      var config;
-      
-      config = require('../models/config');
+      var __slice = [].slice;
       
       module.exports = {
         'progress': _.memoize(function(a, b) {
           return 100 * (a / (b + a));
         }),
-        'onTime': _.memoize(function(milestone) {
+        'onTime': _.memoize(function(number, due_on, created_at, closed_size, open_size) {
           var a, b, c, time;
-          if (!milestone.due_on) {
+          if (!due_on) {
             return 'green';
           }
-          a = +new Date(milestone.created_at);
+          a = +new Date(created_at);
           b = +(new Date);
-          c = +new Date(milestone.due_on);
+          c = +new Date(due_on);
           time = this.progress(b - a, c - b);
-          return ['red', 'green'][+(milestone.progress > time)];
-        }, function(m) {
-          return [m.created_at, m.number].join('/');
+          return ['red', 'green'][+(this.progress(closed_size, open_size) > time)];
+        }, function() {
+          var args;
+          args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
+          return args.join('/');
         }),
         'fromNow': _.memoize(function(jsonDate) {
           return moment(new Date(jsonDate)).fromNow();
@@ -40050,7 +40000,7 @@ Router.prototype.mount = function(routes, path) {
       
       system = require('../models/system').system;
       
-      firebase = require('../modules/firebase');
+      firebase = require('../models/firebase');
       
       user = require('../models/user');
       
@@ -40154,17 +40104,22 @@ Router.prototype.mount = function(routes, path) {
     // milestones.coffee
     root.require.register('burnchart/src/views/milestones.js', function(exports, require, module) {
     
-      var Icons, mediator, projects;
+      var Icons, format, mediator, projects;
       
       mediator = require('../modules/mediator');
       
       projects = require('../models/projects');
+      
+      format = require('../utils/format');
       
       Icons = require('./icons');
       
       module.exports = Ractive.extend({
         'name': 'views/milestones',
         'template': require('../templates/milestones'),
+        'data': {
+          format: format
+        },
         'components': {
           Icons: Icons
         },
@@ -40384,9 +40339,9 @@ Router.prototype.mount = function(routes, path) {
       
       config = require('../../models/config');
       
-      milestones = require('../../modules/milestone');
+      milestones = require('../../modules/github/milestone');
       
-      issues = require('../../modules/issues');
+      issues = require('../../modules/github/issues');
       
       mediator = require('../../modules/mediator');
       
@@ -40402,7 +40357,7 @@ Router.prototype.mount = function(routes, path) {
           'ready': false
         },
         onrender: function() {
-          var done, name, owner, project, _ref,
+          var done, fetchIssues, fetchMilestones, name, owner, project, _ref,
             _this = this;
           _ref = this.get('route'), owner = _ref[0], name = _ref[1];
           document.title = "" + owner + "/" + name;
@@ -40417,67 +40372,36 @@ Router.prototype.mount = function(routes, path) {
             return this.set('ready', true);
           }
           done = system.async();
-          return milestones.getAll(project, function(err, warn, list) {
-            if (err || warn) {
-              done();
-              if (err) {
-                return mediator.fire('!app/notify', {
-                  'text': err.toString(),
-                  'type': 'alert',
-                  'system': true,
-                  'ttl': null
-                });
-              }
-              if (warn) {
-                return mediator.fire('!app/notify', {
-                  'text': warn.toString(),
-                  'type': 'warn',
-                  'system': true,
-                  'ttl': null
-                });
-              }
+          fetchMilestones = function(cb) {
+            return milestones.fetchAll(project, cb);
+          };
+          fetchIssues = function(allMilestones, cb) {
+            return async.map(allMilestones, function(milestone, cb) {
+              return issues.fetchAll({
+                owner: owner,
+                name: name,
+                'milestone': milestone.number
+              }, function(err, obj) {
+                return cb(err, _.extend(milestone, {
+                  'issues': obj
+                }));
+              });
+            }, cb);
+          };
+          return async.waterfall([fetchMilestones, fetchIssues], function(err, data) {
+            done();
+            if (err) {
+              return mediator.fire('!app/notify', {
+                'text': err.toString(),
+                'type': 'alert',
+                'system': true,
+                'ttl': null
+              });
             }
-            switch (config.data.chart.points) {
-              case 'ONE_SIZE':
-                list = _.map(list, function(m) {
-                  m.progress = format.progress(m.closed_issues, m.open_issues);
-                  m.on_time = format.onTime(m);
-                  m.due = format.due(m.due_on);
-                  return m;
-                });
-                done();
-                return _this.set({
-                  'project.milestones': list,
-                  'ready': true
-                });
-              case 'LABELS':
-                return async.map(list, function(m, cb) {
-                  return issues.get_all(_.extend(project, {
-                    'milestone': m
-                  }), function(err, arr) {
-                    if (err) {
-                      return cb(err);
-                    }
-                    return issues.filter(arr, function(err, filtered, total) {
-                      return console.log(filtered, total);
-                    });
-                  });
-                }, function(err, list) {
-                  done();
-                  if (err) {
-                    return mediator.fire('!app/notify', {
-                      'text': err.toString(),
-                      'type': 'alert',
-                      'system': true,
-                      'ttl': null
-                    });
-                  }
-                  return this.set({
-                    'project.milestones': list,
-                    'ready': true
-                  });
-                });
-            }
+            return _this.set({
+              'project.milestones': data,
+              'ready': true
+            });
           });
         }
       });

@@ -1,5 +1,3 @@
-config = require '../models/config'
-
 module.exports =
 
   # Progress in percentages.
@@ -7,21 +5,22 @@ module.exports =
     100 * (a / (b + a))
 
   # Is a milestone on time?
-  'onTime': _.memoize (milestone) ->
+  'onTime': _.memoize (number, due_on, created_at, closed_size, open_size) ->
     # Milestones with no due date are always on track.
-    return 'green' unless milestone.due_on
+    return 'green' unless due_on
 
     # Calculate the progress in days.
-    a = +new Date milestone.created_at
+    a = +new Date created_at
     b = +new Date
-    c = +new Date milestone.due_on
+    c = +new Date due_on
 
     # Progress in time.
     time = @progress b - a, c - b
 
-    [ 'red', 'green' ][ +(milestone.progress > time) ]
-  , (m) -> # resolver
-    [ m.created_at, m.number ].join '/'
+    # Progress in size.
+    [ 'red', 'green' ][ +(@progress(closed_size, open_size) > time) ]
+  , (args...) -> # resolver
+    args.join '/'
 
   # Time from now.
   'fromNow': _.memoize (jsonDate) ->

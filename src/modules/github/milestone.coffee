@@ -1,25 +1,13 @@
 #!/usr/bin/env coffee
-request = require './request'
+request = require '../request'
 
 module.exports =
 
-  # Get a specific milestone for a repo.
-  get: (repo, cb) ->     
-    # Get a specific milestone.
-    if repo.milestone
-      request.oneMilestone repo, repo.milestone, (err, m) ->
-        # Errors?
-        return cb err if err
-        # Empty milestone?
-        if m.open_issues + m.closed_issues is 0
-          return cb null, "No issues for milestone `#{m.title}`"
+  # Fetch a milestone.
+  'fetch': request.oneMilestone
 
-        cb null, null, m
-
-  # Get all milestones.
-  getAll: (repo, cb) ->
-    request.allMilestones repo, (err, data) ->
-      cb err, null, data
+  # Fetch all milestones.
+  'fetchAll': request.allMilestones
 
     # # Get the current milestone out of many.
     # else
