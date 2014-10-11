@@ -95,7 +95,9 @@ ul li{display:inline-block}
 #page #content #projects .sort{float:right;line-height:30px}
 #page #content #projects table{width:100%;}
 #page #content #projects table tr td{background:#fcfcfc;padding:20px 30px;border-bottom:1px solid #eaecf2;}
-#page #content #projects table tr td .project{color:inherit}
+#page #content #projects table tr td .project{color:inherit;}
+#page #content #projects table tr td .project .error{cursor:help;color:#c1041c}
+#page #content #projects table tr td a.project{font-weight:bold}
 #page #content #projects table tr td .milestone .icon{font-size:10px;margin:0}
 #page #content #projects table tr td .progress{width:200px;}
 #page #content #projects table tr td .progress .percent,#page #content #projects table tr td .progress .due{color:#9399ad;font-size:13px}
@@ -105,8 +107,8 @@ ul li{display:inline-block}
 #page #content #projects table tr td .progress .bar.red{background:#c1041c}
 #page #content #projects table tr td .progress .bar.green{background:#00b361}
 #page #content #projects table tr td .progress .due.red{color:#c1041c;font-weight:bold}
-#page #content #projects table tr td:first-child{color:#3e4457;font-weight:bold}
-#page #content #projects table tr:nth-child(2) td{background:#fefefe}
+#page #content #projects table tr td:first-child{color:#3e4457}
+#page #content #projects table tr:nth-child(even) td{background:#fefefe}
 #page #content #projects table tr:last-child td{border:0}
 #page #content #projects table tr.done td{background:#ebf6f1;}
 #page #content #projects table tr.done td .milestone,#page #content #projects table tr.done td .percent,#page #content #projects table tr.done td .due{color:#00b361}

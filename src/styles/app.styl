@@ -309,6 +309,13 @@ ul
             .project
               color: inherit
 
+              .error
+                cursor: help
+                color: $strong_color
+
+            a.project
+              font-weight: bold
+
             .milestone
               .icon
                 font-size: 10px
@@ -346,9 +353,8 @@ ul
 
             &:first-child
               color: #3E4457
-              font-weight: bold
 
-          &:nth-child(2)
+          &:nth-child(even)
             td
               background: lighten(#FCFCFC, 60%)
 

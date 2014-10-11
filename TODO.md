@@ -22,6 +22,7 @@
 - [ ] can we get more than 1 notification at a time?
 - [ ] save in memory only if no `localStorage`, warn about that
 - [ ] what if milestone does not match our strategy?
+- [ ] show a stack of errors from index page as notifications
 
 ###Bugs
 
@@ -43,6 +44,7 @@
 - [ ] focus on form fields style
 - [ ] switch off `user-select` on buttons
 - [ ] make async pages transition so that there is no "jumping" on the page
+- [ ] index page alert tooltip
 
 ###Misc
 

@@ -14,6 +14,7 @@ codes =
   'megaphone':     '\e809'
   'spin4':         '\e80a'
   'spinner1':      '\e80b'
+  'attention':     '\e80c'
 
 module.exports = Ractive.extend
 

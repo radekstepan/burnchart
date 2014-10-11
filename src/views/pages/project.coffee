@@ -2,11 +2,9 @@ Milestones = require '../milestones'
 
 projects   = require '../../models/projects'
 system     = require '../../models/system'
-config     = require '../../models/config'
 milestones = require '../../modules/github/milestone'
 issues     = require '../../modules/github/issues'
 mediator   = require '../../modules/mediator'
-format     = require '../../utils/format'
 
 module.exports = Ractive.extend
 

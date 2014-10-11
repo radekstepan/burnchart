@@ -778,13 +778,13 @@
     // header.mustache
     root.require.register('burnchart/src/templates/header.js', function(exports, require, module) {
     
-      module.exports = ["<div id=\"head\">","  {{#with user}}","    {{#loaded}}","      <div class=\"right\" intro=\"fade\">","        {{#displayName}}","          {{displayName}} logged in","        {{else}}","          <a class=\"github\" on-click=\"!login\"><Icons icon=\"github\"/> Sign In</a>","        {{/displayName}}","      </div>","    {{/loaded}}","  {{/with}}","","  <a id=\"icon\" href=\"#\">","    <Icons icon=\"{{icon}}\"/>","  </a>","","  <div class=\"q\">","    <Icons icon=\"search\"/>","    <Icons icon=\"down-open\"/>","    <input type=\"text\" placeholder=\"Jump to...\">","  </div>","","  <ul>","    <li><a href=\"#new/project\" class=\"add\"><Icons icon=\"plus-circled\"/> Add a Project</a></li>","    <li><a href=\"#\" class=\"faq\">FAQ</a></li>","    <li><a href=\"#reset\">DB Reset</a></li>","    <li><a href=\"#notify\">Notify</a></li>","  </ul>","</div>"].join("\n");
+      module.exports = ["<div id=\"head\">","  {{#with user}}","    {{#loaded}}","      <div class=\"right\" intro=\"fade\">","        {{#displayName}}","          {{displayName}} logged in","        {{else}}","          <a class=\"github\" on-click=\"!login\"><Icons icon=\"github\"/> Sign In</a>","        {{/displayName}}","      </div>","    {{/loaded}}","  {{/with}}","","  <a id=\"icon\" href=\"#\">","    <Icons icon=\"{{icon}}\"/>","  </a>","","  <!--","  <div class=\"q\">","    <Icons icon=\"search\"/>","    <Icons icon=\"down-open\"/>","    <input type=\"text\" placeholder=\"Jump to...\">","  </div>","  -->","","  <ul>","    <li><a href=\"#new/project\" class=\"add\"><Icons icon=\"plus-circled\"/> Add a Project</a></li>","    <li><a href=\"#\" class=\"faq\">FAQ</a></li>","    <li><a href=\"#reset\">DB Reset</a></li>","    <li><a href=\"#notify\">Notify</a></li>","  </ul>","</div>"].join("\n");
     });
 
     // hero.mustache
     root.require.register('burnchart/src/templates/hero.js', function(exports, require, module) {
     
-      module.exports = ["{{^projects.list}}","  <div id=\"hero\">","    <div class=\"content\">","      <Icons icon=\"address\"/>","      <h2>See your project progress</h2>","      <p>Not sure where to start? Just add a demo repo to see a chart. There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable.</p>","      <div class=\"cta\">","        <a href=\"#new/project\" class=\"primary\"><Icons icon=\"plus-circled\"/> Add your project</a>","        <a href=\"#\" class=\"secondary\">Read the Guide</a>","      </div>","    </div>","  </div>","{{/projects.list}}"].join("\n");
+      module.exports = ["<div id=\"hero\">","  <div class=\"content\">","    <Icons icon=\"address\"/>","    <h2>See your project progress</h2>","    <p>Not sure where to start? Just add a demo repo to see a chart. There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable.</p>","    <div class=\"cta\">","      <a href=\"#new/project\" class=\"primary\"><Icons icon=\"plus-circled\"/> Add your project</a>","      <a href=\"#\" class=\"secondary\">Read the Guide</a>","    </div>","  </div>","</div>"].join("\n");
     });
 
     // icons.mustache
@@ -814,7 +814,7 @@
     // index.mustache
     root.require.register('burnchart/src/templates/pages/index.js', function(exports, require, module) {
     
-      module.exports = ["<div id=\"content\" class=\"wrap\">","  <Hero/>","  <Projects/>","</div>"].join("\n");
+      module.exports = ["<div id=\"content\" class=\"wrap\">","  {{#if projects.list}}","    {{#ready}}","      <div intro=\"fade\">","        <Projects projects=\"{{projects}}\"/>","      </div>","    {{/ready}}","  {{else}}","    <Hero/>","  {{/if}}","</div>"].join("\n");
     });
 
     // new.mustache
@@ -826,13 +826,13 @@
     // project.mustache
     root.require.register('burnchart/src/templates/pages/project.js', function(exports, require, module) {
     
-      module.exports = ["<div intro=\"fade\">","  {{#ready}}","    <div id=\"title\">","      <div class=\"wrap\">","        <h2 class=\"title\">{{route.join('/')}}</h2>","      </div>","    </div>","","    <div id=\"content\" class=\"wrap\">","      <Milestones project=\"{{project}}\"/>","    </div>","  {{/ready}}","</div>"].join("\n");
+      module.exports = ["{{#ready}}","  <div intro=\"fade\">","    <div id=\"title\">","      <div class=\"wrap\">","        <h2 class=\"title\">{{route.join('/')}}</h2>","      </div>","    </div>","","    <div id=\"content\" class=\"wrap\">","      <Milestones project=\"{{project}}\"/>","    </div>","  </div>","{{/ready}}"].join("\n");
     });
 
     // projects.mustache
     root.require.register('burnchart/src/templates/projects.js', function(exports, require, module) {
     
-      module.exports = ["{{#projects.list.length}}","  <div id=\"projects\">","    <div class=\"header\">","      <a href=\"#\" class=\"sort\"><Icons icon=\"sort-alphabet\"/> Sorted by priority</a>","      <h2>Projects</h2>","    </div>","","    <table>","      {{#projects.list}}","        {{#milestones}}","          <tr>","            <td class=\"repo\">","              <a class=\"project\" href=\"#{{owner}}/{{name}}\">{{owner}}/{{name}}</a>","            </td>","            <td>","              <a class=\"milestone\" href=\"#{{owner}}/{{name}}/{{number}}\">{{ title }}</a>","            </td>","            <td style=\"width:1%\">","              <div class=\"progress\">","                <span class=\"percent\">{{Math.floor(format.progress(closed_issues, open_issues))}}%</span>","                <span class=\"due\">{{{ format.due(due_on) }}}</span>","                <div class=\"outer bar\">","                  <div class=\"inner bar {{format.onTime(this)}}\" style=\"width:{{format.progress(closed_issues, open_issues)}}%\"></div>","                </div>","              </div>","            </td>","          </tr>","        {{/milestones}}","      {{/projects.list}}","    </table>","","    <div class=\"footer\">","      <a href=\"#\"><Icons icon=\"cog\"/> Edit</a>","    </div>","  </div>","{{/projects.list.length}}","","<!--","  <tr>","    <td><a class=\"repo\" href=\"#\">radekstepan/disposable</a></td>","    <td><span class=\"milestone\">Milestone 1.0 <span class=\"icon down-open\"></span></td>","    <td>","      <div class=\"progress\">","        <span class=\"percent\">40%</span>","        <span class=\"due\">due on Friday</span>","        <div class=\"outer bar\">","          <div class=\"inner bar red\" style=\"width:40%\"></div>","        </div>","      </div>","    </td>","  </tr>","  <tr class=\"done\">","    <td><a class=\"repo\" href=\"#\">radekstepan/burnchart</a></td>","    <td><span class=\"milestone\">Beta Milestone <span class=\"icon down-open\"></span></a></td>","    <td>","      <div class=\"progress\">","        <span class=\"percent\">100%</span>","        <span class=\"due\">due tomorrow</span>","        <div class=\"outer bar\">","          <div class=\"inner bar green\" style=\"width:100%\"></div>","        </div>","      </div>","    </td>","  </tr>","  <tr>","    <td><a class=\"repo\" href=\"#\">intermine/intermine</a></td>","    <td><span class=\"milestone\">Emma Release 96 <span class=\"icon down-open\"></span></a></td>","    <td>","      <div class=\"progress\">","        <span class=\"percent\">27%</span>","        <span class=\"due\">due in 2 weeks</span>","        <div class=\"outer bar\">","          <div class=\"inner bar red\" style=\"width:27%\"></div>","        </div>","      </div>","    </td>","  </tr>","  <tr>","    <td><a class=\"repo\" href=\"#\">microsoft/windows</a></td>","    <td><span class=\"milestone\">RC 9 <span class=\"icon down-open\"></span></a></td>","    <td>","      <div class=\"progress\">","        <span class=\"percent\">90%</span>","        <span class=\"due red\">overdue by a month</span>","        <div class=\"outer bar\">","          <div class=\"inner bar red\" style=\"width:90%\"></div>","        </div>","      </div>","    </td>","  </tr>","-->"].join("\n");
+      module.exports = ["<div id=\"projects\">","  <div class=\"header\">","    <a href=\"#\" class=\"sort\"><Icons icon=\"sort-alphabet\"/> Sorted by priority</a>","    <h2>Projects</h2>","  </div>","","  <table>","    {{#projects.list}}","      {{#if error}}","        <tr>","          <td colspan=\"3\" class=\"repo\">","            <div class=\"project\">{{owner}}/{{name}} <span class=\"error\" title=\"{{error}}\"><Icons icon=\"attention\"/></span></div>","          </td>","        </tr>","      {{else}}","        {{#milestones}}","          <tr>","            <td class=\"repo\">","              <a class=\"project\" href=\"#{{owner}}/{{name}}\">{{owner}}/{{name}}</a>","            </td>","            <td>","              <a class=\"milestone\" href=\"#{{owner}}/{{name}}/{{number}}\">{{ title }}</a>","            </td>","            <td style=\"width:1%\">","              <div class=\"progress\">","                <span class=\"percent\">{{Math.floor(format.progress(issues.closed.size, issues.open.size))}}%</span>","                <span class=\"due\">{{{ format.due(due_on) }}}</span>","                <div class=\"outer bar\">","                  <div class=\"inner bar {{format.onTime(number, due_on, created_at, issues.closed.size, issues.open.size)}}\" style=\"width:{{format.progress(issues.closed.size, issues.open.size)}}%\"></div>","                </div>","              </div>","            </td>","          </tr>","        {{/milestones}}","      {{/if}}","    {{/projects.list}}","  </table>","","  <div class=\"footer\">","    <a href=\"#\"><Icons icon=\"cog\"/> Edit</a>","  </div>","</div>","","<!--","  <tr>","    <td><a class=\"repo\" href=\"#\">radekstepan/disposable</a></td>","    <td><span class=\"milestone\">Milestone 1.0 <span class=\"icon down-open\"></span></td>","    <td>","      <div class=\"progress\">","        <span class=\"percent\">40%</span>","        <span class=\"due\">due on Friday</span>","        <div class=\"outer bar\">","          <div class=\"inner bar red\" style=\"width:40%\"></div>","        </div>","      </div>","    </td>","  </tr>","  <tr class=\"done\">","    <td><a class=\"repo\" href=\"#\">radekstepan/burnchart</a></td>","    <td><span class=\"milestone\">Beta Milestone <span class=\"icon down-open\"></span></a></td>","    <td>","      <div class=\"progress\">","        <span class=\"percent\">100%</span>","        <span class=\"due\">due tomorrow</span>","        <div class=\"outer bar\">","          <div class=\"inner bar green\" style=\"width:100%\"></div>","        </div>","      </div>","    </td>","  </tr>","  <tr>","    <td><a class=\"repo\" href=\"#\">intermine/intermine</a></td>","    <td><span class=\"milestone\">Emma Release 96 <span class=\"icon down-open\"></span></a></td>","    <td>","      <div class=\"progress\">","        <span class=\"percent\">27%</span>","        <span class=\"due\">due in 2 weeks</span>","        <div class=\"outer bar\">","          <div class=\"inner bar red\" style=\"width:27%\"></div>","        </div>","      </div>","    </td>","  </tr>","  <tr>","    <td><a class=\"repo\" href=\"#\">microsoft/windows</a></td>","    <td><span class=\"milestone\">RC 9 <span class=\"icon down-open\"></span></a></td>","    <td>","      <div class=\"progress\">","        <span class=\"percent\">90%</span>","        <span class=\"due red\">overdue by a month</span>","        <div class=\"outer bar\">","          <div class=\"inner bar red\" style=\"width:90%\"></div>","        </div>","      </div>","    </td>","  </tr>","-->"].join("\n");
     });
 
     // date.coffee
@@ -991,20 +991,15 @@
     // hero.coffee
     root.require.register('burnchart/src/views/hero.js', function(exports, require, module) {
     
-      var Icons, mediator, projects;
+      var Icons, mediator;
       
       mediator = require('../modules/mediator');
-      
-      projects = require('../models/projects');
       
       Icons = require('./icons');
       
       module.exports = Ractive.extend({
         'name': 'views/hero',
         'template': require('../templates/hero'),
-        'data': {
-          projects: projects
-        },
         'components': {
           Icons: Icons
         },
@@ -1032,7 +1027,8 @@
         'spin6': '\e808',
         'megaphone': '\e809',
         'spin4': '\e80a',
-        'spinner1': '\e80b'
+        'spinner1': '\e80b',
+        'attention': '\e80c'
       };
       
       module.exports = Ractive.extend({
@@ -1199,13 +1195,21 @@
     // index.coffee
     root.require.register('burnchart/src/views/pages/index.js', function(exports, require, module) {
     
-      var Hero, Projects, format;
+      var Hero, Projects, issues, mediator, milestones, projects, system;
       
       Hero = require('../hero');
       
       Projects = require('../projects');
       
-      format = require('../../utils/format');
+      projects = require('../../models/projects');
+      
+      system = require('../../models/system');
+      
+      milestones = require('../../modules/github/milestone');
+      
+      issues = require('../../modules/github/issues');
+      
+      mediator = require('../../modules/mediator');
       
       module.exports = Ractive.extend({
         'name': 'views/pages/index',
@@ -1215,10 +1219,55 @@
           Projects: Projects
         },
         'data': {
-          format: format
+          'projects': projects,
+          'ready': false
         },
+        'adapt': [Ractive.adaptors.Ractive],
         onrender: function() {
-          return document.title = 'Burnchart: GitHub Burndown Chart as a Service';
+          var done,
+            _this = this;
+          document.title = 'Burnchart: GitHub Burndown Chart as a Service';
+          if (!projects.list.length) {
+            return this.set('ready', true);
+          }
+          done = system.async();
+          return async.map(projects.data.list, function(project, cb) {
+            if (project.milestones) {
+              return cb(null, project);
+            }
+            return milestones.fetchAll(project, function(error, list) {
+              if (error) {
+                return cb(null, _.extend(project, {
+                  error: error
+                }));
+              }
+              return async.map(list, function(milestone, cb) {
+                return issues.fetchAll(_.extend(project, {
+                  'milestone': milestone.number
+                }), function(err, obj) {
+                  return cb(err, _.extend(milestone, {
+                    'issues': obj
+                  }));
+                });
+              }, function(error, list) {
+                delete project.milestone;
+                if (error) {
+                  return cb(null, _.extend(project, {
+                    error: error
+                  }));
+                }
+                return cb(null, _.extend(project, {
+                  'milestones': list
+                }));
+              });
+            });
+          }, function(err, data) {
+            done();
+            return _this.set({
+              'projects.list': data,
+              'ready': true
+            });
+          });
         }
       });
       
@@ -1281,7 +1330,7 @@
     // project.coffee
     root.require.register('burnchart/src/views/pages/project.js', function(exports, require, module) {
     
-      var Milestones, config, format, issues, mediator, milestones, projects, system;
+      var Milestones, issues, mediator, milestones, projects, system;
       
       Milestones = require('../milestones');
       
@@ -1289,15 +1338,11 @@
       
       system = require('../../models/system');
       
-      config = require('../../models/config');
-      
       milestones = require('../../modules/github/milestone');
       
       issues = require('../../modules/github/issues');
       
       mediator = require('../../modules/mediator');
-      
-      format = require('../../utils/format');
       
       module.exports = Ractive.extend({
         'name': 'views/pages/project',
@@ -1363,11 +1408,11 @@
     // projects.coffee
     root.require.register('burnchart/src/views/projects.js', function(exports, require, module) {
     
-      var Icons, mediator, projects;
+      var Icons, format, mediator;
       
       mediator = require('../modules/mediator');
       
-      projects = require('../models/projects');
+      format = require('../utils/format');
       
       Icons = require('./icons');
       
@@ -1375,7 +1420,7 @@
         'name': 'views/projects',
         'template': require('../templates/projects'),
         'data': {
-          projects: projects
+          format: format
         },
         'components': {
           Icons: Icons
