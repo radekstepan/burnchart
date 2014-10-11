@@ -3,6 +3,7 @@
 ##Release: MVP
 
 - [ ] show chart page
+- [ ] pick consistent module naming scheme: index, project, milestone?
 
 ###GitHub
 

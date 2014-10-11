@@ -1,14 +1,17 @@
-#!/usr/bin/env coffee
-config = require '../models/config'
+line = require '../modules/line'
 
-module.exports =
-  
-  # Render the chart.
-  render: ([ actual, ideal, trendline ], cb) ->
-    document.querySelector('#svg').innerHTML = ''
+module.exports = Ractive.extend
+
+  'name': 'views/chart'
+
+  onconstruct: ->
+    console.log @data.milestone
+
+  onrender: ->
+    return console.log 'Use `line` to populate our data, could move to our scope too'
 
     # Get available space.  
-    { height, width } = document.querySelector('#chart').getBoundingClientRect()
+    { height, width } = this.el.getBoundingClientRect()
 
     margin = { 'top': 30, 'right': 30, 'bottom': 40, 'left': 50 }
     width -= margin.left + margin.right
@@ -122,5 +125,3 @@ module.exports =
     .attr("r",  ({ radius }) -> 5 ) # fixed for now
     .on('mouseover', tooltip.show)
     .on('mouseout', tooltip.hide)
-
-    cb null

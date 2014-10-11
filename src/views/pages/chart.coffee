@@ -1,7 +1,11 @@
-system    = require '../../models/system'
-milestone = require '../../modules/milestone'
-project   = require '../../modules/project'
-format    = require '../../utils/format'
+Chart = require '../chart.coffee'
+
+projects   = require '../../models/projects'
+system     = require '../../models/system'
+milestones = require '../../modules/github/milestone'
+issues     = require '../../modules/github/issues'
+mediator   = require '../../modules/mediator'
+format     = require '../../utils/format'
 
 module.exports = Ractive.extend
 
@@ -9,24 +13,52 @@ module.exports = Ractive.extend
 
   'template': require '../../templates/pages/chart'
 
-  'adapt': [ Ractive.adaptors.Ractive ]
+  'components': { Chart }
 
-  'data': { format }
+  'data':
+    'format': format
+    'ready': no
 
   onrender: ->
-    return
-
     [ owner, name, milestone ] = @get 'route'
-    route = { owner, name, milestone }
   
     document.title = "#{owner}/#{name}/#{milestone}"
 
-    milestone.get route, (err, warn, obj) =>
-      throw err if err
-      throw warn if warn
-      # Save the milestone on the route.
-      @set 'milestone', obj
-      route.milestone = obj
+    # Get the associated project.
+    project = projects.find { owner, name }
 
-      project route, (err) ->
-        throw err if err
+    # Should not happen...
+    throw 500 unless project
+
+    # Do we have this milestone already?
+    milestone = _.find project.milestones, { 'number': milestone }
+    return @set { milestone, 'ready': yes } if milestone
+
+    # We are loading the milestones then.
+    done = do system.async
+
+    fetchMilestone = (cb) ->
+      milestones.fetch project, cb
+
+    fetchIssues = (milestone, cb) ->
+      issues.fetchAll project, (err, obj) ->
+        cb err, _.extend milestone, { 'issues': obj }
+
+    async.waterfall [
+      # Get the milestone.
+      fetchMilestone,
+      # Then all its issues.
+      fetchIssues
+    ], (err, data) =>
+      do done
+      return mediator.fire '!app/notify', {
+        'text': do err.toString
+        'type': 'alert'
+        'system': yes
+        'ttl': null
+      } if err
+
+      # Save the milestone.
+      @set
+        'milestone': data
+        'ready': yes
