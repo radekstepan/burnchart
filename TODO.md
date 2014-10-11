@@ -68,6 +68,7 @@
 
 ##Future Releases
 
+- [ ] make an extensible architecture; for example I might want to enable another trendline in the chart which shows estimated end date if one keeps up the pace of last 5 days.
 - [ ] desktop app via `node-gyp`
 - [ ] when watching, only build changed files and then concat them to make builds much faster
 - [ ] smooth animation when transitioning between icons and notifications
