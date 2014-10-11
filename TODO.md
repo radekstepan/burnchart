@@ -2,9 +2,11 @@
 
 ##Release: MVP
 
+- [ ] show chart page
+
 ###GitHub
 
-- [ ] progress needs to be calculated based on strategy even on homepage, then sort the milestones based on priority
+- [ ] sort milestones on index and project page based on priority (most delayed first)
 
 ###Notifications
 
@@ -45,6 +47,7 @@
 - [ ] switch off `user-select` on buttons
 - [ ] make async pages transition so that there is no "jumping" on the page
 - [ ] index page alert tooltip
+- [ ] app icon like http://thenounproject.com/term/fire/50966/
 
 ###Misc
 

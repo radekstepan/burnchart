@@ -29,7 +29,7 @@ module.exports = new Model
     @auth = new FirebaseSimpleLogin client, (err, obj) =>
       user.set 'loaded', yes
 
-      throw err if err or not obj
+      throw err if err
 
       # Save user.
-      user.set obj
+      user.set obj if obj

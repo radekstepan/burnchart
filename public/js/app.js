@@ -98,10 +98,12 @@
           this.set('client', client = new Firebase("https://" + config.data.firebase + ".firebaseio.com"));
           return this.auth = new FirebaseSimpleLogin(client, function(err, obj) {
             user.set('loaded', true);
-            if (err || !obj) {
+            if (err) {
               throw err;
             }
-            return user.set(obj);
+            if (obj) {
+              return user.set(obj);
+            }
           });
         }
       });
