@@ -26,8 +26,8 @@ routes =
   '/':                        c 'index', [ route ]
   '/new/project':             c 'new',   [ route ]
   # The following two routes add a project in the background.
-  '/:owner/:name':            c 'project', [ addProject, route ]
-  '/:owner/:name/:milestone': c 'chart',   [ addProject, route ]
+  '/:owner/:name':            c 'project',   [ addProject, route ]
+  '/:owner/:name/:milestone': c 'milestone', [ addProject, route ]
   # TODO: remove in production.
   '/reset': ->
     mediator.fire '!projects/clear'

@@ -4,10 +4,9 @@ module.exports = Ractive.extend
 
   'name': 'views/chart'
 
-  onconstruct: ->
+  onrender: ->
     console.log @data.milestone
 
-  onrender: ->
     return console.log 'Use `line` to populate our data, could move to our scope too'
 
     # Get available space.  

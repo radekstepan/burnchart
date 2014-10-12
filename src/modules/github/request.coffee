@@ -1,4 +1,4 @@
-user = require '../models/user'
+user = require '../../models/user'
 
 # Custom JSON parser.
 superagent.parse =
@@ -37,7 +37,7 @@ module.exports =
     request data, cb
   
   # Get one open milestone.
-  oneMilestone: ({ owner, name, milestone }, cb) ->    
+  oneMilestone: ({ owner, name, milestone }, cb) ->
     data = _.defaults
       'path':   "/repos/#{owner}/#{name}/milestones/#{milestone}"
       'query':  { 'state': 'open', 'sort': 'due_date', 'direction': 'asc' }

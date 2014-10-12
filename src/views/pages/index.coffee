@@ -1,9 +1,9 @@
 Hero     = require '../hero'
-Projects = require '../projects'
+Projects = require '../tables/projects'
 
 projects   = require '../../models/projects'
 system     = require '../../models/system'
-milestones = require '../../modules/github/milestone'
+milestones = require '../../modules/github/milestones'
 issues     = require '../../modules/github/issues'
 mediator   = require '../../modules/mediator'
 

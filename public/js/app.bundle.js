@@ -39161,13 +39161,11 @@ Router.prototype.mount = function(routes, path) {
     // projects.coffee
     root.require.register('burnchart/src/models/projects.js', function(exports, require, module) {
     
-      var Model, config, date, mediator, request, user;
+      var Model, config, date, mediator, user;
       
       config = require('../models/config');
       
       mediator = require('../modules/mediator');
-      
-      request = require('../modules/request');
       
       Model = require('../utils/model');
       
@@ -39262,211 +39260,6 @@ Router.prototype.mount = function(routes, path) {
       
     });
 
-    // chart.coffee
-    root.require.register('burnchart/src/modules/draw/chart.js', function(exports, require, module) {
-    
-      var config;
-      
-      config = require('../models/config');
-      
-      module.exports = {
-        render: function(_arg, cb) {
-          var actual, height, ideal, line, m, mAxis, margin, svg, tooltip, trendline, width, x, xAxis, y, yAxis, _ref;
-          actual = _arg[0], ideal = _arg[1], trendline = _arg[2];
-          document.querySelector('#svg').innerHTML = '';
-          _ref = document.querySelector('#chart').getBoundingClientRect(), height = _ref.height, width = _ref.width;
-          margin = {
-            'top': 30,
-            'right': 30,
-            'bottom': 40,
-            'left': 50
-          };
-          width -= margin.left + margin.right;
-          height -= margin.top + margin.bottom;
-          x = d3.time.scale().range([0, width]);
-          y = d3.scale.linear().range([height, 0]);
-          xAxis = d3.svg.axis().scale(x).orient("bottom").tickSize(-height).tickFormat(function(d) {
-            return d.getDate();
-          }).tickPadding(10);
-          yAxis = d3.svg.axis().scale(y).orient("left").tickSize(-width).ticks(5).tickPadding(10);
-          line = d3.svg.line().interpolate("linear").x(function(d) {
-            return x(d.date);
-          }).y(function(d) {
-            return y(d.points);
-          });
-          x.domain([ideal[0].date, ideal[ideal.length - 1].date]);
-          y.domain([0, ideal[0].points]).nice();
-          svg = d3.select("#svg").append("svg").attr("width", width + margin.left + margin.right).attr("height", height + margin.top + margin.bottom).append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-          svg.append("g").attr("class", "x axis day").attr("transform", "translate(0," + height + ")").call(xAxis);
-          m = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-          mAxis = xAxis.orient("top").tickSize(height).tickFormat(function(d) {
-            return m[d.getMonth()];
-          }).ticks(2);
-          svg.append("g").attr("class", "x axis month").attr("transform", "translate(0," + height + ")").call(mAxis);
-          svg.append("g").attr("class", "y axis").call(yAxis);
-          svg.append("svg:line").attr("class", "today").attr("x1", x(new Date())).attr("y1", 0).attr("x2", x(new Date())).attr("y2", height);
-          svg.append("path").attr("class", "ideal line").attr("d", line.interpolate("basis")(ideal));
-          svg.append("path").attr("class", "trendline line").attr("d", line.interpolate("linear")(trendline));
-          svg.append("path").attr("class", "actual line").attr("d", line.interpolate("linear").y(function(d) {
-            return y(d.points);
-          })(actual));
-          tooltip = d3.tip().attr('class', 'd3-tip').html(function(_arg1) {
-            var number, title;
-            number = _arg1.number, title = _arg1.title;
-            return "#" + number + ": " + title;
-          });
-          svg.call(tooltip);
-          svg.selectAll("a.issue").data(actual.slice(1)).enter().append('svg:a').attr("xlink:href", function(_arg1) {
-            var html_url;
-            html_url = _arg1.html_url;
-            return html_url;
-          }).attr("xlink:show", 'new').append('svg:circle').attr("cx", function(_arg1) {
-            var date;
-            date = _arg1.date;
-            return x(date);
-          }).attr("cy", function(_arg1) {
-            var points;
-            points = _arg1.points;
-            return y(points);
-          }).attr("r", function(_arg1) {
-            var radius;
-            radius = _arg1.radius;
-            return 5;
-          }).on('mouseover', tooltip.show).on('mouseout', tooltip.hide);
-          return cb(null);
-        }
-      };
-      
-    });
-
-    // line.coffee
-    root.require.register('burnchart/src/modules/draw/line.js', function(exports, require, module) {
-    
-      var __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
-      
-      module.exports = {
-        actual: function(collection, created_at, total, cb) {
-          var head, max, min, range, rest;
-          head = [
-            {
-              'date': new Date(created_at),
-              'points': total
-            }
-          ];
-          min = +Infinity;
-          max = -Infinity;
-          rest = _.map(collection, function(issue) {
-            var closed_at, size;
-            size = issue.size, closed_at = issue.closed_at;
-            if (size < min) {
-              min = size;
-            }
-            if (size > max) {
-              max = size;
-            }
-            issue.date = new Date(closed_at);
-            issue.points = total -= size;
-            return issue;
-          });
-          range = d3.scale.linear().domain([min, max]).range([5, 8]);
-          rest = _.map(rest, function(issue) {
-            issue.radius = range(issue.size);
-            return issue;
-          });
-          return cb(null, [].concat(head, rest));
-        },
-        ideal: function(a, b, total, cb) {
-          var cutoff, d, days, length, m, now, once, velocity, y, _ref, _ref1;
-          if (b < a) {
-            _ref = [a, b], b = _ref[0], a = _ref[1];
-          }
-          _ref1 = _.map(a.match(config.get('chart.datetime'))[1].split('-'), function(v) {
-            return parseInt(v);
-          }), y = _ref1[0], m = _ref1[1], d = _ref1[2];
-          cutoff = new Date(b);
-          days = [];
-          length = 0;
-          (once = function(inc) {
-            var day, day_of;
-            day = new Date(y, m - 1, d + inc);
-            if (!(day_of = day.getDay())) {
-              day_of = 7;
-            }
-            if (__indexOf.call(config.get('chart.off_days'), day_of) >= 0) {
-              days.push({
-                date: day,
-                off_day: true
-              });
-            } else {
-              length += 1;
-              days.push({
-                date: day
-              });
-            }
-            if (!(day > cutoff)) {
-              return once(inc + 1);
-            }
-          })(0);
-          velocity = total / (length - 1);
-          days = _.map(days, function(day, i) {
-            day.points = total;
-            if (days[i] && !days[i].off_day) {
-              total -= velocity;
-            }
-            return day;
-          });
-          if ((now = new Date()) > cutoff) {
-            days.push({
-              date: now,
-              points: 0
-            });
-          }
-          return cb(null, days);
-        },
-        trend: function(actual, created_at, due_on) {
-          var a, b, b1, c1, e, fn, intercept, l, last, slope, start, values;
-          start = +actual[0].date;
-          values = _.map(actual, function(_arg) {
-            var date, points;
-            date = _arg.date, points = _arg.points;
-            return [+date - start, points];
-          });
-          last = actual[actual.length - 1];
-          values.push([+new Date() - start, last.points]);
-          b1 = 0;
-          e = 0;
-          c1 = 0;
-          a = (l = values.length) * _.reduce(values, function(sum, _arg) {
-            var a, b;
-            a = _arg[0], b = _arg[1];
-            b1 += a;
-            e += b;
-            c1 += Math.pow(a, 2);
-            return sum + (a * b);
-          }, 0);
-          slope = (a - (b1 * e)) / ((l * c1) - (Math.pow(b1, 2)));
-          intercept = (e - (slope * b1)) / l;
-          fn = function(x) {
-            return slope * x + intercept;
-          };
-          created_at = new Date(created_at);
-          due_on = due_on ? new Date(due_on) : new Date();
-          a = created_at - start;
-          b = due_on - start;
-          return [
-            {
-              date: created_at,
-              points: fn(a)
-            }, {
-              date: due_on,
-              points: fn(b)
-            }
-          ];
-        }
-      };
-      
-    });
-
     // issues.coffee
     root.require.register('burnchart/src/modules/github/issues.js', function(exports, require, module) {
     
@@ -39474,7 +39267,7 @@ Router.prototype.mount = function(routes, path) {
       
       config = require('../../models/config');
       
-      request = require('../request');
+      request = require('./request');
       
       module.exports = {
         fetchAll: function(repo, cb) {
@@ -39546,12 +39339,12 @@ Router.prototype.mount = function(routes, path) {
       
     });
 
-    // milestone.coffee
-    root.require.register('burnchart/src/modules/github/milestone.js', function(exports, require, module) {
+    // milestones.coffee
+    root.require.register('burnchart/src/modules/github/milestones.js', function(exports, require, module) {
     
       var request;
       
-      request = require('../request');
+      request = require('./request');
       
       module.exports = {
         'fetch': request.oneMilestone,
@@ -39560,30 +39353,12 @@ Router.prototype.mount = function(routes, path) {
       
     });
 
-    // mediator.coffee
-    root.require.register('burnchart/src/modules/mediator.js', function(exports, require, module) {
-    
-      var Mediator;
-      
-      Mediator = Ractive.extend({});
-      
-      module.exports = new Mediator();
-      
-    });
-
-    // project.coffee
-    root.require.register('burnchart/src/modules/project.js', function(exports, require, module) {
-    
-      
-      
-    });
-
     // request.coffee
-    root.require.register('burnchart/src/modules/request.js', function(exports, require, module) {
+    root.require.register('burnchart/src/modules/github/request.js', function(exports, require, module) {
     
       var defaults, error, headers, request, response, user;
       
-      user = require('../models/user');
+      user = require('../../models/user');
       
       superagent.parse = {
         'application/json': function(res) {
@@ -39739,6 +39514,152 @@ Router.prototype.mount = function(routes, path) {
       
     });
 
+    // line.coffee
+    root.require.register('burnchart/src/modules/line.js', function(exports, require, module) {
+    
+      var __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
+      
+      module.exports = {
+        actual: function(collection, created_at, total, cb) {
+          var head, max, min, range, rest;
+          head = [
+            {
+              'date': new Date(created_at),
+              'points': total
+            }
+          ];
+          min = +Infinity;
+          max = -Infinity;
+          rest = _.map(collection, function(issue) {
+            var closed_at, size;
+            size = issue.size, closed_at = issue.closed_at;
+            if (size < min) {
+              min = size;
+            }
+            if (size > max) {
+              max = size;
+            }
+            issue.date = new Date(closed_at);
+            issue.points = total -= size;
+            return issue;
+          });
+          range = d3.scale.linear().domain([min, max]).range([5, 8]);
+          rest = _.map(rest, function(issue) {
+            issue.radius = range(issue.size);
+            return issue;
+          });
+          return cb(null, [].concat(head, rest));
+        },
+        ideal: function(a, b, total, cb) {
+          var cutoff, d, days, length, m, now, once, velocity, y, _ref, _ref1;
+          if (b < a) {
+            _ref = [a, b], b = _ref[0], a = _ref[1];
+          }
+          _ref1 = _.map(a.match(config.get('chart.datetime'))[1].split('-'), function(v) {
+            return parseInt(v);
+          }), y = _ref1[0], m = _ref1[1], d = _ref1[2];
+          cutoff = new Date(b);
+          days = [];
+          length = 0;
+          (once = function(inc) {
+            var day, day_of;
+            day = new Date(y, m - 1, d + inc);
+            if (!(day_of = day.getDay())) {
+              day_of = 7;
+            }
+            if (__indexOf.call(config.get('chart.off_days'), day_of) >= 0) {
+              days.push({
+                date: day,
+                off_day: true
+              });
+            } else {
+              length += 1;
+              days.push({
+                date: day
+              });
+            }
+            if (!(day > cutoff)) {
+              return once(inc + 1);
+            }
+          })(0);
+          velocity = total / (length - 1);
+          days = _.map(days, function(day, i) {
+            day.points = total;
+            if (days[i] && !days[i].off_day) {
+              total -= velocity;
+            }
+            return day;
+          });
+          if ((now = new Date()) > cutoff) {
+            days.push({
+              date: now,
+              points: 0
+            });
+          }
+          return cb(null, days);
+        },
+        trend: function(actual, created_at, due_on) {
+          var a, b, b1, c1, e, fn, intercept, l, last, slope, start, values;
+          start = +actual[0].date;
+          values = _.map(actual, function(_arg) {
+            var date, points;
+            date = _arg.date, points = _arg.points;
+            return [+date - start, points];
+          });
+          last = actual[actual.length - 1];
+          values.push([+new Date() - start, last.points]);
+          b1 = 0;
+          e = 0;
+          c1 = 0;
+          a = (l = values.length) * _.reduce(values, function(sum, _arg) {
+            var a, b;
+            a = _arg[0], b = _arg[1];
+            b1 += a;
+            e += b;
+            c1 += Math.pow(a, 2);
+            return sum + (a * b);
+          }, 0);
+          slope = (a - (b1 * e)) / ((l * c1) - (Math.pow(b1, 2)));
+          intercept = (e - (slope * b1)) / l;
+          fn = function(x) {
+            return slope * x + intercept;
+          };
+          created_at = new Date(created_at);
+          due_on = due_on ? new Date(due_on) : new Date();
+          a = created_at - start;
+          b = due_on - start;
+          return [
+            {
+              date: created_at,
+              points: fn(a)
+            }, {
+              date: due_on,
+              points: fn(b)
+            }
+          ];
+        }
+      };
+      
+    });
+
+    // mediator.coffee
+    root.require.register('burnchart/src/modules/mediator.js', function(exports, require, module) {
+    
+      var Mediator;
+      
+      Mediator = Ractive.extend({});
+      
+      module.exports = new Mediator();
+      
+    });
+
+    // project.coffee
+    root.require.register('burnchart/src/modules/project.js', function(exports, require, module) {
+    
+      
+      
+    });
+
     // router.coffee
     root.require.register('burnchart/src/modules/router.js', function(exports, require, module) {
     
@@ -39793,7 +39714,7 @@ Router.prototype.mount = function(routes, path) {
         '/': c('index', [route]),
         '/new/project': c('new', [route]),
         '/:owner/:name': c('project', [addProject, route]),
-        '/:owner/:name/:milestone': c('chart', [addProject, route]),
+        '/:owner/:name/:milestone': c('milestone', [addProject, route]),
         '/reset': function() {
           mediator.fire('!projects/clear');
           return window.location.hash = '#';
@@ -39843,28 +39764,22 @@ Router.prototype.mount = function(routes, path) {
       module.exports = ["{{#code}}","  <span class=\"icon {{icon}}\">{{{ '&#' + code + ';' }}}</span>","{{/code}}"].join("\n");
     });
 
-    // milestones.mustache
-    root.require.register('burnchart/src/templates/milestones.js', function(exports, require, module) {
-    
-      module.exports = ["<div id=\"projects\">","  <div class=\"header\">","    <a href=\"#\" class=\"sort\"><Icons icon=\"sort-alphabet\"/> Sorted by priority</a>","    <h2>Milestones</h2>","  </div>","","  <table>","    {{#project.milestones}}","      <tr>","        <td>","          <a class=\"milestone\" href=\"#{{project.owner}}/{{project.name}}/{{number}}\">{{ title }}</a>","        </td>","        <td style=\"width:1%\">","          <div class=\"progress\">","            <span class=\"percent\">{{Math.floor(format.progress(issues.closed.size, issues.open.size))}}%</span>","            <span class=\"due\">{{{ format.due(due_on) }}}</span>","            <div class=\"outer bar\">","              <div class=\"inner bar {{format.onTime(number, due_on, created_at, issues.closed.size, issues.open.size)}}\" style=\"width:{{format.progress(issues.closed.size, issues.open.size)}}%\"></div>","            </div>","          </div>","        </td>","      </tr>","    {{/project.milestones}}","  </table>","","  <div class=\"footer\">","    <a href=\"#\"><Icons icon=\"cog\"/> Edit</a>","  </div>","</div>"].join("\n");
-    });
-
     // notify.mustache
     root.require.register('burnchart/src/templates/notify.js', function(exports, require, module) {
     
       module.exports = ["{{#text}}","  {{#system}}","    <div id=\"notify\" class=\"{{type}} system\" style=\"top:{{top}}%\">","      <Icons icon=\"{{icon}}\"/>","      <p>{{text}}</p>","    </div>","  {{else}}","    <div id=\"notify\" class=\"{{type}}\" style=\"top:{{-top}}px\">","      <span class=\"close\" on-click=\"close\" />","      <Icons icon=\"{{icon}}\"/>","      <p>{{text}}</p>","    </div>","  {{/system}}","{{/text}}"].join("\n");
     });
 
-    // chart.mustache
-    root.require.register('burnchart/src/templates/pages/chart.js', function(exports, require, module) {
-    
-      module.exports = ["<div id=\"title\">","  <div class=\"wrap\">","    <h2 class=\"title\">{{ format.title(milestone.title) }}</h2>","    <span class=\"sub\">{{{ format.due(milestone.due_on) }}}</span>","    <p class=\"description\">{{{ format.markdown(milestone.description) }}}</p>","  </div>","</div>","","<div id=\"content\" class=\"wrap\">","  <div id=\"chart\">","    <div id=\"svg\"></div>","  </div>","</div>"].join("\n");
-    });
-
     // index.mustache
     root.require.register('burnchart/src/templates/pages/index.js', function(exports, require, module) {
     
       module.exports = ["<div id=\"content\" class=\"wrap\">","  {{#if projects.list}}","    {{#ready}}","      <div intro=\"fade\">","        <Projects projects=\"{{projects}}\"/>","      </div>","    {{/ready}}","  {{else}}","    <Hero/>","  {{/if}}","</div>"].join("\n");
+    });
+
+    // milestone.mustache
+    root.require.register('burnchart/src/templates/pages/milestone.js', function(exports, require, module) {
+    
+      module.exports = ["{{#ready}}","  <div intro=\"fade\">","    <div id=\"title\">","      <div class=\"wrap\">","        <h2 class=\"title\">{{ format.title(milestone.title) }}</h2>","        <span class=\"sub\">{{{ format.due(milestone.due_on) }}}</span>","        <p class=\"description\">{{{ format.markdown(milestone.description) }}}</p>","      </div>","    </div>","","    <div id=\"content\" class=\"wrap\">","      <Chart milestone=\"{{milestone}}\"/>","    </div>","  </div>","{{/ready}}"].join("\n");
     });
 
     // new.mustache
@@ -39879,8 +39794,14 @@ Router.prototype.mount = function(routes, path) {
       module.exports = ["{{#ready}}","  <div intro=\"fade\">","    <div id=\"title\">","      <div class=\"wrap\">","        <h2 class=\"title\">{{route.join('/')}}</h2>","      </div>","    </div>","","    <div id=\"content\" class=\"wrap\">","      <Milestones project=\"{{project}}\"/>","    </div>","  </div>","{{/ready}}"].join("\n");
     });
 
+    // milestones.mustache
+    root.require.register('burnchart/src/templates/tables/milestones.js', function(exports, require, module) {
+    
+      module.exports = ["<div id=\"projects\">","  <div class=\"header\">","    <a href=\"#\" class=\"sort\"><Icons icon=\"sort-alphabet\"/> Sorted by priority</a>","    <h2>Milestones</h2>","  </div>","","  <table>","    {{#project.milestones}}","      <tr>","        <td>","          <a class=\"milestone\" href=\"#{{project.owner}}/{{project.name}}/{{number}}\">{{ title }}</a>","        </td>","        <td style=\"width:1%\">","          <div class=\"progress\">","            <span class=\"percent\">{{Math.floor(format.progress(issues.closed.size, issues.open.size))}}%</span>","            <span class=\"due\">{{{ format.due(due_on) }}}</span>","            <div class=\"outer bar\">","              <div class=\"inner bar {{format.onTime(number, due_on, created_at, issues.closed.size, issues.open.size)}}\" style=\"width:{{format.progress(issues.closed.size, issues.open.size)}}%\"></div>","            </div>","          </div>","        </td>","      </tr>","    {{/project.milestones}}","  </table>","","  <div class=\"footer\">","    <a href=\"#\"><Icons icon=\"cog\"/> Edit</a>","  </div>","</div>"].join("\n");
+    });
+
     // projects.mustache
-    root.require.register('burnchart/src/templates/projects.js', function(exports, require, module) {
+    root.require.register('burnchart/src/templates/tables/projects.js', function(exports, require, module) {
     
       module.exports = ["<div id=\"projects\">","  <div class=\"header\">","    <a href=\"#\" class=\"sort\"><Icons icon=\"sort-alphabet\"/> Sorted by priority</a>","    <h2>Projects</h2>","  </div>","","  <table>","    {{#projects.list}}","      {{#if error}}","        <tr>","          <td colspan=\"3\" class=\"repo\">","            <div class=\"project\">{{owner}}/{{name}} <span class=\"error\" title=\"{{error}}\"><Icons icon=\"attention\"/></span></div>","          </td>","        </tr>","      {{else}}","        {{#milestones}}","          <tr>","            <td class=\"repo\">","              <a class=\"project\" href=\"#{{owner}}/{{name}}\">{{owner}}/{{name}}</a>","            </td>","            <td>","              <a class=\"milestone\" href=\"#{{owner}}/{{name}}/{{number}}\">{{ title }}</a>","            </td>","            <td style=\"width:1%\">","              <div class=\"progress\">","                <span class=\"percent\">{{Math.floor(format.progress(issues.closed.size, issues.open.size))}}%</span>","                <span class=\"due\">{{{ format.due(due_on) }}}</span>","                <div class=\"outer bar\">","                  <div class=\"inner bar {{format.onTime(number, due_on, created_at, issues.closed.size, issues.open.size)}}\" style=\"width:{{format.progress(issues.closed.size, issues.open.size)}}%\"></div>","                </div>","              </div>","            </td>","          </tr>","        {{/milestones}}","      {{/if}}","    {{/projects.list}}","  </table>","","  <div class=\"footer\">","    <a href=\"#\"><Icons icon=\"cog\"/> Edit</a>","  </div>","</div>","","<!--","  <tr>","    <td><a class=\"repo\" href=\"#\">radekstepan/disposable</a></td>","    <td><span class=\"milestone\">Milestone 1.0 <span class=\"icon down-open\"></span></td>","    <td>","      <div class=\"progress\">","        <span class=\"percent\">40%</span>","        <span class=\"due\">due on Friday</span>","        <div class=\"outer bar\">","          <div class=\"inner bar red\" style=\"width:40%\"></div>","        </div>","      </div>","    </td>","  </tr>","  <tr class=\"done\">","    <td><a class=\"repo\" href=\"#\">radekstepan/burnchart</a></td>","    <td><span class=\"milestone\">Beta Milestone <span class=\"icon down-open\"></span></a></td>","    <td>","      <div class=\"progress\">","        <span class=\"percent\">100%</span>","        <span class=\"due\">due tomorrow</span>","        <div class=\"outer bar\">","          <div class=\"inner bar green\" style=\"width:100%\"></div>","        </div>","      </div>","    </td>","  </tr>","  <tr>","    <td><a class=\"repo\" href=\"#\">intermine/intermine</a></td>","    <td><span class=\"milestone\">Emma Release 96 <span class=\"icon down-open\"></span></a></td>","    <td>","      <div class=\"progress\">","        <span class=\"percent\">27%</span>","        <span class=\"due\">due in 2 weeks</span>","        <div class=\"outer bar\">","          <div class=\"inner bar red\" style=\"width:27%\"></div>","        </div>","      </div>","    </td>","  </tr>","  <tr>","    <td><a class=\"repo\" href=\"#\">microsoft/windows</a></td>","    <td><span class=\"milestone\">RC 9 <span class=\"icon down-open\"></span></a></td>","    <td>","      <div class=\"progress\">","        <span class=\"percent\">90%</span>","        <span class=\"due red\">overdue by a month</span>","        <div class=\"outer bar\">","          <div class=\"inner bar red\" style=\"width:90%\"></div>","        </div>","      </div>","    </td>","  </tr>","-->"].join("\n");
     });
@@ -39995,6 +39916,83 @@ Router.prototype.mount = function(routes, path) {
       
     });
 
+    // chart.coffee
+    root.require.register('burnchart/src/views/chart.js', function(exports, require, module) {
+    
+      var line;
+      
+      line = require('../modules/line');
+      
+      module.exports = Ractive.extend({
+        'name': 'views/chart',
+        onrender: function() {
+          var height, m, mAxis, margin, svg, tooltip, width, x, xAxis, y, yAxis, _ref;
+          console.log(this.data.milestone);
+          return console.log('Use `line` to populate our data, could move to our scope too');
+          _ref = this.el.getBoundingClientRect(), height = _ref.height, width = _ref.width;
+          margin = {
+            'top': 30,
+            'right': 30,
+            'bottom': 40,
+            'left': 50
+          };
+          width -= margin.left + margin.right;
+          height -= margin.top + margin.bottom;
+          x = d3.time.scale().range([0, width]);
+          y = d3.scale.linear().range([height, 0]);
+          xAxis = d3.svg.axis().scale(x).orient("bottom").tickSize(-height).tickFormat(function(d) {
+            return d.getDate();
+          }).tickPadding(10);
+          yAxis = d3.svg.axis().scale(y).orient("left").tickSize(-width).ticks(5).tickPadding(10);
+          line = d3.svg.line().interpolate("linear").x(function(d) {
+            return x(d.date);
+          }).y(function(d) {
+            return y(d.points);
+          });
+          x.domain([ideal[0].date, ideal[ideal.length - 1].date]);
+          y.domain([0, ideal[0].points]).nice();
+          svg = d3.select("#svg").append("svg").attr("width", width + margin.left + margin.right).attr("height", height + margin.top + margin.bottom).append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+          svg.append("g").attr("class", "x axis day").attr("transform", "translate(0," + height + ")").call(xAxis);
+          m = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+          mAxis = xAxis.orient("top").tickSize(height).tickFormat(function(d) {
+            return m[d.getMonth()];
+          }).ticks(2);
+          svg.append("g").attr("class", "x axis month").attr("transform", "translate(0," + height + ")").call(mAxis);
+          svg.append("g").attr("class", "y axis").call(yAxis);
+          svg.append("svg:line").attr("class", "today").attr("x1", x(new Date())).attr("y1", 0).attr("x2", x(new Date())).attr("y2", height);
+          svg.append("path").attr("class", "ideal line").attr("d", line.interpolate("basis")(ideal));
+          svg.append("path").attr("class", "trendline line").attr("d", line.interpolate("linear")(trendline));
+          svg.append("path").attr("class", "actual line").attr("d", line.interpolate("linear").y(function(d) {
+            return y(d.points);
+          })(actual));
+          tooltip = d3.tip().attr('class', 'd3-tip').html(function(_arg) {
+            var number, title;
+            number = _arg.number, title = _arg.title;
+            return "#" + number + ": " + title;
+          });
+          svg.call(tooltip);
+          return svg.selectAll("a.issue").data(actual.slice(1)).enter().append('svg:a').attr("xlink:href", function(_arg) {
+            var html_url;
+            html_url = _arg.html_url;
+            return html_url;
+          }).attr("xlink:show", 'new').append('svg:circle').attr("cx", function(_arg) {
+            var date;
+            date = _arg.date;
+            return x(date);
+          }).attr("cy", function(_arg) {
+            var points;
+            points = _arg.points;
+            return y(points);
+          }).attr("r", function(_arg) {
+            var radius;
+            radius = _arg.radius;
+            return 5;
+          }).on('mouseover', tooltip.show).on('mouseout', tooltip.hide);
+        }
+      });
+      
+    });
+
     // header.coffee
     root.require.register('burnchart/src/views/header.js', function(exports, require, module) {
     
@@ -40099,33 +40097,6 @@ Router.prototype.mount = function(routes, path) {
       
     });
 
-    // milestones.coffee
-    root.require.register('burnchart/src/views/milestones.js', function(exports, require, module) {
-    
-      var Icons, format, mediator, projects;
-      
-      mediator = require('../modules/mediator');
-      
-      projects = require('../models/projects');
-      
-      format = require('../utils/format');
-      
-      Icons = require('./icons');
-      
-      module.exports = Ractive.extend({
-        'name': 'views/milestones',
-        'template': require('../templates/milestones'),
-        'data': {
-          format: format
-        },
-        'components': {
-          Icons: Icons
-        },
-        'adapt': [Ractive.adaptors.Ractive]
-      });
-      
-    });
-
     // notify.coffee
     root.require.register('burnchart/src/views/notify.js', function(exports, require, module) {
     
@@ -40191,57 +40162,6 @@ Router.prototype.mount = function(routes, path) {
       
     });
 
-    // chart.coffee
-    root.require.register('burnchart/src/views/pages/chart.js', function(exports, require, module) {
-    
-      var format, milestone, project, system;
-      
-      system = require('../../models/system');
-      
-      milestone = require('../../modules/milestone');
-      
-      project = require('../../modules/project');
-      
-      format = require('../../utils/format');
-      
-      module.exports = Ractive.extend({
-        'name': 'views/pages/chart',
-        'template': require('../../templates/pages/chart'),
-        'adapt': [Ractive.adaptors.Ractive],
-        'data': {
-          format: format
-        },
-        onrender: function() {
-          var name, owner, route, _ref,
-            _this = this;
-          return;
-          _ref = this.get('route'), owner = _ref[0], name = _ref[1], milestone = _ref[2];
-          route = {
-            owner: owner,
-            name: name,
-            milestone: milestone
-          };
-          document.title = "" + owner + "/" + name + "/" + milestone;
-          return milestone.get(route, function(err, warn, obj) {
-            if (err) {
-              throw err;
-            }
-            if (warn) {
-              throw warn;
-            }
-            _this.set('milestone', obj);
-            route.milestone = obj;
-            return project(route, function(err) {
-              if (err) {
-                throw err;
-              }
-            });
-          });
-        }
-      });
-      
-    });
-
     // index.coffee
     root.require.register('burnchart/src/views/pages/index.js', function(exports, require, module) {
     
@@ -40249,13 +40169,13 @@ Router.prototype.mount = function(routes, path) {
       
       Hero = require('../hero');
       
-      Projects = require('../projects');
+      Projects = require('../tables/projects');
       
       projects = require('../../models/projects');
       
       system = require('../../models/system');
       
-      milestones = require('../../modules/github/milestone');
+      milestones = require('../../modules/github/milestones');
       
       issues = require('../../modules/github/issues');
       
@@ -40323,6 +40243,90 @@ Router.prototype.mount = function(routes, path) {
       
     });
 
+    // milestone.coffee
+    root.require.register('burnchart/src/views/pages/milestone.js', function(exports, require, module) {
+    
+      var Chart, format, issues, mediator, milestones, projects, system;
+      
+      Chart = require('../chart');
+      
+      projects = require('../../models/projects');
+      
+      system = require('../../models/system');
+      
+      milestones = require('../../modules/github/milestones');
+      
+      issues = require('../../modules/github/issues');
+      
+      mediator = require('../../modules/mediator');
+      
+      format = require('../../utils/format');
+      
+      module.exports = Ractive.extend({
+        'name': 'views/pages/chart',
+        'template': require('../../templates/pages/milestone'),
+        'components': {
+          Chart: Chart
+        },
+        'data': {
+          'format': format,
+          'ready': false
+        },
+        onrender: function() {
+          var done, fetchIssues, fetchMilestone, milestone, name, obj, owner, project, _ref,
+            _this = this;
+          _ref = this.get('route'), owner = _ref[0], name = _ref[1], milestone = _ref[2];
+          document.title = "" + owner + "/" + name + "/" + milestone;
+          project = projects.find({
+            owner: owner,
+            name: name
+          });
+          if (!project) {
+            throw 500;
+          }
+          obj = _.find(project.milestones, {
+            'number': milestone
+          });
+          if (obj) {
+            return this.set({
+              'milestone': obj,
+              'ready': true
+            });
+          }
+          done = system.async();
+          fetchMilestone = function(cb) {
+            return milestones.fetch(_.extend(project, {
+              milestone: milestone
+            }), cb);
+          };
+          fetchIssues = function(milestone, cb) {
+            return issues.fetchAll(project, function(err, obj) {
+              return cb(err, _.extend(milestone, {
+                'issues': obj
+              }));
+            });
+          };
+          return async.waterfall([fetchMilestone, fetchIssues], function(err, data) {
+            done();
+            if (err) {
+              return mediator.fire('!app/notify', {
+                'text': err.toString(),
+                'type': 'alert',
+                'system': true,
+                'ttl': null
+              });
+            }
+            projects.push('list', data);
+            return _this.set({
+              'milestone': data,
+              'ready': true
+            });
+          });
+        }
+      });
+      
+    });
+
     // new.coffee
     root.require.register('burnchart/src/views/pages/new.js', function(exports, require, module) {
     
@@ -40382,13 +40386,13 @@ Router.prototype.mount = function(routes, path) {
     
       var Milestones, issues, mediator, milestones, projects, system;
       
-      Milestones = require('../milestones');
+      Milestones = require('../tables/milestones');
       
       projects = require('../../models/projects');
       
       system = require('../../models/system');
       
-      milestones = require('../../modules/github/milestone');
+      milestones = require('../../modules/github/milestones');
       
       issues = require('../../modules/github/issues');
       
@@ -40455,20 +40459,47 @@ Router.prototype.mount = function(routes, path) {
       
     });
 
+    // milestones.coffee
+    root.require.register('burnchart/src/views/tables/milestones.js', function(exports, require, module) {
+    
+      var Icons, format, mediator, projects;
+      
+      mediator = require('../../modules/mediator');
+      
+      projects = require('../../models/projects');
+      
+      format = require('../../utils/format');
+      
+      Icons = require('../icons');
+      
+      module.exports = Ractive.extend({
+        'name': 'views/milestones',
+        'template': require('../../templates/tables/milestones'),
+        'data': {
+          format: format
+        },
+        'components': {
+          Icons: Icons
+        },
+        'adapt': [Ractive.adaptors.Ractive]
+      });
+      
+    });
+
     // projects.coffee
-    root.require.register('burnchart/src/views/projects.js', function(exports, require, module) {
+    root.require.register('burnchart/src/views/tables/projects.js', function(exports, require, module) {
     
       var Icons, format, mediator;
       
-      mediator = require('../modules/mediator');
+      mediator = require('../../modules/mediator');
       
-      format = require('../utils/format');
+      format = require('../../utils/format');
       
-      Icons = require('./icons');
+      Icons = require('../icons');
       
       module.exports = Ractive.extend({
         'name': 'views/projects',
-        'template': require('../templates/projects'),
+        'template': require('../../templates/tables/projects'),
         'data': {
           format: format
         },

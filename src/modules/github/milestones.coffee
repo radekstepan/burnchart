@@ -1,5 +1,5 @@
 #!/usr/bin/env coffee
-request = require '../request'
+request = require './request'
 
 module.exports =
 

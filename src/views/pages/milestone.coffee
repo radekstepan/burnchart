@@ -1,8 +1,8 @@
-Chart = require '../chart.coffee'
+Chart = require '../chart'
 
 projects   = require '../../models/projects'
 system     = require '../../models/system'
-milestones = require '../../modules/github/milestone'
+milestones = require '../../modules/github/milestones'
 issues     = require '../../modules/github/issues'
 mediator   = require '../../modules/mediator'
 format     = require '../../utils/format'
@@ -11,7 +11,7 @@ module.exports = Ractive.extend
 
   'name': 'views/pages/chart'
 
-  'template': require '../../templates/pages/chart'
+  'template': require '../../templates/pages/milestone'
 
   'components': { Chart }
 
@@ -31,14 +31,14 @@ module.exports = Ractive.extend
     throw 500 unless project
 
     # Do we have this milestone already?
-    milestone = _.find project.milestones, { 'number': milestone }
-    return @set { milestone, 'ready': yes } if milestone
+    obj = _.find project.milestones, { 'number': milestone }
+    return @set { 'milestone': obj, 'ready': yes } if obj
 
     # We are loading the milestones then.
     done = do system.async
 
     fetchMilestone = (cb) ->
-      milestones.fetch project, cb
+      milestones.fetch _.extend(project, { milestone }), cb
 
     fetchIssues = (milestone, cb) ->
       issues.fetchAll project, (err, obj) ->
@@ -59,6 +59,9 @@ module.exports = Ractive.extend
       } if err
 
       # Save the milestone.
+      projects.push 'list', data
+
+      # Show the page.
       @set
         'milestone': data
         'ready': yes

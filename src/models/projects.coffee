@@ -1,6 +1,5 @@
 config   = require '../models/config'
 mediator = require '../modules/mediator'
-request  = require '../modules/request'
 Model    = require '../utils/model'
 date     = require '../utils/date'
 user     = require './user'
