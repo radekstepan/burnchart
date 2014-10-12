@@ -1,10 +1,12 @@
+config = require '../models/config'
+
 module.exports =
 
   # A graph of closed issues.
   # `collection`: issues
   # `created_at`: milestone start date
   # `total`:    total number of points (open & closed issues)
-  actual: (collection, created_at, total, cb) ->
+  actual: (collection, created_at, total) ->
     head = [ {
       'date': new Date created_at
       'points': total
@@ -31,18 +33,18 @@ module.exports =
       issue.radius = range issue.size
       issue
 
-    cb null, [].concat head, rest
+    [].concat head, rest
 
   # A graph of an ideal progression..
   # `a`:   milestone start date
   # `b`:   milestone end date
   # `total`: total number of points (open & closed issues)
-  ideal: (a, b, total, cb) ->
+  ideal: (a, b, total) ->
     # Swap?
     [ b, a ] = [ a, b ] if b < a
 
     # We start here adding days to `d`.
-    [ y, m, d ] = _.map a.match(config.get('chart.datetime'))[1].split('-'), (v) -> parseInt v
+    [ y, m, d ] = _.map a.match(config.data.chart.datetime)[1].split('-'), (v) -> parseInt v
     # We want to end here.
     cutoff = new Date(b)
 
@@ -54,7 +56,7 @@ module.exports =
       
       # Does this day count?
       day_of = 7 if !day_of = day.getDay()
-      if day_of in config.get('chart.off_days')
+      if day_of in config.data.chart.off_days
         days.push { date: day, off_day: yes }
       else
         length += 1
@@ -74,10 +76,12 @@ module.exports =
     # Do we need to make a link to right now?
     days.push { date: now, points: 0 } if (now = new Date()) > cutoff
 
-    cb null, days
+    days
 
   # Graph representing a trendling of actual issues.
   trend: (actual, created_at, due_on) ->
+    return [] unless actual.length
+
     start = +actual[0].date
 
     # Values is a list of time from the start and points remaining.

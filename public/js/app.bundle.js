@@ -39273,10 +39273,14 @@ Router.prototype.mount = function(routes, path) {
         fetchAll: function(repo, cb) {
           var calcSize, oneStatus;
           calcSize = function(list, cb) {
-            var size;
+            var issue, size, _i, _len;
             switch (config.data.chart.points) {
               case 'ONE_SIZE':
                 size = list.length;
+                for (_i = 0, _len = list.length; _i < _len; _i++) {
+                  issue = list[_i];
+                  issue.size = 1;
+                }
                 return cb(null, {
                   list: list,
                   size: size
@@ -39517,10 +39521,13 @@ Router.prototype.mount = function(routes, path) {
     // line.coffee
     root.require.register('burnchart/src/modules/line.js', function(exports, require, module) {
     
-      var __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
+      var config,
+        __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
+      
+      config = require('../models/config');
       
       module.exports = {
-        actual: function(collection, created_at, total, cb) {
+        actual: function(collection, created_at, total) {
           var head, max, min, range, rest;
           head = [
             {
@@ -39548,14 +39555,14 @@ Router.prototype.mount = function(routes, path) {
             issue.radius = range(issue.size);
             return issue;
           });
-          return cb(null, [].concat(head, rest));
+          return [].concat(head, rest);
         },
-        ideal: function(a, b, total, cb) {
+        ideal: function(a, b, total) {
           var cutoff, d, days, length, m, now, once, velocity, y, _ref, _ref1;
           if (b < a) {
             _ref = [a, b], b = _ref[0], a = _ref[1];
           }
-          _ref1 = _.map(a.match(config.get('chart.datetime'))[1].split('-'), function(v) {
+          _ref1 = _.map(a.match(config.data.chart.datetime)[1].split('-'), function(v) {
             return parseInt(v);
           }), y = _ref1[0], m = _ref1[1], d = _ref1[2];
           cutoff = new Date(b);
@@ -39567,7 +39574,7 @@ Router.prototype.mount = function(routes, path) {
             if (!(day_of = day.getDay())) {
               day_of = 7;
             }
-            if (__indexOf.call(config.get('chart.off_days'), day_of) >= 0) {
+            if (__indexOf.call(config.data.chart.off_days, day_of) >= 0) {
               days.push({
                 date: day,
                 off_day: true
@@ -39596,10 +39603,13 @@ Router.prototype.mount = function(routes, path) {
               points: 0
             });
           }
-          return cb(null, days);
+          return days;
         },
         trend: function(actual, created_at, due_on) {
           var a, b, b1, c1, e, fn, intercept, l, last, slope, start, values;
+          if (!actual.length) {
+            return [];
+          }
           start = +actual[0].date;
           values = _.map(actual, function(_arg) {
             var date, points;
@@ -39650,13 +39660,6 @@ Router.prototype.mount = function(routes, path) {
       Mediator = Ractive.extend({});
       
       module.exports = new Mediator();
-      
-    });
-
-    // project.coffee
-    root.require.register('burnchart/src/modules/project.js', function(exports, require, module) {
-    
-      
       
     });
 
@@ -39744,6 +39747,12 @@ Router.prototype.mount = function(routes, path) {
     root.require.register('burnchart/src/templates/app.js', function(exports, require, module) {
     
       module.exports = ["<div id=\"app\">","  <Notify/>","  <Header/>","","  <div id=\"page\">","    <!-- content loaded from a router -->","  </div>","","  <div id=\"footer\">","    <div class=\"wrap\">","      &copy; 2012-2014 <a href=\"http://cloudfi.re\">Cloudfire Systems</a>","    </div>","  </div>","</div>"].join("\n");
+    });
+
+    // chart.mustache
+    root.require.register('burnchart/src/templates/chart.js', function(exports, require, module) {
+    
+      module.exports = ["<div id=\"chart\"></div>"].join("\n");
     });
 
     // header.mustache
@@ -39925,10 +39934,15 @@ Router.prototype.mount = function(routes, path) {
       
       module.exports = Ractive.extend({
         'name': 'views/chart',
-        onrender: function() {
-          var height, m, mAxis, margin, svg, tooltip, width, x, xAxis, y, yAxis, _ref;
-          console.log(this.data.milestone);
-          return console.log('Use `line` to populate our data, could move to our scope too');
+        'template': require('../templates/chart'),
+        oncomplete: function() {
+          var actual, height, ideal, issues, m, mAxis, margin, milestone, svg, tooltip, total, trend, width, x, xAxis, y, yAxis, _ref;
+          milestone = this.data.milestone;
+          issues = milestone.issues;
+          total = issues.open.size + issues.closed.size;
+          actual = line.actual(issues.closed.list, milestone.created_at, total);
+          ideal = line.ideal(milestone.created_at, milestone.due_on, total);
+          trend = line.trend(actual, milestone.created_at, milestone.due_on);
           _ref = this.el.getBoundingClientRect(), height = _ref.height, width = _ref.width;
           margin = {
             'top': 30,
@@ -39951,7 +39965,7 @@ Router.prototype.mount = function(routes, path) {
           });
           x.domain([ideal[0].date, ideal[ideal.length - 1].date]);
           y.domain([0, ideal[0].points]).nice();
-          svg = d3.select("#svg").append("svg").attr("width", width + margin.left + margin.right).attr("height", height + margin.top + margin.bottom).append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+          svg = d3.select(this.el.querySelector('#chart')).append("svg").attr("width", width + margin.left + margin.right).attr("height", height + margin.top + margin.bottom).append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
           svg.append("g").attr("class", "x axis day").attr("transform", "translate(0," + height + ")").call(xAxis);
           m = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
           mAxis = xAxis.orient("top").tickSize(height).tickFormat(function(d) {
@@ -39961,7 +39975,7 @@ Router.prototype.mount = function(routes, path) {
           svg.append("g").attr("class", "y axis").call(yAxis);
           svg.append("svg:line").attr("class", "today").attr("x1", x(new Date())).attr("y1", 0).attr("x2", x(new Date())).attr("y2", height);
           svg.append("path").attr("class", "ideal line").attr("d", line.interpolate("basis")(ideal));
-          svg.append("path").attr("class", "trendline line").attr("d", line.interpolate("linear")(trendline));
+          svg.append("path").attr("class", "trendline line").attr("d", line.interpolate("linear")(trend));
           svg.append("path").attr("class", "actual line").attr("d", line.interpolate("linear").y(function(d) {
             return y(d.points);
           })(actual));

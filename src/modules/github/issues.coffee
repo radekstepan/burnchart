@@ -12,6 +12,9 @@ module.exports =
       switch config.data.chart.points
         when 'ONE_SIZE'
           size = list.length
+
+          ( issue.size = 1 for issue in list )
+
           cb null, { list, size }
         
         when 'LABELS'

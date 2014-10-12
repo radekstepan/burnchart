@@ -72,7 +72,7 @@ ul li{display:inline-block}
 #title .sub{font-size:16px;font-weight:bold;margin:0 20px}
 #title .description{display:inline-block;font-family:'MuseoSlab500Regular',serif;white-space:nowrap;color:#b1b6c4}
 #page{padding-bottom:80px;}
-#page #content{padding:20px;margin-top:20px;}
+#page #content{padding:20px;margin-top:20px;margin-bottom:40px;}
 #page #content #hero{background:url("../img/hires/2.jpg") center;-webkit-background-size:cover;-moz-background-size:cover;background-size:cover;-webkit-border-radius:2px;border-radius:2px;margin-bottom:30px;}
 #page #content #hero .content{-webkit-border-radius:2px;border-radius:2px;color:#fff;padding:30px;background:rgba(0,0,0,0.3);-webkit-box-shadow:inset 0 1px 2px rgba(0,0,0,0.2);box-shadow:inset 0 1px 2px rgba(0,0,0,0.2);}
 #page #content #hero .content h2{margin-bottom:20px;margin-left:140px}
@@ -117,4 +117,4 @@ ul li{display:inline-block}
 #page #content #projects .header a{font-family:'MuseoSlab500Regular',serif}
 #page #content #projects .footer{background:#f9fafb;color:#aaafbf;-webkit-box-shadow:inset 0 1px 2px rgba(221,225,237,0.2);box-shadow:inset 0 1px 2px rgba(221,225,237,0.2);border-top:1px solid #dde1ed;text-align:right;font-family:'MuseoSlab500Regular',serif;}
 #page #content #projects .footer .icon{color:#aaafbf}
-#footer{position:absolute;width:100%;bottom:0;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;border-top:1px solid #f3f4f8;text-align:center;padding:30px;margin-top:30px;font-family:'MuseoSlab500Regular',serif}
+#footer{position:absolute;width:100%;bottom:0;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;border-top:1px solid #f3f4f8;text-align:center;padding:30px;font-family:'MuseoSlab500Regular',serif}

@@ -2,9 +2,6 @@
 
 ##Release: MVP
 
-- [ ] show chart page
-- [ ] pick consistent module naming scheme: index, project, milestone?
-
 ###GitHub
 
 - [ ] sort milestones on index and project page based on priority (most delayed first)
@@ -26,6 +23,9 @@
 - [ ] save in memory only if no `localStorage`, warn about that
 - [ ] what if milestone does not match our strategy?
 - [ ] show a stack of errors from index page as notifications
+
+###Gotchas
+- [ ] an issue may have been closed before the start of the milestone; choose the earliest as the start date
 
 ###Bugs
 

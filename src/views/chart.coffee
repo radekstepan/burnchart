@@ -4,14 +4,22 @@ module.exports = Ractive.extend
 
   'name': 'views/chart'
 
-  onrender: ->
-    console.log @data.milestone
+  'template': require '../templates/chart'
 
-    return console.log 'Use `line` to populate our data, could move to our scope too'
+  oncomplete: ->
+    milestone = @data.milestone
+    issues = milestone.issues
+    # Total number of points in the milestone.
+    total = issues.open.size + issues.closed.size
 
-    # Get available space.  
-    { height, width } = this.el.getBoundingClientRect()
-
+    # Actual, ideal & trend lines.
+    actual = line.actual issues.closed.list, milestone.created_at, total
+    ideal  = line.ideal milestone.created_at, milestone.due_on, total
+    trend  = line.trend actual, milestone.created_at, milestone.due_on
+    
+    # Get available space.
+    { height, width } = @el.getBoundingClientRect()
+    
     margin = { 'top': 30, 'right': 30, 'bottom': 40, 'left': 50 }
     width -= margin.left + margin.right
     height -= margin.top + margin.bottom
@@ -47,7 +55,7 @@ module.exports = Ractive.extend
     y.domain([ 0, ideal[0].points ]).nice()
 
     # Add an SVG element with the desired dimensions and margin.
-    svg = d3.select("#svg").append("svg")
+    svg = d3.select(this.el.querySelector('#chart')).append("svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
     .append("g")
@@ -97,7 +105,7 @@ module.exports = Ractive.extend
     # Add the trendline path.
     svg.append("path")
     .attr("class", "trendline line")
-    .attr("d", line.interpolate("linear")(trendline))
+    .attr("d", line.interpolate("linear")(trend))
 
     # Add the actual line path.
     svg.append("path")
