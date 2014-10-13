@@ -19,42 +19,54 @@ module.exports =
   
   # Get a repo.
   repo: ({ owner, name }, cb) ->
-    data = _.defaults
-      'path':   "/repos/#{owner}/#{name}"
-      'headers':  headers user.data.token
-    , defaults.github
+    return cb 'Request is malformed' unless isValid { owner, name }
 
-    request data, cb
+    ready ->
+      data = _.defaults
+        'path':   "/repos/#{owner}/#{name}"
+        'headers':  headers user.data.accessToken
+      , defaults.github
+
+      request data, cb
 
   # Get all open milestones.
-  allMilestones: ({ owner, name }, cb) ->     
-    data = _.defaults
-      'path':   "/repos/#{owner}/#{name}/milestones"
-      'query':  { 'state': 'open', 'sort': 'due_date', 'direction': 'asc' }
-      'headers':  headers user.data.token
-    , defaults.github
+  allMilestones: ({ owner, name }, cb) -> 
+    return cb 'Request is malformed' unless isValid { owner, name }
 
-    request data, cb
+    ready ->
+      data = _.defaults
+        'path':   "/repos/#{owner}/#{name}/milestones"
+        'query':  { 'state': 'open', 'sort': 'due_date', 'direction': 'asc' }
+        'headers':  headers user.data.accessToken
+      , defaults.github
+
+      request data, cb
   
   # Get one open milestone.
   oneMilestone: ({ owner, name, milestone }, cb) ->
-    data = _.defaults
-      'path':   "/repos/#{owner}/#{name}/milestones/#{milestone}"
-      'query':  { 'state': 'open', 'sort': 'due_date', 'direction': 'asc' }
-      'headers':  headers user.data.token
-    , defaults.github
+    return cb 'Request is malformed' unless isValid { owner, name, milestone }
 
-    request data, cb
+    ready ->
+      data = _.defaults
+        'path':   "/repos/#{owner}/#{name}/milestones/#{milestone}"
+        'query':  { 'state': 'open', 'sort': 'due_date', 'direction': 'asc' }
+        'headers':  headers user.data.accessToken
+      , defaults.github
+
+      request data, cb
 
   # Get all issues for a state.
-  allIssues: ({ owner, name, milestone }, query, cb) ->     
-    data = _.defaults
-      'path':   "/repos/#{owner}/#{name}/issues"
-      'query':  _.extend query, { milestone, 'per_page': '100' }
-      'headers':  headers user.data.token
-    , defaults.github
+  allIssues: ({ owner, name, milestone }, query, cb) ->
+    return cb 'Request is malformed' unless isValid { owner, name, milestone }
 
-    request data, cb
+    ready ->
+      data = _.defaults
+        'path':   "/repos/#{owner}/#{name}/issues"
+        'query':  _.extend query, { milestone, 'per_page': '100' }
+        'headers':  headers user.data.accessToken
+      , defaults.github
+
+      request data, cb
 
 # Make a request using SuperAgent.
 request = ({ protocol, host, path, query, headers }, cb) ->
@@ -99,12 +111,36 @@ response = (err, data, cb) ->
 # Give us headers.
 headers = (token) ->
   # The defaults.
-  h = _.extend {},
+  h =
     'Content-Type': 'application/json'
     'Accept': 'application/vnd.github.v3'
   # Add token?
   h.Authorization = "token #{token}" if token?
   h
+
+isValid = (obj) ->
+  rules =
+    'owner':     (val) -> val?
+    'name':      (val) -> val?
+    'milestone': (val) -> _.isInt val
+  
+  ( return no for key, val of obj when key of rules and not rules[key](val) )
+
+  yes
+
+# Switch when user is ready.
+isReady = user.data.ready
+
+# A stack of requests to execute once ready.
+stack = []
+ready = (cb) ->
+  if isReady then do cb else stack.push cb
+
+# Observe user's readiness.
+user.observe 'ready', (val) ->
+  isReady = val
+  # Clear the stack?
+  ( do stack.shift() while stack.length ) if val
 
 # Parse an error.
 error = (err) ->

@@ -6,3 +6,6 @@ _.mixin
       _.each keys, (key) ->
         obj[key] = item[key]
       obj
+
+  'isInt': (val) ->
+    not isNaN(val) and parseInt(Number(val)) is val and not isNaN(parseInt(val, 10))

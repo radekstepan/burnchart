@@ -39141,17 +39141,16 @@ Router.prototype.mount = function(routes, path) {
           return user.reset();
         },
         onrender: function() {
-          var client,
-            _this = this;
+          var client;
           this.set('client', client = new Firebase("https://" + config.data.firebase + ".firebaseio.com"));
           return this.auth = new FirebaseSimpleLogin(client, function(err, obj) {
-            user.set('loaded', true);
             if (err) {
               throw err;
             }
             if (obj) {
-              return user.set(obj);
+              user.set(obj);
             }
+            return user.set('ready', true);
           });
         }
       });
@@ -39360,7 +39359,7 @@ Router.prototype.mount = function(routes, path) {
     // request.coffee
     root.require.register('burnchart/src/modules/github/request.js', function(exports, require, module) {
     
-      var defaults, error, headers, request, response, user;
+      var defaults, error, headers, isReady, isValid, ready, request, response, stack, user;
       
       user = require('../../models/user');
       
@@ -39385,54 +39384,92 @@ Router.prototype.mount = function(routes, path) {
       
       module.exports = {
         repo: function(_arg, cb) {
-          var data, name, owner;
+          var name, owner;
           owner = _arg.owner, name = _arg.name;
-          data = _.defaults({
-            'path': "/repos/" + owner + "/" + name,
-            'headers': headers(user.data.token)
-          }, defaults.github);
-          return request(data, cb);
+          if (!isValid({
+            owner: owner,
+            name: name
+          })) {
+            return cb('Request is malformed');
+          }
+          return ready(function() {
+            var data;
+            data = _.defaults({
+              'path': "/repos/" + owner + "/" + name,
+              'headers': headers(user.data.accessToken)
+            }, defaults.github);
+            return request(data, cb);
+          });
         },
         allMilestones: function(_arg, cb) {
-          var data, name, owner;
+          var name, owner;
           owner = _arg.owner, name = _arg.name;
-          data = _.defaults({
-            'path': "/repos/" + owner + "/" + name + "/milestones",
-            'query': {
-              'state': 'open',
-              'sort': 'due_date',
-              'direction': 'asc'
-            },
-            'headers': headers(user.data.token)
-          }, defaults.github);
-          return request(data, cb);
+          if (!isValid({
+            owner: owner,
+            name: name
+          })) {
+            return cb('Request is malformed');
+          }
+          return ready(function() {
+            var data;
+            data = _.defaults({
+              'path': "/repos/" + owner + "/" + name + "/milestones",
+              'query': {
+                'state': 'open',
+                'sort': 'due_date',
+                'direction': 'asc'
+              },
+              'headers': headers(user.data.accessToken)
+            }, defaults.github);
+            return request(data, cb);
+          });
         },
         oneMilestone: function(_arg, cb) {
-          var data, milestone, name, owner;
+          var milestone, name, owner;
           owner = _arg.owner, name = _arg.name, milestone = _arg.milestone;
-          data = _.defaults({
-            'path': "/repos/" + owner + "/" + name + "/milestones/" + milestone,
-            'query': {
-              'state': 'open',
-              'sort': 'due_date',
-              'direction': 'asc'
-            },
-            'headers': headers(user.data.token)
-          }, defaults.github);
-          return request(data, cb);
+          if (!isValid({
+            owner: owner,
+            name: name,
+            milestone: milestone
+          })) {
+            return cb('Request is malformed');
+          }
+          return ready(function() {
+            var data;
+            data = _.defaults({
+              'path': "/repos/" + owner + "/" + name + "/milestones/" + milestone,
+              'query': {
+                'state': 'open',
+                'sort': 'due_date',
+                'direction': 'asc'
+              },
+              'headers': headers(user.data.accessToken)
+            }, defaults.github);
+            return request(data, cb);
+          });
         },
         allIssues: function(_arg, query, cb) {
-          var data, milestone, name, owner;
+          var milestone, name, owner;
           owner = _arg.owner, name = _arg.name, milestone = _arg.milestone;
-          data = _.defaults({
-            'path': "/repos/" + owner + "/" + name + "/issues",
-            'query': _.extend(query, {
-              milestone: milestone,
-              'per_page': '100'
-            }),
-            'headers': headers(user.data.token)
-          }, defaults.github);
-          return request(data, cb);
+          if (!isValid({
+            owner: owner,
+            name: name,
+            milestone: milestone
+          })) {
+            return cb('Request is malformed');
+          }
+          return ready(function() {
+            var data;
+            data = _.defaults({
+              'path': "/repos/" + owner + "/" + name + "/issues",
+              'query': _.extend(query, {
+                milestone: milestone,
+                'per_page': '100'
+              }),
+              'headers': headers(user.data.accessToken)
+            }, defaults.github);
+            return request(data, cb);
+          });
         }
       };
       
@@ -39484,15 +39521,61 @@ Router.prototype.mount = function(routes, path) {
       
       headers = function(token) {
         var h;
-        h = _.extend({}, {
+        h = {
           'Content-Type': 'application/json',
           'Accept': 'application/vnd.github.v3'
-        });
+        };
         if (token != null) {
           h.Authorization = "token " + token;
         }
         return h;
       };
+      
+      isValid = function(obj) {
+        var key, rules, val;
+        rules = {
+          'owner': function(val) {
+            return val != null;
+          },
+          'name': function(val) {
+            return val != null;
+          },
+          'milestone': function(val) {
+            return _.isInt(val);
+          }
+        };
+        for (key in obj) {
+          val = obj[key];
+          if (key in rules && !rules[key](val)) {
+            return false;
+          }
+        }
+        return true;
+      };
+      
+      isReady = user.data.ready;
+      
+      stack = [];
+      
+      ready = function(cb) {
+        if (isReady) {
+          return cb();
+        } else {
+          return stack.push(cb);
+        }
+      };
+      
+      user.observe('ready', function(val) {
+        var _results;
+        isReady = val;
+        if (val) {
+          _results = [];
+          while (stack.length) {
+            _results.push(stack.shift()());
+          }
+          return _results;
+        }
+      });
       
       error = function(err) {
         var message;
@@ -39758,7 +39841,7 @@ Router.prototype.mount = function(routes, path) {
     // header.mustache
     root.require.register('burnchart/src/templates/header.js', function(exports, require, module) {
     
-      module.exports = ["<div id=\"head\">","  {{#with user}}","    {{#loaded}}","      <div class=\"right\" intro=\"fade\">","        {{#displayName}}","          {{displayName}} logged in","        {{else}}","          <a class=\"github\" on-click=\"!login\"><Icons icon=\"github\"/> Sign In</a>","        {{/displayName}}","      </div>","    {{/loaded}}","  {{/with}}","","  <a id=\"icon\" href=\"#\">","    <Icons icon=\"{{icon}}\"/>","  </a>","","  <!--","  <div class=\"q\">","    <Icons icon=\"search\"/>","    <Icons icon=\"down-open\"/>","    <input type=\"text\" placeholder=\"Jump to...\">","  </div>","  -->","","  <ul>","    <li><a href=\"#new/project\" class=\"add\"><Icons icon=\"plus-circled\"/> Add a Project</a></li>","    <li><a href=\"#\" class=\"faq\">FAQ</a></li>","    <li><a href=\"#reset\">DB Reset</a></li>","    <li><a href=\"#notify\">Notify</a></li>","  </ul>","</div>"].join("\n");
+      module.exports = ["<div id=\"head\">","  {{#with user}}","    {{#ready}}","      <div class=\"right\" intro=\"fade\">","        {{#displayName}}","          {{displayName}} logged in","        {{else}}","          <a class=\"github\" on-click=\"!login\"><Icons icon=\"github\"/> Sign In</a>","        {{/displayName}}","      </div>","    {{/ready}}","  {{/with}}","","  <a id=\"icon\" href=\"#\">","    <Icons icon=\"{{icon}}\"/>","  </a>","","  <!--","  <div class=\"q\">","    <Icons icon=\"search\"/>","    <Icons icon=\"down-open\"/>","    <input type=\"text\" placeholder=\"Jump to...\">","  </div>","  -->","","  <ul>","    <li><a href=\"#new/project\" class=\"add\"><Icons icon=\"plus-circled\"/> Add a Project</a></li>","    <li><a href=\"#\" class=\"faq\">FAQ</a></li>","    <li><a href=\"#reset\">DB Reset</a></li>","    <li><a href=\"#notify\">Notify</a></li>","  </ul>","</div>"].join("\n");
     });
 
     // hero.mustache
@@ -39907,6 +39990,9 @@ Router.prototype.mount = function(routes, path) {
             });
             return obj;
           });
+        },
+        'isInt': function(val) {
+          return !isNaN(val) && parseInt(Number(val)) === val && !isNaN(parseInt(val, 10));
         }
       });
       
@@ -40290,6 +40376,7 @@ Router.prototype.mount = function(routes, path) {
           var done, fetchIssues, fetchMilestone, milestone, name, obj, owner, project, _ref,
             _this = this;
           _ref = this.get('route'), owner = _ref[0], name = _ref[1], milestone = _ref[2];
+          milestone = parseInt(milestone);
           document.title = "" + owner + "/" + name + "/" + milestone;
           project = projects.find({
             owner: owner,
@@ -40309,13 +40396,19 @@ Router.prototype.mount = function(routes, path) {
           }
           done = system.async();
           fetchMilestone = function(cb) {
-            return milestones.fetch(_.extend(project, {
+            return milestones.fetch({
+              owner: owner,
+              name: name,
               milestone: milestone
-            }), cb);
+            }, cb);
           };
-          fetchIssues = function(milestone, cb) {
-            return issues.fetchAll(project, function(err, obj) {
-              return cb(err, _.extend(milestone, {
+          fetchIssues = function(data, cb) {
+            return issues.fetchAll({
+              owner: owner,
+              name: name,
+              milestone: milestone
+            }, function(err, obj) {
+              return cb(err, _.extend(data, {
                 'issues': obj
               }));
             });
@@ -40330,7 +40423,11 @@ Router.prototype.mount = function(routes, path) {
                 'ttl': null
               });
             }
-            projects.push('list', data);
+            if (project.milestones == null) {
+              project.milestones = [];
+            }
+            project.milestones.push(data);
+            projects.update('list');
             return _this.set({
               'milestone': data,
               'ready': true

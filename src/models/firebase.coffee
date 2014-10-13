@@ -26,10 +26,10 @@ module.exports = new Model
     @set 'client', client = new Firebase "https://#{config.data.firebase}.firebaseio.com"
     
     # Check if we have a user in session.
-    @auth = new FirebaseSimpleLogin client, (err, obj) =>
-      user.set 'loaded', yes
-
+    @auth = new FirebaseSimpleLogin client, (err, obj) ->
       throw err if err
-
+      
       # Save user.
       user.set obj if obj
+      # Say we are done.
+      user.set 'ready', yes

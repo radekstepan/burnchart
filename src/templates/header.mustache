@@ -1,6 +1,6 @@
 <div id="head">
   {{#with user}}
-    {{#loaded}}
+    {{#ready}}
       <div class="right" intro="fade">
         {{#displayName}}
           {{displayName}} logged in
@@ -8,7 +8,7 @@
           <a class="github" on-click="!login"><Icons icon="github"/> Sign In</a>
         {{/displayName}}
       </div>
-    {{/loaded}}
+    {{/ready}}
   {{/with}}
 
   <a id="icon" href="#">

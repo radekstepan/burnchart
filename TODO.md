@@ -15,6 +15,7 @@
 
 ###Error Handling
 
+- [ ] second visit to a different milestone comes out blank
 - [ ] verify that project exists on project page when fetching it remotely (add behind the scenes)
 - [ ] deal with Firebase timing out, are we still logged-in?
 - [ ] visiting a chart page saves the project if it isn't saved already

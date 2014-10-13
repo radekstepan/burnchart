@@ -22,6 +22,8 @@ module.exports = Ractive.extend
   onrender: ->
     [ owner, name, milestone ] = @get 'route'
   
+    milestone = parseInt milestone
+
     document.title = "#{owner}/#{name}/#{milestone}"
 
     # Get the associated project.
@@ -38,11 +40,11 @@ module.exports = Ractive.extend
     done = do system.async
 
     fetchMilestone = (cb) ->
-      milestones.fetch _.extend(project, { milestone }), cb
+      milestones.fetch { owner, name, milestone }, cb
 
-    fetchIssues = (milestone, cb) ->
-      issues.fetchAll project, (err, obj) ->
-        cb err, _.extend milestone, { 'issues': obj }
+    fetchIssues = (data, cb) ->
+      issues.fetchAll { owner, name, milestone }, (err, obj) ->
+        cb err, _.extend data, { 'issues': obj }
 
     async.waterfall [
       # Get the milestone.
@@ -59,7 +61,9 @@ module.exports = Ractive.extend
       } if err
 
       # Save the milestone.
-      projects.push 'list', data
+      project.milestones ?= []
+      project.milestones.push data
+      projects.update 'list'
 
       # Show the page.
       @set
