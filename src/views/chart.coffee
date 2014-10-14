@@ -1,4 +1,4 @@
-line = require '../modules/line'
+lines = require '../modules/lines'
 
 module.exports = Ractive.extend
 
@@ -13,13 +13,13 @@ module.exports = Ractive.extend
     total = issues.open.size + issues.closed.size
 
     # Actual, ideal & trend lines.
-    actual = line.actual issues.closed.list, milestone.created_at, total
-    ideal  = line.ideal milestone.created_at, milestone.due_on, total
-    trend  = line.trend actual, milestone.created_at, milestone.due_on
-    
+    actual = lines.actual issues.closed.list, milestone.created_at, total
+    ideal  = lines.ideal milestone.created_at, milestone.due_on, total
+    trend  = lines.trend actual, milestone.created_at, milestone.due_on
+
     # Get available space.
     { height, width } = @el.getBoundingClientRect()
-    
+
     margin = { 'top': 30, 'right': 30, 'bottom': 40, 'left': 50 }
     width -= margin.left + margin.right
     height -= margin.top + margin.bottom

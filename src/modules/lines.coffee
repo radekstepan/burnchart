@@ -3,10 +3,10 @@ config = require '../models/config'
 module.exports =
 
   # A graph of closed issues.
-  # `collection`: issues
+  # `issues`:     issues list
   # `created_at`: milestone start date
   # `total`:    total number of points (open & closed issues)
-  actual: (collection, created_at, total) ->
+  actual: (issues, created_at, total) ->
     head = [ {
       'date': new Date created_at
       'points': total
@@ -15,7 +15,7 @@ module.exports =
     min = +Infinity ; max = -Infinity
 
     # Generate the actual closes.
-    rest = _.map collection, (issue) ->
+    rest = _.map issues, (issue) ->
       { size, closed_at } = issue
       # Determine the range.
       min = size if size < min

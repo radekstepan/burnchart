@@ -2,6 +2,8 @@
 
 ##Release: MVP
 
+- [ ] visiting a project page (from chart) should query for all milestones and issues sans what we've got
+
 ###GitHub
 
 - [ ] sort milestones on index and project page based on priority (most delayed first)
@@ -30,8 +32,7 @@
 
 ###Bugs
 
-- [ ] `localStorage` is getting reset
-- [ ] a bit of a freeze when fetching `mbostock/d3`
+- [ ] `rails/rails/24` has issues in two clusters as if merged from two milestones
 
 ###Docs
 
@@ -50,6 +51,7 @@
 - [ ] make async pages transition so that there is no "jumping" on the page
 - [ ] index page alert tooltip
 - [ ] app icon like http://thenounproject.com/term/fire/50966/
+- [ ] make it easy to go back to project page from a chart page, show it in the header
 
 ###Misc
 

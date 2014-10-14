@@ -553,8 +553,8 @@
       
     });
 
-    // line.coffee
-    root.require.register('burnchart/src/modules/line.js', function(exports, require, module) {
+    // lines.coffee
+    root.require.register('burnchart/src/modules/lines.js', function(exports, require, module) {
     
       var config,
         __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
@@ -562,7 +562,7 @@
       config = require('../models/config');
       
       module.exports = {
-        actual: function(collection, created_at, total) {
+        actual: function(issues, created_at, total) {
           var head, max, min, range, rest;
           head = [
             {
@@ -572,7 +572,7 @@
           ];
           min = +Infinity;
           max = -Infinity;
-          rest = _.map(collection, function(issue) {
+          rest = _.map(issues, function(issue) {
             var closed_at, size;
             size = issue.size, closed_at = issue.closed_at;
             if (size < min) {
@@ -966,21 +966,21 @@
     // chart.coffee
     root.require.register('burnchart/src/views/chart.js', function(exports, require, module) {
     
-      var line;
+      var lines;
       
-      line = require('../modules/line');
+      lines = require('../modules/lines');
       
       module.exports = Ractive.extend({
         'name': 'views/chart',
         'template': require('../templates/chart'),
         oncomplete: function() {
-          var actual, height, ideal, issues, m, mAxis, margin, milestone, svg, tooltip, total, trend, width, x, xAxis, y, yAxis, _ref;
+          var actual, height, ideal, issues, line, m, mAxis, margin, milestone, svg, tooltip, total, trend, width, x, xAxis, y, yAxis, _ref;
           milestone = this.data.milestone;
           issues = milestone.issues;
           total = issues.open.size + issues.closed.size;
-          actual = line.actual(issues.closed.list, milestone.created_at, total);
-          ideal = line.ideal(milestone.created_at, milestone.due_on, total);
-          trend = line.trend(actual, milestone.created_at, milestone.due_on);
+          actual = lines.actual(issues.closed.list, milestone.created_at, total);
+          ideal = lines.ideal(milestone.created_at, milestone.due_on, total);
+          trend = lines.trend(actual, milestone.created_at, milestone.due_on);
           _ref = this.el.getBoundingClientRect(), height = _ref.height, width = _ref.width;
           margin = {
             'top': 30,
@@ -1340,7 +1340,7 @@
           obj = _.find(project.milestones, {
             'number': milestone
           });
-          if (obj) {
+          if (obj != null) {
             return this.set({
               'milestone': obj,
               'ready': true

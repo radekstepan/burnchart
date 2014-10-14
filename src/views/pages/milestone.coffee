@@ -34,7 +34,7 @@ module.exports = Ractive.extend
 
     # Do we have this milestone already?
     obj = _.find project.milestones, { 'number': milestone }
-    return @set { 'milestone': obj, 'ready': yes } if obj
+    return @set { 'milestone': obj, 'ready': yes } if obj?
 
     # We are loading the milestones then.
     done = do system.async
