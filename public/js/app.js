@@ -211,6 +211,156 @@
       
     });
 
+    // axes.coffee
+    root.require.register('burnchart/src/modules/chart/axes.js', function(exports, require, module) {
+    
+      module.exports = {
+        horizontal: function(height) {
+          return d3.svg.axis().scale(x).orient("bottom").tickSize(-height).tickFormat(function(d) {
+            return d.getDate();
+          }).tickPadding(10);
+        },
+        vertical: function(width, y) {
+          return d3.svg.axis().scale(y).orient("left").tickSize(-width).ticks(5).tickPadding(10);
+        }
+      };
+      
+    });
+
+    // lines.coffee
+    root.require.register('burnchart/src/modules/chart/lines.js', function(exports, require, module) {
+    
+      var config,
+        __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
+      
+      config = require('../../models/config');
+      
+      module.exports = {
+        actual: function(issues, created_at, total) {
+          var head, max, min, range, rest;
+          head = [
+            {
+              'date': new Date(created_at),
+              'points': total
+            }
+          ];
+          min = +Infinity;
+          max = -Infinity;
+          rest = _.map(issues, function(issue) {
+            var closed_at, size;
+            size = issue.size, closed_at = issue.closed_at;
+            if (size < min) {
+              min = size;
+            }
+            if (size > max) {
+              max = size;
+            }
+            issue.date = new Date(closed_at);
+            issue.points = total -= size;
+            return issue;
+          });
+          range = d3.scale.linear().domain([min, max]).range([5, 8]);
+          rest = _.map(rest, function(issue) {
+            issue.radius = range(issue.size);
+            return issue;
+          });
+          return [].concat(head, rest);
+        },
+        ideal: function(a, b, total) {
+          var cutoff, d, days, length, m, now, once, velocity, y, _ref, _ref1;
+          if (b < a) {
+            _ref = [a, b], b = _ref[0], a = _ref[1];
+          }
+          _ref1 = _.map(a.match(config.data.chart.datetime)[1].split('-'), function(v) {
+            return parseInt(v);
+          }), y = _ref1[0], m = _ref1[1], d = _ref1[2];
+          cutoff = new Date(b);
+          days = [];
+          length = 0;
+          (once = function(inc) {
+            var day, day_of;
+            day = new Date(y, m - 1, d + inc);
+            if (!(day_of = day.getDay())) {
+              day_of = 7;
+            }
+            if (__indexOf.call(config.data.chart.off_days, day_of) >= 0) {
+              days.push({
+                date: day,
+                off_day: true
+              });
+            } else {
+              length += 1;
+              days.push({
+                date: day
+              });
+            }
+            if (!(day > cutoff)) {
+              return once(inc + 1);
+            }
+          })(0);
+          velocity = total / (length - 1);
+          days = _.map(days, function(day, i) {
+            day.points = total;
+            if (days[i] && !days[i].off_day) {
+              total -= velocity;
+            }
+            return day;
+          });
+          if ((now = new Date()) > cutoff) {
+            days.push({
+              date: now,
+              points: 0
+            });
+          }
+          return days;
+        },
+        trend: function(actual, created_at, due_on) {
+          var a, b, b1, c1, e, fn, intercept, l, last, slope, start, values;
+          if (!actual.length) {
+            return [];
+          }
+          start = +actual[0].date;
+          values = _.map(actual, function(_arg) {
+            var date, points;
+            date = _arg.date, points = _arg.points;
+            return [+date - start, points];
+          });
+          last = actual[actual.length - 1];
+          values.push([+new Date() - start, last.points]);
+          b1 = 0;
+          e = 0;
+          c1 = 0;
+          a = (l = values.length) * _.reduce(values, function(sum, _arg) {
+            var a, b;
+            a = _arg[0], b = _arg[1];
+            b1 += a;
+            e += b;
+            c1 += Math.pow(a, 2);
+            return sum + (a * b);
+          }, 0);
+          slope = (a - (b1 * e)) / ((l * c1) - (Math.pow(b1, 2)));
+          intercept = (e - (slope * b1)) / l;
+          fn = function(x) {
+            return slope * x + intercept;
+          };
+          created_at = new Date(created_at);
+          due_on = due_on ? new Date(due_on) : new Date();
+          a = created_at - start;
+          b = due_on - start;
+          return [
+            {
+              date: created_at,
+              points: fn(a)
+            }, {
+              date: due_on,
+              points: fn(b)
+            }
+          ];
+        }
+      };
+      
+    });
+
     // issues.coffee
     root.require.register('burnchart/src/modules/github/issues.js', function(exports, require, module) {
     
@@ -553,140 +703,6 @@
       
     });
 
-    // lines.coffee
-    root.require.register('burnchart/src/modules/lines.js', function(exports, require, module) {
-    
-      var config,
-        __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
-      
-      config = require('../models/config');
-      
-      module.exports = {
-        actual: function(issues, created_at, total) {
-          var head, max, min, range, rest;
-          head = [
-            {
-              'date': new Date(created_at),
-              'points': total
-            }
-          ];
-          min = +Infinity;
-          max = -Infinity;
-          rest = _.map(issues, function(issue) {
-            var closed_at, size;
-            size = issue.size, closed_at = issue.closed_at;
-            if (size < min) {
-              min = size;
-            }
-            if (size > max) {
-              max = size;
-            }
-            issue.date = new Date(closed_at);
-            issue.points = total -= size;
-            return issue;
-          });
-          range = d3.scale.linear().domain([min, max]).range([5, 8]);
-          rest = _.map(rest, function(issue) {
-            issue.radius = range(issue.size);
-            return issue;
-          });
-          return [].concat(head, rest);
-        },
-        ideal: function(a, b, total) {
-          var cutoff, d, days, length, m, now, once, velocity, y, _ref, _ref1;
-          if (b < a) {
-            _ref = [a, b], b = _ref[0], a = _ref[1];
-          }
-          _ref1 = _.map(a.match(config.data.chart.datetime)[1].split('-'), function(v) {
-            return parseInt(v);
-          }), y = _ref1[0], m = _ref1[1], d = _ref1[2];
-          cutoff = new Date(b);
-          days = [];
-          length = 0;
-          (once = function(inc) {
-            var day, day_of;
-            day = new Date(y, m - 1, d + inc);
-            if (!(day_of = day.getDay())) {
-              day_of = 7;
-            }
-            if (__indexOf.call(config.data.chart.off_days, day_of) >= 0) {
-              days.push({
-                date: day,
-                off_day: true
-              });
-            } else {
-              length += 1;
-              days.push({
-                date: day
-              });
-            }
-            if (!(day > cutoff)) {
-              return once(inc + 1);
-            }
-          })(0);
-          velocity = total / (length - 1);
-          days = _.map(days, function(day, i) {
-            day.points = total;
-            if (days[i] && !days[i].off_day) {
-              total -= velocity;
-            }
-            return day;
-          });
-          if ((now = new Date()) > cutoff) {
-            days.push({
-              date: now,
-              points: 0
-            });
-          }
-          return days;
-        },
-        trend: function(actual, created_at, due_on) {
-          var a, b, b1, c1, e, fn, intercept, l, last, slope, start, values;
-          if (!actual.length) {
-            return [];
-          }
-          start = +actual[0].date;
-          values = _.map(actual, function(_arg) {
-            var date, points;
-            date = _arg.date, points = _arg.points;
-            return [+date - start, points];
-          });
-          last = actual[actual.length - 1];
-          values.push([+new Date() - start, last.points]);
-          b1 = 0;
-          e = 0;
-          c1 = 0;
-          a = (l = values.length) * _.reduce(values, function(sum, _arg) {
-            var a, b;
-            a = _arg[0], b = _arg[1];
-            b1 += a;
-            e += b;
-            c1 += Math.pow(a, 2);
-            return sum + (a * b);
-          }, 0);
-          slope = (a - (b1 * e)) / ((l * c1) - (Math.pow(b1, 2)));
-          intercept = (e - (slope * b1)) / l;
-          fn = function(x) {
-            return slope * x + intercept;
-          };
-          created_at = new Date(created_at);
-          due_on = due_on ? new Date(due_on) : new Date();
-          a = created_at - start;
-          b = due_on - start;
-          return [
-            {
-              date: created_at,
-              points: fn(a)
-            }, {
-              date: due_on,
-              points: fn(b)
-            }
-          ];
-        }
-      };
-      
-    });
-
     // mediator.coffee
     root.require.register('burnchart/src/modules/mediator.js', function(exports, require, module) {
     
@@ -966,9 +982,11 @@
     // chart.coffee
     root.require.register('burnchart/src/views/chart.js', function(exports, require, module) {
     
-      var lines;
+      var axes, lines;
       
-      lines = require('../modules/lines');
+      lines = require('../modules/chart/lines');
+      
+      axes = require('../modules/chart/axes');
       
       module.exports = Ractive.extend({
         'name': 'views/chart',
@@ -992,10 +1010,8 @@
           height -= margin.top + margin.bottom;
           x = d3.time.scale().range([0, width]);
           y = d3.scale.linear().range([height, 0]);
-          xAxis = d3.svg.axis().scale(x).orient("bottom").tickSize(-height).tickFormat(function(d) {
-            return d.getDate();
-          }).tickPadding(10);
-          yAxis = d3.svg.axis().scale(y).orient("left").tickSize(-width).ticks(5).tickPadding(10);
+          xAxis = axes.horizontal(height);
+          yAxis = axes.vertical(width, y);
           line = d3.svg.line().interpolate("linear").x(function(d) {
             return x(d.date);
           }).y(function(d) {

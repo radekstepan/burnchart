@@ -1,4 +1,4 @@
-config = require '../models/config'
+config = require '../../models/config'
 
 module.exports =
 
