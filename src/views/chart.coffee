@@ -13,6 +13,11 @@ module.exports = Ractive.extend
     # Total number of points in the milestone.
     total = issues.open.size + issues.closed.size
 
+    # An issue may have been closed before the start of a milestone.
+    if issues.length and milestone.created_at > issues[0].closed_at
+      # This is the new start.
+      milestone.created_at = issues[0].closed_at
+
     # Actual, ideal & trend lines.
     actual = lines.actual issues.closed.list, milestone.created_at, total
     ideal  = lines.ideal milestone.created_at, milestone.due_on, total
