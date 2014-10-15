@@ -2,7 +2,7 @@
 
 ##Concept
 
-GitHub Burndown Chart as a service. Public repos are free, for private access auth via GitHub and pay.
+GitHub Burndown Chart as a service. Answers the questions "are my projects on track"?
 
 ##Notes
 
@@ -18,6 +18,9 @@ GitHub Burndown Chart as a service. Public repos are free, for private access au
 - use [readme.io](https://readme.io/) for documentation
 - send handwritten thank you cards to the first customers
 - use [DigitalOcean](https://www.digitalocean.com/) as a GitHub Student (@bath.edu email) to get $100 in platform credits which translates to 20 months on the slowest (fast enough) dyno
+- payments need to be automatic, why penalize users that are loyal to us with a burden of an admin task?
+- ability to use the program needs to be frictionless; jump straight into the action, fill in data behind the scenes etc.
+- send reminders to people whose account is expiring
 
 ##Plans
 
@@ -34,7 +37,13 @@ GitHub Burndown Chart as a service. Public repos are free, for private access au
 - auto-update with new information
 - private repos
 
-###Free Forever Business Plan
+###Free Forever Business Plan (= Community Shareholder/Partners Plan)
+
+I can't sell people on free membership, that is only a small incentive. But I can sell them on an app that does what they want. Have early access to features etc. If someone sees that my app can help them, why not tell me about it so I can make it happen?
+
+I could also provide people with Assembly coins for each feedback session I've had with them, thus making them share in the profits. They are basically startup members with equity by being Product Developers.
+
+To qualify, these people need to be businesses actively using the software. Thus being standin-users for other such $ paying businesses.
 
 Let me call you every 3 months to ask how you are doing, how you are using the software, what can I improve, and you will get 3 months usage for free. The idea is to keep in touch with the most loyal customers, to hear them say how great/shabby the app is. If they don't want to talk they can always pay for the Business Plan.
 

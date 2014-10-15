@@ -784,16 +784,6 @@
         '/reset': function() {
           mediator.fire('!projects/clear');
           return window.location.hash = '#';
-        },
-        '/notify': function() {
-          var done;
-          done = system.async();
-          mediator.fire('!app/notify', {
-            'text': 'You have some interesting news in your inbox. Go check it out now.',
-            'type': 'warn'
-          });
-          window.location.hash = '#';
-          return _.delay(done, 3e3);
         }
       };
       

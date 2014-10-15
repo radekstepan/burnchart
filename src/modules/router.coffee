@@ -32,16 +32,6 @@ routes =
   '/reset': ->
     mediator.fire '!projects/clear'
     window.location.hash = '#'
-  # Fake loading & notification.
-  '/notify': ->
-    done = do system.async
-    
-    mediator.fire '!app/notify',
-      'text': 'You have some interesting news in your inbox. Go check it out now.'
-      'type': 'warn'
-    window.location.hash = '#'
-
-    _.delay done, 3e3
 
 # Flatiron Director router.
 module.exports = Router(routes).configure

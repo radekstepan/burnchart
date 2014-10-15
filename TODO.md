@@ -2,8 +2,6 @@
 
 ##Release: MVP
 
-###GitHub
-
 - [ ] sort milestones on index and project page based on priority (most delayed first); Trend - actual = different in days and those overdue come first
 
 ###Notifications
@@ -27,10 +25,11 @@
 - [ ] `rails/rails/24` has issues in two clusters as if merged from two milestones
 - [ ] trendline cutting into axes
 
-###Docs
+###Customers
 
 - [ ] landing page for the project and put message on `github-burndown-chart` repo
 - [ ] provide a documentation site (because we ref it from hero)
+- [ ] conctact the people that have starred the original burndown chart telling them about the repo; keep track of connects via a tiny crm/spreadsheet and use a custom email address like radek@burnchart.io
 
 ###Routing
 
@@ -87,14 +86,17 @@
 - [ ] show an overall text-based status like: all projects on time etc.
 - [ ] until GH fix milestone start date then provide an option to specify it (either do that on GH server or locally); for example a text like this: `starts: 09-10-2014` in the description which we provide regex for
 - [ ] work on mobile devices
-- [ ] show velocity number for each member of the team in the corner of the layout
+- [ ] show velocity number for each member of the team in the corner of the layout (the point is to get better at planning how many tasks can people take on, thus how fast can we work)
+- [ ] if we have the above, we could get a suggestion as to how many points we are able to go through in the next iteration while keeping everyone at their max capacity. One could almost drag & drop tasks to people and see a live progress of how the ideal trendline will fare based on a known speed of people; or we could be somehow notified that people are maxed out
 - [ ] show velocity for all team members and how it progresses through time
 - [ ] points collector - give medals for 1st 3 spots in terms of velocity
 - [ ] show past commits or due dates like in [this calendar](https://dribbble.com/shots/1736128-Meetups-Page?list=shots&sort=popular&timeframe=now&offset=5)
-- [ ] find a way where, as a group, we can share repo data by trusting the other repo members that use our platform
 - [ ] support Jira & Gitlab
 - [ ] when fetching subsequent updates, fetch only the last page of issues since some repos are large (2.5MB & 19 pages for `mbostock/d3`); actually that is for all issues, not milestone constrained. So only an issue if we want to see a burnchart for all the issues for a repo
 - [ ] if all issue circles are close to each other, make a "master circle" that amalgamates all the issues into one large circle, makes for a prettier view
 - [ ] make better x-axis date display, otherwise we see all 1s.
 - [ ] some [fun loading messages](http://www.gamefaqs.com/pc/561176-simcity-4/faqs/22135) from Sim City.
 - [ ] show number of tasks, points, days left just like in Assembly on chart page
+- [ ] receive reminders when a due date is nearing and our project is behind schedule; receive a daily digest saying how the progress went in that day/week; these are all ways we can help people answer the question: is my project on track?
+- [ ] if we save user's tokens we could check data on their behalf, then messaging would work; API could be provided so that others could plug into the data
+- [ ] derive insights; one part is to see if we are on track, the other is to get better at estimating. If we know when an issue is worked on and when closed, with its accompanying size, we can say which issues went well, and which fared poorly. Then we can visualize a weekly/monthly/per-milestone list of loosers and winners. Perhaps the user can glean a pattern from that.
