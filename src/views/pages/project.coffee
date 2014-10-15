@@ -45,7 +45,7 @@ module.exports = Ractive.extend
         issues.fetchAll { owner, name, 'milestone': milestone.number }, (err, obj) ->
           return cb err if err
           # Save the milestone with issues.
-          project.push 'milestones', _.extend milestone, { 'issues': obj }
+          projects.addMilestone project, _.extend milestone, { 'issues': obj }
           cb null
       , cb
 

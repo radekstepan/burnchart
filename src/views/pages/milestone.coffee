@@ -60,10 +60,8 @@ module.exports = Ractive.extend
         'ttl': null
       } if err
 
-      # Save the milestone.
-      project.milestones ?= []
-      project.milestones.push data
-      projects.update 'list'
+      # Save the milestone with issues.
+      projects.addMilestone project, data
 
       # Show the page.
       @set

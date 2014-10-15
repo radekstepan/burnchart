@@ -2,37 +2,30 @@
 
 ##Release: MVP
 
-- [ ] visiting a project page (from chart) should query for all milestones and issues sans what we've got
-
 ###GitHub
 
-- [ ] sort milestones on index and project page based on priority (most delayed first)
+- [ ] sort milestones on index and project page based on priority (most delayed first); Trend - actual = different in days and those overdue come first
 
 ###Notifications
 
 - [ ] create a 500/400/loading system messages
 - [ ] mediator `!app/notify/edit` will edit the current notification
-- [ ] need to show status (receiving information etc.) per repo with little warning triangle when we get 400/500 on milestones
 - [ ] handle multiple notifications, for example success on closed milestone and then show a different chart or add a project
 
 ###Error Handling
 
-- [ ] second visit to a different milestone comes out blank
-- [ ] verify that project exists on project page when fetching it remotely (add behind the scenes)
 - [ ] deal with Firebase timing out, are we still logged-in?
-- [ ] visiting a chart page saves the project if it isn't saved already
 - [ ] check that we have not run out of requests to make
-- [ ] can we get more than 1 notification at a time?
+- [ ] can we get more than 1 notification at a time? stack them and show just one text
 - [ ] save in memory only if no `localStorage`, warn about that
 - [ ] what if milestone does not match our strategy?
-- [ ] show a stack of errors from index page as notifications
-
-###Gotchas
-- [ ] an issue may have been closed before the start of the milestone; choose the earliest as the start date
+- [ ] Check location.hash is supported
+- [ ] move tests from `radekstepan/github-burndown-chart`
 
 ###Bugs
 
 - [ ] `rails/rails/24` has issues in two clusters as if merged from two milestones
+- [ ] trendline cutting into axes
 
 ###Docs
 
@@ -46,12 +39,13 @@
 
 ###Style
 
-- [ ] focus on form fields style
+- [ ] focus on form fields style (blue outline etc)
 - [ ] switch off `user-select` on buttons
 - [ ] make async pages transition so that there is no "jumping" on the page
-- [ ] index page alert tooltip
+- [ ] index page alert tooltip (like on chart page)
 - [ ] app icon like http://thenounproject.com/term/fire/50966/
 - [ ] make it easy to go back to project page from a chart page, show it in the header
+- [ ] tell people if they have no due date
 
 ###Misc
 
@@ -79,16 +73,11 @@
 - [ ] show animated lines when drawing the chart
 - [ ] highlight changes from past fetch
 - [ ] In add a project form autocomplete on my username, orgs I am member of and repos I have access to
-- [ ] Someone might create a public repo, add it to the system and switch it to private; need to check repo priviledges at runtime; or when asking for auth, one would choose either public OR public/private, but this could get confusign.
 - [ ] Make sure the padding fits throughout the interface; we have user-select on elements.
-- [ ] Check location.hash is supported
 - [ ] Have an app wide of triggering a URL and have named routes too
-- [ ] On page load get all the latest data regardless of `time_ago`
 - [ ] rotate between percentage progress and points left
 - [ ] be able to config options through UI that currently have to be hardcoded in config
-- [ ] cache repos in `localStorage` for those that do not use GitHub login
 - [ ] choose your own theme
-- [ ] custom milestone start dates
 - [ ] show burndown chart for all milestones
 - [ ] handle Enterprise editions of GH (signed up in gh dev program)
 - [ ] auto-update the chart (with delay when no activity) when logged-in
@@ -102,13 +91,10 @@
 - [ ] show velocity for all team members and how it progresses through time
 - [ ] points collector - give medals for 1st 3 spots in terms of velocity
 - [ ] show past commits or due dates like in [this calendar](https://dribbble.com/shots/1736128-Meetups-Page?list=shots&sort=popular&timeframe=now&offset=5)
-- [ ] allow people to submit suggestions via GitHub Issues
 - [ ] find a way where, as a group, we can share repo data by trusting the other repo members that use our platform
 - [ ] support Jira & Gitlab
 - [ ] when fetching subsequent updates, fetch only the last page of issues since some repos are large (2.5MB & 19 pages for `mbostock/d3`); actually that is for all issues, not milestone constrained. So only an issue if we want to see a burnchart for all the issues for a repo
-- [ ] move tests from `radekstepan/github-burndown-chart`
 - [ ] if all issue circles are close to each other, make a "master circle" that amalgamates all the issues into one large circle, makes for a prettier view
-- [ ] tell people if they have no due date
 - [ ] make better x-axis date display, otherwise we see all 1s.
 - [ ] some [fun loading messages](http://www.gamefaqs.com/pc/561176-simcity-4/faqs/22135) from Sim City.
-- [ ] show number of tasks, points, days left just like in Assembly
+- [ ] show number of tasks, points, days left just like in Assembly on chart page

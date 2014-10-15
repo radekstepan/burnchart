@@ -137,6 +137,18 @@
             return this.push('list', project);
           }
         },
+        addMilestone: function(project, milestone) {
+          var idx;
+          if ((idx = _.findIndex(this.data.list, project)) > -1) {
+            if (project.milestones != null) {
+              return this.push("list." + idx + ".milestones", milestone);
+            } else {
+              return this.set("list." + idx + ".milestones", [milestone]);
+            }
+          } else {
+            throw 500;
+          }
+        },
         clear: function() {
           return this.set('list', []);
         },
@@ -215,7 +227,7 @@
     root.require.register('burnchart/src/modules/chart/axes.js', function(exports, require, module) {
     
       module.exports = {
-        horizontal: function(height) {
+        horizontal: function(height, x) {
           return d3.svg.axis().scale(x).orient("bottom").tickSize(-height).tickFormat(function(d) {
             return d.getDate();
           }).tickPadding(10);
@@ -992,10 +1004,14 @@
         'name': 'views/chart',
         'template': require('../templates/chart'),
         oncomplete: function() {
-          var actual, height, ideal, issues, line, m, mAxis, margin, milestone, svg, tooltip, total, trend, width, x, xAxis, y, yAxis, _ref;
+          var actual, head, height, ideal, issues, line, m, mAxis, margin, milestone, svg, tooltip, total, trend, width, x, xAxis, y, yAxis, _ref;
           milestone = this.data.milestone;
           issues = milestone.issues;
           total = issues.open.size + issues.closed.size;
+          head = issues.closed.list[0].closed_at;
+          if (issues.length && milestone.created_at > head) {
+            milestone.created_at = head;
+          }
           actual = lines.actual(issues.closed.list, milestone.created_at, total);
           ideal = lines.ideal(milestone.created_at, milestone.due_on, total);
           trend = lines.trend(actual, milestone.created_at, milestone.due_on);
@@ -1010,7 +1026,7 @@
           height -= margin.top + margin.bottom;
           x = d3.time.scale().range([0, width]);
           y = d3.scale.linear().range([height, 0]);
-          xAxis = axes.horizontal(height);
+          xAxis = axes.horizontal(height, x);
           yAxis = axes.vertical(width, y);
           line = d3.svg.line().interpolate("linear").x(function(d) {
             return x(d.date);
@@ -1391,11 +1407,7 @@
                 'ttl': null
               });
             }
-            if (project.milestones == null) {
-              project.milestones = [];
-            }
-            project.milestones.push(data);
-            projects.update('list');
+            projects.addMilestone(project, data);
             return _this.set({
               'milestone': data,
               'ready': true
@@ -1487,7 +1499,7 @@
           'ready': false
         },
         onrender: function() {
-          var done, fetchIssues, fetchMilestones, name, owner, project, _ref,
+          var done, fetchIssues, fetchMilestones, findMilestone, name, owner, project, _ref,
             _this = this;
           _ref = this.get('route'), owner = _ref[0], name = _ref[1];
           document.title = "" + owner + "/" + name;
@@ -1498,27 +1510,36 @@
           if (!project) {
             throw 500;
           }
-          if (project.milestones) {
-            return this.set('ready', true);
-          }
           done = system.async();
+          findMilestone = function(number) {
+            return _.find(project.milestones || [], {
+              number: number
+            });
+          };
           fetchMilestones = function(cb) {
             return milestones.fetchAll(project, cb);
           };
           fetchIssues = function(allMilestones, cb) {
-            return async.map(allMilestones, function(milestone, cb) {
+            return async.each(allMilestones, function(milestone, cb) {
+              if (findMilestone(milestone.number)) {
+                return cb(null);
+              }
               return issues.fetchAll({
                 owner: owner,
                 name: name,
                 'milestone': milestone.number
               }, function(err, obj) {
-                return cb(err, _.extend(milestone, {
+                if (err) {
+                  return cb(err);
+                }
+                projects.addMilestone(project, _.extend(milestone, {
                   'issues': obj
                 }));
+                return cb(null);
               });
             }, cb);
           };
-          return async.waterfall([fetchMilestones, fetchIssues], function(err, data) {
+          return async.waterfall([fetchMilestones, fetchIssues], function(err) {
             done();
             if (err) {
               return mediator.fire('!app/notify', {
@@ -1528,10 +1549,7 @@
                 'ttl': null
               });
             }
-            return _this.set({
-              'project.milestones': data,
-              'ready': true
-            });
+            return _this.set('ready', true);
           });
         }
       });

@@ -13,10 +13,12 @@ module.exports = Ractive.extend
     # Total number of points in the milestone.
     total = issues.open.size + issues.closed.size
 
+
     # An issue may have been closed before the start of a milestone.
-    if issues.length and milestone.created_at > issues[0].closed_at
+    head = issues.closed.list[0].closed_at
+    if issues.length and milestone.created_at > head
       # This is the new start.
-      milestone.created_at = issues[0].closed_at
+      milestone.created_at = head
 
     # Actual, ideal & trend lines.
     actual = lines.actual issues.closed.list, milestone.created_at, total
@@ -24,7 +26,7 @@ module.exports = Ractive.extend
     trend  = lines.trend actual, milestone.created_at, milestone.due_on
 
     # Get available space.
-    { height, width } = @el.getBoundingClientRect()
+    { height, width } = do @el.getBoundingClientRect
 
     margin = { 'top': 30, 'right': 30, 'bottom': 40, 'left': 50 }
     width -= margin.left + margin.right
@@ -35,9 +37,9 @@ module.exports = Ractive.extend
     y = d3.scale.linear().range([ height, 0 ])
 
     # Axes.
-    xAxis = axes.horizontal height
+    xAxis = axes.horizontal height, x
     yAxis = axes.vertical width, y
-    
+
     # Line generator.
     line = d3.svg.line()
     .interpolate("linear")

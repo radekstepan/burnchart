@@ -18,6 +18,15 @@ module.exports = new Model
   add: (project) ->
     @push 'list', project unless @exists project
 
+  addMilestone: (project, milestone) ->
+    if (idx = _.findIndex(@data.list, project)) > -1
+      if project.milestones?
+        @push "list.#{idx}.milestones", milestone
+      else
+        @set "list.#{idx}.milestones", [ milestone ]
+    else
+      throw 500
+
   clear: ->
     @set 'list', []
 

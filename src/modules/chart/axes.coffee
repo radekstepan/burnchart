@@ -1,6 +1,6 @@
 module.exports =
 
-  horizontal: (height) ->
+  horizontal: (height, x) ->
     d3.svg.axis().scale(x)
       .orient("bottom")
       # Show vertical lines...
