@@ -4,6 +4,16 @@
 
 - [ ] sort milestones on index and project page based on priority (most delayed first); Trend - actual = different in days and those overdue come first
 
+1. in a projects collection observe the list prop and resort index; already sorted flag passed in as yes)
+1. The index is not already sorted when sort order changes
+1. index is a list of 3 elements; list index, milestone index and priority number
+1. go through projects and its milestones in two loops to extract and sort using function
+1. tables loop index getting the obj from projects collection and render
+1. sort order link toggles available sort by keys and changes the current key
+1. use while loop and pop when resetting the index
+1. third number in tuples be the priority number so we can insert into already sorted
+1. leave the code open so we can remove a project or milestone later on
+
 ###Notifications
 
 - [ ] create a 500/400/loading system messages
