@@ -58,6 +58,7 @@
 
 ###Misc
 
+- [ ] the deploy script needs to disable autoreload
 - [ ] calculate by how many % are we late/on time so we can sort the milestones in projects
 - [ ] vendor module so we can proxy require all `window` libs
 - [ ] implement search box that quickly takes you to a chart (and may hide "pro actions")
