@@ -119,3 +119,4 @@
 - [ ] receive reminders when a due date is nearing and our project is behind schedule; receive a daily digest saying how the progress went in that day/week; these are all ways we can help people answer the question: is my project on track?
 - [ ] if we save user's tokens we could check data on their behalf, then messaging would work; API could be provided so that others could plug into the data
 - [ ] derive insights; one part is to see if we are on track, the other is to get better at estimating. If we know when an issue is worked on and when closed, with its accompanying size, we can say which issues went well, and which fared poorly. Then we can visualize a weekly/monthly/per-milestone list of loosers and winners. Perhaps the user can glean a pattern from that.
+- [ ] create fake Firebase endpoint for GitHub auth, or change the endpoint in settings (easier)
