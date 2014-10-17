@@ -1,5 +1,5 @@
-mediator = require '../modules/mediator'
-Icons    = require './icons'
+mediator = require '../modules/mediator.coffee'
+Icons    = require './icons.coffee'
 
 HEIGHT = 68 # height of div in px
 
@@ -7,7 +7,7 @@ module.exports = Ractive.extend
 
   'name': 'views/notify'
 
-  'template': require '../templates/notify'
+  'template': require '../templates/notify.html'
 
   'data':
     'top': HEIGHT

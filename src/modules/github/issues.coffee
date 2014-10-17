@@ -1,6 +1,6 @@
 #!/usr/bin/env coffee
-config  = require '../../models/config'
-request = require './request'
+config  = require '../../models/config.coffee'
+request = require './request.coffee'
 
 module.exports =
 

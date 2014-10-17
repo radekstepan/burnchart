@@ -1,6 +1,6 @@
-Model  = require '../utils/model'
-user   = require './user'
-config = require './config'
+Model  = require '../utils/model.coffee'
+user   = require './user.coffee'
+config = require './config.coffee'
 
 module.exports = new Model
 

@@ -1,4 +1,4 @@
-user = require '../../models/user'
+user = require '../../models/user.coffee'
 
 # Custom JSON parser.
 superagent.parse =

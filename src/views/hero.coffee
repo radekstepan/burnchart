@@ -1,11 +1,11 @@
-mediator = require '../modules/mediator'
-Icons    = require './icons'
+mediator = require '../modules/mediator.coffee'
+Icons    = require './icons.coffee'
 
 module.exports = Ractive.extend
 
   'name': 'views/hero'
 
-  'template': require '../templates/hero'
+  'template': require '../templates/hero.html'
 
   'components': { Icons }
 

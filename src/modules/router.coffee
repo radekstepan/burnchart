@@ -1,5 +1,5 @@
-mediator = require './mediator'
-system   = require '../models/system'
+mediator = require './mediator.coffee'
+system   = require '../models/system.coffee'
 
 el = '#page'
 
@@ -18,7 +18,7 @@ route = (page, args...) ->
   # Hide any notifications.
   mediator.fire '!app/notify/hide'
   # Require the new one.
-  Page = require "../views/pages/#{page}"
+  Page = require "../views/pages/#{page}.coffee"
   # Render it.
   view = new Page { el, 'data': { 'route': args } }
 

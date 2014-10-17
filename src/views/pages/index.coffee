@@ -1,18 +1,18 @@
-Hero     = require '../hero'
-Projects = require '../tables/projects'
+Hero     = require '../hero.coffee'
+Projects = require '../tables/projects.coffee'
 
-projects   = require '../../models/projects'
-system     = require '../../models/system'
-milestones = require '../../modules/github/milestones'
-issues     = require '../../modules/github/issues'
-mediator   = require '../../modules/mediator'
+projects   = require '../../models/projects.coffee'
+system     = require '../../models/system.coffee'
+milestones = require '../../modules/github/milestones.coffee'
+issues     = require '../../modules/github/issues.coffee'
+mediator   = require '../../modules/mediator.coffee'
 
 
 module.exports = Ractive.extend
 
   'name': 'views/pages/index'
 
-  'template': require '../../templates/pages/index'
+  'template': require '../../templates/pages/index.html'
 
   'components': { Hero, Projects }
 

@@ -1,15 +1,15 @@
 ( require "./#{key}" for key in [
-  'utils/mixins'
-  'models/projects' # will load projects from localStorage
+  'utils/mixins.coffee'
+  'models/projects.coffee' # will load projects from localStorage
 ] )
 
-Header = require './views/header'
-Notify = require './views/notify'
-router = require './modules/router'
+Header = require './views/header.coffee'
+Notify = require './views/notify.coffee'
+router = require './modules/router.coffee'
 
 App = Ractive.extend
   
-  'template': require './templates/app'
+  'template': require './templates/app.html'
 
   'components': { Header, Notify }
 

@@ -1,17 +1,17 @@
-Chart = require '../chart'
+Chart = require '../chart.coffee'
 
-projects   = require '../../models/projects'
-system     = require '../../models/system'
-milestones = require '../../modules/github/milestones'
-issues     = require '../../modules/github/issues'
-mediator   = require '../../modules/mediator'
-format     = require '../../utils/format'
+projects   = require '../../models/projects.coffee'
+system     = require '../../models/system.coffee'
+milestones = require '../../modules/github/milestones.coffee'
+issues     = require '../../modules/github/issues.coffee'
+mediator   = require '../../modules/mediator.coffee'
+format     = require '../../utils/format.coffee'
 
 module.exports = Ractive.extend
 
   'name': 'views/pages/chart'
 
-  'template': require '../../templates/pages/milestone'
+  'template': require '../../templates/pages/milestone.html'
 
   'components': { Chart }
 

@@ -1,5 +1,5 @@
-mediator = require '../modules/mediator'
-Model    = require '../utils/model'
+mediator = require '../modules/mediator.coffee'
+Model    = require '../utils/model.coffee'
 
 # System state.
 system = new Model

@@ -7,7 +7,7 @@ module.exports = (grunt) ->
                 dest: 'public/js/commonjs.js'
 
             commonjs:
-                src: [ 'src/**/*.{coffee,js,json,mustache}' ]
+                src: [ 'src/**/*.{coffee,js,json,mustache,html}' ]
                 dest: 'public/js/app.js'
                 options:
                     main: 'src/app.coffee'

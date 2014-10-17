@@ -1,13 +1,13 @@
-mediator = require '../../modules/mediator'
-system   = require '../../models/system'
-user     = require '../../models/user'
-key      = require '../../utils/key'
+mediator = require '../../modules/mediator.coffee'
+system   = require '../../models/system.coffee'
+user     = require '../../models/user.coffee'
+key      = require '../../utils/key.coffee'
 
 module.exports = Ractive.extend
 
   'name': 'views/pages/new'
 
-  'template': require '../../templates/pages/new'
+  'template': require '../../templates/pages/new.html'
 
   'data': { 'value': 'radekstepan/disposable', user }
 

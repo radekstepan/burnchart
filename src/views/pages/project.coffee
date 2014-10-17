@@ -1,16 +1,16 @@
-Milestones = require '../tables/milestones'
+Milestones = require '../tables/milestones.coffee'
 
-projects   = require '../../models/projects'
-system     = require '../../models/system'
-milestones = require '../../modules/github/milestones'
-issues     = require '../../modules/github/issues'
-mediator   = require '../../modules/mediator'
+projects   = require '../../models/projects.coffee'
+system     = require '../../models/system.coffee'
+milestones = require '../../modules/github/milestones.coffee'
+issues     = require '../../modules/github/issues.coffee'
+mediator   = require '../../modules/mediator.coffee'
 
 module.exports = Ractive.extend
 
   'name': 'views/pages/project'
 
-  'template': require '../../templates/pages/project'
+  'template': require '../../templates/pages/project.html'
 
   'components': { Milestones }
 

@@ -5,24 +5,24 @@
   (function() {
     
     // app.coffee
-    root.require.register('burnchart/src/app.js', function(exports, require, module) {
+    root.require.register('burnchart/src/app.coffee', function(exports, require, module) {
     
       var App, Header, Notify, key, router, _i, _len, _ref;
       
-      _ref = ['utils/mixins', 'models/projects'];
+      _ref = ['utils/mixins.coffee', 'models/projects.coffee'];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         key = _ref[_i];
         require("./" + key);
       }
       
-      Header = require('./views/header');
+      Header = require('./views/header.coffee');
       
-      Notify = require('./views/notify');
+      Notify = require('./views/notify.coffee');
       
-      router = require('./modules/router');
+      router = require('./modules/router.coffee');
       
       App = Ractive.extend({
-        'template': require('./templates/app'),
+        'template': require('./templates/app.html'),
         'components': {
           Header: Header,
           Notify: Notify
@@ -37,11 +37,11 @@
     });
 
     // config.coffee
-    root.require.register('burnchart/src/models/config.js', function(exports, require, module) {
+    root.require.register('burnchart/src/models/config.coffee', function(exports, require, module) {
     
       var Model;
       
-      Model = require('../utils/model');
+      Model = require('../utils/model.coffee');
       
       module.exports = new Model({
         'name': 'models/config',
@@ -64,15 +64,15 @@
     });
 
     // firebase.coffee
-    root.require.register('burnchart/src/models/firebase.js', function(exports, require, module) {
+    root.require.register('burnchart/src/models/firebase.coffee', function(exports, require, module) {
     
       var Model, config, user;
       
-      Model = require('../utils/model');
+      Model = require('../utils/model.coffee');
       
-      user = require('./user');
+      user = require('./user.coffee');
       
-      config = require('./config');
+      config = require('./config.coffee');
       
       module.exports = new Model({
         'name': 'models/firebase',
@@ -110,19 +110,19 @@
     });
 
     // projects.coffee
-    root.require.register('burnchart/src/models/projects.js', function(exports, require, module) {
+    root.require.register('burnchart/src/models/projects.coffee', function(exports, require, module) {
     
       var Model, config, date, mediator, user;
       
-      config = require('../models/config');
+      config = require('../models/config.coffee');
       
-      mediator = require('../modules/mediator');
+      mediator = require('../modules/mediator.coffee');
       
-      Model = require('../utils/model');
+      Model = require('../utils/model.coffee');
       
-      date = require('../utils/date');
+      date = require('../utils/date.coffee');
       
-      user = require('./user');
+      user = require('./user.coffee');
       
       module.exports = new Model({
         'name': 'models/projects',
@@ -169,13 +169,13 @@
     });
 
     // system.coffee
-    root.require.register('burnchart/src/models/system.js', function(exports, require, module) {
+    root.require.register('burnchart/src/models/system.coffee', function(exports, require, module) {
     
       var Model, async, counter, mediator, system;
       
-      mediator = require('../modules/mediator');
+      mediator = require('../modules/mediator.coffee');
       
-      Model = require('../utils/model');
+      Model = require('../utils/model.coffee');
       
       system = new Model({
         'name': 'models/system',
@@ -203,13 +203,13 @@
     });
 
     // user.coffee
-    root.require.register('burnchart/src/models/user.js', function(exports, require, module) {
+    root.require.register('burnchart/src/models/user.coffee', function(exports, require, module) {
     
       var Model, mediator;
       
-      mediator = require('../modules/mediator');
+      mediator = require('../modules/mediator.coffee');
       
-      Model = require('../utils/model');
+      Model = require('../utils/model.coffee');
       
       module.exports = new Model({
         'name': 'models/user',
@@ -224,7 +224,7 @@
     });
 
     // axes.coffee
-    root.require.register('burnchart/src/modules/chart/axes.js', function(exports, require, module) {
+    root.require.register('burnchart/src/modules/chart/axes.coffee', function(exports, require, module) {
     
       module.exports = {
         horizontal: function(height, x) {
@@ -240,12 +240,12 @@
     });
 
     // lines.coffee
-    root.require.register('burnchart/src/modules/chart/lines.js', function(exports, require, module) {
+    root.require.register('burnchart/src/modules/chart/lines.coffee', function(exports, require, module) {
     
       var config,
         __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
       
-      config = require('../../models/config');
+      config = require('../../models/config.coffee');
       
       module.exports = {
         actual: function(issues, created_at, total) {
@@ -374,13 +374,13 @@
     });
 
     // issues.coffee
-    root.require.register('burnchart/src/modules/github/issues.js', function(exports, require, module) {
+    root.require.register('burnchart/src/modules/github/issues.coffee', function(exports, require, module) {
     
       var config, request;
       
-      config = require('../../models/config');
+      config = require('../../models/config.coffee');
       
-      request = require('./request');
+      request = require('./request.coffee');
       
       module.exports = {
         fetchAll: function(repo, cb) {
@@ -457,11 +457,11 @@
     });
 
     // milestones.coffee
-    root.require.register('burnchart/src/modules/github/milestones.js', function(exports, require, module) {
+    root.require.register('burnchart/src/modules/github/milestones.coffee', function(exports, require, module) {
     
       var request;
       
-      request = require('./request');
+      request = require('./request.coffee');
       
       module.exports = {
         'fetch': request.oneMilestone,
@@ -471,11 +471,11 @@
     });
 
     // request.coffee
-    root.require.register('burnchart/src/modules/github/request.js', function(exports, require, module) {
+    root.require.register('burnchart/src/modules/github/request.coffee', function(exports, require, module) {
     
       var defaults, error, headers, isReady, isValid, ready, request, response, stack, user;
       
-      user = require('../../models/user');
+      user = require('../../models/user.coffee');
       
       superagent.parse = {
         'application/json': function(res) {
@@ -716,7 +716,7 @@
     });
 
     // mediator.coffee
-    root.require.register('burnchart/src/modules/mediator.js', function(exports, require, module) {
+    root.require.register('burnchart/src/modules/mediator.coffee', function(exports, require, module) {
     
       var Mediator;
       
@@ -727,14 +727,14 @@
     });
 
     // router.coffee
-    root.require.register('burnchart/src/modules/router.js', function(exports, require, module) {
+    root.require.register('burnchart/src/modules/router.coffee', function(exports, require, module) {
     
       var addProject, c, el, mediator, route, routes, system, view,
         __slice = [].slice;
       
-      mediator = require('./mediator');
+      mediator = require('./mediator.coffee');
       
-      system = require('../models/system');
+      system = require('../models/system.coffee');
       
       el = '#page';
       
@@ -767,7 +767,7 @@
           view.teardown();
         }
         mediator.fire('!app/notify/hide');
-        Page = require("../views/pages/" + page);
+        Page = require("../views/pages/" + page + ".coffee");
         return view = new Page({
           el: el,
           'data': {
@@ -796,80 +796,80 @@
       
     });
 
-    // app.mustache
-    root.require.register('burnchart/src/templates/app.js', function(exports, require, module) {
+    // app.html
+    root.require.register('burnchart/src/templates/app.html', function(exports, require, module) {
     
       module.exports = ["<div id=\"app\">","  <Notify/>","  <Header/>","","  <div id=\"page\">","    <!-- content loaded from a router -->","  </div>","","  <div id=\"footer\">","    <div class=\"wrap\">","      &copy; 2012-2014 <a href=\"http://cloudfi.re\">Cloudfire Systems</a>","    </div>","  </div>","</div>"].join("\n");
     });
 
-    // chart.mustache
-    root.require.register('burnchart/src/templates/chart.js', function(exports, require, module) {
+    // chart.html
+    root.require.register('burnchart/src/templates/chart.html', function(exports, require, module) {
     
       module.exports = ["<div id=\"chart\"></div>"].join("\n");
     });
 
-    // header.mustache
-    root.require.register('burnchart/src/templates/header.js', function(exports, require, module) {
+    // header.html
+    root.require.register('burnchart/src/templates/header.html', function(exports, require, module) {
     
       module.exports = ["<div id=\"head\">","  {{#with user}}","    {{#ready}}","      <div class=\"right\" intro=\"fade\">","        {{#displayName}}","          {{displayName}} logged in","        {{else}}","          <a class=\"github\" on-click=\"!login\"><Icons icon=\"github\"/> Sign In</a>","        {{/displayName}}","      </div>","    {{/ready}}","  {{/with}}","","  <a id=\"icon\" href=\"#\">","    <Icons icon=\"{{icon}}\"/>","  </a>","","  <!--","  <div class=\"q\">","    <Icons icon=\"search\"/>","    <Icons icon=\"down-open\"/>","    <input type=\"text\" placeholder=\"Jump to...\">","  </div>","  -->","","  <ul>","    <li><a href=\"#new/project\" class=\"add\"><Icons icon=\"plus-circled\"/> Add a Project</a></li>","    <li><a href=\"#\" class=\"faq\">FAQ</a></li>","    <li><a href=\"#reset\">DB Reset</a></li>","    <li><a href=\"#notify\">Notify</a></li>","  </ul>","</div>"].join("\n");
     });
 
-    // hero.mustache
-    root.require.register('burnchart/src/templates/hero.js', function(exports, require, module) {
+    // hero.html
+    root.require.register('burnchart/src/templates/hero.html', function(exports, require, module) {
     
       module.exports = ["<div id=\"hero\">","  <div class=\"content\">","    <Icons icon=\"address\"/>","    <h2>See your project progress</h2>","    <p>Not sure where to start? Just add a demo repo to see a chart. There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable.</p>","    <div class=\"cta\">","      <a href=\"#new/project\" class=\"primary\"><Icons icon=\"plus-circled\"/> Add your project</a>","      <a href=\"#\" class=\"secondary\">Read the Guide</a>","    </div>","  </div>","</div>"].join("\n");
     });
 
-    // icons.mustache
-    root.require.register('burnchart/src/templates/icons.js', function(exports, require, module) {
+    // icons.html
+    root.require.register('burnchart/src/templates/icons.html', function(exports, require, module) {
     
       module.exports = ["{{#code}}","  <span class=\"icon {{icon}}\">{{{ '&#' + code + ';' }}}</span>","{{/code}}"].join("\n");
     });
 
-    // notify.mustache
-    root.require.register('burnchart/src/templates/notify.js', function(exports, require, module) {
+    // notify.html
+    root.require.register('burnchart/src/templates/notify.html', function(exports, require, module) {
     
       module.exports = ["{{#text}}","  {{#system}}","    <div id=\"notify\" class=\"{{type}} system\" style=\"top:{{top}}%\">","      <Icons icon=\"{{icon}}\"/>","      <p>{{text}}</p>","    </div>","  {{else}}","    <div id=\"notify\" class=\"{{type}}\" style=\"top:{{-top}}px\">","      <span class=\"close\" on-click=\"close\" />","      <Icons icon=\"{{icon}}\"/>","      <p>{{text}}</p>","    </div>","  {{/system}}","{{/text}}"].join("\n");
     });
 
-    // index.mustache
-    root.require.register('burnchart/src/templates/pages/index.js', function(exports, require, module) {
+    // index.html
+    root.require.register('burnchart/src/templates/pages/index.html', function(exports, require, module) {
     
       module.exports = ["<div id=\"content\" class=\"wrap\">","  {{#if projects.list}}","    {{#ready}}","      <div intro=\"fade\">","        <Projects projects=\"{{projects}}\"/>","      </div>","    {{/ready}}","  {{else}}","    <Hero/>","  {{/if}}","</div>"].join("\n");
     });
 
-    // milestone.mustache
-    root.require.register('burnchart/src/templates/pages/milestone.js', function(exports, require, module) {
+    // milestone.html
+    root.require.register('burnchart/src/templates/pages/milestone.html', function(exports, require, module) {
     
       module.exports = ["{{#ready}}","  <div intro=\"fade\">","    <div id=\"title\">","      <div class=\"wrap\">","        <h2 class=\"title\">{{ format.title(milestone.title) }}</h2>","        <span class=\"sub\">{{{ format.due(milestone.due_on) }}}</span>","        <p class=\"description\">{{{ format.markdown(milestone.description) }}}</p>","      </div>","    </div>","","    <div id=\"content\" class=\"wrap\">","      <Chart milestone=\"{{milestone}}\"/>","    </div>","  </div>","{{/ready}}"].join("\n");
     });
 
-    // new.mustache
-    root.require.register('burnchart/src/templates/pages/new.js', function(exports, require, module) {
+    // new.html
+    root.require.register('burnchart/src/templates/pages/new.html', function(exports, require, module) {
     
       module.exports = ["<div id=\"content\" class=\"wrap\">","  <div id=\"add\">","    <div class=\"header\">","      <h2>Add a Project</h2>","      <p>Type in the name of the repository as you would normally. If you'd like to add a private GitHub project, <a href=\"#\">Sign In</a> first.</p>","    </div>","","    <div class=\"form\">","      <table>","        <tr>","          <td>","            <input type=\"text\" placeholder=\"user/repo\" autocomplete=\"off\" value=\"{{value}}\" on-keyup=\"submit:{{value}}\">","          </td>","          <td>","            <a on-click=\"submit:{{value}}\">Add</a>","          </td>","        </tr>","      </table>","    </div>","  </div>","</div>"].join("\n");
     });
 
-    // project.mustache
-    root.require.register('burnchart/src/templates/pages/project.js', function(exports, require, module) {
+    // project.html
+    root.require.register('burnchart/src/templates/pages/project.html', function(exports, require, module) {
     
       module.exports = ["{{#ready}}","  <div intro=\"fade\">","    <div id=\"title\">","      <div class=\"wrap\">","        <h2 class=\"title\">{{route.join('/')}}</h2>","      </div>","    </div>","","    <div id=\"content\" class=\"wrap\">","      <Milestones project=\"{{project}}\"/>","    </div>","  </div>","{{/ready}}"].join("\n");
     });
 
-    // milestones.mustache
-    root.require.register('burnchart/src/templates/tables/milestones.js', function(exports, require, module) {
+    // milestones.html
+    root.require.register('burnchart/src/templates/tables/milestones.html', function(exports, require, module) {
     
       module.exports = ["<div id=\"projects\">","  <div class=\"header\">","    <a href=\"#\" class=\"sort\"><Icons icon=\"sort-alphabet\"/> Sorted by priority</a>","    <h2>Milestones</h2>","  </div>","","  <table>","    {{#project.milestones}}","      <tr>","        <td>","          <a class=\"milestone\" href=\"#{{project.owner}}/{{project.name}}/{{number}}\">{{ title }}</a>","        </td>","        <td style=\"width:1%\">","          <div class=\"progress\">","            <span class=\"percent\">{{Math.floor(format.progress(issues.closed.size, issues.open.size))}}%</span>","            <span class=\"due\">{{{ format.due(due_on) }}}</span>","            <div class=\"outer bar\">","              <div class=\"inner bar {{format.onTime(number, due_on, created_at, issues.closed.size, issues.open.size)}}\" style=\"width:{{format.progress(issues.closed.size, issues.open.size)}}%\"></div>","            </div>","          </div>","        </td>","      </tr>","    {{/project.milestones}}","  </table>","","  <div class=\"footer\">","    <a href=\"#\"><Icons icon=\"cog\"/> Edit</a>","  </div>","</div>"].join("\n");
     });
 
-    // projects.mustache
-    root.require.register('burnchart/src/templates/tables/projects.js', function(exports, require, module) {
+    // projects.html
+    root.require.register('burnchart/src/templates/tables/projects.html', function(exports, require, module) {
     
       module.exports = ["<div id=\"projects\">","  <div class=\"header\">","    <a href=\"#\" class=\"sort\"><Icons icon=\"sort-alphabet\"/> Sorted by priority</a>","    <h2>Projects</h2>","  </div>","","  <table>","    {{#projects.list}}","      {{#if error}}","        <tr>","          <td colspan=\"3\" class=\"repo\">","            <div class=\"project\">{{owner}}/{{name}} <span class=\"error\" title=\"{{error}}\"><Icons icon=\"attention\"/></span></div>","          </td>","        </tr>","      {{else}}","        {{#milestones}}","          <tr>","            <td class=\"repo\">","              <a class=\"project\" href=\"#{{owner}}/{{name}}\">{{owner}}/{{name}}</a>","            </td>","            <td>","              <a class=\"milestone\" href=\"#{{owner}}/{{name}}/{{number}}\">{{ title }}</a>","            </td>","            <td style=\"width:1%\">","              <div class=\"progress\">","                <span class=\"percent\">{{Math.floor(format.progress(issues.closed.size, issues.open.size))}}%</span>","                <span class=\"due\">{{{ format.due(due_on) }}}</span>","                <div class=\"outer bar\">","                  <div class=\"inner bar {{format.onTime(number, due_on, created_at, issues.closed.size, issues.open.size)}}\" style=\"width:{{format.progress(issues.closed.size, issues.open.size)}}%\"></div>","                </div>","              </div>","            </td>","          </tr>","        {{/milestones}}","      {{/if}}","    {{/projects.list}}","  </table>","","  <div class=\"footer\">","    <a href=\"#\"><Icons icon=\"cog\"/> Edit</a>","  </div>","</div>","","<!--","  <tr>","    <td><a class=\"repo\" href=\"#\">radekstepan/disposable</a></td>","    <td><span class=\"milestone\">Milestone 1.0 <span class=\"icon down-open\"></span></td>","    <td>","      <div class=\"progress\">","        <span class=\"percent\">40%</span>","        <span class=\"due\">due on Friday</span>","        <div class=\"outer bar\">","          <div class=\"inner bar red\" style=\"width:40%\"></div>","        </div>","      </div>","    </td>","  </tr>","  <tr class=\"done\">","    <td><a class=\"repo\" href=\"#\">radekstepan/burnchart</a></td>","    <td><span class=\"milestone\">Beta Milestone <span class=\"icon down-open\"></span></a></td>","    <td>","      <div class=\"progress\">","        <span class=\"percent\">100%</span>","        <span class=\"due\">due tomorrow</span>","        <div class=\"outer bar\">","          <div class=\"inner bar green\" style=\"width:100%\"></div>","        </div>","      </div>","    </td>","  </tr>","  <tr>","    <td><a class=\"repo\" href=\"#\">intermine/intermine</a></td>","    <td><span class=\"milestone\">Emma Release 96 <span class=\"icon down-open\"></span></a></td>","    <td>","      <div class=\"progress\">","        <span class=\"percent\">27%</span>","        <span class=\"due\">due in 2 weeks</span>","        <div class=\"outer bar\">","          <div class=\"inner bar red\" style=\"width:27%\"></div>","        </div>","      </div>","    </td>","  </tr>","  <tr>","    <td><a class=\"repo\" href=\"#\">microsoft/windows</a></td>","    <td><span class=\"milestone\">RC 9 <span class=\"icon down-open\"></span></a></td>","    <td>","      <div class=\"progress\">","        <span class=\"percent\">90%</span>","        <span class=\"due red\">overdue by a month</span>","        <div class=\"outer bar\">","          <div class=\"inner bar red\" style=\"width:90%\"></div>","        </div>","      </div>","    </td>","  </tr>","-->"].join("\n");
     });
 
     // date.coffee
-    root.require.register('burnchart/src/utils/date.js', function(exports, require, module) {
+    root.require.register('burnchart/src/utils/date.coffee', function(exports, require, module) {
     
       module.exports = {
         now: function() {
@@ -880,7 +880,7 @@
     });
 
     // format.coffee
-    root.require.register('burnchart/src/utils/format.js', function(exports, require, module) {
+    root.require.register('burnchart/src/utils/format.coffee', function(exports, require, module) {
     
       var __slice = [].slice;
       
@@ -930,7 +930,7 @@
     });
 
     // key.coffee
-    root.require.register('burnchart/src/utils/key.js', function(exports, require, module) {
+    root.require.register('burnchart/src/utils/key.coffee', function(exports, require, module) {
     
       module.exports = {
         is: function(evt) {
@@ -945,7 +945,7 @@
     });
 
     // mixins.coffee
-    root.require.register('burnchart/src/utils/mixins.js', function(exports, require, module) {
+    root.require.register('burnchart/src/utils/mixins.coffee', function(exports, require, module) {
     
       _.mixin({
         'pluckMany': function(source, keys) {
@@ -969,7 +969,7 @@
     });
 
     // model.coffee
-    root.require.register('burnchart/src/utils/model.js', function(exports, require, module) {
+    root.require.register('burnchart/src/utils/model.coffee', function(exports, require, module) {
     
       module.exports = function(opts) {
         var Model, model;
@@ -982,17 +982,17 @@
     });
 
     // chart.coffee
-    root.require.register('burnchart/src/views/chart.js', function(exports, require, module) {
+    root.require.register('burnchart/src/views/chart.coffee', function(exports, require, module) {
     
       var axes, lines;
       
-      lines = require('../modules/chart/lines');
+      lines = require('../modules/chart/lines.coffee');
       
-      axes = require('../modules/chart/axes');
+      axes = require('../modules/chart/axes.coffee');
       
       module.exports = Ractive.extend({
         'name': 'views/chart',
-        'template': require('../templates/chart'),
+        'template': require('../templates/chart.html'),
         oncomplete: function() {
           var actual, head, height, ideal, issues, line, m, mAxis, margin, milestone, svg, tooltip, total, trend, width, x, xAxis, y, yAxis, _ref;
           milestone = this.data.milestone;
@@ -1068,21 +1068,21 @@
     });
 
     // header.coffee
-    root.require.register('burnchart/src/views/header.js', function(exports, require, module) {
+    root.require.register('burnchart/src/views/header.coffee', function(exports, require, module) {
     
       var Icons, firebase, system, user;
       
-      system = require('../models/system').system;
+      system = require('../models/system.coffee').system;
       
-      firebase = require('../models/firebase');
+      firebase = require('../models/firebase.coffee');
       
-      user = require('../models/user');
+      user = require('../models/user.coffee');
       
-      Icons = require('./icons');
+      Icons = require('./icons.coffee');
       
       module.exports = Ractive.extend({
         'name': 'views/header',
-        'template': require('../templates/header'),
+        'template': require('../templates/header.html'),
         'data': {
           'user': user,
           'icon': 'fire-station'
@@ -1111,17 +1111,17 @@
     });
 
     // hero.coffee
-    root.require.register('burnchart/src/views/hero.js', function(exports, require, module) {
+    root.require.register('burnchart/src/views/hero.coffee', function(exports, require, module) {
     
       var Icons, mediator;
       
-      mediator = require('../modules/mediator');
+      mediator = require('../modules/mediator.coffee');
       
-      Icons = require('./icons');
+      Icons = require('./icons.coffee');
       
       module.exports = Ractive.extend({
         'name': 'views/hero',
-        'template': require('../templates/hero'),
+        'template': require('../templates/hero.html'),
         'components': {
           Icons: Icons
         },
@@ -1131,11 +1131,11 @@
     });
 
     // icons.coffee
-    root.require.register('burnchart/src/views/icons.js', function(exports, require, module) {
+    root.require.register('burnchart/src/views/icons.coffee', function(exports, require, module) {
     
-      var codes, utils;
+      var codes, format;
       
-      utils = require('../utils/format');
+      format = require('../utils/format.coffee');
       
       codes = {
         'cog': '\e800',
@@ -1155,13 +1155,13 @@
       
       module.exports = Ractive.extend({
         'name': 'views/icons',
-        'template': require('../templates/icons'),
+        'template': require('../templates/icons.html'),
         'isolated': true,
         onrender: function() {
           return this.observe('icon', function(icon) {
             var hex;
             if (icon && (hex = codes[icon])) {
-              return this.set('code', utils.hexToDecimal(hex));
+              return this.set('code', format.hexToDecimal(hex));
             } else {
               return this.set('code', null);
             }
@@ -1172,19 +1172,19 @@
     });
 
     // notify.coffee
-    root.require.register('burnchart/src/views/notify.js', function(exports, require, module) {
+    root.require.register('burnchart/src/views/notify.coffee', function(exports, require, module) {
     
       var HEIGHT, Icons, mediator;
       
-      mediator = require('../modules/mediator');
+      mediator = require('../modules/mediator.coffee');
       
-      Icons = require('./icons');
+      Icons = require('./icons.coffee');
       
       HEIGHT = 68;
       
       module.exports = Ractive.extend({
         'name': 'views/notify',
-        'template': require('../templates/notify'),
+        'template': require('../templates/notify.html'),
         'data': {
           'top': HEIGHT,
           'hidden': true,
@@ -1237,27 +1237,27 @@
     });
 
     // index.coffee
-    root.require.register('burnchart/src/views/pages/index.js', function(exports, require, module) {
+    root.require.register('burnchart/src/views/pages/index.coffee', function(exports, require, module) {
     
       var Hero, Projects, issues, mediator, milestones, projects, system;
       
-      Hero = require('../hero');
+      Hero = require('../hero.coffee');
       
-      Projects = require('../tables/projects');
+      Projects = require('../tables/projects.coffee');
       
-      projects = require('../../models/projects');
+      projects = require('../../models/projects.coffee');
       
-      system = require('../../models/system');
+      system = require('../../models/system.coffee');
       
-      milestones = require('../../modules/github/milestones');
+      milestones = require('../../modules/github/milestones.coffee');
       
-      issues = require('../../modules/github/issues');
+      issues = require('../../modules/github/issues.coffee');
       
-      mediator = require('../../modules/mediator');
+      mediator = require('../../modules/mediator.coffee');
       
       module.exports = Ractive.extend({
         'name': 'views/pages/index',
-        'template': require('../../templates/pages/index'),
+        'template': require('../../templates/pages/index.html'),
         'components': {
           Hero: Hero,
           Projects: Projects
@@ -1318,27 +1318,27 @@
     });
 
     // milestone.coffee
-    root.require.register('burnchart/src/views/pages/milestone.js', function(exports, require, module) {
+    root.require.register('burnchart/src/views/pages/milestone.coffee', function(exports, require, module) {
     
       var Chart, format, issues, mediator, milestones, projects, system;
       
-      Chart = require('../chart');
+      Chart = require('../chart.coffee');
       
-      projects = require('../../models/projects');
+      projects = require('../../models/projects.coffee');
       
-      system = require('../../models/system');
+      system = require('../../models/system.coffee');
       
-      milestones = require('../../modules/github/milestones');
+      milestones = require('../../modules/github/milestones.coffee');
       
-      issues = require('../../modules/github/issues');
+      issues = require('../../modules/github/issues.coffee');
       
-      mediator = require('../../modules/mediator');
+      mediator = require('../../modules/mediator.coffee');
       
-      format = require('../../utils/format');
+      format = require('../../utils/format.coffee');
       
       module.exports = Ractive.extend({
         'name': 'views/pages/chart',
-        'template': require('../../templates/pages/milestone'),
+        'template': require('../../templates/pages/milestone.html'),
         'components': {
           Chart: Chart
         },
@@ -1409,21 +1409,21 @@
     });
 
     // new.coffee
-    root.require.register('burnchart/src/views/pages/new.js', function(exports, require, module) {
+    root.require.register('burnchart/src/views/pages/new.coffee', function(exports, require, module) {
     
       var key, mediator, system, user;
       
-      mediator = require('../../modules/mediator');
+      mediator = require('../../modules/mediator.coffee');
       
-      system = require('../../models/system');
+      system = require('../../models/system.coffee');
       
-      user = require('../../models/user');
+      user = require('../../models/user.coffee');
       
-      key = require('../../utils/key');
+      key = require('../../utils/key.coffee');
       
       module.exports = Ractive.extend({
         'name': 'views/pages/new',
-        'template': require('../../templates/pages/new'),
+        'template': require('../../templates/pages/new.html'),
         'data': {
           'value': 'radekstepan/disposable',
           user: user
@@ -1463,25 +1463,25 @@
     });
 
     // project.coffee
-    root.require.register('burnchart/src/views/pages/project.js', function(exports, require, module) {
+    root.require.register('burnchart/src/views/pages/project.coffee', function(exports, require, module) {
     
       var Milestones, issues, mediator, milestones, projects, system;
       
-      Milestones = require('../tables/milestones');
+      Milestones = require('../tables/milestones.coffee');
       
-      projects = require('../../models/projects');
+      projects = require('../../models/projects.coffee');
       
-      system = require('../../models/system');
+      system = require('../../models/system.coffee');
       
-      milestones = require('../../modules/github/milestones');
+      milestones = require('../../modules/github/milestones.coffee');
       
-      issues = require('../../modules/github/issues');
+      issues = require('../../modules/github/issues.coffee');
       
-      mediator = require('../../modules/mediator');
+      mediator = require('../../modules/mediator.coffee');
       
       module.exports = Ractive.extend({
         'name': 'views/pages/project',
-        'template': require('../../templates/pages/project'),
+        'template': require('../../templates/pages/project.html'),
         'components': {
           Milestones: Milestones
         },
@@ -1547,21 +1547,21 @@
     });
 
     // milestones.coffee
-    root.require.register('burnchart/src/views/tables/milestones.js', function(exports, require, module) {
+    root.require.register('burnchart/src/views/tables/milestones.coffee', function(exports, require, module) {
     
       var Icons, format, mediator, projects;
       
-      mediator = require('../../modules/mediator');
+      mediator = require('../../modules/mediator.coffee');
       
-      projects = require('../../models/projects');
+      projects = require('../../models/projects.coffee');
       
-      format = require('../../utils/format');
+      format = require('../../utils/format.coffee');
       
-      Icons = require('../icons');
+      Icons = require('../icons.coffee');
       
       module.exports = Ractive.extend({
         'name': 'views/milestones',
-        'template': require('../../templates/tables/milestones'),
+        'template': require('../../templates/tables/milestones.html'),
         'data': {
           format: format
         },
@@ -1574,19 +1574,19 @@
     });
 
     // projects.coffee
-    root.require.register('burnchart/src/views/tables/projects.js', function(exports, require, module) {
+    root.require.register('burnchart/src/views/tables/projects.coffee', function(exports, require, module) {
     
       var Icons, format, mediator;
       
-      mediator = require('../../modules/mediator');
+      mediator = require('../../modules/mediator.coffee');
       
-      format = require('../../utils/format');
+      format = require('../../utils/format.coffee');
       
-      Icons = require('../icons');
+      Icons = require('../icons.coffee');
       
       module.exports = Ractive.extend({
         'name': 'views/projects',
-        'template': require('../../templates/tables/projects'),
+        'template': require('../../templates/tables/projects.html'),
         'data': {
           format: format
         },
@@ -1600,32 +1600,23 @@
   })();
 
   // Return the main app.
-  var main = root.require("burnchart/src/app.js");
+  var main = root.require("burnchart/src/app.coffee");
+
+  // CommonJS/Modules with all its aliases.
+  
+  root.require.register("burnchart", function(exports, require, module) {
+    module.exports = main;
+  });
+  
 
   // AMD/RequireJS.
-  if (typeof define !== 'undefined' && define.amd) {
-  
+  if (typeof define === 'function' && define.amd) {
     define("burnchart", [ /* load deps ahead of time */ ], function () {
       return main;
     });
-  
   }
 
-  // CommonJS.
-  else if (typeof module !== 'undefined' && module.exports) {
-    module.exports = main;
-  }
-
-  // Globally exported.
-  else {
-  
-    root["burnchart"] = main;
-  
-  }
-
-  // Alias our app.
-  
-  root.require.alias("burnchart/src/app.js", "burnchart/index.js");
-  
+  // Browser globals.
+  root["burnchart"] = main;
 
 })(this);

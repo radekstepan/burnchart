@@ -1,11 +1,11 @@
-lines = require '../modules/chart/lines'
-axes  = require '../modules/chart/axes'
+lines = require '../modules/chart/lines.coffee'
+axes  = require '../modules/chart/axes.coffee'
 
 module.exports = Ractive.extend
 
   'name': 'views/chart'
 
-  'template': require '../templates/chart'
+  'template': require '../templates/chart.html'
 
   oncomplete: ->
     milestone = @data.milestone

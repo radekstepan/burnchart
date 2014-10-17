@@ -1,205 +1,92 @@
-// A standalone CommonJS loader.
-(function(root) {
-  /**
-   * Require the given path.
-   *
-   * @param {String} path
-   * @return {Object} exports
-   * @api public
-   */
-  var require = function(path, parent, orig) {
-    var resolved = require.resolve(path);
+(function(/*! Brunch !*/) {
+  'use strict';
 
-    // lookup failed
-    if (!resolved) {
-      orig = orig || path;
-      parent = parent || 'root';
-      var err = new Error('Failed to require "' + orig + '" from "' + parent + '"');
-      err.path = orig;
-      err.parent = parent;
-      err.require = true;
-      throw err;
+  var globals = typeof window !== 'undefined' ? window : global;
+  if (typeof globals.require === 'function') return;
+
+  var modules = {};
+  var cache = {};
+
+  var has = function(object, name) {
+    return ({}).hasOwnProperty.call(object, name);
+  };
+
+  var expand = function(root, name) {
+    var results = [], parts, part;
+    if (/^\.\.?(\/|$)/.test(name)) {
+      parts = [root, name].join('/').split('/');
+    } else {
+      parts = name.split('/');
     }
-
-    var module = require.modules[resolved];
-
-    // perform real require()
-    // by invoking the module's
-    // registered function
-    if (!module._resolving && !module.exports) {
-      var mod = {};
-      mod.exports = {};
-      mod.client = mod.component = true;
-      module._resolving = true;
-      module.call(this, mod.exports, require.relative(resolved), mod);
-      delete module._resolving;
-      module.exports = mod.exports;
+    for (var i = 0, length = parts.length; i < length; i++) {
+      part = parts[i];
+      if (part === '..') {
+        results.pop();
+      } else if (part !== '.' && part !== '') {
+        results.push(part);
+      }
     }
+    return results.join('/');
+  };
 
+  var dirname = function(path) {
+    return path.split('/').slice(0, -1).join('/');
+  };
+
+  var localRequire = function(path) {
+    return function(name) {
+      var dir = dirname(path);
+      var absolute = expand(dir, name);
+      return globals.require(absolute, path);
+    };
+  };
+
+  var initModule = function(name, definition) {
+    var module = {id: name, exports: {}};
+    cache[name] = module;
+    definition(module.exports, localRequire(name), module);
     return module.exports;
   };
 
-  /**
-   * Registered modules.
-   */
+  var require = function(name, loaderPath) {
+    var path = expand(name, '.');
+    if (loaderPath == null) loaderPath = '/';
 
-  require.modules = {};
+    if (has(cache, path)) return cache[path].exports;
+    if (has(modules, path)) return initModule(path, modules[path]);
 
-  /**
-   * Registered aliases.
-   */
+    var dirIndex = expand(path, './index');
+    if (has(cache, dirIndex)) return cache[dirIndex].exports;
+    if (has(modules, dirIndex)) return initModule(dirIndex, modules[dirIndex]);
 
-  require.aliases = {};
+    throw new Error('Cannot find module "' + name + '" from '+ '"' + loaderPath + '"');
+  };
 
-  /**
-   * Resolve `path`.
-   *
-   * Lookup:
-   *
-   *   - PATH/index.js
-   *   - PATH.js
-   *   - PATH
-   *
-   * @param {String} path
-   * @return {String} path or null
-   * @api private
-   */
-
-  require.resolve = function(path) {
-    if (path.charAt(0) === '/') path = path.slice(1);
-
-    var paths = [
-      path,
-      path + '.js',
-      path + '.json',
-      path + '/index.js',
-      path + '/index.json'
-    ];
-
-    for (var i = 0; i < paths.length; i++) {
-      path = paths[i];
-      if (require.modules.hasOwnProperty(path)) return path;
-      if (require.aliases.hasOwnProperty(path)) return require.aliases[path];
+  var define = function(bundle, fn) {
+    if (typeof bundle === 'object') {
+      for (var key in bundle) {
+        if (has(bundle, key)) {
+          modules[key] = bundle[key];
+        }
+      }
+    } else {
+      modules[bundle] = fn;
     }
   };
 
-  /**
-   * Normalize `path` relative to the current path.
-   *
-   * @param {String} curr
-   * @param {String} path
-   * @return {String}
-   * @api private
-   */
-
-  require.normalize = function(curr, path) {
-    var segs = [];
-
-    if ('.' != path.charAt(0)) return path;
-
-    curr = curr.split('/');
-    path = path.split('/');
-
-    for (var i = 0; i < path.length; ++i) {
-      if ('..' == path[i]) {
-        curr.pop();
-      } else if ('.' !== path[i] && '' !== path[i]) {
-        segs.push(path[i]);
+  var list = function() {
+    var result = [];
+    for (var item in modules) {
+      if (has(modules, item)) {
+        result.push(item);
       }
     }
-
-    return curr.concat(segs).join('/');
+    return result;
   };
 
-  /**
-   * Register module at `path` with callback `definition`.
-   *
-   * @param {String} path
-   * @param {Function} definition
-   * @api private
-   */
-
-  require.register = function(path, definition) {
-    require.modules[path] = definition;
-  };
-
-  /**
-   * Alias a module definition.
-   *
-   * @param {String} from
-   * @param {String} to
-   * @api private
-   */
-
-  require.alias = function(from, to) {
-    if (!require.modules.hasOwnProperty(from)) {
-      throw new Error('Failed to alias "' + from + '", it does not exist');
-    }
-    require.aliases[to] = from;
-  };
-
-  /**
-   * Return a require function relative to the `parent` path.
-   *
-   * @param {String} parent
-   * @return {Function}
-   * @api private
-   */
-
-  require.relative = function(parent) {
-    var p = require.normalize(parent, '..');
-
-    /**
-     * lastIndexOf helper.
-     */
-
-    function lastIndexOf(arr, obj) {
-      var i = arr.length;
-      while (i--) {
-        if (arr[i] === obj) return i;
-      }
-      return -1;
-    }
-
-    /**
-     * The relative require() itself.
-     */
-
-    var localRequire = function(path) {
-      var resolved = localRequire.resolve(path);
-      return require(resolved, parent, path);
-    };
-
-    /**
-     * Resolve relative to the parent.
-     */
-
-    localRequire.resolve = function(path) {
-      var c = path.charAt(0);
-      if ('/' == c) return path.slice(1);
-      if ('.' == c) return require.normalize(p, path);
-
-      // resolve deps by returning
-      // the dep in the nearest "deps"
-      // directory
-      var segs = parent.split('/');
-      var i = lastIndexOf(segs, 'deps') + 1;
-      if (!i) i = 0;
-      path = segs.slice(0, i + 1).join('/') + '/deps/' + path;
-      return path;
-    };
-
-    /**
-     * Check if module is defined at `path`.
-     */
-    localRequire.exists = function(path) {
-      return require.modules.hasOwnProperty(localRequire.resolve(path));
-    };
-
-    return localRequire;
-  };
-
-  // Do we already have require loader?
-  root.require = (typeof root.require !== 'undefined') ? root.require : require;
-
-})(this);
+  globals.require = require;
+  globals.require.define = define;
+  globals.require.register = define;
+  globals.require.list = list;
+  globals.require.brunch = true;
+})();

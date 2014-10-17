@@ -1,8 +1,8 @@
-config   = require '../models/config'
-mediator = require '../modules/mediator'
-Model    = require '../utils/model'
-date     = require '../utils/date'
-user     = require './user'
+config   = require '../models/config.coffee'
+mediator = require '../modules/mediator.coffee'
+Model    = require '../utils/model.coffee'
+date     = require '../utils/date.coffee'
+user     = require './user.coffee'
 
 module.exports = new Model
 

@@ -1,13 +1,13 @@
-{ system } = require '../models/system'
-firebase   = require '../models/firebase'
-user       = require '../models/user'
-Icons      = require './icons'
+{ system } = require '../models/system.coffee'
+firebase   = require '../models/firebase.coffee'
+user       = require '../models/user.coffee'
+Icons      = require './icons.coffee'
 
 module.exports = Ractive.extend
 
   'name': 'views/header'
 
-  'template': require '../templates/header'
+  'template': require '../templates/header.html'
 
   'data':
     'user': user

@@ -1,13 +1,13 @@
-mediator = require '../../modules/mediator'
-projects = require '../../models/projects'
-format   = require '../../utils/format'
-Icons    = require '../icons'
+mediator = require '../../modules/mediator.coffee'
+projects = require '../../models/projects.coffee'
+format   = require '../../utils/format.coffee'
+Icons    = require '../icons.coffee'
 
 module.exports = Ractive.extend
 
   'name': 'views/milestones'
 
-  'template': require '../../templates/tables/milestones'
+  'template': require '../../templates/tables/milestones.html'
 
   'data': { format }
 

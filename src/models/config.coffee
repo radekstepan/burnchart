@@ -1,4 +1,4 @@
-Model = require '../utils/model'
+Model = require '../utils/model.coffee'
 
 module.exports = new Model
 

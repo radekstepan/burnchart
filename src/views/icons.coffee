@@ -1,4 +1,4 @@
-utils = require '../utils/format'
+format = require '../utils/format.coffee'
 
 # Fontello icon hex codes.
 codes =
@@ -20,13 +20,13 @@ module.exports = Ractive.extend
 
   'name': 'views/icons'
 
-  'template': require '../templates/icons'
+  'template': require '../templates/icons.html'
 
   'isolated': yes
 
   onrender: ->
     @observe 'icon', (icon) ->
       if icon and hex = codes[icon]
-        @set 'code', utils.hexToDecimal hex
+        @set 'code', format.hexToDecimal hex
       else
         @set 'code', null
