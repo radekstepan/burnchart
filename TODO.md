@@ -6,8 +6,7 @@
 
 1. in a projects collection observe the list prop and resort index; already sorted flag passed in as yes)
 1. The index is not already sorted when sort order changes
-1. index is a list of 3 elements; list index, milestone index and priority number
-1. go through projects and its milestones in two loops to extract and sort using function
+1. index is a list ofls and its milestones in two loops to extract and sort using function
 1. tables loop index getting the obj from projects collection and render
 1. sort order link toggles available sort by keys and changes the current key
 1. use while loop and pop when resetting the index
@@ -66,7 +65,7 @@
 
 ###Misc
 
-- [ ] the deploy script needs to disable autoreload
+- [ ] the deploy script needs to disable autoreload; `make watch` should start a static web server and also launch a build script with a flag saying which files to include in the head (uncompressed, with live reload); standard build script should minify scripts
 - [ ] calculate by how many % are we late/on time so we can sort the milestones in projects
 - [ ] vendor module so we can proxy require all `window` libs
 - [ ] implement search box that quickly takes you to a chart (and may hide "pro actions")
