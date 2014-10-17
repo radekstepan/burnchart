@@ -1,6 +1,6 @@
 #Tasks to do
 
-##Release: MVP
+##Release: Assembly
 
 - [ ] sort milestones on index and project page based on priority (most delayed first); Trend - actual = different in days and those overdue come first
 
@@ -21,32 +21,31 @@
 - [ ] check with austin@assembly.com if my repo looks good to be forked to Assembly
 - [ ] fork it to Assembly
 
-###Notifications
-
-- [ ] create a 500/400/loading system messages
-- [ ] mediator `!app/notify/edit` will edit the current notification
-- [ ] handle multiple notifications, for example success on closed milestone and then show a different chart or add a project
-
 ###Error Handling
 
-- [ ] deal with Firebase timing out, are we still logged-in?
-- [ ] check that we have not run out of requests to make
-- [ ] can we get more than 1 notification at a time? stack them and show just one text
 - [ ] save in memory only if no `localStorage`, warn about that
-- [ ] what if milestone does not match our strategy?
+- [ ] can we get more than 1 notification at a time? stack them and show just one text
 - [ ] Check location.hash is supported
 - [ ] move tests from `radekstepan/github-burndown-chart`
-
-###Bugs
-
-- [ ] `rails/rails/24` has issues in two clusters as if merged from two milestones
-- [ ] trendline cutting into axes
 
 ###Customers
 
 - [ ] landing page for the project and put message on `github-burndown-chart` repo
 - [ ] provide a documentation site (because we ref it from hero)
-- [ ] conctact the people that have starred the original burndown chart telling them about the repo; keep track of connects via a tiny crm/spreadsheet and use a custom email address like radek@burnchart.io
+
+###Style
+
+- [ ] make it easy to go back to project page from a chart page, show it in the header
+
+###Misc
+
+- [ ] the deploy script needs to disable autoreload; `make watch` should start a static web server and also launch a build script with a flag saying which files to include in the head (uncompressed, with live reload); standard build script should minify scripts
+- [ ] vendor module so we can proxy require all `window` libs
+- [ ] show a countdown clock towards the end of the milestone or show overdue
+- [ ] trigger success topbar when we have completed a milestone on chart page; show plain when we are behind
+- [ ] on chart page show a little progress bar in the title
+
+##Backlog
 
 ###Routing
 
@@ -60,29 +59,36 @@
 - [ ] make async pages transition so that there is no "jumping" on the page
 - [ ] index page alert tooltip (like on chart page)
 - [ ] app icon like http://thenounproject.com/term/fire/50966/
-- [ ] make it easy to go back to project page from a chart page, show it in the header
 - [ ] tell people if they have no due date
+- [ ] calculate left margin based on the total number of points text width
+
+###Customers
+
+- [ ] conctact the people that have starred the original burndown chart telling them about the repo; keep track of connects via a tiny crm/spreadsheet and use a custom email address like radek@burnchart.io
+
+###Bugs
+
+- [ ] `rails/rails/24` has issues in two clusters as if merged from two milestones
+- [ ] trendline cutting into axes
+
+###Error Handling
+
+- [ ] deal with Firebase timing out, are we still logged-in?
+- [ ] check that we have not run out of requests to make
+- [ ] what if milestone does not match our strategy?
+
+###Notifications
+
+- [ ] create a 500/400/loading system messages
+- [ ] mediator `!app/notify/edit` will edit the current notification
+- [ ] handle multiple notifications, for example success on closed milestone and then show a different chart or add a project
 
 ###Misc
 
-- [ ] the deploy script needs to disable autoreload; `make watch` should start a static web server and also launch a build script with a flag saying which files to include in the head (uncompressed, with live reload); standard build script should minify scripts
-- [ ] calculate by how many % are we late/on time so we can sort the milestones in projects
-- [ ] vendor module so we can proxy require all `window` libs
-- [ ] implement search box that quickly takes you to a chart (and may hide "pro actions")
-- [ ] show hero box or projects with a fade in and only when known
-- [ ] calculate left margin based on the total number of points text width
-- [ ] show a countdown clock towards the end of the milestone or show overdue
-- [ ] trigger success topbar when we have completed a milestone on chart page; show plain when we are behind
-- [ ] on chart page show a little progress bar in the title
 - [ ] use tap plugin for `Ractive`
 - [ ] the app bundle (albeit uncompressed) clocks in at 1.5MB, reduce the size (`d3` is huge (use [grunt-smash](https://github.com/cvisco/grunt-smash), [docs here](https://github.com/mbostock/smash/wiki)), `localForage` not nedded)
-- [ ] make tests work again
-- [ ] use minified builds in production
-- [ ] move project to Assembly
 - [ ] make the names consistent, reuse code, template etc.
-
-##Future Releases
-
+- [ ] implement search box that quickly takes you to a chart (and may hide "pro actions")
 - [ ] make an extensible architecture; for example I might want to enable another trendline in the chart which shows estimated end date if one keeps up the pace of last 5 days.
 - [ ] desktop app via `node-gyp`
 - [ ] when watching, only build changed files and then concat them to make builds much faster
