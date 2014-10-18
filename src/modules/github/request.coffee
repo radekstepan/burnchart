@@ -1,3 +1,5 @@
+{ _, superagent } = require '../vendor.coffee'
+
 user = require '../../models/user.coffee'
 
 # Custom JSON parser.

@@ -1,3 +1,5 @@
+{ Firebase, FirebaseSimpleLogin } = require '../modules/vendor.coffee'
+
 Model  = require '../utils/model.coffee'
 user   = require './user.coffee'
 config = require './config.coffee'

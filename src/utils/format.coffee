@@ -1,3 +1,5 @@
+{ _, moment, marked } = require '../modules/vendor.coffee'
+
 module.exports =
 
   # Progress in percentages.

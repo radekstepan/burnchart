@@ -1,3 +1,5 @@
+{ _, lscache } = require '../modules/vendor.coffee'
+
 config   = require '../models/config.coffee'
 mediator = require '../modules/mediator.coffee'
 Model    = require '../utils/model.coffee'

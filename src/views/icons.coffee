@@ -1,3 +1,5 @@
+{ Ractive } = require '../modules/vendor.coffee'
+
 format = require '../utils/format.coffee'
 
 # Fontello icon hex codes.

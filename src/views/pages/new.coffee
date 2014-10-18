@@ -1,3 +1,5 @@
+{ _, Ractive } = require '../../modules/vendor.coffee'
+
 mediator = require '../../modules/mediator.coffee'
 system   = require '../../models/system.coffee'
 user     = require '../../models/user.coffee'

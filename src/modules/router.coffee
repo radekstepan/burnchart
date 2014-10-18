@@ -1,3 +1,5 @@
+{ _, director } = require './vendor.coffee'
+
 mediator = require './mediator.coffee'
 system   = require '../models/system.coffee'
 
@@ -34,7 +36,7 @@ routes =
     window.location.hash = '#'
 
 # Flatiron Director router.
-module.exports = Router(routes).configure
+module.exports = director.Router(routes).configure
   'strict': no # allow trailing slashes
   notfound: ->
     throw 404

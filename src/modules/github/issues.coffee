@@ -1,3 +1,5 @@
+{ _, async } = require '../vendor.coffee'
+
 #!/usr/bin/env coffee
 config  = require '../../models/config.coffee'
 request = require './request.coffee'

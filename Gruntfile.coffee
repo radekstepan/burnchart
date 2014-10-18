@@ -15,6 +15,10 @@ module.exports = (grunt) ->
             # Mustaches.
             'ractivate'
           ]
+          alias: [
+            './vendor/d3-tip/index.js:d3-tip'
+            './vendor/firebase-simple-login/firebase-simple-login.js:firebase-simple-login'
+          ]
 
     stylus:
       compile:
@@ -27,32 +31,32 @@ module.exports = (grunt) ->
         ]
         dest: 'public/css/app.css'
 
-    concat:      
-      scripts:
-        src: [
-          # CommonJS loader.
-          'public/js/commonjs.js'
-          # Vendor dependencies.
-          'vendor/lodash/dist/lodash.js'
-          'vendor/ractive/ractive.js'
-          'vendor/ractive-transitions-fade/ractive-transitions-fade.js'
-          'vendor/ractive-ractive/index.js'
-          'vendor/firebase/firebase.js'
-          'vendor/firebase-simple-login/firebase-simple-login.js'
-          'vendor/superagent/superagent.js'
-          'vendor/lscache/lscache.js'
-          'vendor/async/lib/async.js'
-          'vendor/moment/moment.js'
-          'vendor/d3/d3.js'
-          'vendor/d3-tip/index.js'
-          'vendor/marked/lib/marked.js'
-          'vendor/director/build/director.js'
-          # Our app.
-          'public/js/app.js'
-        ]
-        dest: 'public/js/app.bundle.js'
-        options:
-          separator: ';' # for minification purposes
+    # concat:      
+    #   scripts:
+    #     src: [
+    #       # CommonJS loader.
+    #       'public/js/commonjs.js'
+    #       # Vendor dependencies.
+    #       'vendor/lodash/dist/lodash.js'
+    #       'vendor/ractive/ractive.js'
+    #       'vendor/ractive-transitions-fade/ractive-transitions-fade.js'
+    #       'vendor/ractive-ractive/index.js'
+    #       'vendor/firebase/firebase.js'
+    #       'vendor/firebase-simple-login/firebase-simple-login.js'
+    #       'vendor/superagent/superagent.js'
+    #       'vendor/lscache/lscache.js'
+    #       'vendor/async/lib/async.js'
+    #       'vendor/moment/moment.js'
+    #       'vendor/d3/d3.js'
+    #       'vendor/d3-tip/index.js'
+    #       'vendor/marked/lib/marked.js'
+    #       'vendor/director/build/director.js'
+    #       # Our app.
+    #       'public/js/app.js'
+    #     ]
+    #     dest: 'public/js/app.bundle.js'
+    #     options:
+    #       separator: ';' # for minification purposes
 
       styles:
         src: [

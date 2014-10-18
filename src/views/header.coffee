@@ -1,3 +1,5 @@
+{ Ractive } = require '../modules/vendor.coffee'
+
 { system } = require '../models/system.coffee'
 firebase   = require '../models/firebase.coffee'
 user       = require '../models/user.coffee'

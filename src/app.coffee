@@ -1,3 +1,4 @@
+{ Ractive, RactiveRactive, RactiveTransitionsFade } = require './modules/vendor.coffee'
 # Lodash mixins.
 require './utils/mixins.coffee'
 # Will load projects from localStorage.

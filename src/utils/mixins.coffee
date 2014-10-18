@@ -1,3 +1,5 @@
+{ _ } = require '../modules/vendor.coffee'
+
 _.mixin
   'pluckMany': (source, keys) ->
     throw '`keys` needs to be an Array' unless _.isArray keys

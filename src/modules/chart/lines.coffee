@@ -1,3 +1,5 @@
+{ _, d3 } = require '../../modules/vendor.coffee'
+
 config = require '../../models/config.coffee'
 
 module.exports =

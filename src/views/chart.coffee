@@ -1,3 +1,5 @@
+{ Ractive, d3, d3tip } = require '../modules/vendor.coffee'
+
 lines = require '../modules/chart/lines.coffee'
 axes  = require '../modules/chart/axes.coffee'
 

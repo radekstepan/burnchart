@@ -1,3 +1,5 @@
+{ _, Ractive, async } = require '../../modules/vendor.coffee'
+
 Hero     = require '../hero.coffee'
 Projects = require '../tables/projects.coffee'
 

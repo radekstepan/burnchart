@@ -1,3 +1,5 @@
+{ d3 } = require '../vendor.coffee'
+
 module.exports =
 
   horizontal: (height, x) ->

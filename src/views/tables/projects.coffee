@@ -1,3 +1,5 @@
+{ Ractive } = require '../../modules/vendor.coffee'
+
 mediator = require '../../modules/mediator.coffee'
 format   = require '../../utils/format.coffee'
 Icons    = require '../icons.coffee'
