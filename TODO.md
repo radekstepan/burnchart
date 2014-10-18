@@ -2,6 +2,7 @@
 
 ##Release: Assembly
 
+- [ ] use Browserify as an app build pipeline
 - [ ] sort milestones on index and project page based on priority (most delayed first); Trend - actual = different in days and those overdue come first
 
 1. in a projects collection observe the list prop and resort index; already sorted flag passed in as yes)
@@ -32,6 +33,7 @@
 
 - [ ] landing page for the project and put message on `github-burndown-chart` repo
 - [ ] provide a documentation site (because we ref it from hero)
+- [ ] track users/make it easy for people to leave feedback
 
 ###Style
 
