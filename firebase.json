@@ -1,9 +1,9 @@
 {
-    "firebase": "burnchart",
-    "public": "public",
-    "ignore": [
-        "firebase.json",
-        "**/.*",
-        "**/node_modules/**"
-    ]
+  "firebase": "burnchart",
+  "public": "public",
+  "ignore": [
+    "firebase.json",
+    "**/.*",
+    "**/node_modules/**"
+  ]
 }

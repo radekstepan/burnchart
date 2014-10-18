@@ -5,6 +5,12 @@ system   = require '../models/system.coffee'
 
 el = '#page'
 
+pages =
+  "index": require "../views/pages/index.coffee"
+  "milestone": require "../views/pages/milestone.coffee"
+  "new": require "../views/pages/new.coffee"
+  "project": require "../views/pages/project.coffee"
+
 # Add a project from a route.
 addProject = (page, owner, name) ->
   mediator.fire '!projects/add', { owner, name }
@@ -20,7 +26,7 @@ route = (page, args...) ->
   # Hide any notifications.
   mediator.fire '!app/notify/hide'
   # Require the new one.
-  Page = require "../views/pages/#{page}.coffee"
+  Page = pages[page]
   # Render it.
   view = new Page { el, 'data': { 'route': args } }
 

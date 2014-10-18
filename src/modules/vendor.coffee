@@ -1,15 +1,14 @@
-# All our vendor dependencies in one place.moment
-exports._ = exports.lodash = require 'lodash'
-exports.Ractive = require 'Ractive'
-exports.RactiveRactive = require 'ractive-ractive'
-exports.RactiveTransitionsFade = require 'ractive-transitions-fade'
-exports.Firebase = require 'Firebase'
-exports.FirebaseSimpleLogin = require 'firebase-simple-login'
-exports.superagent = require 'superagent'
-exports.async = require 'async'
-exports.moment = require 'moment'
-exports.d3 = require 'd3'
-exports.d3tip = require 'd3-tip'
-exports.marked = require 'marked'
-exports.director = require 'director'
-exports.lscache = require 'lscache'
+# All our vendor dependencies in one place.
+module.exports =
+  '_': window._
+  'Ractive': window.Ractive
+  'Firebase': window.Firebase
+  'FirebaseSimpleLogin': window.FirebaseSimpleLogin
+  'SuperAgent': window.superagent
+  'async': window.async
+  'moment': window.moment
+  'd3': window.d3
+  'marked': window.marked
+  'director':
+    'Router': window.Router
+  'lscache': window.lscache

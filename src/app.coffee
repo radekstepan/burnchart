@@ -1,4 +1,4 @@
-{ Ractive, RactiveRactive, RactiveTransitionsFade } = require './modules/vendor.coffee'
+{ Ractive } = require './modules/vendor.coffee'
 # Lodash mixins.
 require './utils/mixins.coffee'
 # Will load projects from localStorage.
@@ -19,5 +19,3 @@ app = new Ractive
   onrender: ->
     # Start the router.
     router.init '/'
-
-do app.render

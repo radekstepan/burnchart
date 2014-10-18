@@ -1,9 +1,9 @@
-{ _, superagent } = require '../vendor.coffee'
+{ _, SuperAgent } = require '../vendor.coffee'
 
 user = require '../../models/user.coffee'
 
 # Custom JSON parser.
-superagent.parse =
+SuperAgent.parse =
   'application/json': (res) ->
     try
       JSON.parse res
@@ -78,7 +78,7 @@ request = ({ protocol, host, path, query, headers }, cb) ->
   q = if query then '?' + ( "#{k}=#{v}" for k, v of query ).join('&') else ''
 
   # The URI.
-  req = superagent.get("#{protocol}://#{host}#{path}#{q}")
+  req = SuperAgent.get("#{protocol}://#{host}#{path}#{q}")
   # Add headers.
   ( req.set(k, v) for k, v of headers )
   
