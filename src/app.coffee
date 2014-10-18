@@ -1,15 +1,17 @@
-( require "./#{key}" for key in [
-  'utils/mixins.coffee'
-  'models/projects.coffee' # will load projects from localStorage
-] )
+# Lodash mixins.
+require './utils/mixins.coffee'
+# Will load projects from localStorage.
+require './models/projects.coffee'
 
 Header = require './views/header.coffee'
 Notify = require './views/notify.coffee'
 router = require './modules/router.coffee'
 
-App = Ractive.extend
+app = new Ractive
   
   'template': require './templates/app.html'
+
+  'el': 'body'
 
   'components': { Header, Notify }
 
@@ -17,4 +19,4 @@ App = Ractive.extend
     # Start the router.
     router.init '/'
 
-module.exports = new App()
+do app.render

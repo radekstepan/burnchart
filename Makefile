@@ -7,7 +7,7 @@ build:
 
 watch:
 	grunt
-	grunt watch
+	grunt watchify
 
 serve:
 	cd public; python -m SimpleHTTPServer 8000
