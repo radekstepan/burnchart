@@ -44,6 +44,8 @@
 - [ ] show a countdown clock towards the end of the milestone or show overdue
 - [ ] trigger success topbar when we have completed a milestone on chart page; show plain when we are behind
 - [ ] on chart page show a little progress bar in the title
+- [ ] add a chart straight from the hero banner
+- [ ]
 
 ##Backlog
 
@@ -125,3 +127,4 @@
 - [ ] if we save user's tokens we could check data on their behalf, then messaging would work; API could be provided so that others could plug into the data
 - [ ] derive insights; one part is to see if we are on track, the other is to get better at estimating. If we know when an issue is worked on and when closed, with its accompanying size, we can say which issues went well, and which fared poorly. Then we can visualize a weekly/monthly/per-milestone list of loosers and winners. Perhaps the user can glean a pattern from that.
 - [ ] create fake Firebase endpoint for GitHub auth, or change the endpoint in settings (easier)
+- [ ] have an icon that shows a progress for a milestone that can be shown on GitHub README page
