@@ -79,8 +79,8 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks('grunt-contrib-clean')
 
   grunt.registerTask('default', [
-    'clean'
-    'browserify'
+    #'clean'
+    #'browserify'
     'stylus'
     'concat'
   ])

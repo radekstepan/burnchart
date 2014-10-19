@@ -74,6 +74,7 @@
 
 - [ ] `rails/rails/24` has issues in two clusters as if merged from two milestones
 - [ ] trendline cutting into axes
+- [ ] Browserify does not generate source maps
 
 ###Error Handling
 
