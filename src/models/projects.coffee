@@ -2,6 +2,7 @@
 
 config   = require '../models/config.coffee'
 mediator = require '../modules/mediator.coffee'
+stats    = require '../modules/stats.coffee'
 Model    = require '../utils/model.coffee'
 date     = require '../utils/date.coffee'
 search   = require '../utils/search.coffee'
@@ -12,7 +13,7 @@ module.exports = new Model
   'name': 'models/projects'
 
   'data':
-    'sortKey': 'priority'
+    'sortBy': 'priority'
 
   find: (project) ->
     _.find @data.list, project
@@ -24,14 +25,33 @@ module.exports = new Model
   add: (project) ->
     @push 'list', project unless @exists project
 
+  # Find index of a project.
+  findIndex: ({ owner, name }) ->
+    _.findIndex @data.list, { owner, name }
+
   addMilestone: (project, milestone) ->
-    if (idx = _.findIndex(@data.list, project)) > -1
+    # Add in the stats.
+    _.extend milestone, { 'stats': stats(milestone) }
+
+    if (idx = @findIndex(project)) > -1
       if project.milestones?
         @push "list.#{idx}.milestones", milestone
       else
         @set "list.#{idx}.milestones", [ milestone ]
     else
+      # We are supposed to exist already.
       throw 500
+
+  # Save an error from loading milestones or issues
+  saveError: (project, err) ->
+    if (idx = @findIndex(project)) > -1
+      if project.errors?
+        @push "list.#{idx}.errors", err
+      else
+        @set "list.#{idx}.errors", [ err ]
+    else
+      # We are supposed to exist already.
+      throw 500  
 
   clear: ->
     @set 'list', []
@@ -42,9 +62,10 @@ module.exports = new Model
     index = @data.index or []
 
     for p in @data.list
+      continue unless p.milestones?
       for m in p.milestones
         # Run a comparator here inserting into index.
-        @data.sortKey
+        console.log @data.sortBy, m
 
     # Save the index.
     @set 'index', index
@@ -67,6 +88,6 @@ module.exports = new Model
     # Reset our index and re-sort.
     @observe 'sortKey', ->
       # Use pop as Ractive is glitchy.
-      @pop 'index' while @data.index.length
+      ( @pop 'index' while @data.index.length ) if @data.index?
       # Run the sort again.
       do @sort

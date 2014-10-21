@@ -48,7 +48,8 @@ module.exports = Ractive.extend
           return cb err if err
           # Save the milestone with issues.
           projects.addMilestone project, _.extend milestone, { 'issues': obj }
-          cb null
+          # Next.
+          do cb
       , cb
 
     # Run it.

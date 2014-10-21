@@ -3,7 +3,7 @@
 ##Release: Assembly
 
 - [ ] use Browserify as an app build pipeline
-- [ ] sort milestones on index and project page based on priority (most delayed first); Trend - actual = different in days and those overdue come first
+- [ ] sort milestones on index and project page based on priority (most delayed first); Trend - actual = difference in days and those overdue come first
 
 1. in a projects collection observe the list prop and resort index; already sorted flag passed in as yes)
 1. The index is not already sorted when sort order changes

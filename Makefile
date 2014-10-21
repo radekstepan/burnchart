@@ -6,10 +6,6 @@ build:
 	./node_modules/.bin/browserify -e ./src/app.coffee -o public/js/app.js -d
 	grunt
 
-watch:
-	grunt
-	grunt watchify
-
 serve:
 	cd public; python -m SimpleHTTPServer 8000
 

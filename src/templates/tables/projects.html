@@ -6,10 +6,10 @@
 
   <table>
     {{#projects.list}}
-      {{#if error}}
+      {{#if errors}}
         <tr>
           <td colspan="3" class="repo">
-            <div class="project">{{owner}}/{{name}} <span class="error" title="{{error}}"><Icons icon="attention"/></span></div>
+            <div class="project">{{owner}}/{{name}} <span class="error" title="{{errors.join('\n')}}"><Icons icon="attention"/></span></div>
           </td>
         </tr>
       {{else}}
@@ -23,10 +23,10 @@
             </td>
             <td style="width:1%">
               <div class="progress">
-                <span class="percent">{{Math.floor(format.progress(issues.closed.size, issues.open.size))}}%</span>
+                <span class="percent">{{Math.floor(stats.progress.points)}}%</span>
                 <span class="due">{{{ format.due(due_on) }}}</span>
                 <div class="outer bar">
-                  <div class="inner bar {{format.onTime(number, due_on, created_at, issues.closed.size, issues.open.size)}}" style="width:{{format.progress(issues.closed.size, issues.open.size)}}%"></div>
+                  <div class="inner bar {{(stats.isOnTime) ? 'green' : 'red'}}" style="width:{{stats.progress.points}}%"></div>
                 </div>
               </div>
             </td>

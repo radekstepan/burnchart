@@ -116,10 +116,10 @@ module.exports =
 
     [
       {
-        date: created_at
-        points: fn(a)
+        'date': created_at
+        'points': fn(a)
       }, {
-        date: due_on
-        points: fn(b)
+        'date': due_on
+        'points': fn(b)
       }
     ]

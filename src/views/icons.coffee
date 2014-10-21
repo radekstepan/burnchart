@@ -29,6 +29,6 @@ module.exports = Ractive.extend
   onrender: ->
     @observe 'icon', (icon) ->
       if icon and hex = codes[icon]
-        @set 'code', format.hexToDecimal hex
+        @set 'code', format.hexToDec hex
       else
         @set 'code', null

@@ -9,7 +9,6 @@ milestones = require '../../modules/github/milestones.coffee'
 issues     = require '../../modules/github/issues.coffee'
 mediator   = require '../../modules/mediator.coffee'
 
-
 module.exports = Ractive.extend
 
   'name': 'views/pages/index'
@@ -32,28 +31,41 @@ module.exports = Ractive.extend
 
     done = do system.async
 
+    # For all projects.
     async.map projects.data.list, (project, cb) ->
-      # Skip if we have milestones already.
-      return cb null, project if project.milestones
-      # Otherwise fetch them.
-      milestones.fetchAll project, (error, list) ->
+      # Fetch their milestones.
+      milestones.fetchAll project, (err, list) ->
         # Save the error if project does not exist.
-        return cb null, _.extend project, { error } if error
-        # Now map in the issues.
-        async.map list, (milestone, cb) ->
-          issues.fetchAll _.extend(project, { 'milestone': milestone.number }), (err, obj) ->
-            cb err, _.extend milestone, { 'issues': obj }
-        , (error, list) ->
-          delete project.milestone # from fetchAll or do deep clone
-          # Save any errors.
-          return cb null, _.extend project, { error } if error
-          # Otherwise add the milestones.
-          cb null, _.extend project, { 'milestones': list }
+        if err
+          projects.saveError project, err
+          return do cb
 
-    , (err, data) =>
-      # TODO: Errors are saved on projects. Show them as a notification here too.
-      # Save the projects.
+        # Now add in the issues.
+        async.each list, (milestone, cb) ->
+          # Do we have this milestone already?
+          return cb null if _.find project.milestones, ({ number }) ->
+            milestone.number is number
+          
+          # OK fetch all the issues for this milestone then.
+          issues.fetchAll
+            'owner': project.owner
+            'name': project.name
+            'milestone': milestone.number
+          , (err, obj) ->
+            # Save any errors on the project.
+            if err
+              projects.saveError project, err
+              return do cb
+
+            # Add in the issues to the milestone.
+            _.extend milestone, { 'issues': obj }
+            # Save the milestone.
+            projects.addMilestone project, milestone
+            # Done
+            do cb
+        
+        , cb
+
+    , =>
       do done
-      @set
-        'projects.list': data
-        'ready': yes
+      @set 'ready', yes
