@@ -4,11 +4,15 @@ config   = require '../models/config.coffee'
 mediator = require '../modules/mediator.coffee'
 Model    = require '../utils/model.coffee'
 date     = require '../utils/date.coffee'
+search   = require '../utils/search.coffee'
 user     = require './user.coffee'
 
 module.exports = new Model
 
   'name': 'models/projects'
+
+  'data':
+    'sortKey': 'priority'
 
   find: (project) ->
     _.find @data.list, project
@@ -32,6 +36,19 @@ module.exports = new Model
   clear: ->
     @set 'list', []
 
+  # Sort an already sorted index.
+  sort: ->
+    # Get or initialize the index.
+    index = @data.index or []
+
+    for p in @data.list
+      for m in p.milestones
+        # Run a comparator here inserting into index.
+        @data.sortKey
+
+    # Save the index.
+    @set 'index', index
+
   onconstruct: ->
     mediator.on '!projects/add',    _.bind @add, @
     mediator.on '!projects/clear',  _.bind @clear, @
@@ -40,7 +57,16 @@ module.exports = new Model
     # Init the projects.
     @set 'list', lscache.get('projects') or []
 
-    # Persist projects in local storage (sans milestones).
     @observe 'list', (projects) ->
+      # Persist projects in local storage (sans milestones).
       lscache.set 'projects', _.pluckMany projects, [ 'owner', 'name' ]
+      # Update the index.
+      do @sort
     , 'init': no
+
+    # Reset our index and re-sort.
+    @observe 'sortKey', ->
+      # Use pop as Ractive is glitchy.
+      @pop 'index' while @data.index.length
+      # Run the sort again.
+      do @sort
