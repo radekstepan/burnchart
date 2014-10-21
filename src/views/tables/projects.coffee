@@ -3,6 +3,7 @@
 mediator = require '../../modules/mediator.coffee'
 format   = require '../../utils/format.coffee'
 Icons    = require '../icons.coffee'
+projects = require '../../models/projects.coffee'
 
 module.exports = Ractive.extend
 

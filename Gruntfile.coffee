@@ -47,6 +47,7 @@ module.exports = (grunt) ->
           'vendor/d3-tip/index.js'
           'vendor/marked/lib/marked.js'
           'vendor/director/build/director.js'
+          'vendor/sorted-index-compare/index.js'
         ]
         dest: 'public/js/vendor.js'
         options:

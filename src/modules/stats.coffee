@@ -1,3 +1,5 @@
+{ moment }  = require './vendor.coffee'
+
 # Progress in %.
 progress = (a, b) -> 100 * (a / (b + a))
 
@@ -17,9 +19,11 @@ module.exports = (milestone) ->
     # Progress in time.
     time = progress b - a, c - b
 
-    isOnTime = points > time
+    # How many days is 1% of the time?
+    days = (moment(a).diff(moment(b), 'days')) / 100
 
     {
-      'isOnTime': isOnTime
+      'isOnTime': points > time
       'progress': { points, time }
+      'days':     days
     }

@@ -12,3 +12,4 @@ module.exports =
   'director':
     'Router': window.Router
   'lscache': window.lscache
+  'sortedIndexCmp': window.sortedIndex

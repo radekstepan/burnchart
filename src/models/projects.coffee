@@ -1,4 +1,4 @@
-{ _, lscache } = require '../modules/vendor.coffee'
+{ _, lscache, sortedIndexCmp } = require '../modules/vendor.coffee'
 
 config   = require '../models/config.coffee'
 mediator = require '../modules/mediator.coffee'
@@ -14,6 +14,22 @@ module.exports = new Model
 
   'data':
     'sortBy': 'priority'
+
+  # Return a sort order comparator.
+  comparator: ->
+    switch @data.sortBy
+      # Priority comparator from most delayed in days.
+      when 'priority' then ([ i, j ], b) =>
+        # Convert existing index into actual proejct milestone.
+        a = @data.list[i].milestones[j]
+        # By progress points.
+        $ = { 'progress': { 'points': 0 } }
+        a.stats ?= $ ; b.progress ?= $
+
+        a.stats.progress.points - b.stats.progress.points
+      
+      # Whatever sort order...
+      else -> 0
 
   find: (project) ->
     _.find @data.list, project
@@ -61,11 +77,13 @@ module.exports = new Model
     # Get or initialize the index.
     index = @data.index or []
 
-    for p in @data.list
+    for p, i in @data.list
       continue unless p.milestones?
-      for m in p.milestones
+      for m, j in p.milestones
         # Run a comparator here inserting into index.
-        console.log @data.sortBy, m
+        idx = sortedIndexCmp index, m, do @comparator
+        # Log.
+        index.splice idx, 0, [ i, j ]
 
     # Save the index.
     @set 'index', index
@@ -86,7 +104,7 @@ module.exports = new Model
     , 'init': no
 
     # Reset our index and re-sort.
-    @observe 'sortKey', ->
+    @observe 'sortBy', ->
       # Use pop as Ractive is glitchy.
       ( @pop 'index' while @data.index.length ) if @data.index?
       # Run the sort again.
