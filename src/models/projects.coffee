@@ -5,7 +5,6 @@ mediator = require '../modules/mediator.coffee'
 stats    = require '../modules/stats.coffee'
 Model    = require '../utils/model.coffee'
 date     = require '../utils/date.coffee'
-search   = require '../utils/search.coffee'
 user     = require './user.coffee'
 
 module.exports = new Model
@@ -13,21 +12,30 @@ module.exports = new Model
   'name': 'models/projects'
 
   'data':
-    'sortBy': 'priority'
+    'sortBy': 'progress'
 
   # Return a sort order comparator.
   comparator: ->
+    { list } = @data
+
+    # Convert existing index into actual project milestone.
+    deIdx = (fn) =>
+      ([ i, j ], b) =>
+        fn list[i].milestones[j], b
+
     switch @data.sortBy
-      # Priority comparator from most delayed in days.
-      when 'priority' then ([ i, j ], b) =>
-        # Convert existing index into actual proejct milestone.
-        a = @data.list[i].milestones[j]
+      # From highest progress.
+      when 'progress' then deIdx (a, b) ->
         # By progress points.
         $ = { 'progress': { 'points': 0 } }
         a.stats ?= $ ; b.progress ?= $
 
         a.stats.progress.points - b.stats.progress.points
-      
+
+      # From most delayed in days.
+      when 'priority' then deIdx (a, b) =>
+        0
+
       # Whatever sort order...
       else -> 0
 
