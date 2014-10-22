@@ -4,15 +4,7 @@
 
 - [ ] use Browserify as an app build pipeline
 - [ ] sort milestones on index and project page based on priority (most delayed first); Trend - actual = difference in days and those overdue come first
-
-1. in a projects collection observe the list prop and resort index; already sorted flag passed in as yes)
-1. The index is not already sorted when sort order changes
-1. index is a list ofls and its milestones in two loops to extract and sort using function
-1. tables loop index getting the obj from projects collection and render
-1. sort order link toggles available sort by keys and changes the current key
-1. use while loop and pop when resetting the index
-1. third number in tuples be the priority number so we can insert into already sorted
-1. leave the code open so we can remove a project or milestone later on
+- [ ] sort on name using https://github.com/npm/node-semver/blob/master/semver.js if detected
 
 ###Git
 

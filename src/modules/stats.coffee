@@ -20,7 +20,7 @@ module.exports = (milestone) ->
     time = progress b - a, c - b
 
     # How many days is 1% of the time?
-    days = (moment(a).diff(moment(b), 'days')) / 100
+    days = (moment(b).diff(moment(a), 'days')) / 100
 
     {
       'isOnTime': points > time

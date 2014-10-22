@@ -12,7 +12,7 @@ module.exports = new Model
   'name': 'models/projects'
 
   'data':
-    'sortBy': 'progress'
+    'sortBy': 'priority'
 
   # Return a sort order comparator.
   comparator: ->
@@ -23,17 +23,34 @@ module.exports = new Model
       ([ i, j ], b) =>
         fn list[i].milestones[j], b
 
+    # Set default fields, in place.
+    defaults = (arr, hash) ->
+      for item in arr
+        for k, v of hash
+          ref = item
+          for p, i in keys = k.split '.'
+            if i is keys.length - 1
+              ref[p] ?= v
+            else
+              ref = ref[p] ?= {}
+
+    # The actual fn selection.
     switch sortBy
       # From highest progress points.
       when 'progress' then deIdx (a, b) ->
-        $ = { 'progress': { 'points': 0 } }
-        a.stats ?= $ ; b.progress ?= $
-
+        defaults [ a, b ], { 'stats.progress.points': 0 }
+        # Simple points difference.
         a.stats.progress.points - b.stats.progress.points
 
       # From most delayed in days.
       when 'priority' then deIdx (a, b) ->
-        throw 'Not implemented'
+        # Milestones with no deadline are always at the "beginning".
+        defaults [ a, b ], { 'stats.progress.time': 0, 'stats.days': 1e3 }
+        # % difference in progress times the number of days ahead or behind.
+        [ $a, $b ] = _.map [ a, b ], ({ stats }) ->
+          (stats.progress.points - stats.progress.time) * stats.days
+
+        $b - $a
 
       # The "whatever" sort order...
       else -> 0
