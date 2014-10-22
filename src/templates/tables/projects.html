@@ -24,12 +24,12 @@
                     <a class="project" href="#{{owner}}/{{name}}">{{owner}}/{{name}}</a>
                   </td>
                   <td>
-                    <a class="milestone" href="#{{owner}}/{{name}}/{{milestone.number}}">{{ title }}</a>
+                    <a class="milestone" href="#{{owner}}/{{name}}/{{milestone.number}}">{{ milestone.title }}</a>
                   </td>
                   <td style="width:1%">
                     <div class="progress">
                       <span class="percent">{{Math.floor(milestone.stats.progress.points)}}%</span>
-                      <span class="due">{{{ format.due(due_on) }}}</span>
+                      <span class="due">{{{ format.due(milestone.due_on) }}}</span>
                       <div class="outer bar">
                         <div class="inner bar {{(milestone.stats.isOnTime) ? 'green' : 'red'}}" style="width:{{milestone.stats.progress.points}}%"></div>
                       </div>

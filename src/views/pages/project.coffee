@@ -17,6 +17,7 @@ module.exports = Ractive.extend
   'components': { Milestones }
 
   'data':
+    'projects': projects
     'ready': no
 
   onrender: ->

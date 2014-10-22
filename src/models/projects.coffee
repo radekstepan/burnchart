@@ -16,27 +16,26 @@ module.exports = new Model
 
   # Return a sort order comparator.
   comparator: ->
-    { list } = @data
+    { list, sortBy } = @data
 
     # Convert existing index into actual project milestone.
     deIdx = (fn) =>
       ([ i, j ], b) =>
         fn list[i].milestones[j], b
 
-    switch @data.sortBy
-      # From highest progress.
+    switch sortBy
+      # From highest progress points.
       when 'progress' then deIdx (a, b) ->
-        # By progress points.
         $ = { 'progress': { 'points': 0 } }
         a.stats ?= $ ; b.progress ?= $
 
         a.stats.progress.points - b.stats.progress.points
 
       # From most delayed in days.
-      when 'priority' then deIdx (a, b) =>
-        0
+      when 'priority' then deIdx (a, b) ->
+        throw 'Not implemented'
 
-      # Whatever sort order...
+      # The "whatever" sort order...
       else -> 0
 
   find: (project) ->
@@ -53,18 +52,23 @@ module.exports = new Model
   findIndex: ({ owner, name }) ->
     _.findIndex @data.list, { owner, name }
 
+  # Add a milestone for a project.
   addMilestone: (project, milestone) ->
     # Add in the stats.
     _.extend milestone, { 'stats': stats(milestone) }
+    # We are supposed to exist already.
+    throw 500 if (i = @findIndex(project)) < 0 
 
-    if (idx = @findIndex(project)) > -1
-      if project.milestones?
-        @push "list.#{idx}.milestones", milestone
-      else
-        @set "list.#{idx}.milestones", [ milestone ]
+    # Have milestones already?
+    if project.milestones?
+      @push "list.#{i}.milestones", milestone
+      j = @data.list[i].milestones.length - 1 # index in milestones
     else
-      # We are supposed to exist already.
-      throw 500
+      @set "list.#{i}.milestones", [ milestone ]
+      j = 0  # index in milestones
+
+    # Now index this milestone.
+    @sort [ i, j ], milestone
 
   # Save an error from loading milestones or issues
   saveError: (project, err) ->
@@ -80,18 +84,25 @@ module.exports = new Model
   clear: ->
     @set 'list', []
 
-  # Sort an already sorted index.
-  sort: ->
+  # Sort/or insert into an already sorted index.
+  sort: (ref, m) ->
     # Get or initialize the index.
     index = @data.index or []
 
-    for p, i in @data.list
-      continue unless p.milestones?
-      for m, j in p.milestones
-        # Run a comparator here inserting into index.
-        idx = sortedIndexCmp index, m, do @comparator
-        # Log.
-        index.splice idx, 0, [ i, j ]
+    # Do one.
+    if m
+      idx = sortedIndexCmp index, m, do @comparator
+      index.splice idx, 0, ref
+    # Do all.
+    else
+      for p, i in @data.list
+        # TODO: need to show projects that failed too...
+        continue unless p.milestones?
+        for m, j in p.milestones
+          # Run a comparator here inserting into index.
+          idx = sortedIndexCmp index, m, do @comparator
+          # Log.
+          index.splice idx, 0, [ i, j ]
 
     # Save the index.
     @set 'index', index
@@ -104,16 +115,14 @@ module.exports = new Model
     # Init the projects.
     @set 'list', lscache.get('projects') or []
 
+    # Persist projects in local storage (sans milestones).
     @observe 'list', (projects) ->
-      # Persist projects in local storage (sans milestones).
       lscache.set 'projects', _.pluckMany projects, [ 'owner', 'name' ]
-      # Update the index.
-      do @sort
     , 'init': no
 
     # Reset our index and re-sort.
     @observe 'sortBy', ->
-      # Use pop as Ractive is glitchy.
+      # Use pop as Ractive is glitchy when resetting arrays.
       ( @pop 'index' while @data.index.length ) if @data.index?
       # Run the sort again.
       do @sort

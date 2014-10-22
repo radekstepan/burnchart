@@ -2,8 +2,14 @@ install:
 	npm install
 	bower install
 
-build:
+build-app:
 	./node_modules/.bin/browserify -e ./src/app.coffee -o public/js/app.js -d
+
+watch-app:
+	./node_modules/.bin/watchify -e ./src/app.coffee -o public/js/app.js -d	
+
+build:
+	build-app
 	grunt
 
 serve:
