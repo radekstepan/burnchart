@@ -48,6 +48,7 @@ module.exports = (grunt) ->
           'vendor/marked/lib/marked.js'
           'vendor/director/build/director.js'
           'vendor/sorted-index-compare/index.js'
+          'node-semver/semver.js'
         ]
         dest: 'public/js/vendor.js'
         options:

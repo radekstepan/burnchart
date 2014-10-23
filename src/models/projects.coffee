@@ -1,4 +1,4 @@
-{ _, lscache, sortedIndexCmp } = require '../modules/vendor.coffee'
+{ _, lscache, sortedIndexCmp, semver } = require '../modules/vendor.coffee'
 
 config   = require '../models/config.coffee'
 mediator = require '../modules/mediator.coffee'
@@ -12,7 +12,7 @@ module.exports = new Model
   'name': 'models/projects'
 
   'data':
-    'sortBy': 'priority'
+    'sortBy': 'name'
 
   # Return a sort order comparator.
   comparator: ->
@@ -20,8 +20,8 @@ module.exports = new Model
 
     # Convert existing index into actual project milestone.
     deIdx = (fn) =>
-      ([ i, j ], b) =>
-        fn list[i].milestones[j], b
+      ([ i, j ], rest...) =>
+        fn.apply @, [ [ list[i], list[i].milestones[j] ] ].concat rest
 
     # Set default fields, in place.
     defaults = (arr, hash) ->
@@ -37,20 +37,31 @@ module.exports = new Model
     # The actual fn selection.
     switch sortBy
       # From highest progress points.
-      when 'progress' then deIdx (a, b) ->
-        defaults [ a, b ], { 'stats.progress.points': 0 }
+      when 'progress' then deIdx ([ aP, aM ], [ bP, bM ]) ->
+        defaults [ aM, bM ], { 'stats.progress.points': 0 }
         # Simple points difference.
-        a.stats.progress.points - b.stats.progress.points
+        aM.stats.progress.points - bM.stats.progress.points
 
       # From most delayed in days.
-      when 'priority' then deIdx (a, b) ->
+      when 'priority' then deIdx ([ aP, aM ], [ bP, bM ]) ->
         # Milestones with no deadline are always at the "beginning".
-        defaults [ a, b ], { 'stats.progress.time': 0, 'stats.days': 1e3 }
+        defaults [ aM, bM ], { 'stats.progress.time': 0, 'stats.days': 1e3 }
         # % difference in progress times the number of days ahead or behind.
-        [ $a, $b ] = _.map [ a, b ], ({ stats }) ->
+        [ $a, $b ] = _.map [ aM, bM ], ({ stats }) ->
           (stats.progress.points - stats.progress.time) * stats.days
 
         $b - $a
+
+      # Based on project then milestone name including semver.
+      when 'name' then deIdx ([ aP, aM ], [ bP, bM ]) ->
+        return owner if owner = bP.owner.localeCompare aP.owner
+        return name if name = bP.name.localeCompare aP.name
+        # Try semver.
+        if semver.valid(bM.title) and semver.valid(aM.title)
+          semver.gt bM.title, aM.title
+        # Back to string compare.
+        else
+          bM.title.localeCompare aM.title
 
       # The "whatever" sort order...
       else -> 0
@@ -85,7 +96,7 @@ module.exports = new Model
       j = 0  # index in milestones
 
     # Now index this milestone.
-    @sort [ i, j ], milestone
+    @sort [ i, j ], [ project, milestone ]
 
   # Save an error from loading milestones or issues
   saveError: (project, err) ->
@@ -102,13 +113,13 @@ module.exports = new Model
     @set 'list', []
 
   # Sort/or insert into an already sorted index.
-  sort: (ref, m) ->
+  sort: (ref, data) ->
     # Get or initialize the index.
     index = @data.index or []
 
     # Do one.
-    if m
-      idx = sortedIndexCmp index, m, do @comparator
+    if ref
+      idx = sortedIndexCmp index, data, do @comparator
       index.splice idx, 0, ref
     # Do all.
     else
@@ -117,7 +128,7 @@ module.exports = new Model
         continue unless p.milestones?
         for m, j in p.milestones
           # Run a comparator here inserting into index.
-          idx = sortedIndexCmp index, m, do @comparator
+          idx = sortedIndexCmp index, data, do @comparator
           # Log.
           index.splice idx, 0, [ i, j ]
 
@@ -143,3 +154,4 @@ module.exports = new Model
       ( @pop 'index' while @data.index.length ) if @data.index?
       # Run the sort again.
       do @sort
+    , 'init': no

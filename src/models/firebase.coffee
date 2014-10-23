@@ -16,7 +16,7 @@ module.exports = new Model
     # Login.
     @auth.login config.data.provider,
       'rememberMe': yes
-      'scope': 'public_repo'
+      'scope': 'private_repo'
 
   # Logout a user.
   logout: ->

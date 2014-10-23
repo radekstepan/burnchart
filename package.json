@@ -27,5 +27,8 @@
       "coffeeify",
       "ractivate"
     ]
+  },
+  "browser": {
+    "semver": "./vendor/node-semver/semver.js"
   }
 }

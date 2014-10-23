@@ -17,6 +17,7 @@
     "ractive-ractive": "rstacruz/ractive-ractive",
     "ractive-transitions-fade": "~0.1.2",
     "sorted-index-compare": "6wunderkinder/sortedindex-compare",
-    "superagent": "~0.19.0"
+    "superagent": "~0.19.0",
+    "node-semver": "npm/node-semver#~4.1.0"
   }
 }

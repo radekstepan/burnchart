@@ -13,3 +13,4 @@ module.exports =
     'Router': window.Router
   'lscache': window.lscache
   'sortedIndexCmp': window.sortedIndex
+  'semver': require 'semver'
