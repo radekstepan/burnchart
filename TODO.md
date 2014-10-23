@@ -3,8 +3,6 @@
 ##Release: Assembly
 
 - [ ] use Browserify as an app build pipeline
-- [ ] sort milestones on index and project page based on priority (most delayed first); Trend - actual = difference in days and those overdue come first
-- [ ] sort on name using https://github.com/npm/node-semver/blob/master/semver.js if detected
 
 ###Git
 
@@ -33,6 +31,7 @@
 
 ###Misc
 
+- [ ] extend from Eventful object that disposes of mediator subscriptions on teardown
 - [ ] the deploy script needs to disable autoreload; `make watch` should start a static web server and also launch a build script with a flag saying which files to include in the head (uncompressed, with live reload); standard build script should minify scripts
 - [ ] vendor module so we can proxy require all `window` libs
 - [ ] show a countdown clock towards the end of the milestone or show overdue

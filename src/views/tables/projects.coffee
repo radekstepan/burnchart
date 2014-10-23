@@ -1,18 +1,7 @@
-{ Ractive } = require '../../modules/vendor.coffee'
+Table = require './table.coffee'
 
-mediator = require '../../modules/mediator.coffee'
-format   = require '../../utils/format.coffee'
-Icons    = require '../icons.coffee'
-projects = require '../../models/projects.coffee'
-
-module.exports = Ractive.extend
+module.exports = Table.extend
 
   'name': 'views/projects'
 
   'template': require '../../templates/tables/projects.html'
-
-  'data': { format }
-
-  'components': { Icons }
-
-  'adapt': [ Ractive.adaptors.Ractive ]

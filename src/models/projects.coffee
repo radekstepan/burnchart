@@ -12,7 +12,10 @@ module.exports = new Model
   'name': 'models/projects'
 
   'data':
-    'sortBy': 'name'
+    # Current sort order.
+    'sortBy': 'priority'
+    # Sort functions.
+    'sortFns': [ 'progress', 'priority', 'name' ]
 
   # Return a sort order comparator.
   comparator: ->
@@ -128,7 +131,7 @@ module.exports = new Model
         continue unless p.milestones?
         for m, j in p.milestones
           # Run a comparator here inserting into index.
-          idx = sortedIndexCmp index, data, do @comparator
+          idx = sortedIndexCmp index, [ p, m ], do @comparator
           # Log.
           index.splice idx, 0, [ i, j ]
 
@@ -151,7 +154,7 @@ module.exports = new Model
     # Reset our index and re-sort.
     @observe 'sortBy', ->
       # Use pop as Ractive is glitchy when resetting arrays.
-      ( @pop 'index' while @data.index.length ) if @data.index?
+      @set 'index', null
       # Run the sort again.
       do @sort
     , 'init': no
