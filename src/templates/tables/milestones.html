@@ -10,24 +10,22 @@
 
         {{# { p: projects.list[index[0]] } }}
           {{#if p.owner == project.owner && p.name == project.name }}
-
-              {{# { milestone: project.milestones[index[1]] } }}
-                <tr>
-                  <td>
-                    <a class="milestone" href="#{{project.owner}}/{{project.name}}/{{milestone.number}}">{{ milestone.title }}</a>
-                  </td>
-                  <td style="width:1%">
-                    <div class="progress">
-                      <span class="percent">{{Math.floor(milestone.stats.progress.points)}}%</span>
-                      <span class="due">{{{ format.due(milestone.due_on) }}}</span>
-                      <div class="outer bar">
-                        <div class="inner bar {{(milestone.stats.isOnTime) ? 'green' : 'red'}}" style="width:{{milestone.stats.progress.points}}%"></div>
-                      </div>
+            {{# { milestone: project.milestones[index[1]] } }}
+              <tr>
+                <td>
+                  <a class="milestone" href="#{{project.owner}}/{{project.name}}/{{milestone.number}}">{{ milestone.title }}</a>
+                </td>
+                <td style="width:1%">
+                  <div class="progress">
+                    <span class="percent">{{Math.floor(milestone.stats.progress.points)}}%</span>
+                    <span class="due">{{{ format.due(milestone.due_on) }}}</span>
+                    <div class="outer bar">
+                      <div class="inner bar {{(milestone.stats.isOnTime) ? 'green' : 'red'}}" style="width:{{milestone.stats.progress.points}}%"></div>
                     </div>
-                  </td>
-                </tr>
-              {{/}}
-
+                  </div>
+                </td>
+              </tr>
+            {{/}}
           {{/if}}
         {{/}}
 
