@@ -113,7 +113,7 @@ module.exports = new Model
       throw 500  
 
   clear: ->
-    @set 'list', []
+    @set 'list': [], 'index': []
 
   # Sort/or insert into an already sorted index.
   sort: (ref, data) ->

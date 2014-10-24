@@ -56,6 +56,7 @@
 - [ ] app icon like http://thenounproject.com/term/fire/50966/
 - [ ] tell people if they have no due date
 - [ ] calculate left margin based on the total number of points text width
+- [ ] responsive layout
 
 ###Customers
 
