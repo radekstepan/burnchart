@@ -21,7 +21,7 @@
         {{# { project: projects.list[index[0]] } }}
           {{#with project}}
             {{# { milestone: project.milestones[index[1]] } }}
-              <tr>
+              <tr class="{{#if milestone.stats.isDone}}done{{/if}}">
                 <td class="repo">
                   <a class="project" href="#{{owner}}/{{name}}">{{owner}}/{{name}}</a>
                 </td>
@@ -31,7 +31,7 @@
                 <td style="width:1%">
                   <div class="progress">
                     <span class="percent">{{Math.floor(milestone.stats.progress.points)}}%</span>
-                    <span class="due">{{{ format.due(milestone.due_on) }}}</span>
+                    <span class="due {{#if milestone.stats.isOverdue}}red{{/if}}">{{{ format.due(milestone.due_on) }}}</span>
                     <div class="outer bar">
                       <div class="inner bar {{(milestone.stats.isOnTime) ? 'green' : 'red'}}" style="width:{{milestone.stats.progress.points}}%"></div>
                     </div>
@@ -50,58 +50,3 @@
     <a href="#"><Icons icon="cog"/> Edit</a>
   </div>
 </div>
-
-<!--
-  <tr>
-    <td><a class="repo" href="#">radekstepan/disposable</a></td>
-    <td><span class="milestone">Milestone 1.0 <span class="icon down-open"></span></td>
-    <td>
-      <div class="progress">
-        <span class="percent">40%</span>
-        <span class="due">due on Friday</span>
-        <div class="outer bar">
-          <div class="inner bar red" style="width:40%"></div>
-        </div>
-      </div>
-    </td>
-  </tr>
-  <tr class="done">
-    <td><a class="repo" href="#">radekstepan/burnchart</a></td>
-    <td><span class="milestone">Beta Milestone <span class="icon down-open"></span></a></td>
-    <td>
-      <div class="progress">
-        <span class="percent">100%</span>
-        <span class="due">due tomorrow</span>
-        <div class="outer bar">
-          <div class="inner bar green" style="width:100%"></div>
-        </div>
-      </div>
-    </td>
-  </tr>
-  <tr>
-    <td><a class="repo" href="#">intermine/intermine</a></td>
-    <td><span class="milestone">Emma Release 96 <span class="icon down-open"></span></a></td>
-    <td>
-      <div class="progress">
-        <span class="percent">27%</span>
-        <span class="due">due in 2 weeks</span>
-        <div class="outer bar">
-          <div class="inner bar red" style="width:27%"></div>
-        </div>
-      </div>
-    </td>
-  </tr>
-  <tr>
-    <td><a class="repo" href="#">microsoft/windows</a></td>
-    <td><span class="milestone">RC 9 <span class="icon down-open"></span></a></td>
-    <td>
-      <div class="progress">
-        <span class="percent">90%</span>
-        <span class="due red">overdue by a month</span>
-        <div class="outer bar">
-          <div class="inner bar red" style="width:90%"></div>
-        </div>
-      </div>
-    </td>
-  </tr>
--->
