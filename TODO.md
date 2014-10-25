@@ -2,8 +2,6 @@
 
 ##Release: Assembly
 
-- [ ] use Browserify as an app build pipeline
-
 ###Git
 
 - [ ] create notes about how original people can upgrade to burnchart
@@ -38,7 +36,6 @@
 - [ ] trigger success topbar when we have completed a milestone on chart page; show plain when we are behind
 - [ ] on chart page show a little progress bar in the title
 - [ ] add a chart straight from the hero banner
-- [ ]
 
 ##Backlog
 

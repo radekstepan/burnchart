@@ -1,22 +1,6 @@
 module.exports = (grunt) ->
   grunt.initConfig
     pkg: grunt.file.readJSON("package.json")
-    
-    clean: [ 'public/js' ]
-
-    browserify:
-      app:
-        src: 'src/app.coffee'
-        dest: 'public/js/app.js'
-        options:
-          transform: [
-            # CoffeeScript.
-            'coffeeify'
-            # Mustaches.
-            'ractivate'
-          ]
-        browserifyOptions:
-          debug: yes
 
     stylus:
       style:
@@ -63,31 +47,11 @@ module.exports = (grunt) ->
         ]
         dest: 'public/css/app.bundle.css'
 
-    uglify:
-      files:
-        'public/js/app.min.js': 'public/js/app.js'
-        'public/js/app.bundle.min.js': 'public/js/app.bundle.js'
-
-    cssmin:
-      files:
-        'public/css/app.min.css': 'public/css/app.css'
-        'public/css/app.bundle.min.css': 'public/css/app.bundle.css'
-
   grunt.loadNpmTasks('grunt-browserify')
   grunt.loadNpmTasks('grunt-contrib-stylus')
   grunt.loadNpmTasks('grunt-contrib-concat')
-  grunt.loadNpmTasks('grunt-contrib-uglify')
-  grunt.loadNpmTasks('grunt-contrib-cssmin')
-  grunt.loadNpmTasks('grunt-contrib-clean')
 
   grunt.registerTask('default', [
-    #'clean'
-    #'browserify'
     'stylus'
     'concat'
-  ])
-
-  grunt.registerTask('minify', [
-    'uglify'
-    'cssmin'
   ])

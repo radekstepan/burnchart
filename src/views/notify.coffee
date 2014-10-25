@@ -1,4 +1,4 @@
-{ _, Ractive, d3 } = require '../modules/vendor.coffee'
+{ Ractive, _, d3 } = require '../modules/vendor.coffee'
 
 mediator = require '../modules/mediator.coffee'
 Icons    = require './icons.coffee'

@@ -8,8 +8,7 @@ build-app:
 watch-app:
 	./node_modules/.bin/watchify -e ./src/app.coffee -o public/js/app.js -d	
 
-build:
-	build-app
+build-vendor:
 	grunt
 
 serve:
@@ -17,5 +16,3 @@ serve:
 
 deploy:
 	firebase deploy
-
-.PHONY: build
