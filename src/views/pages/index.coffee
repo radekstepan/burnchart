@@ -7,7 +7,6 @@ projects   = require '../../models/projects.coffee'
 system     = require '../../models/system.coffee'
 milestones = require '../../modules/github/milestones.coffee'
 issues     = require '../../modules/github/issues.coffee'
-mediator   = require '../../modules/mediator.coffee'
 
 module.exports = Ractive.extend
 

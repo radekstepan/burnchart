@@ -1,9 +1,8 @@
 { _, lscache, sortedIndexCmp, semver } = require '../modules/vendor.coffee'
 
+Model    = require '../utils/ractive/model.coffee'
 config   = require '../models/config.coffee'
-mediator = require '../modules/mediator.coffee'
 stats    = require '../modules/stats.coffee'
-Model    = require '../utils/model.coffee'
 date     = require '../utils/date.coffee'
 user     = require './user.coffee'
 
@@ -139,8 +138,8 @@ module.exports = new Model
     @set 'index', index
 
   onconstruct: ->
-    mediator.on '!projects/add',    _.bind @add, @
-    mediator.on '!projects/clear',  _.bind @clear, @
+    @subscribe '!projects/add',    @add, @
+    @subscribe '!projects/clear',  @clear, @
 
   onrender: ->
     # Init the projects.

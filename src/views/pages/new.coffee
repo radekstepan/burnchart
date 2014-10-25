@@ -1,11 +1,11 @@
 { _, Ractive } = require '../../modules/vendor.coffee'
 
-mediator = require '../../modules/mediator.coffee'
+Eventful   = require '../../utils/ractive/eventful.coffee'
 system   = require '../../models/system.coffee'
 user     = require '../../models/user.coffee'
 key      = require '../../utils/key.coffee'
 
-module.exports = Ractive.extend
+module.exports = Eventful.extend
 
   'name': 'views/pages/new'
 
@@ -24,10 +24,10 @@ module.exports = Ractive.extend
     done = do system.async
 
     # Save repo.
-    mediator.fire '!projects/add', { owner, name }, (err) ->
+    @publish '!projects/add', { owner, name }, (err) =>
       do done
 
-      mediator.fire '!app/notify',
+      @publish '!app/notify',
         'text': err or "Project #{value} saved."
         'type': if err then 'error' else 'success'
 

@@ -1,11 +1,11 @@
 { Ractive, _, d3 } = require '../modules/vendor.coffee'
 
-mediator = require '../modules/mediator.coffee'
+Eventful = require '../utils/ractive/eventful.coffee'
 Icons    = require './icons.coffee'
 
 HEIGHT = 68 # height of div in px
 
-module.exports = Ractive.extend
+module.exports = Eventful.extend
 
   'name': 'views/notify'
 
@@ -56,8 +56,8 @@ module.exports = Ractive.extend
   
   onconstruct: ->
     # On outside messages.
-    mediator.on '!app/notify', _.bind @show, @
-    mediator.on '!app/notify/hide', _.bind @hide, @
+    @subscribe '!app/notify', @show, @
+    @subscribe '!app/notify/hide', @hide, @
 
     # Close us prematurely...
     @on 'close', @hide

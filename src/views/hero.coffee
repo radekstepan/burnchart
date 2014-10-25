@@ -1,7 +1,6 @@
 { Ractive } = require '../modules/vendor.coffee'
 
-mediator = require '../modules/mediator.coffee'
-Icons    = require './icons.coffee'
+Icons = require './icons.coffee'
 
 module.exports = Ractive.extend
 

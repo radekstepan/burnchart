@@ -1,14 +1,14 @@
-{ _, Ractive, async } = require '../../modules/vendor.coffee'
+{ _, async } = require '../../modules/vendor.coffee'
 
 Milestones = require '../tables/milestones.coffee'
 
+Eventful   = require '../../utils/ractive/eventful.coffee'
 projects   = require '../../models/projects.coffee'
 system     = require '../../models/system.coffee'
 milestones = require '../../modules/github/milestones.coffee'
 issues     = require '../../modules/github/issues.coffee'
-mediator   = require '../../modules/mediator.coffee'
 
-module.exports = Ractive.extend
+module.exports = Eventful.extend
 
   'name': 'views/pages/project'
 
@@ -63,7 +63,7 @@ module.exports = Ractive.extend
       fetchIssues
     ], (err) =>
       do done
-      return mediator.fire '!app/notify', {
+      return @publish '!app/notify', {
         'text': do err.toString
         'type': 'alert'
         'system': yes

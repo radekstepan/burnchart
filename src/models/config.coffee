@@ -1,4 +1,4 @@
-Model = require '../utils/model.coffee'
+Model = require '../utils/ractive/model.coffee'
 
 module.exports = new Model
 

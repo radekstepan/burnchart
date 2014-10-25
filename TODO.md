@@ -12,9 +12,6 @@
 
 ###Error Handling
 
-- [ ] save in memory only if no `localStorage`, warn about that
-- [ ] can we get more than 1 notification at a time? stack them and show just one text
-- [ ] Check location.hash is supported
 - [ ] move tests from `radekstepan/github-burndown-chart`
 
 ###Customers
@@ -23,13 +20,8 @@
 - [ ] provide a documentation site (because we ref it from hero)
 - [ ] track users/make it easy for people to leave feedback
 
-###Style
-
-- [ ] make it easy to go back to project page from a chart page, show it in the header
-
 ###Misc
 
-- [ ] extend from Eventful object that disposes of mediator subscriptions on teardown
 - [ ] the deploy script needs to disable autoreload; `make watch` should start a static web server and also launch a build script with a flag saying which files to include in the head (uncompressed, with live reload); standard build script should minify scripts
 - [ ] vendor module so we can proxy require all `window` libs
 - [ ] show a countdown clock towards the end of the milestone or show overdue
@@ -54,6 +46,7 @@
 - [ ] tell people if they have no due date
 - [ ] calculate left margin based on the total number of points text width
 - [ ] responsive layout
+- [ ] show project name on the milestone page, in the title
 
 ###Customers
 
@@ -70,6 +63,7 @@
 - [ ] deal with Firebase timing out, are we still logged-in?
 - [ ] check that we have not run out of requests to make
 - [ ] what if milestone does not match our strategy?
+- [ ] web storage and location hash supported by 93% of browsers; good enough?
 
 ###Notifications
 
