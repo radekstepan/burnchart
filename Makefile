@@ -6,7 +6,7 @@ build-app:
 	./node_modules/.bin/browserify -e ./src/app.coffee -o public/js/app.js -d
 
 watch-app:
-	./node_modules/.bin/watchify -e ./src/app.coffee -o public/js/app.js -d	
+	./node_modules/.bin/watchify -e ./src/app.coffee -o public/js/app.js -d	 -v
 
 build-vendor:
 	grunt

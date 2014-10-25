@@ -23,9 +23,6 @@
 ###Misc
 
 - [ ] the deploy script needs to disable autoreload; `make watch` should start a static web server and also launch a build script with a flag saying which files to include in the head (uncompressed, with live reload); standard build script should minify scripts
-- [ ] vendor module so we can proxy require all `window` libs
-- [ ] show a countdown clock towards the end of the milestone or show overdue
-- [ ] trigger success topbar when we have completed a milestone on chart page; show plain when we are behind
 - [ ] on chart page show a little progress bar in the title
 - [ ] add a chart straight from the hero banner
 

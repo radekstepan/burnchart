@@ -65,6 +65,18 @@ module.exports = Eventful.extend
       # Save the milestone with issues.
       projects.addMilestone project, data
 
+      # Done?
+      @publish '!app/notify', {
+        'text': 'The milestone is complete'
+        'type': 'success'
+      } if data.stats.isDone
+
+      # Overdue?
+      @publish '!app/notify', {
+        'text': 'The milestone is overdue'
+        'type': 'warn'
+      } if data.stats.isOverdue
+
       # Show the page.
       @set
         'milestone': data
