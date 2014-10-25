@@ -23,8 +23,6 @@
 ###Misc
 
 - [ ] the deploy script needs to disable autoreload; `make watch` should start a static web server and also launch a build script with a flag saying which files to include in the head (uncompressed, with live reload); standard build script should minify scripts
-- [ ] on chart page show a little progress bar in the title
-- [ ] add a chart straight from the hero banner
 
 ##Backlog
 
@@ -53,7 +51,7 @@
 
 - [ ] `rails/rails/24` has issues in two clusters as if merged from two milestones
 - [ ] trendline cutting into axes
-- [ ] Browserify does not generate source maps
+- [ ] topbar messages set position from `top`, does not work when we have scrolled on the page; show sticky to the top and move with our scroll; at the very least make them show up at the top and not be hidden
 
 ###Error Handling
 
@@ -70,6 +68,8 @@
 
 ###Misc
 
+- [ ] add a chart straight from the hero banner
+- [ ] on chart page show a little progress bar in the title
 - [ ] use tap plugin for `Ractive`
 - [ ] the app bundle (albeit uncompressed) clocks in at 1.5MB, reduce the size (`d3` is huge (use [grunt-smash](https://github.com/cvisco/grunt-smash), [docs here](https://github.com/mbostock/smash/wiki)), `localForage` not nedded)
 - [ ] make the names consistent, reuse code, template etc.

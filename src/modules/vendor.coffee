@@ -3,7 +3,6 @@ module.exports =
   '_': window._
   'Ractive': window.Ractive
   'Firebase': window.Firebase
-  'FirebaseSimpleLogin': window.FirebaseSimpleLogin
   'SuperAgent': window.superagent
   'async': window.async
   'moment': window.moment

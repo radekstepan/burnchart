@@ -1,6 +1,7 @@
 { _, Ractive } = require '../../modules/vendor.coffee'
 
-Eventful   = require '../../utils/ractive/eventful.coffee'
+Eventful = require '../../utils/ractive/eventful.coffee'
+firebase = require '../../models/firebase.coffee'
 system   = require '../../models/system.coffee'
 user     = require '../../models/user.coffee'
 key      = require '../../utils/key.coffee'
@@ -27,6 +28,11 @@ module.exports = Eventful.extend
     # Redirect to the dashboard.
     # TODO: trigger a named route
     window.location.hash = '#'
+
+  onconstruct: ->
+    # Login user.
+    @on '!login', ->
+      do firebase.login
 
   onrender: ->
     document.title = 'Add a new project'

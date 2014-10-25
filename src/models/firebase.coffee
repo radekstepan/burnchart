@@ -1,4 +1,4 @@
-{ Firebase, FirebaseSimpleLogin } = require '../modules/vendor.coffee'
+{ Firebase } = require '../modules/vendor.coffee'
 
 Model  = require '../utils/ractive/model.coffee'
 user   = require './user.coffee'
@@ -8,30 +8,35 @@ module.exports = new Model
 
   'name': 'models/firebase'
 
-  auth: ->
-    throw 'Not overriden'
-
   # Login a user.
   login: (cb) ->
-    # Login.
-    @auth.login config.data.provider,
+    cb 'Not ready yet' unless @data.client
+
+    @data.client.authWithOAuthPopup "github", (err, authData) =>      
+      return @publish '!app/notify', {
+        'text': do err.toString
+        'type': 'alert'
+        'system': yes
+      } if err
+
+      @onAuth authData
+    ,
       'rememberMe': yes
       'scope': 'private_repo'
 
+  onAuth: (authData) ->
+    # Save user.
+    user.set authData
+    # Say we are done.
+    user.set 'ready', yes
+
   # Logout a user.
   logout: ->
-    @auth?.logout
-    do user.reset
+    throw 'Implement'
 
   onrender: ->
     # Setup a new client.
     @set 'client', client = new Firebase "https://#{config.data.firebase}.firebaseio.com"
-    
-    # Check if we have a user in session.
-    @auth = new FirebaseSimpleLogin client, (err, obj) ->
-      throw err if err
-      
-      # Save user.
-      user.set obj if obj
-      # Say we are done.
-      user.set 'ready', yes
+
+    # When user is authenticated.
+    client.onAuth @onAuth

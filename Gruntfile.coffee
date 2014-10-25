@@ -22,7 +22,6 @@ module.exports = (grunt) ->
           'vendor/ractive-transitions-fade/ractive-transitions-fade.js'
           'vendor/ractive-ractive/index.js'
           'vendor/firebase/firebase.js'
-          'vendor/firebase-simple-login/firebase-simple-login.js'
           'vendor/superagent/superagent.js'
           'vendor/lscache/lscache.js'
           'vendor/async/lib/async.js'

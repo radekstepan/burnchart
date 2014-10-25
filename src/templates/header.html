@@ -2,11 +2,11 @@
   {{#with user}}
     {{#ready}}
       <div class="right" intro="fade">
-        {{#displayName}}
-          {{displayName}} logged in
+        {{#uid}}
+          {{github.displayName}} logged in
         {{else}}
           <a class="github" on-click="!login"><Icons icon="github"/> Sign In</a>
-        {{/displayName}}
+        {{/uid}}
       </div>
     {{/ready}}
   {{/with}}

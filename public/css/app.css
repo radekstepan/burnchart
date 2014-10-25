@@ -69,7 +69,6 @@ ul li{display:inline-block}
 #head .right a{-webkit-border-radius:2px;border-radius:2px;background:#ffbb2a;color:#c1041c;padding:11px 20px}
 #title{border-bottom:3px solid #f3f4f8;}
 #title .title{border-bottom:3px solid #aaafbf;margin:30px 0 -3px 0;display:inline-block;padding-bottom:20px}
-#title .sup{color:#b1b6c4}
 #title .sub{font-size:16px;font-weight:bold;margin:0 20px}
 #title .description{display:inline-block;font-family:'MuseoSlab500Regular',serif;white-space:nowrap;color:#b1b6c4}
 #page{padding-bottom:80px;}

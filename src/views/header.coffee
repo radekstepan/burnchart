@@ -23,8 +23,7 @@ module.exports = Ractive.extend
   onconstruct: ->
     # Login user.
     @on '!login', ->
-      firebase.login (err) ->
-        throw err if err
+      do firebase.login
 
   onrender: ->
     # Switch loading icon with app icon.
