@@ -19,21 +19,14 @@ module.exports = Eventful.extend
   submit: (evt, value) ->
     return if key.is(evt) and not key.isEnter(evt)
 
-    [ owner, name ] = value.split('/')
-
-    done = do system.async
+    [ owner, name ] = value.split '/'
 
     # Save repo.
-    @publish '!projects/add', { owner, name }, (err) =>
-      do done
+    @publish '!projects/add', { owner, name }
 
-      @publish '!app/notify',
-        'text': err or "Project #{value} saved."
-        'type': if err then 'error' else 'success'
-
-      # Redirect to the dashboard.
-      # TODO: trigger a named route
-      window.location.hash = '#'
+    # Redirect to the dashboard.
+    # TODO: trigger a named route
+    window.location.hash = '#'
 
   onrender: ->
     document.title = 'Add a new project'
