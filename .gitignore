@@ -1,7 +1,7 @@
 node_modules/
 *.log
 .build_cache~
-.grunt
+.grunt/
 build/*.map
 public/js/app.bundle.js
 public/js/app.js
