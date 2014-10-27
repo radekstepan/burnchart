@@ -1,4 +1,4 @@
-{ Ractive } = require '../modules/vendor.coffee'
+Ractive = require 'ractive'
 
 { system } = require '../models/system.coffee'
 firebase   = require '../models/firebase.coffee'

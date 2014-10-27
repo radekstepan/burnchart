@@ -1,4 +1,4 @@
-{ _ } = require '../modules/vendor.coffee'
+_ = require 'lodash'
 
 _.mixin
   'pluckMany': (source, keys) ->

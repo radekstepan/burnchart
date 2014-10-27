@@ -1,4 +1,4 @@
-{ Ractive } = require './vendor.coffee'
+Ractive = require 'ractive'
 
 Mediator = Ractive.extend {}
 

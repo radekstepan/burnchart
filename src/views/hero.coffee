@@ -1,4 +1,4 @@
-{ Ractive } = require '../modules/vendor.coffee'
+Ractive = require 'ractive'
 
 Icons = require './icons.coffee'
 

@@ -1,4 +1,7 @@
-{ Ractive, d3 } = require '../modules/vendor.coffee'
+Ractive = require 'ractive'
+d3      = require 'd3'
+
+require('d3-tip')(d3)
 
 lines = require '../modules/chart/lines.coffee'
 axes  = require '../modules/chart/axes.coffee'

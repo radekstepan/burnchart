@@ -2,4 +2,7 @@ node_modules/
 *.log
 .build_cache~
 build/*.map
-vendor/
+public/js/app.bundle.js
+public/js/app.js
+public/css/app.bundle.css
+public/css/app.css

@@ -1,4 +1,3 @@
-#!/usr/bin/env coffee
 request = require './request.coffee'
 
 module.exports =

@@ -1,4 +1,7 @@
-{ _, lscache, sortedIndexCmp, semver } = require '../modules/vendor.coffee'
+_           = require 'lodash'
+lscache     = require 'lscache'
+sortedIndex = require 'sortedindex-compare'
+semver      = require 'semver'
 
 Model    = require '../utils/ractive/model.coffee'
 config   = require '../models/config.coffee'
@@ -121,7 +124,7 @@ module.exports = new Model
 
     # Do one.
     if ref
-      idx = sortedIndexCmp index, data, do @comparator
+      idx = sortedIndex index, data, do @comparator
       index.splice idx, 0, ref
     # Do all.
     else
@@ -130,7 +133,7 @@ module.exports = new Model
         continue unless p.milestones?
         for m, j in p.milestones
           # Run a comparator here inserting into index.
-          idx = sortedIndexCmp index, [ p, m ], do @comparator
+          idx = sortedIndex index, [ p, m ], do @comparator
           # Log.
           index.splice idx, 0, [ i, j ]
 

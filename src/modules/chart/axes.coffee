@@ -1,4 +1,4 @@
-{ d3 } = require '../vendor.coffee'
+d3 = require 'd3'
 
 module.exports =
 

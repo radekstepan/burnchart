@@ -1,4 +1,6 @@
-{ Ractive, _, d3 } = require '../modules/vendor.coffee'
+_       = require 'lodash'
+Ractive = require 'ractive'
+d3      = require 'd3'
 
 Eventful = require '../utils/ractive/eventful.coffee'
 Icons    = require './icons.coffee'

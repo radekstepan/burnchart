@@ -1,4 +1,8 @@
-{ Ractive } = require './modules/vendor.coffee'
+Ractive = require 'ractive'
+
+# Load Ractive transitions and adapters.
+require 'ractive-transitions-fade'
+require 'ractive-ractive'
 
 # Lodash mixins.
 require './utils/mixins.coffee'

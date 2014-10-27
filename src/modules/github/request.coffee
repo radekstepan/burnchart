@@ -1,9 +1,10 @@
-{ _, SuperAgent } = require '../vendor.coffee'
+_          = require 'lodash'
+superagent = require 'superagent'
 
 user = require '../../models/user.coffee'
 
 # Custom JSON parser.
-SuperAgent.parse =
+superagent.parse =
   'application/json': (res) ->
     try
       JSON.parse res
@@ -78,7 +79,7 @@ request = ({ protocol, host, path, query, headers }, cb) ->
   q = if query then '?' + ( "#{k}=#{v}" for k, v of query ).join('&') else ''
 
   # The URI.
-  req = SuperAgent.get("#{protocol}://#{host}#{path}#{q}")
+  req = superagent.get("#{protocol}://#{host}#{path}#{q}")
   # Add headers.
   ( req.set(k, v) for k, v of headers )
   

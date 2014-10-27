@@ -1,4 +1,5 @@
-{ _, d3 } = require '../../modules/vendor.coffee'
+_  = require 'lodash'
+d3 = require 'd3'
 
 config = require '../../models/config.coffee'
 

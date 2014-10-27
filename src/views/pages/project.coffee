@@ -1,4 +1,5 @@
-{ _, async } = require '../../modules/vendor.coffee'
+_     = require 'lodash'
+async = require 'async'
 
 Milestones = require '../tables/milestones.coffee'
 

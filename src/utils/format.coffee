@@ -1,4 +1,6 @@
-{ _, moment, marked } = require '../modules/vendor.coffee'
+_      = require 'lodash'
+moment = require 'moment'
+marked = require 'marked'
 
 module.exports =
 

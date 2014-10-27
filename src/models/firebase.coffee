@@ -1,4 +1,4 @@
-{ Firebase } = require '../modules/vendor.coffee'
+Firebase = require 'firebase'
 
 Model  = require '../utils/ractive/model.coffee'
 user   = require './user.coffee'

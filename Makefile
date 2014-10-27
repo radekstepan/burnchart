@@ -1,28 +1,29 @@
 # Install dependencies.
 install:
 	npm install
-	bower install
-
-# Build the app for production.
-build-app:
-	./node_modules/.bin/browserify -e ./src/app.coffee -o public/js/app.js
 
 # Watch the app sources and build with source maps.
-watch-app:
-	./node_modules/.bin/watchify -e ./src/app.coffee -o public/js/app.js -d	-v
-
-# Build vendor libs and styles.
-build-vendor:
-	grunt
+watch:
+	./node_modules/.bin/watchify -e ./src/app.coffee -o public/js/app.bundle.js -d	-v
 
 # Serve locally.
 serve:
 	cd public; python -m SimpleHTTPServer 8000
 
-# Make and publish a minified package.
-publish:
+# Make a minified package.
+build:
 	grunt init
-	make build-app
-	make build-vendor
+	./node_modules/.bin/browserify -e ./src/app.coffee -o public/js/app.bundle.js
+	grunt
 	grunt minify
-	firebase deploy
+
+# Publish on Firebase or GitHub Pages.
+publish:
+	# firebase deploy -> http://burnchart.firebaseapp.com
+	git subtree push --prefix public origin gh-pages
+
+# Run mocha test.
+test:
+	./node_modules/.bin/mocha --compilers coffee:coffee-script/register --reporter spec --ui exports --timeout 20000 --slow 15000 --bail
+
+.PHONY: test

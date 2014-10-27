@@ -27,42 +27,10 @@ module.exports = (grunt) ->
         dest: 'public/css/app.css'
 
     concat:
-      vendor:
-        src: [
-          # Vendor dependencies.
-          'vendor/lodash/dist/lodash.js'
-          'vendor/ractive/ractive.js'
-          'vendor/ractive-transitions-fade/ractive-transitions-fade.js'
-          'vendor/ractive-ractive/index.js'
-          'vendor/firebase/firebase.js'
-          'vendor/superagent/superagent.js'
-          'vendor/lscache/lscache.js'
-          'vendor/async/lib/async.js'
-          'vendor/moment/moment.js'
-          'vendor/d3/d3.js'
-          'vendor/d3-tip/index.js'
-          'vendor/marked/lib/marked.js'
-          'vendor/director/build/director.js'
-          'vendor/sorted-index-compare/index.js'
-          'node-semver/semver.js'
-        ]
-        dest: 'public/js/vendor.js'
-        options:
-          separator: ';' # for minification purposes
-
-      bundle:
-        src: [
-          'public/js/vendor.min.js'
-          'public/js/app.min.js'
-        ]
-        dest: 'public/js/app.bundle.min.js'
-        options:
-          separator: ';' # for minification purposes
-
       css:
         src: [
           # Vendor dependencies.
-          'vendor/normalize-css/normalize.css'
+          'node_modules/normalize.css/normalize.css'
           # Our style.
           'public/css/app.css'
         ]
@@ -71,8 +39,7 @@ module.exports = (grunt) ->
     uglify:
       bundle:
         files:
-          'public/js/app.min.js': 'public/js/app.js'
-          'public/js/vendor.min.js': 'public/js/vendor.js'
+          'public/js/app.bundle.min.js': 'public/js/app.bundle.js'
 
     cssmin:
       bundle:
@@ -90,7 +57,6 @@ module.exports = (grunt) ->
   # Stylus to CSS, concat JS libs and all CSS.
   grunt.registerTask('default', [
     'stylus:app'
-    'concat:vendor'
     'concat:css'
   ])
 
@@ -102,7 +68,6 @@ module.exports = (grunt) ->
 
   # Minify JS, CSS and concat JS.
   grunt.registerTask('minify', [
-    'uglify:bundle'
-    'cssmin:bundle'
-    'concat:bundle'
+    'uglify'
+    'cssmin'
   ])

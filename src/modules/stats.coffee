@@ -1,4 +1,4 @@
-{ moment }  = require './vendor.coffee'
+moment = require 'moment'
 
 # Progress in %.
 progress = (a, b) -> 100 * (a / (b + a))

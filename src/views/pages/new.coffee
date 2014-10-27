@@ -1,4 +1,5 @@
-{ _, Ractive } = require '../../modules/vendor.coffee'
+_       = require 'lodash'
+Ractive = require 'ractive'
 
 Eventful = require '../../utils/ractive/eventful.coffee'
 firebase = require '../../models/firebase.coffee'

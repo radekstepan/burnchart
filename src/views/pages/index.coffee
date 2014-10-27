@@ -1,4 +1,6 @@
-{ Ractive, _, async } = require '../../modules/vendor.coffee'
+_       = require 'lodash'
+Ractive = require 'ractive'
+async   = require 'async'
 
 Hero     = require '../hero.coffee'
 Projects = require '../tables/projects.coffee'

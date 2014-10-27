@@ -1,4 +1,5 @@
-{ _, director } = require './vendor.coffee'
+_        = require 'lodash'
+director = require 'director'
 
 mediator = require './mediator.coffee'
 system   = require '../models/system.coffee'

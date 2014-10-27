@@ -1,6 +1,6 @@
-{ _, async } = require '../vendor.coffee'
+_     = require 'lodash'
+async = require 'async'
 
-#!/usr/bin/env coffee
 config  = require '../../models/config.coffee'
 request = require './request.coffee'
 

@@ -2,12 +2,15 @@
 
 ##Release: Assembly
 
+- [ ] when merged with github-burndown-chart use GitHub Hosting, add a publish script and use burnchart.io as a domain
+
 ###Git
 
 - [ ] create notes about how original people can upgrade to burnchart
-- [ ] add licensing, clean up docs, track them on git or using Assembly system?
+- [ ] clean up docs, track them on git or using Assembly system?
 - [ ] rename repo to burnchart
 - [ ] check with austin@assembly.com if my repo looks good to be forked to Assembly
+- [ ] move domain to Assembly
 - [ ] fork it to Assembly
 
 ###Error Handling

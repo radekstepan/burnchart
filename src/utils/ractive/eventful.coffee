@@ -1,4 +1,5 @@
-{ Ractive, _ } = require '../../modules/vendor.coffee'
+_       = require 'lodash'
+Ractive = require 'ractive'
 
 mediator = require '../../modules/mediator.coffee'
 
