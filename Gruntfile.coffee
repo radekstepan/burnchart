@@ -51,7 +51,10 @@ module.exports = (grunt) ->
     'gh-pages':
       options:
         base: 'public'
-      src: ['**']
+        branch: 'gh-pages'
+        message: 'Publish to GitHub Pages'
+        push: yes
+      src: '**/*'
 
   grunt.loadNpmTasks('grunt-mkdir')
   grunt.loadNpmTasks('grunt-contrib-clean')
