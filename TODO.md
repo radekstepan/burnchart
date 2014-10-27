@@ -20,10 +20,6 @@
 - [ ] provide a documentation site (because we ref it from hero)
 - [ ] track users/make it easy for people to leave feedback
 
-###Misc
-
-- [ ] the deploy script needs to disable autoreload; `make watch` should start a static web server and also launch a build script with a flag saying which files to include in the head (uncompressed, with live reload); standard build script should minify scripts
-
 ##Backlog
 
 ###Routing
@@ -49,6 +45,8 @@
 
 ###Bugs
 
+- [ ] success/warn topbar on milestone page is only shown if we async load data
+- [ ] html entities (like &amp; at the bottom of the page) are not being rendered correctly; {{{}}} ?
 - [ ] `rails/rails/24` has issues in two clusters as if merged from two milestones
 - [ ] trendline cutting into axes
 - [ ] topbar messages set position from `top`, does not work when we have scrolled on the page; show sticky to the top and move with our scroll; at the very least make them show up at the top and not be hidden
@@ -68,6 +66,9 @@
 
 ###Misc
 
+- [ ] be able to logout
+- [ ] be able to delete added projects; see the cog at the bottom of tables
+- [ ] how GitHub show commit activity in weekly slots, can we have something like this in the chart? Basically show commits in that week and their users
 - [ ] add a chart straight from the hero banner
 - [ ] on chart page show a little progress bar in the title
 - [ ] use tap plugin for `Ractive`

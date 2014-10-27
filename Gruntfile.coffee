@@ -2,8 +2,21 @@ module.exports = (grunt) ->
   grunt.initConfig
     pkg: grunt.file.readJSON("package.json")
 
+    clean: [
+      'public/js'
+      'public/css'
+    ]
+
+    mkdir:
+      all:
+        options:
+          create: [
+            'public/js'
+            'public/css'
+          ]
+
     stylus:
-      style:
+      app:
         src: [
           'src/styles/fonts.styl'
           'src/styles/icons.styl'
@@ -14,7 +27,7 @@ module.exports = (grunt) ->
         dest: 'public/css/app.css'
 
     concat:
-      js:
+      vendor:
         src: [
           # Vendor dependencies.
           'vendor/lodash/dist/lodash.js'
@@ -37,6 +50,15 @@ module.exports = (grunt) ->
         options:
           separator: ';' # for minification purposes
 
+      bundle:
+        src: [
+          'public/js/vendor.min.js'
+          'public/js/app.min.js'
+        ]
+        dest: 'public/js/app.bundle.min.js'
+        options:
+          separator: ';' # for minification purposes
+
       css:
         src: [
           # Vendor dependencies.
@@ -46,11 +68,41 @@ module.exports = (grunt) ->
         ]
         dest: 'public/css/app.bundle.css'
 
-  grunt.loadNpmTasks('grunt-browserify')
+    uglify:
+      bundle:
+        files:
+          'public/js/app.min.js': 'public/js/app.js'
+          'public/js/vendor.min.js': 'public/js/vendor.js'
+
+    cssmin:
+      bundle:
+        files:
+          'public/css/app.min.css': 'public/css/app.css'
+          'public/css/app.bundle.min.css': 'public/css/app.bundle.css'
+
+  grunt.loadNpmTasks('grunt-mkdir')
+  grunt.loadNpmTasks('grunt-contrib-clean')
   grunt.loadNpmTasks('grunt-contrib-stylus')
   grunt.loadNpmTasks('grunt-contrib-concat')
+  grunt.loadNpmTasks('grunt-contrib-uglify')
+  grunt.loadNpmTasks('grunt-contrib-cssmin')
 
+  # Stylus to CSS, concat JS libs and all CSS.
   grunt.registerTask('default', [
-    'stylus'
-    'concat'
+    'stylus:app'
+    'concat:vendor'
+    'concat:css'
+  ])
+
+  # Cleanup public directories.
+  grunt.registerTask('init', [
+    'clean'
+    'mkdir'
+  ])  
+
+  # Minify JS, CSS and concat JS.
+  grunt.registerTask('minify', [
+    'uglify:bundle'
+    'cssmin:bundle'
+    'concat:bundle'
   ])
