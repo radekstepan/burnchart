@@ -17,9 +17,8 @@ build:
 	grunt
 	grunt minify
 
-# Publish on Firebase or GitHub Pages.
+# Publish to GitHub Pages.
 publish:
-	# firebase deploy -> http://burnchart.firebaseapp.com
 	grunt gh-pages
 
 # Run mocha test.

@@ -23,11 +23,6 @@
 
 ##Backlog
 
-###Routing
-
-- [ ] Handle [404](https://www.firebase.com/docs/hosting/guide/url-redirects-rewrites.html#section-404) on routes; from catch all check if '/' or go 404 controller
-- [ ] allow `pushState` when [Firebase hosted](https://www.firebase.com/docs/hosting/guide/url-redirects-rewrites.html#section-rewrites)
-
 ###Style
 
 - [ ] focus on form fields style (blue outline etc)
@@ -54,6 +49,7 @@
 
 ###Error Handling
 
+- [ ] GitHub Pages 404 file
 - [ ] deal with Firebase timing out, are we still logged-in?
 - [ ] check that we have not run out of requests to make
 - [ ] what if milestone does not match our strategy?
