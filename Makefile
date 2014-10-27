@@ -20,7 +20,7 @@ build:
 # Publish on Firebase or GitHub Pages.
 publish:
 	# firebase deploy -> http://burnchart.firebaseapp.com
-	git subtree push --prefix public origin gh-pages
+	grunt gh-pages
 
 # Run mocha test.
 test:

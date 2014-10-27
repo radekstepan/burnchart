@@ -1,13 +1,14 @@
 module.exports = (grunt) ->
   grunt.initConfig
+    
     pkg: grunt.file.readJSON("package.json")
 
-    clean: [
+    'clean': [
       'public/js'
       'public/css'
     ]
 
-    mkdir:
+    'mkdir':
       all:
         options:
           create: [
@@ -15,7 +16,7 @@ module.exports = (grunt) ->
             'public/css'
           ]
 
-    stylus:
+    'stylus':
       app:
         src: [
           'src/styles/fonts.styl'
@@ -26,7 +27,7 @@ module.exports = (grunt) ->
         ]
         dest: 'public/css/app.css'
 
-    concat:
+    'concat':
       css:
         src: [
           # Vendor dependencies.
@@ -36,16 +37,21 @@ module.exports = (grunt) ->
         ]
         dest: 'public/css/app.bundle.css'
 
-    uglify:
+    'uglify':
       bundle:
         files:
           'public/js/app.bundle.min.js': 'public/js/app.bundle.js'
 
-    cssmin:
+    'cssmin':
       bundle:
         files:
           'public/css/app.min.css': 'public/css/app.css'
           'public/css/app.bundle.min.css': 'public/css/app.bundle.css'
+
+    'gh-pages':
+      options:
+        base: 'public'
+      src: ['**']
 
   grunt.loadNpmTasks('grunt-mkdir')
   grunt.loadNpmTasks('grunt-contrib-clean')
@@ -53,6 +59,7 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks('grunt-contrib-concat')
   grunt.loadNpmTasks('grunt-contrib-uglify')
   grunt.loadNpmTasks('grunt-contrib-cssmin')
+  grunt.loadNpmTasks('grunt-gh-pages');
 
   # Stylus to CSS, concat JS libs and all CSS.
   grunt.registerTask('default', [
