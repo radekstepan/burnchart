@@ -2,8 +2,6 @@
 
 ##Release: Assembly
 
-- [ ] when merged with github-burndown-chart use GitHub Hosting, add a publish script and use burnchart.io as a domain
-
 ###Git
 
 - [ ] create notes about how original people can upgrade to burnchart
