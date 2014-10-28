@@ -101,16 +101,19 @@ module.exports = Ractive.extend
     # Add the ideal line path.
     svg.append("path")
     .attr("class", "ideal line")
-    .attr("d", line.interpolate("basis")(ideal))
+    # Piecewise linear segments, as in a polyline.
+    .attr("d", line.interpolate("linear")(ideal))
 
     # Add the trendline path.
     svg.append("path")
     .attr("class", "trendline line")
+    # Piecewise linear segments, as in a polyline.
     .attr("d", line.interpolate("linear")(trend))
 
     # Add the actual line path.
     svg.append("path")
     .attr("class", "actual line")
+    # Piecewise linear segments, as in a polyline.
     .attr("d", line.interpolate("linear").y( (d) -> y(d.points) )(actual))
 
     # Collect the tooltip here.

@@ -13,7 +13,6 @@
 
 ##Next Release
 
-- [ ] https://github.com/medic/medic-webapp project is overdue and trendline & ideal line end on that date; should max on that date or today's date
 - [ ] http://burnchart.io#rails I would expect it to list all the projects for that owner so I can select one of them (Ryan)
 
 ##Backlog

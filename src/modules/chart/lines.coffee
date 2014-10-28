@@ -77,7 +77,7 @@ module.exports =
       day
 
     # Do we need to make a link to right now?
-    days.push { date: now, points: 0 } if (now = new Date()) > cutoff
+    days.push { date: now, points: 0 } if (now = new Date) > cutoff
 
     days
 
@@ -93,7 +93,7 @@ module.exports =
 
     # Now is an actual point too.
     last = actual[actual.length - 1]
-    values.push [ + new Date() - start, last.points ]
+    values.push [ + new Date - start, last.points ]
 
     # http://classroom.synonym.com/calculate-trendline-2709.html
     b1 = 0 ; e = 0 ; c1 = 0
@@ -109,8 +109,16 @@ module.exports =
 
     # Milestone always has a creation date.
     created_at = new Date created_at
-    # Due date can be empty.
-    due_on = if due_on then new Date(due_on) else new Date()
+    
+    now = new Date
+    # Due date specified.
+    if due_on
+      due_on = new Date due_on
+      # In the past?
+      due_on = now if now > due_on
+    # No due date
+    else
+      due_on = now
 
     a = created_at - start
     b = due_on - start
