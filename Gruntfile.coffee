@@ -54,6 +54,7 @@ module.exports = (grunt) ->
         branch: 'gh-pages'
         message: 'Publish to GitHub Pages'
         push: yes
+        add: yes
       src: [
         'css/**/*'
         'fonts/**/*'
