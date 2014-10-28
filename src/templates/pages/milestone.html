@@ -2,13 +2,9 @@
   <div intro="fade">
     <div id="title">
       <div class="wrap">
-        <table>
-          <tr>
-            <td><h2 class="title">{{ format.title(milestone.title) }}</h2></td>
-            <td><span class="sub">{{{ format.due(milestone.due_on) }}}</span></td>
-            <td><div class="description">{{{ format.markdown(milestone.description) }}}</div></td>
-          </tr>
-        </table>
+        <h2 class="title">{{ format.title(milestone.title) }}</h2>
+        <span class="sub">{{{ format.due(milestone.due_on) }}}</span>
+        <div class="description">{{{ format.markdown(milestone.description) }}}</div>
       </div>
     </div>
 
