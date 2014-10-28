@@ -24,6 +24,7 @@ GitHub Burndown Chart as a service. Answers the question "are my projects on tra
 - ability to use the program needs to be frictionless; jump straight into the action, fill in data behind the scenes etc.
 - send reminders to people whose account is expiring
 - [Waffle](https://waffle.io/) from Rally software has a kanban board that will support [burnup chart](https://waffle.io/waffleio/waffle.io/cards/53e5347682b317f7d9ad6eac); it will charge $7/month
+- should we be part of https://www.zenhub.io/pricing? Pricing is per bundle of users, interesting.
 
 ##Plans
 
