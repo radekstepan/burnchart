@@ -69,8 +69,8 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks('grunt-contrib-cssmin')
   grunt.loadNpmTasks('grunt-gh-pages');
 
-  # Stylus to CSS, concat JS libs and all CSS.
-  grunt.registerTask('default', [
+  # Stylus to CSS, concat all CSS.
+  grunt.registerTask('style', [
     'stylus:app'
     'concat:css'
   ])

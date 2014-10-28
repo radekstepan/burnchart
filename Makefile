@@ -8,13 +8,13 @@ watch:
 
 # Serve locally.
 serve:
-	cd public; python -m SimpleHTTPServer 8000
+	./node_modules/.bin/static public -H '{"Cache-Control": "no-cache, must-revalidate"}'
 
 # Make a minified package.
 build:
 	grunt init
 	./node_modules/.bin/browserify -e ./src/app.coffee -o public/js/app.bundle.js
-	grunt
+	grunt style
 	grunt minify
 
 # Publish to GitHub Pages.
