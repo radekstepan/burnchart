@@ -1,7 +1,0 @@
-node_modules/
-.idea/
-*.log
-src/components/
-config.json
-vendor/
-.build_cache~
