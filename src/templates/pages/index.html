@@ -1,0 +1,11 @@
+<div id="content" class="wrap">
+  {{#if projects.list}}
+    {{#ready}}
+      <div intro="fade">
+        <Projects projects="{{projects}}"/>
+      </div>
+    {{/ready}}
+  {{else}}
+    <Hero/>
+  {{/if}}
+</div>

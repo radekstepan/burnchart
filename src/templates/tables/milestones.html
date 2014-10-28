@@ -1,0 +1,39 @@
+<div id="projects">
+  <div class="header">
+    <a class="sort" on-click="sortBy"><Icons icon="sort-alphabet"/> Sorted by {{projects.sortBy}}</a>
+    <h2>Milestones</h2>
+  </div>
+
+  <table>
+    {{#projects.index}}
+      {{# { index: this } }}
+
+        {{# { p: projects.list[index[0]] } }}
+          {{#if p.owner == project.owner && p.name == project.name }}
+            {{# { milestone: project.milestones[index[1]] } }}
+              <tr class="{{#if milestone.stats.isDone}}done{{/if}}">
+                <td>
+                  <a class="milestone" href="#{{project.owner}}/{{project.name}}/{{milestone.number}}">{{ milestone.title }}</a>
+                </td>
+                <td style="width:1%">
+                  <div class="progress">
+                    <span class="percent">{{Math.floor(milestone.stats.progress.points)}}%</span>
+                    <span class="due {{#if milestone.stats.isOverdue}}red{{/if}}">{{{ format.due(milestone.due_on) }}}</span>
+                    <div class="outer bar">
+                      <div class="inner bar {{(milestone.stats.isOnTime) ? 'green' : 'red'}}" style="width:{{milestone.stats.progress.points}}%"></div>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            {{/}}
+          {{/if}}
+        {{/}}
+
+      {{/}}
+    {{/projects.index}}
+  </table>
+
+  <div class="footer">
+    <!--<a href="#"><Icons icon="cog"/> Edit</a>-->
+  </div>
+</div>

@@ -1,0 +1,15 @@
+{{#ready}}
+  <div intro="fade">
+    <div id="title">
+      <div class="wrap">
+        <h2 class="title">{{ format.title(milestone.title) }}</h2>
+        <span class="sub">{{{ format.due(milestone.due_on) }}}</span>
+        <div class="description">{{{ format.markdown(milestone.description) }}}</div>
+      </div>
+    </div>
+
+    <div id="content" class="wrap">
+      <Chart milestone="{{milestone}}"/>
+    </div>
+  </div>
+{{/ready}}

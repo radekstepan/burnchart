@@ -1,0 +1,30 @@
+<div id="head">
+  {{#with user}}
+    {{#ready}}
+      <div class="right" intro="fade">
+        {{#uid}}
+          {{github.displayName}} logged in
+        {{else}}
+          <a class="github" on-click="!login"><Icons icon="github"/> Sign In</a>
+        {{/uid}}
+      </div>
+    {{/ready}}
+  {{/with}}
+
+  <a id="icon" href="#">
+    <Icons icon="{{icon}}"/>
+  </a>
+
+  <!--
+  <div class="q">
+    <Icons icon="search"/>
+    <Icons icon="down-open"/>
+    <input type="text" placeholder="Jump to...">
+  </div>
+  -->
+
+  <ul>
+    <li><a href="#new/project" class="add"><Icons icon="plus-circled"/> Add a Project</a></li>
+    <li><a href="#demo"><Icons icon="download-cloud"/> Demo Projects</a></li>
+  </ul>
+</div>
