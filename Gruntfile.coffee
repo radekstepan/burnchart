@@ -59,7 +59,6 @@ module.exports = (grunt) ->
         'fonts/**/*'
         'img/**/*'
         'js/**/*'
-        'index.html'
       ]
 
   grunt.loadNpmTasks('grunt-mkdir')

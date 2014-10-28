@@ -1,29 +1,24 @@
 #Tasks to do
 
-##Release: Assembly
-
-###Git
-
 - [ ] create notes about how original people can upgrade to burnchart
 - [ ] clean up docs, track them on git or using Assembly system?
 - [ ] rename repo to burnchart
 - [ ] check with austin@assembly.com if my repo looks good to be forked to Assembly
 - [ ] move domain to Assembly
 - [ ] fork it to Assembly
-
-###Error Handling
-
 - [ ] move tests from `radekstepan/github-burndown-chart`
-
-###Customers
-
 - [ ] landing page for the project and put message on `github-burndown-chart` repo
 - [ ] provide a documentation site (because we ref it from hero)
 - [ ] track users/make it easy for people to leave feedback
 
-##Backlog
+##Next Release
 
-###Style
+- [ ] https://github.com/medic/medic-webapp project is overdue and trendline & ideal line end on that date; should max on that date or today's date
+- [ ] https://github.com/ractivejs/ractive gives me NaN for a milestone progress %
+- [ ] http://burnchart.io#rails I would expect it to list all the projects for that owner so I can select one of them (Ryan)
+- [ ] why didn't Reset DB load demo data? (Ryan)
+
+##Backlog
 
 - [ ] focus on form fields style (blue outline etc)
 - [ ] switch off `user-select` on buttons
@@ -34,35 +29,20 @@
 - [ ] calculate left margin based on the total number of points text width
 - [ ] responsive layout
 - [ ] show project name on the milestone page, in the title
-
-###Customers
-
 - [ ] conctact the people that have starred the original burndown chart telling them about the repo; keep track of connects via a tiny crm/spreadsheet and use a custom email address like radek@burnchart.io
-
-###Bugs
-
 - [ ] success/warn topbar on milestone page is only shown if we async load data
 - [ ] html entities (like &amp; at the bottom of the page) are not being rendered correctly; {{{}}} ?
 - [ ] `rails/rails/24` has issues in two clusters as if merged from two milestones
 - [ ] trendline cutting into axes
 - [ ] topbar messages set position from `top`, does not work when we have scrolled on the page; show sticky to the top and move with our scroll; at the very least make them show up at the top and not be hidden
-
-###Error Handling
-
 - [ ] GitHub Pages 404 file
 - [ ] deal with Firebase timing out, are we still logged-in?
 - [ ] check that we have not run out of requests to make
 - [ ] what if milestone does not match our strategy?
 - [ ] web storage and location hash supported by 93% of browsers; good enough?
-
-###Notifications
-
 - [ ] create a 500/400/loading system messages
 - [ ] mediator `!app/notify/edit` will edit the current notification
 - [ ] handle multiple notifications, for example success on closed milestone and then show a different chart or add a project
-
-###Misc
-
 - [ ] be able to logout
 - [ ] be able to delete added projects; see the cog at the bottom of tables
 - [ ] how GitHub show commit activity in weekly slots, can we have something like this in the chart? Basically show commits in that week and their users
