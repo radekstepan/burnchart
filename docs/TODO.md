@@ -1,7 +1,5 @@
 #Tasks to do
 
-- [*] success/warn topbar on milestone page is only shown if we async load data
-- [ ] why didn't Reset DB load demo data? (Ryan)
 - [ ] create notes about how original people can upgrade to burnchart
 - [ ] clean up docs, track them on git or using Assembly system?
 - [ ] rename repo to burnchart

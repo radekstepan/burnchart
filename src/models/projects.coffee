@@ -114,6 +114,16 @@ module.exports = new Model
       # We are supposed to exist already.
       throw 500  
 
+  demo: ->
+    @set 'list': [
+      { 'owner': 'mbostock', 'name': 'd3' }
+      { 'owner': 'medic', 'name': 'medic-webapp' }
+      { 'owner': 'ractivejs', 'name': 'ractive' }
+      { 'owner': 'radekstepan', 'name': 'disposable' }
+      { 'owner': 'rails', 'name': 'rails' }
+      { 'owner': 'rails', 'name': 'spring' }
+    ], 'index': []
+
   clear: ->
     @set 'list': [], 'index': []
 
@@ -141,8 +151,8 @@ module.exports = new Model
     @set 'index', index
 
   onconstruct: ->
-    @subscribe '!projects/add',    @add, @
-    @subscribe '!projects/clear',  @clear, @
+    @subscribe '!projects/add',  @add, @
+    @subscribe '!projects/demo', @demo, @
 
   onrender: ->
     # Init the projects.

@@ -38,8 +38,8 @@ routes =
   '/:owner/:name':            c 'project',   [ addProject, route ]
   '/:owner/:name/:milestone': c 'milestone', [ addProject, route ]
   # TODO: remove in production.
-  '/reset': ->
-    mediator.fire '!projects/clear'
+  '/demo': ->
+    mediator.fire '!projects/demo'
     window.location.hash = '#'
 
 # Flatiron Director router.
