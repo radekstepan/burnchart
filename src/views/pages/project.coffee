@@ -21,6 +21,17 @@ module.exports = Eventful.extend
     'projects': projects
     'ready': no
 
+  cb: (err) ->
+    return @publish '!app/notify', {
+      'text': do err.toString
+      'type': 'alert'
+      'system': yes
+      'ttl': null
+    } if err
+
+    # Say we are ready.
+    @set 'ready', yes
+
   onrender: ->
     [ owner, name ] = @get 'route'
 
@@ -30,7 +41,9 @@ module.exports = Eventful.extend
     @set 'project', project = projects.find { owner, name }
 
     # Should not happen...
-    throw 500 unless project
+    return @cb 'Project not found' unless project
+
+    # ---
 
     # We don't know if we have all milestones, so fetch them.
     done = do system.async
@@ -64,12 +77,6 @@ module.exports = Eventful.extend
       fetchIssues
     ], (err) =>
       do done
-      return @publish '!app/notify', {
-        'text': do err.toString
-        'type': 'alert'
-        'system': yes
-        'ttl': null
-      } if err
-
-      # Say we are ready.
-      @set 'ready', yes
+      
+      # Pass to callback.
+      @cb.apply @, arguments

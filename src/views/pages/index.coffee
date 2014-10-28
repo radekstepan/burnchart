@@ -24,11 +24,16 @@ module.exports = Ractive.extend
 
   'adapt': [ Ractive.adaptors.Ractive ]
 
+  cb: ->
+    @set 'ready', yes
+
   onrender: ->
     document.title = 'Burnchart: GitHub Burndown Chart as a Service'
 
     # Quit if we have no projects.
-    return @set('ready', yes) unless projects.list.length
+    return do @cb unless projects.list.length
+
+    # ---
 
     done = do system.async
 
@@ -69,4 +74,4 @@ module.exports = Ractive.extend
 
     , =>
       do done
-      @set 'ready', yes
+      do @cb

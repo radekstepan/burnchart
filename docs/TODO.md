@@ -1,6 +1,7 @@
 #Tasks to do
 
-- [ ] success/warn topbar on milestone page is only shown if we async load data
+- [*] success/warn topbar on milestone page is only shown if we async load data
+- [ ] why didn't Reset DB load demo data? (Ryan)
 - [ ] create notes about how original people can upgrade to burnchart
 - [ ] clean up docs, track them on git or using Assembly system?
 - [ ] rename repo to burnchart
@@ -16,7 +17,6 @@
 
 - [ ] https://github.com/medic/medic-webapp project is overdue and trendline & ideal line end on that date; should max on that date or today's date
 - [ ] http://burnchart.io#rails I would expect it to list all the projects for that owner so I can select one of them (Ryan)
-- [ ] why didn't Reset DB load demo data? (Ryan)
 
 ##Backlog
 

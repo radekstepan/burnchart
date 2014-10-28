@@ -22,6 +22,40 @@ module.exports = Eventful.extend
     'format': format
     'ready': no
 
+  # Callback when we have data.
+  cb: (err, data) ->
+    return @publish '!app/notify', {
+      'text': do err.toString
+      'type': 'alert'
+      'system': yes
+      'ttl': null
+    } if err
+    
+    # No issues?
+    return @publish '!app/notify', {
+      'text': 'The milestone has no issues'
+      'type': 'warn'
+      'system': yes
+      'ttl': null
+    } if data.stats.isEmpty
+
+    # Done?
+    @publish '!app/notify', {
+      'text': 'The milestone is complete'
+      'type': 'success'
+    } if data.stats.isDone
+
+    # Overdue?
+    @publish '!app/notify', {
+      'text': 'The milestone is overdue'
+      'type': 'warn'
+    } if data.stats.isOverdue
+
+    # Show the page.
+    @set
+      'milestone': data
+      'ready': yes
+
   onrender: ->
     [ owner, name, milestone ] = @get 'route'
   
@@ -33,11 +67,13 @@ module.exports = Eventful.extend
     project = projects.find { owner, name }
 
     # Should not happen...
-    throw 500 unless project
+    return @cb 'Project not found' unless project
 
     # Do we have this milestone already?
-    obj = _.find project.milestones, { 'number': milestone }
-    return @set { 'milestone': obj, 'ready': yes } if obj?
+    data = _.find project.milestones, { 'number': milestone }
+    return @cb null, data if data?
+    
+    # ---
 
     # We are loading the milestones then.
     done = do system.async
@@ -56,37 +92,9 @@ module.exports = Eventful.extend
       fetchIssues
     ], (err, data) =>
       do done
-      return @publish '!app/notify', {
-        'text': do err.toString
-        'type': 'alert'
-        'system': yes
-        'ttl': null
-      } if err
-      
+
       # Save the milestone with issues.
-      projects.addMilestone project, data
-      
-      # No issues?
-      return @publish '!app/notify', {
-        'text': 'The milestone has no issues'
-        'type': 'warn'
-        'system': yes
-        'ttl': null
-      } if data.stats.isEmpty
+      projects.addMilestone project, data unless err
 
-      # Done?
-      @publish '!app/notify', {
-        'text': 'The milestone is complete'
-        'type': 'success'
-      } if data.stats.isDone
-
-      # Overdue?
-      @publish '!app/notify', {
-        'text': 'The milestone is overdue'
-        'type': 'warn'
-      } if data.stats.isOverdue
-
-      # Show the page.
-      @set
-        'milestone': data
-        'ready': yes
+      # Pass to callback.
+      @cb.apply @, arguments
