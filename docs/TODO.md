@@ -1,5 +1,6 @@
 #Tasks to do
 
+- [ ] success/warn topbar on milestone page is only shown if we async load data
 - [ ] create notes about how original people can upgrade to burnchart
 - [ ] clean up docs, track them on git or using Assembly system?
 - [ ] rename repo to burnchart
@@ -14,12 +15,12 @@
 ##Next Release
 
 - [ ] https://github.com/medic/medic-webapp project is overdue and trendline & ideal line end on that date; should max on that date or today's date
-- [*] https://github.com/ractivejs/ractive gives me NaN for a milestone progress %
 - [ ] http://burnchart.io#rails I would expect it to list all the projects for that owner so I can select one of them (Ryan)
 - [ ] why didn't Reset DB load demo data? (Ryan)
 
 ##Backlog
 
+- [ ] be able to specify milestone by name (will nicely show in title)
 - [ ] focus on form fields style (blue outline etc)
 - [ ] switch off `user-select` on buttons
 - [ ] make async pages transition so that there is no "jumping" on the page
@@ -30,7 +31,6 @@
 - [ ] responsive layout
 - [ ] show project name on the milestone page, in the title
 - [ ] conctact the people that have starred the original burndown chart telling them about the repo; keep track of connects via a tiny crm/spreadsheet and use a custom email address like radek@burnchart.io
-- [ ] success/warn topbar on milestone page is only shown if we async load data
 - [ ] html entities (like &amp; at the bottom of the page) are not being rendered correctly; {{{}}} ?
 - [ ] `rails/rails/24` has issues in two clusters as if merged from two milestones
 - [ ] trendline cutting into axes

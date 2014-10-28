@@ -62,9 +62,17 @@ module.exports = Eventful.extend
         'system': yes
         'ttl': null
       } if err
-
+      
       # Save the milestone with issues.
       projects.addMilestone project, data
+      
+      # No issues?
+      return @publish '!app/notify', {
+        'text': 'The milestone has no issues'
+        'type': 'warn'
+        'system': yes
+        'ttl': null
+      } if data.stats.isEmpty
 
       # Done?
       @publish '!app/notify', {
