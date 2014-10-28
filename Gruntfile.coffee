@@ -70,7 +70,7 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks('grunt-gh-pages');
 
   # Stylus to CSS, concat all CSS.
-  grunt.registerTask('style', [
+  grunt.registerTask('css', [
     'stylus:app'
     'concat:css'
   ])

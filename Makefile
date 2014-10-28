@@ -14,7 +14,7 @@ serve:
 build:
 	grunt init
 	./node_modules/.bin/browserify -e ./src/app.coffee -o public/js/app.bundle.js
-	grunt style
+	grunt css
 	grunt minify
 
 # Publish to GitHub Pages.
