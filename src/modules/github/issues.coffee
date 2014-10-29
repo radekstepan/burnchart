@@ -10,21 +10,18 @@ module.exports =
   fetchAll: (repo, cb) ->
     # For each `open` and `closed` issues in parallel.
     async.parallel [
-      _.partial async.waterfall, [ _.partial(oneStatus, repo, 'open'),   calcSize ]
-      _.partial async.waterfall, [ _.partial(oneStatus, repo, 'closed'), calcSize ]
+      _.partial(oneStatus, repo, 'open')
+      _.partial(oneStatus, repo, 'closed')
     ], (err, [ open, closed ]) ->
       cb err, { open, closed }
 
 # Calculate size of either open or closed issues.
 # Modifies issues by ref.
-calcSize = (list, cb) ->
+calcSize = (list) ->
   switch config.data.chart.points
     when 'ONE_SIZE'
       size = list.length
-
       ( issue.size = 1 for issue in list )
-
-      cb null, { list, size }
     
     when 'LABELS'
       size = 0
@@ -44,26 +41,32 @@ calcSize = (list, cb) ->
         # Increase the total.
         size += issue.size
         
-        # Are we saving it?
+        # Issues without size (no matching labels) are not saved.
         !!issue.size
 
-      cb null, { list, size }
+  # Sync return.
+  { list, size }
 
 # For each state...
 oneStatus = (repo, state, cb) ->
   # Concat them here.
   results = []
 
+  done = (err) ->
+    return cb err if err
+    # Add the size.
+    cb null, calcSize results
+
   # One pageful fetch (next pages in series).
   do fetchPage = (page=1) ->
     request.allIssues repo, { state, page }, (err, data) ->
       # Errors?
-      return cb err if err
+      return done err if err
       # Empty?
-      return cb null, results unless data.length
+      return done null, results unless data.length
       # Concat sorted (api does not sort on closed_at!).
       results = results.concat _.sortBy data, 'closed_at'
       # < 100 results?
-      return cb null, results if data.length < 100
+      return done null, results if data.length < 100
       # Fetch the next page then.
       fetchPage page + 1
