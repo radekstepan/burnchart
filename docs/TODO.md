@@ -16,6 +16,7 @@
 
 ##Backlog
 
+- [ ] highlight today in the chart better
 - [ ] one click to go from a project or milestone view to github
 - [ ] be able to specify milestone by name (will nicely show in title)
 - [ ] focus on form fields style (blue outline etc)

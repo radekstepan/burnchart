@@ -47,7 +47,6 @@ coverage:
 
 # Run code coverage and publish to coveralls.
 coveralls:
-	TOKEN = PASSWORD1
 	$(MOCHA) $(OPTS) --reporter mocha-lcov-reporter --require blanket | COVERALLS_REPO_TOKEN=$(TOKEN) COVERALLS_SERVICE_NAME=MOCHA $(COVERALLS)
 
 .PHONY: test
