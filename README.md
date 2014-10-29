@@ -7,4 +7,4 @@ GitHub Burndown Chart as a service. Answers the question "are my projects on tra
 [![Dependencies](http://img.shields.io/david/radekstepan/burnchart.svg?style=flat)](https://david-dm.org/radekstepan/burnchart)
 [![License](http://img.shields.io/badge/license-AGPL--3.0-red.svg?style=flat)](LICENSE)
 
-![image](https://github.com/radekstepan/burnchart/raw/assembly/public/screenshots.jpg)
+![image](https://raw.githubusercontent.com/radekstepan/burnchart/assembly/public/screenshots.jpg)
