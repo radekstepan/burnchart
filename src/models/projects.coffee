@@ -3,11 +3,10 @@ lscache     = require 'lscache'
 sortedIndex = require 'sortedindex-compare'
 semver      = require 'semver'
 
-Model    = require '../utils/ractive/model.coffee'
-config   = require '../models/config.coffee'
-stats    = require '../modules/stats.coffee'
-date     = require '../utils/date.coffee'
-user     = require './user.coffee'
+Model  = require '../utils/ractive/model.coffee'
+config = require '../models/config.coffee'
+stats  = require '../modules/stats.coffee'
+user   = require './user.coffee'
 
 module.exports = new Model
 

@@ -27,20 +27,24 @@
     "grunt-contrib-concat": "~0.5.0",
     "grunt-contrib-uglify": "~0.6.0",
     "grunt-contrib-cssmin": "~0.10.0",
+    "grunt-contrib-watch": "~0.6.1",
     "grunt-gh-pages": "~0.9.1",
     "coffeeify": "~0.7.0L",
     "ractivate": "~0.2.0",
     "browserify": "~6.1.0",
     "watchify": "~2.1.0",
     "node-static": "~0.7.6",
-
+    
     "mocha": "~2.0.1",
+    "mocha-lcov-reporter": "0.0.1",
+    "blanket": "~1.1.6",
+    "coveralls": "~2.11.2",
+    "proxyquire": "~1.0.1",
     "coffee-script": "~1.8.0",
     
     "async": "~0.9.0",
     "d3": "~3.4.13",
     "d3-tip": "Caged/d3-tip",
-    "proxyquire": "~1.0.1",
     "lodash": "~2.4.1",
     "director": "~1.2.3",
     "firebase": "~1.1.2",
@@ -60,5 +64,15 @@
       "coffeeify",
       "ractivate"
     ]
+  },
+  "config": {
+    "blanket": {
+      "loader": "./node-loaders/coffee-script",
+      "pattern": "src",
+      "data-cover-never": "node_modules",
+      "data-cover-flags": {
+        "engineOnly": true
+      }
+    }
   }
 }

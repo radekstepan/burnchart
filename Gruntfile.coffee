@@ -48,6 +48,13 @@ module.exports = (grunt) ->
           'public/css/app.min.css': 'public/css/app.css'
           'public/css/app.bundle.min.css': 'public/css/app.bundle.css'
 
+    'watch':
+      css:
+        files: [ 'src/styles/**/*.styl' ]
+        tasks: [ 'stylus', 'concat' ]
+        options:
+          spawn: no
+
     'gh-pages':
       options:
         base: 'public'
@@ -68,7 +75,8 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks('grunt-contrib-concat')
   grunt.loadNpmTasks('grunt-contrib-uglify')
   grunt.loadNpmTasks('grunt-contrib-cssmin')
-  grunt.loadNpmTasks('grunt-gh-pages');
+  grunt.loadNpmTasks('grunt-contrib-watch')
+  grunt.loadNpmTasks('grunt-gh-pages')
 
   # Stylus to CSS, concat all CSS.
   grunt.registerTask('css', [

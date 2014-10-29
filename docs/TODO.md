@@ -1,6 +1,5 @@
 #Tasks to do
 
-- [ ] watch CSS too
 - [ ] add some product screenshots
 - [ ] create notes about how original people can upgrade to burnchart
 - [ ] clean up docs, track them on git or using Assembly system?
@@ -8,7 +7,6 @@
 - [ ] check with austin@assembly.com if my repo looks good to be forked to Assembly
 - [ ] move domain to Assembly
 - [ ] fork it to Assembly
-- [ ] move tests from `radekstepan/github-burndown-chart`
 - [ ] landing page for the project and put message on `github-burndown-chart` repo
 - [ ] provide a documentation site (because we ref it from hero)
 - [ ] track users/make it easy for people to leave feedback
@@ -19,6 +17,7 @@
 
 ##Backlog
 
+- [ ] one click to go from a project or milestone view to github
 - [ ] be able to specify milestone by name (will nicely show in title)
 - [ ] focus on form fields style (blue outline etc)
 - [ ] switch off `user-select` on buttons
