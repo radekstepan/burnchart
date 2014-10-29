@@ -1,5 +1,7 @@
 #Tasks to do
 
+- [ ] watch CSS too
+- [ ] add some product screenshots
 - [ ] create notes about how original people can upgrade to burnchart
 - [ ] clean up docs, track them on git or using Assembly system?
 - [ ] rename repo to burnchart
@@ -13,7 +15,7 @@
 
 ##Next Release
 
-- [ ] http://burnchart.io#rails I would expect it to list all the projects for that owner so I can select one of them (Ryan)
+- [ ] http://burnchart.io#rails I would expect it to list all the projects for that owner so I can select one of them (Ryan); we could show a list of available project names with their: `description`, `private` flag and `has_issues` making the project greyed out if no issues found
 
 ##Backlog
 

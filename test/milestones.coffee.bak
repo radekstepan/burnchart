@@ -1,4 +1,3 @@
-#!/usr/bin/env coffee
 proxy  = do require('proxyquire').noCallThru
 assert = require 'assert'
 path   = require 'path'

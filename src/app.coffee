@@ -4,8 +4,6 @@ Ractive = require 'ractive'
 require 'ractive-transitions-fade'
 require 'ractive-ractive'
 
-# Lodash mixins.
-require './utils/mixins.coffee'
 # Will load projects from localStorage.
 require './models/projects.coffee'
 

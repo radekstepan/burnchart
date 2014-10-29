@@ -23,86 +23,115 @@ class Sa
       cb null, @response
     , @timeout
 
+superagent = new Sa()
+
+# Proxy the superagent lib.
 request = proxy path.resolve(__dirname, '../src/modules/github/request.coffee'),
-  '../vendor.coffee':
-    'superagent': new Sa()
+  'superagent': superagent
+
+# User is ready, make the requests.
+user = require '../src/models/user.coffee'
+user.set 'ready', yes
 
 module.exports =
 
   'request - all milestones (ok)': (done) ->
-    sa.response =
+    superagent.response =
       'statusType': 2
       'error': no
       'body': [ null ]
     
-    request.allMilestones {}, (err, data) ->
+    owner = 'radekstepan'
+    name = 'burnchart'
+
+    request.allMilestones { owner, name }, (err, data) ->
       assert.ifError err
-      assert.deepEqual sa.params,
-        'uri': 'undefined://undefined/repos/undefined/milestones?state=open&sort=due_date&direction=asc'
+      assert.deepEqual superagent.params,
+        'uri': 'https://api.github.com/repos/radekstepan/burnchart/milestones?state=open&sort=due_date&direction=asc'
         'Content-Type': 'application/json',
         'Accept': 'application/vnd.github.v3'
       assert.deepEqual data, [ null ]
       do done
 
   'request - one milestone (ok)': (done) ->
-    sa.response =
+    superagent.response =
       'statusType': 2
       'error': no
       'body': [ null ]
     
-    request.oneMilestone {}, 1, (err, data) ->
+    owner = 'radekstepan'
+    name = 'burnchart'
+    milestone = 1
+
+    request.oneMilestone { owner, name, milestone }, (err, data) ->
       assert.ifError err
-      assert.deepEqual sa.params,
-        'uri': 'undefined://undefined/repos/undefined/milestones/1?state=open&sort=due_date&direction=asc'
+      assert.deepEqual superagent.params,
+        'uri': 'https://api.github.com/repos/radekstepan/burnchart/milestones/1?state=open&sort=due_date&direction=asc'
         'Content-Type': 'application/json',
         'Accept': 'application/vnd.github.v3'
       assert.deepEqual data, [ null ]
       do done
   
   'request - one milestone (404)': (done) ->
-    sa.response =
+    superagent.response =
       'statusType': 4
       'error': Error "cannot GET undefined (404)"
       'body':
         'documentation_url': "http://developer.github.com/v3"
         'message': "Not Found"
+
+    owner = 'radekstepan'
+    name = 'burnchart'
+    milestone = 0
     
-    request.oneMilestone {}, 9, (err) ->
+    request.oneMilestone { owner, name, milestone }, (err) ->
       assert.equal err, 'Not Found'
       do done
 
   'request - one milestone (500)': (done) ->
-    sa.response =
+    superagent.response =
       'statusType': 5
       'error': Error "Error"
       'body': null
+
+    owner = 'radekstepan'
+    name = 'burnchart'
+    milestone = 0
     
-    request.oneMilestone {}, 9, (err) ->
+    request.oneMilestone { owner, name, milestone }, (err) ->
       assert.equal err, 'Error'
       do done
 
   'request - all issues (ok)': (done) ->
-    sa.response =
+    superagent.response =
       'statusType': 2
       'error': no
       'body': [ null ]
+
+    owner = 'radekstepan'
+    name = 'burnchart'
+    milestone = 0
     
-    request.allIssues {}, {}, (err, data) ->
+    request.allIssues { owner, name, milestone }, {}, (err, data) ->
       assert.ifError err
-      assert.deepEqual sa.params,
-        'uri': 'undefined://undefined/repos/undefined/issues?per_page=100'
+      assert.deepEqual superagent.params,
+        'uri': 'https://api.github.com/repos/radekstepan/burnchart/issues?milestone=0&per_page=100'
         'Content-Type': 'application/json',
         'Accept': 'application/vnd.github.v3'
       assert.deepEqual data, [ null ]
       do done
 
   'request - timeout': (done) ->
-    sa.timeout = 10001
-    sa.response =
+    superagent.timeout = 5001
+    superagent.response =
       'statusType': 2
       'error': no
       'body': [ null ]
+
+    owner = 'radekstepan'
+    name = 'burnchart'
+    milestone = 0
     
-    request.allIssues {}, {}, (err) ->
+    request.allIssues { owner, name, milestone }, {}, (err) ->
       assert.equal err, 'Request has timed out'
       do done

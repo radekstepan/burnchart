@@ -1,6 +1,9 @@
 _          = require 'lodash'
 superagent = require 'superagent'
 
+# Lodash mixins.
+require '../../utils/mixins.coffee'
+
 user = require '../../models/user.coffee'
 
 # Custom JSON parser.
@@ -33,7 +36,7 @@ module.exports =
       request data, cb
 
   # Get all open milestones.
-  allMilestones: ({ owner, name }, cb) -> 
+  allMilestones: ({ owner, name }, cb) ->
     return cb 'Request is malformed' unless isValid { owner, name }
 
     ready ->
@@ -79,7 +82,7 @@ request = ({ protocol, host, path, query, headers }, cb) ->
   q = if query then '?' + ( "#{k}=#{v}" for k, v of query ).join('&') else ''
 
   # The URI.
-  req = superagent.get("#{protocol}://#{host}#{path}#{q}")
+  req = superagent.get "#{protocol}://#{host}#{path}#{q}"
   # Add headers.
   ( req.set(k, v) for k, v of headers )
   
@@ -87,7 +90,7 @@ request = ({ protocol, host, path, query, headers }, cb) ->
   timeout = setTimeout ->
     exited = yes
     cb 'Request has timed out'
-  , 1e4 # give us 10s
+  , 5e3 # give us 5s
 
   # Send.
   req.end (err, data) ->
