@@ -1,6 +1,5 @@
 #Tasks to do
 
-- [ ] add some product screenshots
 - [ ] create notes about how original people can upgrade to burnchart
 - [ ] clean up docs, track them on git or using Assembly system?
 - [ ] rename repo to burnchart
