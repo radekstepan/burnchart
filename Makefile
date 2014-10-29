@@ -39,15 +39,15 @@ OPTS = --compilers coffee:coffee-script/register --ui exports --timeout 20000 --
 
 # Run mocha test.
 test:
-	REPORTER = spec
-	$(MOCHA) $(OPTS) --reporter $(REPORTER)
+	$(MOCHA) $(OPTS) --reporter spec
 
 # Run code coverage.
 coverage:
-	$(MOCHA) $(OPTS) --reporter $(REPORTER) --require blanket > docs/COVERAGE.html
+	$(MOCHA) $(OPTS) --reporter html-cov --require blanket > docs/COVERAGE.html
 
 # Run code coverage and publish to coveralls.
 coveralls:
-	$(MOCHA) $(OPTS) --reporter $(REPORTER) --require blanket | COVERALLS_SERVICE_NAME=MOCHA $(COVERALLS)
+	TOKEN = PASSWORD1
+	$(MOCHA) $(OPTS) --reporter mocha-lcov-reporter --require blanket | COVERALLS_REPO_TOKEN=$(TOKEN) COVERALLS_SERVICE_NAME=MOCHA $(COVERALLS)
 
 .PHONY: test
