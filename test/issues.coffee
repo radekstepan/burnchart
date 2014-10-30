@@ -1,7 +1,6 @@
 proxy  = do require('proxyquire').noCallThru
 assert = require 'assert'
 path   = require 'path'
-require 'blanket'
 
 request = {}
 

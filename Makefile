@@ -14,7 +14,7 @@ watch:
 
 # Watch the app.
 watch-js:
-	$(WATCH) -e ./src/app.coffee -o public/js/app.bundle.js -d	-v
+	$(WATCH) -e ./src/app.coffee -o public/js/app.bundle.js -d -v
 
 # Watch the styles.
 watch-css:
@@ -35,7 +35,7 @@ build:
 publish:
 	$(GRUNT) gh-pages
 
-OPTS = --compilers coffee:coffee-script/register --ui exports --timeout 20000 --slow 15000 --bail
+OPTS = --compilers coffee:coffee-script/register --ui exports --bail
 
 # Run mocha test.
 test:

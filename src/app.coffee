@@ -9,6 +9,8 @@ require './models/projects.coffee'
 
 Header = require './views/header.coffee'
 Notify = require './views/notify.coffee'
+Icons  = require './views/icons.coffee'
+
 router = require './modules/router.coffee'
 
 new Ractive
@@ -17,7 +19,7 @@ new Ractive
 
   'el': 'body'
 
-  'components': { Header, Notify }
+  'components': { Header, Notify, Icons }
 
   onrender: ->
     # Start the router.

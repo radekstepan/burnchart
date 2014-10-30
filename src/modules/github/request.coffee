@@ -4,7 +4,8 @@ superagent = require 'superagent'
 # Lodash mixins.
 require '../../utils/mixins.coffee'
 
-user = require '../../models/user.coffee'
+config = require '../../models/config.coffee'
+user   = require '../../models/user.coffee'
 
 # Custom JSON parser.
 superagent.parse =
@@ -90,7 +91,7 @@ request = ({ protocol, host, path, query, headers }, cb) ->
   timeout = setTimeout ->
     exited = yes
     cb 'Request has timed out'
-  , 5e3 # give us 5s
+  , config.data.request.timeout # wait this long
 
   # Send.
   req.end (err, data) ->

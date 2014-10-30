@@ -18,6 +18,7 @@ codes =
   'spinner1':       '\e80b'
   'attention':      '\e80c'
   'download-cloud': '\e80d'
+  'heart':          '\e80e'
 
 module.exports = Ractive.extend
 

@@ -18,7 +18,7 @@ module.exports = (milestone) ->
         isDone = yes if points is 100
 
     # Milestones with no due date are always on track.
-    return { isOverdue, isOnTime, isDone, isEmpty, 'progress': { points } } unless milestone.due_on
+    return { isOverdue, isOnTime, isDone, isEmpty, 'progress': { points } } unless milestone.due_on?
 
     a = +new Date milestone.created_at
     b = +new Date

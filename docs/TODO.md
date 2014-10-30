@@ -2,9 +2,7 @@
 
 - [ ] create notes about how original people can upgrade to burnchart
 - [ ] clean up docs, track them on git or using Assembly system?
-- [ ] rename repo to burnchart
 - [ ] check with austin@assembly.com if my repo looks good to be forked to Assembly
-- [ ] move domain to Assembly
 - [ ] fork it to Assembly
 - [ ] landing page for the project and put message on `github-burndown-chart` repo
 - [ ] provide a documentation site (because we ref it from hero)
@@ -12,6 +10,7 @@
 
 ##Next Release
 
+- [ ] make coverage work
 - [ ] http://burnchart.io#rails I would expect it to list all the projects for that owner so I can select one of them (Ryan); we could show a list of available project names with their: `description`, `private` flag and `has_issues` making the project greyed out if no issues found
 
 ##Backlog

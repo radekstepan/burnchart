@@ -113,6 +113,7 @@ module.exports = new Model
       # We are supposed to exist already.
       throw 500  
 
+  # TODO: remove in production.
   demo: ->
     @set 'list': [
       { 'owner': 'mbostock', 'name': 'd3' }
@@ -166,6 +167,6 @@ module.exports = new Model
     @observe 'sortBy', ->
       # Use pop as Ractive is glitchy when resetting arrays.
       @set 'index', null
-      # Run the sort again.
+      # Run the sort again.
       do @sort
     , 'init': no

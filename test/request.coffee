@@ -1,7 +1,6 @@
 proxy  = do require('proxyquire').noCallThru
 assert = require 'assert'
 path   = require 'path'
-require 'blanket'
 
 class Sa
 
@@ -33,6 +32,9 @@ request = proxy path.resolve(__dirname, '../src/modules/github/request.coffee'),
 # User is ready, make the requests.
 user = require '../src/models/user.coffee'
 user.set 'ready', yes
+
+# Get config so we can fudge timeout.
+config = require '../src/models/config.coffee'
 
 module.exports =
 
@@ -123,7 +125,10 @@ module.exports =
       do done
 
   'request - timeout': (done) ->
-    superagent.timeout = 5001
+    # Run this last or reset timeout to default again...
+    config.set 'request.timeout', 10
+
+    superagent.timeout = 11
     superagent.response =
       'statusType': 2
       'error': no

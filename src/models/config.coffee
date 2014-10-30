@@ -33,3 +33,7 @@ module.exports = new Model
       "location": /^#!((\/[^\/]+){2,3})$/
       # Process all issues as one size (ONE_SIZE) or use labels (LABELS).
       "points": 'ONE_SIZE'
+    # Request pertaining.
+    "request":
+      # Default timeout of 5s.
+      "timeout": 5e3
