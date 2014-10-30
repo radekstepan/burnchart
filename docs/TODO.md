@@ -10,11 +10,11 @@
 
 ##Next Release
 
-- [ ] make coverage work
 - [ ] http://burnchart.io#rails I would expect it to list all the projects for that owner so I can select one of them (Ryan); we could show a list of available project names with their: `description`, `private` flag and `has_issues` making the project greyed out if no issues found
 
 ##Backlog
 
+- [ ] coverage using `blanket` does not work in tests that `proxyquire`
 - [ ] highlight today in the chart better
 - [ ] one click to go from a project or milestone view to github
 - [ ] be able to specify milestone by name (will nicely show in title)

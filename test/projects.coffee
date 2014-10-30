@@ -1,11 +1,6 @@
-proxy  = do require('proxyquire').noCallThru
 assert = require 'assert'
-path   = require 'path'
-_      = require 'lodash'
 
-projects = proxy path.resolve(__dirname, '../src/models/projects.coffee'),
-  # Just return the stats that are on the milestone already.
-  '../modules/stats.coffee': ({ stats }) -> stats
+projects = require '../src/models/projects.coffee'
 
 module.exports =
 
@@ -17,7 +12,7 @@ module.exports =
     do projects.clear
 
     project = { 'owner': 'radekstepan', 'name': 'burnchart' }
-    milestone = 'title': '1.0.0'
+    milestone = 'title': '1.0.0', 'stats': {}
 
     projects.push 'list', project
     projects.addMilestone project, milestone
@@ -108,8 +103,8 @@ module.exports =
     projects.set 'sortBy', 'name'
 
     project = { 'owner': 'radekstepan', 'name': 'burnchart' }
-    milestone1 = 'title': 'B'
-    milestone2 = 'title': 'A'
+    milestone1 = 'title': 'B', 'stats': {}
+    milestone2 = 'title': 'A', 'stats': {}
 
     projects.push 'list', project
     projects.addMilestone project, milestone1
@@ -125,9 +120,9 @@ module.exports =
     projects.set 'sortBy', 'name'
 
     project = { 'owner': 'radekstepan', 'name': 'burnchart' }
-    milestone1 = 'title': '1.2.5'
-    milestone2 = 'title': '1.1.x'
-    milestone3 = 'title': '1.1.7'
+    milestone1 = 'title': '1.2.5', 'stats': {}
+    milestone2 = 'title': '1.1.x', 'stats': {}
+    milestone3 = 'title': '1.1.7', 'stats': {}
 
     projects.push 'list', project
     projects.addMilestone project, milestone1

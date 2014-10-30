@@ -7,6 +7,9 @@ progress = (a, b) ->
 # Calculate the stats for a milestone.
 #  Is it on time? What is the progress?
 module.exports = (milestone) ->
+    # Makes testing easier...
+    return milestone.stats if milestone.stats?
+
     isDone = no ; isOnTime = yes ; isOverdue = no ; isEmpty = yes; points = 0
 
     # Progress in points.

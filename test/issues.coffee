@@ -1,13 +1,8 @@
-proxy  = do require('proxyquire').noCallThru
 assert = require 'assert'
-path   = require 'path'
 
-request = {}
-
-issues = proxy path.resolve(__dirname, '../src/modules/github/issues.coffee'),
-  './request.coffee': request
-
-config = require '../src/models/config.coffee'
+request = require '../src/modules/github/request.coffee'
+issues  = require '../src/modules/github/issues.coffee'
+config  = require '../src/models/config.coffee'
 
 repo = { 'owner': 'radekstepan', 'name': 'burnchart', 'milestone': 1 }
 

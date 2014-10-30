@@ -44,6 +44,9 @@ calcSize = (list) ->
         # Issues without size (no matching labels) are not saved.
         !!issue.size
 
+    else
+      throw 500
+
   # Sync return.
   { list, size }
 
