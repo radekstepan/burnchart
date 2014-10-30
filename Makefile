@@ -35,7 +35,7 @@ build:
 publish:
 	$(GRUNT) gh-pages
 
-OPTS = --compilers coffee:coffee-script/register --ui exports --bail
+OPTS = --compilers coffee:coffee-script/register --ui exports
 
 # Run mocha test.
 test:

@@ -128,7 +128,7 @@ module.exports =
     # Run this last or reset timeout to default again...
     config.set 'request.timeout', 10
 
-    superagent.timeout = 11
+    superagent.timeout = 20
     superagent.response =
       'statusType': 2
       'error': no
