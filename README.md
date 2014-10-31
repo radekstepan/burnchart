@@ -1,8 +1,8 @@
 *Existing users: The url mapping has been preserved from the original app, we are just using a different domain. If you'd like to use the previous version(s), grab the tags `v1`, `v2`.*
 
-#burnchart
+#[burnchart](http://burnchart.io)
 
-GitHub Burndown Chart as a service. Answers the question "are my projects on track"?
+GitHub Burndown Chart as a Service. Answers the question "are my projects on track"?
 
 ![Build Status](http://img.shields.io/codeship/31951cd0-42c7-0132-d601-5ea438edf284.svg?style=flat)
 [![Coverage](http://img.shields.io/coveralls/radekstepan/burnchart/master.svg?style=flat)](<https://coveralls.io/r/radekstepan/burnchart>)
