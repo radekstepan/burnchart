@@ -36,7 +36,7 @@ Choose from `ONE_SIZE` which means each issue is worth 1 point or `LABELS` where
 "points": "ONE_SIZE"
 ```
 
-If you specify `LABELS` above, here is the place set the regex used to parse the number out of a label. When multiple matching size labels exist, their sum is taken.
+If you specify `LABELS` above, this is the place to set a regex used to parse a label and extract points size from it. When multiple matching size labels exist, their sum is taken.
 
 ```coffeescript
 "size_label": /^size (\d+)$/
