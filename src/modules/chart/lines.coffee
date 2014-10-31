@@ -1,5 +1,6 @@
-_  = require 'lodash'
-d3 = require 'd3'
+_      = require 'lodash'
+d3     = require 'd3'
+moment = require 'moment'
 
 config = require '../../models/config.coffee'
 
@@ -11,7 +12,7 @@ module.exports =
   # `total`:      total number of points (open & closed issues)
   actual: (issues, created_at, total) ->
     head = [ {
-      'date': new Date created_at
+      'date': do moment(created_at).toJSON
       'points': total
     } ]
     
@@ -25,7 +26,7 @@ module.exports =
       max = size if size > max
 
       # Dropping points remaining.
-      issue.date = new Date closed_at
+      issue.date = do moment(closed_at).toJSON
       issue.points = total -= size
       issue
     
@@ -43,30 +44,29 @@ module.exports =
   # `b`:     milestone end date
   # `total`: total number of points (open & closed issues)
   ideal: (a, b, total) ->
-    # Swap?
+    # Swap if end is before the start...
     [ b, a ] = [ a, b ] if b < a
 
-    # We start here adding days to `d`.
-    [ y, m, d ] = _.map a.match(config.data.chart.datetime)[1].split('-'), (v) -> parseInt v
-    # We want to end here.
-    cutoff = new Date(b)
+    a = moment a
+    # Do we have a due date?
+    b = if b? then moment b else do moment.utc
 
     # Go through the beginning to the end skipping off days.
     days = [] ; length = 0
     do once = (inc = 0) ->
-      # A new day.
-      day = new Date y, m - 1, d + inc
+      # A new day. TODO: deal with hours and minutes!
+      day = a.add 1, 'days'
       
       # Does this day count?
-      day_of = 7 if !day_of = day.getDay()
+      day_of = 7 unless day_of = do day.weekday
       if day_of in config.data.chart.off_days
-        days.push { date: day, off_day: yes }
+        days.push { 'date': do day.toJSON, 'off_day': yes }
       else
         length += 1
-        days.push { date: day }
+        days.push { 'date': do day.toJSON }
       
       # Go again?
-      once(inc + 1) unless day > cutoff
+      once(inc + 1) unless day > b
 
     # Map points on the array of days now.
     velocity = total / (length - 1)
@@ -77,7 +77,7 @@ module.exports =
       day
 
     # Do we need to make a link to right now?
-    days.push { date: now, points: 0 } if (now = new Date) > cutoff
+    days.push { 'date': do now.toJSON, 'points': 0 } if (now = do moment.utc) > b
 
     days
 
@@ -85,15 +85,17 @@ module.exports =
   trend: (actual, created_at, due_on) ->
     return [] unless actual.length
 
-    start = +actual[0].date
+    [ first, ..., last ] = actual
+
+    start = moment first.date
 
     # Values is a list of time from the start and points remaining.
     values = _.map actual, ({ date, points }) ->
-      [ +date - start, points ]
+      [ moment(date).diff(start), points ]
 
     # Now is an actual point too.
-    last = actual[actual.length - 1]
-    values.push [ + new Date - start, last.points ]
+    now = do moment.utc
+    values.push [ now.diff(start), last.points ]
 
     # http://classroom.synonym.com/calculate-trendline-2709.html
     b1 = 0 ; e = 0 ; c1 = 0
@@ -105,30 +107,30 @@ module.exports =
 
     slope = (a - (b1 * e)) / ((l * c1) - (Math.pow(b1, 2)))
     intercept = (e - (slope * b1)) / l
+    
     fn = (x) -> slope * x + intercept
 
     # Milestone always has a creation date.
-    created_at = new Date created_at
+    created_at = moment created_at
     
-    now = new Date
     # Due date specified.
     if due_on
-      due_on = new Date due_on
+      due_on = moment due_on
       # In the past?
       due_on = now if now > due_on
     # No due date
     else
       due_on = now
 
-    a = created_at - start
-    b = due_on - start
+    a = created_at.diff start
+    b = due_on.diff start
 
     [
       {
-        'date': created_at
-        'points': fn(a)
+        'date': do created_at.toJSON
+        'points': fn a
       }, {
-        'date': due_on
-        'points': fn(b)
+        'date': do due_on.toJSON
+        'points': fn b
       }
     ]

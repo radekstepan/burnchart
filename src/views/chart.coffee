@@ -48,12 +48,16 @@ module.exports = Ractive.extend
     # Line generator.
     line = d3.svg.line()
     .interpolate("linear")
-    .x( (d) -> x(d.date) )
+    .x( (d) -> x(new Date(d.date)) ) # convert to Date only now
     .y( (d) -> y(d.points) )
 
     # Get the minimum and maximum date, and initial points.
-    x.domain([ ideal[0].date, ideal[ideal.length - 1].date ])
-    y.domain([ 0, ideal[0].points ]).nice()
+    [ first, ..., last ] = ideal
+    x.domain [
+        new Date(first.date)
+        new Date(last.date)
+    ]
+    y.domain([ 0, first.points ]).nice()
 
     # Add an SVG element with the desired dimensions and margin.
     svg = d3.select(this.el.querySelector('#chart')).append("svg")
@@ -93,9 +97,9 @@ module.exports = Ractive.extend
     # Add a line showing where we are now.
     svg.append("svg:line")
     .attr("class", "today")
-    .attr("x1", x(new Date()))
+    .attr("x1", x(new Date))
     .attr("y1", 0)
-    .attr("x2", x(new Date()))
+    .attr("x2", x(new Date))
     .attr("y2", height)
 
     # Add the ideal line path.
@@ -131,7 +135,7 @@ module.exports = Ractive.extend
     .attr("xlink:href", ({ html_url }) -> html_url )
     .attr("xlink:show", 'new')
     .append('svg:circle')
-    .attr("cx", ({ date }) -> x date )
+    .attr("cx", ({ date }) -> x new Date date )
     .attr("cy", ({ points }) -> y points )
     .attr("r",  ({ radius }) -> 5 ) # fixed for now
     .on('mouseover', tooltip.show)

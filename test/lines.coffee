@@ -18,16 +18,18 @@ module.exports =
     do done
 
   'lines - ideal': (done) ->
+    # Dates are coming in without timezone information, so UTC.
     a = '2011-04-01T00:00:00Z'
     b = '2011-04-03T00:00:00Z'
     
     line = lines.ideal(a, b, 4)[ 0...3 ]
 
     assert.deepEqual line, [
-      { 'date': new Date('2011-04-01T06:00:00Z'), 'points': 4 }
-      { 'date': new Date('2011-04-02T06:00:00Z'), 'points': 2 }
-      { 'date': new Date('2011-04-03T06:00:00Z'), 'points': 0 }
+      { 'date': '2011-04-02T00:00:00.000Z', 'points': 4 }
+      { 'date': '2011-04-03T00:00:00.000Z', 'points': 2 }
+      { 'date': '2011-04-04T00:00:00.000Z', 'points': 0 }
     ]
+
 
     do done
 

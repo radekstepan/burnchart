@@ -8,7 +8,7 @@
 - [ ] 4 until GH fix milestone start date then provide an option to specify it; for example a text like this: `starts: 09-10-2014` in the description which we provide regex for in the config
 - [ ] 5 be able to config options through ui that currently have to be hardcoded in the config
 - [ ] 5 be able to delete added projects; on the project page listing all milestone, enable the cog at the bottom of the table, clicking it slides a link with a dustbin next to it which deletes the project
-- [ ] 3 dates not parsing well with timezones, see ideal lines test file
+- [ ] 3 check that we are using moment and toJSON all the way until chart view; tests checking res from github in milestones and issues
 
 ###Normal
 
@@ -22,7 +22,7 @@
 - [ ] 3 In add a project form autocomplete on my username, orgs I am member of and repos I have access to, use code from [elastic-med](https://github.com/intermine/intermine-apps-c/blob/master/elastic-med/src/components/search.coffee#L24-L46) to show the first option with Tab doing the autocomplete
 - [ ] 4 show number of tasks, points, days left, progress bar in the header of a chart page, just like in Assembly
 - [ ] 3 be able to specify milestone by name (will nicely show in title), so when we type in `owner/name/name` it should resolve the number
-- [ ] 3 trendline is sometimes cutting into axes, but maybe it was just an interpolation
+- [ ] 3 trendline is sometimes cutting into axes, see `rails/rails/36`
 - [ ] 3 deal with Firebase timing out, are we still logged-in? Show a warning page telling the people to refresh the browser (adding a button to do the same)
 - [ ] 3 use issue title to determine size
 - [ ] 3 the app bundle (albeit uncompressed) clocks in at 1.5MB, reduce the size (`d3` is huge (use [grunt-smash](https://github.com/cvisco/grunt-smash), [docs here](https://github.com/mbostock/smash/wiki)))

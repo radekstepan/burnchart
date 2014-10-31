@@ -25,8 +25,6 @@ module.exports = new Model
     "chart":
       # Days we are not working. Mon = 1
       "off_days": [ ]
-      # How do we parse GitHub dates?
-      "datetime": /^(\d{4}-\d{2}-\d{2})T(.*)/
       # How does a size label look like?
       "size_label": /^size (\d+)$/
       # Process all issues as one size (ONE_SIZE) or use labels (LABELS).
