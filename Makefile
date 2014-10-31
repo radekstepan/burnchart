@@ -18,7 +18,8 @@ watch-js:
 
 # Watch the styles.
 watch-css:
-	$(GRUNT) watch
+	$(GRUNT) css   # first build
+	$(GRUNT) watch # then watch
 
 # Serve locally.
 serve:

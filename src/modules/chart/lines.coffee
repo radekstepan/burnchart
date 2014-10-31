@@ -6,9 +6,9 @@ config = require '../../models/config.coffee'
 module.exports =
 
   # A graph of closed issues.
-  # `issues`:     issues list
+  # `issues`:     closed issues list
   # `created_at`: milestone start date
-  # `total`:    total number of points (open & closed issues)
+  # `total`:      total number of points (open & closed issues)
   actual: (issues, created_at, total) ->
     head = [ {
       'date': new Date created_at
@@ -39,8 +39,8 @@ module.exports =
     [].concat head, rest
 
   # A graph of an ideal progression..
-  # `a`:   milestone start date
-  # `b`:   milestone end date
+  # `a`:     milestone start date
+  # `b`:     milestone end date
   # `total`: total number of points (open & closed issues)
   ideal: (a, b, total) ->
     # Swap?

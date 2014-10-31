@@ -29,8 +29,6 @@ module.exports = new Model
       "datetime": /^(\d{4}-\d{2}-\d{2})T(.*)/
       # How does a size label look like?
       "size_label": /^size (\d+)$/
-      # How do we specify which user/repo/(milestone) we want?
-      "location": /^#!((\/[^\/]+){2,3})$/
       # Process all issues as one size (ONE_SIZE) or use labels (LABELS).
       "points": 'ONE_SIZE'
     # Request pertaining.
