@@ -5,11 +5,11 @@
 GitHub Burndown Chart as a service. Answers the question "are my projects on track"?
 
 [![Build Status](http://img.shields.io/codeship/<ID_HERE>.svg?style=flat)](<URL_HERE>)
-[![Coverage](http://img.shields.io/coveralls/radekstepan/burnchart/assembly.svg?style=flat)](<https://coveralls.io/r/radekstepan/burnchart>)
-[![Dependencies](http://img.shields.io/david/radekstepan/burnchart.svg?style=flat)](https://david-dm.org/radekstepan/burnchart)
+[![Coverage](http://img.shields.io/coveralls/asm-products/burnchart/master.svg?style=flat)](<https://coveralls.io/r/asm-products/burnchart>)
+[![Dependencies](http://img.shields.io/david/asm-products/burnchart.svg?style=flat)](https://david-dm.org/asm-products/burnchart)
 [![License](http://img.shields.io/badge/license-AGPL--3.0-red.svg?style=flat)](LICENSE)
 
-![image](https://raw.githubusercontent.com/radekstepan/burnchart/assembly/public/screenshots.jpg)
+![image](https://raw.githubusercontent.com/asm-products/burnchart/master/public/screenshots.jpg)
 
 ##Features
 
