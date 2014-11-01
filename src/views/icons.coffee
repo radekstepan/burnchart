@@ -19,6 +19,7 @@ codes =
   'attention':      '\e80c'
   'download-cloud': '\e80d'
   'heart':          '\e80e'
+  'lifebuoy':       '\e80f'
 
 module.exports = Ractive.extend
 

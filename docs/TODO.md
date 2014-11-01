@@ -1,5 +1,7 @@
 ##Backlog
 
+Use [Tally](http://tally.tl/) to determine what to work on next.
+
 ###Important
 
 - [ ] 3 `rails/rails/24` has issues in two clusters as if merged from two milestones, does it mean that sort by date is not working?
@@ -23,6 +25,7 @@
 - [ ] 3 trendline is sometimes cutting into axes, see `rails/rails/36`
 - [ ] 3 deal with Firebase timing out, are we still logged-in? Show a warning page telling the people to refresh the browser (adding a button to do the same)
 - [ ] 3 use issue title to determine size
+- [ ] 3 give people the ability to use private or public repo access. Use a dropdown button where we can choose either or.
 - [ ] 3 the app bundle (albeit uncompressed) clocks in at 1.5MB, reduce the size (`d3` is huge (use [grunt-smash](https://github.com/cvisco/grunt-smash), [docs here](https://github.com/mbostock/smash/wiki)))
 - [ ] 4 show number of tasks, points, days left, progress bar in the header of a chart page, just like in Assembly
 - [ ] 4 make better x-axis date display, otherwise we see all 1s, basically show better bands, choose per week or per month where appropriate
@@ -54,3 +57,5 @@
 - [ ] 5 show past commits or due dates like in [this calendar](https://dribbble.com/shots/1736128-Meetups-Page?list=shots&sort=popular&timeframe=now&offset=5)
 - [ ] 7 support Jira, Gitlab, Assembly
 - [ ] 5 determine which [case](http://www.scrumdesk.com/is-it-your-burn-down-chart/) the burnchart falls into
+- [ ] 7 [Enhanced Burndown Chart](https://help.rallydev.com/enhanced-burndown-chart), if we cache the issues through a milestone, we can show changes to the scope of work
+- [ ] 7 Use [RemoteStorage](http://remotestorage.io/integrate) to cache data instead of using Firebase

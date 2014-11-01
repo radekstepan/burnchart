@@ -13,12 +13,12 @@ GitHub Burndown Chart as a Service. Answers the question "are my projects on tra
 
 ##Features
 
-1. Running from the browser, apart from GitHub account sign in.
-1. Private repos; sign in with your GitHub account.
-1. Store projects in browser's `localStorage`.
-1. Off days; specify which days of the week to leave out from ideal burndown progression line.
-1. Trend line; to see if you can make it to the deadline at this pace.
-1. Different point counting strategies; select from 1 issues = 1 point or read size from issue label.
+1. Running from the **browser**, apart from GitHub account sign in which uses Firebase backend.
+1. **Private repos**; sign in with your GitHub account.
+1. **Store** projects in browser's `localStorage`.
+1. **Off days**; specify which days of the week to leave out from ideal burndown progression line.
+1. **Trend line**; to see if you can make it to the deadline at this pace.
+1. Different **point counting** strategies; select from 1 issues = 1 point or read size from issue label.
 
 ##Configuration
 
