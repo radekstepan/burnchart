@@ -1,0 +1,89 @@
+#chart {
+  height: 300px;
+  position: relative;
+  
+  #tooltip {
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+  
+  svg {
+    path.line {    
+      fill: none;
+      stroke-width: 1px;
+      clip-path: url("#clip");
+      
+      &.actual {
+        stroke: #64584c;
+        stroke-width: 3px;
+      }
+      
+      &.ideal {
+        stroke: #cacaca;
+        stroke-width: 3px;
+      }
+      
+      &.trendline {
+        stroke: #64584c;
+        stroke-width: 1.5px;
+        stroke-dasharray: 5, 5;
+      }
+    }
+    
+    line.today {
+      stroke: #cacaca;
+      stroke-width: 1px;
+      shape-rendering: crispEdges;
+      stroke-dasharray: 5, 5;
+    }
+    
+    circle {
+      fill: #64584c;
+      stroke: transparent;
+      stroke-width: 15px;
+      cursor: pointer;
+    }
+    
+    .axis {
+      shape-rendering: crispEdges;
+      
+      line {
+        stroke: rgba(202,202,202,0.25);
+        shape-rendering: crispEdges;
+      }
+      
+      text {
+        font-weight: bold;
+        fill: #cacaca;
+      }
+      
+      path {
+        display: none;
+      }
+    }
+  }
+}
+
+.d3-tip {
+  margin-top: -10px;
+  font-size: 11px;
+  padding: 8px 10px 7px 10px;
+  text-align: center;
+  background: rgba(0,0,0,0.75);
+  color: #fff;
+  border-radius: 3px;
+
+  &:after {
+    width: 100%;
+    color: rgba(0,0,0,0.8);
+    content: "\25BC";
+    position: absolute;
+  }
+  
+  &.n:after {
+    margin: -3px 0 0 0;
+    top: 100%;
+    left: 0;
+  }
+}

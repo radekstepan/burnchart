@@ -1,0 +1,48 @@
+.icon {
+  vertical-align: middle;
+  font-family: "Fontello";
+  font-style: normal;
+  font-weight: normal;
+  speak: none;
+  display: inline-block;
+  text-decoration: inherit;
+  text-align: center;
+  font-variant: normal;
+  text-transform: none;
+
+  &[class^='spin'],
+  &[class*=' spin'] {
+    .animation(spin 2s infinite linear);
+  }
+}
+
+@-webkit-keyframes spin { .spinner-frames(-webkit-); }
+@-moz-keyframes spin { .spinner-frames(-moz-); }
+@-ms-keyframes spin { .spinner-frames(-ms-); }
+@-o-keyframes spin { .spinner-frames; }
+@keyframes spin { .spinner-frames; }
+
+.spinner-frames() {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+.spinner-frames(@prefix) {
+  from {
+    @{prefix}transform: rotate(0deg);
+  }
+  to {
+    @{prefix}transform: rotate(360deg);
+  }
+}
+
+.animation(@args) {
+  -webkit-animation: @args;
+  -moz-animation: @args;
+  -ms-animation: @args;
+  -o-animation: @args;
+  animation: @args;
+}

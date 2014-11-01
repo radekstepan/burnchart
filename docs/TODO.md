@@ -3,12 +3,12 @@
 ###Important
 
 - [ ] 3 `rails/rails/24` has issues in two clusters as if merged from two milestones, does it mean that sort by date is not working?
+- [ ] 3 check that we are using moment and toJSON all the way until chart view; tests checking res from github in milestones and issues
 - [ ] 4 http://burnchart.io#rails I would expect it to list all the projects for that owner so I can select one of them (Ryan); we could show a list of available project names with their: `description`, `private` flag and `has_issues` making the project greyed out if no issues found, cache these projects in local storage
 - [ ] 4 if all issue circles in the chart are close to each other, make a "master circle" that amalgamates all the issues into one large circle, makes for a prettier view
 - [ ] 4 until GH fix milestone start date then provide an option to specify it; for example a text like this: `starts: 09-10-2014` in the description which we provide regex for in the config
 - [ ] 5 be able to config options through ui that currently have to be hardcoded in the config
 - [ ] 5 be able to delete added projects; on the project page listing all milestone, enable the cog at the bottom of the table, clicking it slides a link with a dustbin next to it which deletes the project
-- [ ] 3 check that we are using moment and toJSON all the way until chart view; tests checking res from github in milestones and issues
 
 ###Normal
 
@@ -18,14 +18,14 @@
 - [ ] 2 show project name on the milestone page, in the title so that we immediately know where we are
 - [ ] 2 focus on form fields style (blue outline etc) and switch off `user-select` on buttons
 - [ ] 2 be able to logout, add an icon next to the name with arrow leading out of the square
-- [ ] 4 make better x-axis date display, otherwise we see all 1s, basically show better bands, choose per week or per month where appropriate
 - [ ] 3 In add a project form autocomplete on my username, orgs I am member of and repos I have access to, use code from [elastic-med](https://github.com/intermine/intermine-apps-c/blob/master/elastic-med/src/components/search.coffee#L24-L46) to show the first option with Tab doing the autocomplete
-- [ ] 4 show number of tasks, points, days left, progress bar in the header of a chart page, just like in Assembly
 - [ ] 3 be able to specify milestone by name (will nicely show in title), so when we type in `owner/name/name` it should resolve the number
 - [ ] 3 trendline is sometimes cutting into axes, see `rails/rails/36`
 - [ ] 3 deal with Firebase timing out, are we still logged-in? Show a warning page telling the people to refresh the browser (adding a button to do the same)
 - [ ] 3 use issue title to determine size
 - [ ] 3 the app bundle (albeit uncompressed) clocks in at 1.5MB, reduce the size (`d3` is huge (use [grunt-smash](https://github.com/cvisco/grunt-smash), [docs here](https://github.com/mbostock/smash/wiki)))
+- [ ] 4 show number of tasks, points, days left, progress bar in the header of a chart page, just like in Assembly
+- [ ] 4 make better x-axis date display, otherwise we see all 1s, basically show better bands, choose per week or per month where appropriate
 - [ ] 5 responsive layout hiding header links into a button
 - [ ] 5 show burndown chart for all milestones
 
@@ -53,3 +53,4 @@
 - [ ] 5 create fake Firebase endpoint for GitHub auth, or change the endpoint in settings (easier) if people don't trust Google Firebase
 - [ ] 5 show past commits or due dates like in [this calendar](https://dribbble.com/shots/1736128-Meetups-Page?list=shots&sort=popular&timeframe=now&offset=5)
 - [ ] 7 support Jira, Gitlab, Assembly
+- [ ] 5 determine which [case](http://www.scrumdesk.com/is-it-your-burn-down-chart/) the burnchart falls into

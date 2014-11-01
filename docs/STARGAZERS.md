@@ -2,86 +2,86 @@
 
 *Original list of stargazers for `radekstepan/github-burndown-chart`.*
 
-radekstepan
-anissen
-HudsonAfonso
-jcberthon
-vad710
-Tomohiro
-terite
-MachineTi
-ttsuruoka
-ph
-xiechao06
-sbusso
-icesoar
-toland
-cymantic
-yuriykulikov
-icecreammatt
-mps
-jhnns
-PyroMani
-nathankleyn
-ecarreras
-dmihalcik
-xavierchou
-xavierchow
-chaselee
-jamespjh
-egi
-HasAMcNett
-mkuprionis
-morgan
-davidtingsu
-steevee
-menzer
-rauhryan
-gilday
-nside
-rukku
-tnira
-savage69kr
-uzulla
-yoiang
-andyberry88
-polidog
-acouch
-y-uuki
-Sixeight
-mzyy94
-Vorzard
-kasperisager
-sychedelix
-rochacbruno
-ellisonleao
-avelino
-rturk
-checkcheckzz
-tkmoteki
-lerrua
-opn
-tea-mac
-u01jmg3
-dwcaraway
-emanuelvianna
-dwightwatson
-donkirkby
-you21979
-taka011239
-monzou
-h-ikio
-jinky32
-alantrrs
-concertman
-AntoinePlu
-motemen
-mackagy1
-zoncoen
-lukebrooker
-katryo
-l0gicpath
-bshyong
-nightlyworker
-Meroje
-marcioukita
+1. radekstepan
+1. anissen
+1. HudsonAfonso
+1. jcberthon
+1. vad710
+1. Tomohiro
+1. terite
+1. MachineTi
+1. ttsuruoka
+1. ph
+1. xiechao06
+1. sbusso
+1. icesoar
+1. toland
+1. cymantic
+1. yuriykulikov
+1. icecreammatt
+1. mps
+1. jhnns
+1. PyroMani
+1. nathankleyn
+1. ecarreras
+1. dmihalcik
+1. xavierchou
+1. xavierchow
+1. chaselee
+1. jamespjh
+1. egi
+1. HasAMcNett
+1. mkuprionis
+1. morgan
+1. davidtingsu
+1. steevee
+1. menzer
+1. rauhryan
+1. gilday
+1. nside
+1. rukku
+1. tnira
+1. savage69kr
+1. uzulla
+1. yoiang
+1. andyberry88
+1. polidog
+1. acouch
+1. y-uuki
+1. Sixeight
+1. mzyy94
+1. Vorzard
+1. kasperisager
+1. sychedelix
+1. rochacbruno
+1. ellisonleao
+1. avelino
+1. rturk
+1. checkcheckzz
+1. tkmoteki
+1. lerrua
+1. opn
+1. tea-mac
+1. u01jmg3
+1. dwcaraway
+1. emanuelvianna
+1. dwightwatson
+1. donkirkby
+1. you21979
+1. taka011239
+1. monzou
+1. h-ikio
+1. jinky32
+1. alantrrs
+1. concertman
+1. AntoinePlu
+1. motemen
+1. mackagy1
+1. zoncoen
+1. lukebrooker
+1. katryo
+1. l0gicpath
+1. bshyong
+1. nightlyworker
+1. Meroje
+1. marcioukita

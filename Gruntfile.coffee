@@ -16,27 +16,6 @@ module.exports = (grunt) ->
             'public/css'
           ]
 
-    'stylus':
-      app:
-        src: [
-          'src/styles/fonts.styl'
-          'src/styles/icons.styl'
-          'src/styles/chart.styl'
-          'src/styles/notification.styl'
-          'src/styles/app.styl'
-        ]
-        dest: 'public/css/app.css'
-
-    'concat':
-      css:
-        src: [
-          # Vendor dependencies.
-          'node_modules/normalize.css/normalize.css'
-          # Our style.
-          'public/css/app.css'
-        ]
-        dest: 'public/css/app.bundle.css'
-
     'uglify':
       bundle:
         files:
@@ -47,13 +26,6 @@ module.exports = (grunt) ->
         files:
           'public/css/app.min.css': 'public/css/app.css'
           'public/css/app.bundle.min.css': 'public/css/app.bundle.css'
-
-    'watch':
-      css:
-        files: [ 'src/styles/**/*.styl' ]
-        tasks: [ 'stylus', 'concat' ]
-        options:
-          spawn: no
 
     'gh-pages':
       options:
@@ -71,18 +43,9 @@ module.exports = (grunt) ->
 
   grunt.loadNpmTasks('grunt-mkdir')
   grunt.loadNpmTasks('grunt-contrib-clean')
-  grunt.loadNpmTasks('grunt-contrib-stylus')
-  grunt.loadNpmTasks('grunt-contrib-concat')
   grunt.loadNpmTasks('grunt-contrib-uglify')
   grunt.loadNpmTasks('grunt-contrib-cssmin')
-  grunt.loadNpmTasks('grunt-contrib-watch')
   grunt.loadNpmTasks('grunt-gh-pages')
-
-  # Stylus to CSS, concat all CSS.
-  grunt.registerTask('css', [
-    'stylus:app'
-    'concat:css'
-  ])
 
   # Cleanup public directories.
   grunt.registerTask('init', [
