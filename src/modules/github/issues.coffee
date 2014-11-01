@@ -57,8 +57,8 @@ oneStatus = (repo, state, cb) ->
 
   done = (err) ->
     return cb err if err
-    # Add the size.
-    cb null, calcSize results
+    # Sort by closed time and add the size.
+    cb null, calcSize _.sortBy results, 'closed_at'
 
   # One pageful fetch (next pages in series).
   do fetchPage = (page=1) ->
@@ -67,8 +67,8 @@ oneStatus = (repo, state, cb) ->
       return done err if err
       # Empty?
       return done null, results unless data.length
-      # Concat sorted (api does not sort on closed_at!).
-      results = results.concat _.sortBy data, 'closed_at'
+      # Append the data.
+      results = results.concat data
       # < 100 results?
       return done null, results if data.length < 100
       # Fetch the next page then.

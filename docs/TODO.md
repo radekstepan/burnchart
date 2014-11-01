@@ -4,7 +4,6 @@ Use [Tally](http://tally.tl/) to determine what to work on next.
 
 ###Important
 
-- [ ] 3 `rails/rails/24` has issues in two clusters as if merged from two milestones, does it mean that sort by date is not working?
 - [ ] 3 check that we are using moment and toJSON all the way until chart view; tests checking res from github in milestones and issues
 - [ ] 4 http://burnchart.io#rails I would expect it to list all the projects for that owner so I can select one of them (Ryan); we could show a list of available project names with their: `description`, `private` flag and `has_issues` making the project greyed out if no issues found, cache these projects in local storage
 - [ ] 4 if all issue circles in the chart are close to each other, make a "master circle" that amalgamates all the issues into one large circle, makes for a prettier view
@@ -54,8 +53,9 @@ Use [Tally](http://tally.tl/) to determine what to work on next.
 - [ ] 4 show animated lines when drawing the chart
 - [ ] 5 how GitHub show commit activity in weekly slots, can we have something like this in the chart? Basically show commits in that week and their users
 - [ ] 5 create fake Firebase endpoint for GitHub auth, or change the endpoint in settings (easier) if people don't trust Google Firebase
-- [ ] 5 show past commits or due dates like in [this calendar](https://dribbble.com/shots/1736128-Meetups-Page?list=shots&sort=popular&timeframe=now&offset=5)
-- [ ] 7 support Jira, Gitlab, Assembly
 - [ ] 5 determine which [case](http://www.scrumdesk.com/is-it-your-burn-down-chart/) the burnchart falls into
+- [ ] 5 show past commits or due dates like in [this calendar](https://dribbble.com/shots/1736128-Meetups-Page?list=shots&sort=popular&timeframe=now&offset=5)
+- [ ] 5 a little service endpoint having the same api as GitHub; use it for support of other services and internally to test `request` without proxyrequireing `SuperAgent`
+- [ ] 7 support Jira, Gitlab, Assembly
 - [ ] 7 [Enhanced Burndown Chart](https://help.rallydev.com/enhanced-burndown-chart), if we cache the issues through a milestone, we can show changes to the scope of work
 - [ ] 7 Use [RemoteStorage](http://remotestorage.io/integrate) to cache data instead of using Firebase
