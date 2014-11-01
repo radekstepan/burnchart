@@ -50,6 +50,7 @@
     "grunt-gh-pages": "~0.9.1",
     "grunt-mkdir": "~0.1.2",
     "less": "^1.7.5",
+    "lesshat": "~3.0.2",
     "mocha": "~2.0.1",
     "mocha-lcov-reporter": "0.0.1",
     "node-static": "~0.7.6",

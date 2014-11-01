@@ -69,11 +69,11 @@ ul {
     }
   }
 
-  .system {
+  &.system {
     top: 0%;
     left: 50%;
-    transform: translateX(-50%) translateY(-50%);
     width: 500px;
+    .transform(translateX(-50%) translateY(-50%));
 
     p {
       padding-top: 20px;
@@ -156,7 +156,7 @@ ul {
       border: 0;
       padding: 10px 12px 10px 36px;
       font-size: 14px;
-      border-radius: 2px;
+      .border-radius(2px);
       color: #fff;
       width: 220px;
     }
@@ -187,7 +187,7 @@ ul {
     color: #e0808d;
 
     a {
-      border-radius: 2px;
+      .border-radius(2px);
       background: @highlight_color;
       color: @strong_color;
       padding: 11px 20px;
@@ -238,15 +238,15 @@ ul {
     #hero {
       background: url("../img/highway.jpg") center;
       background-size: cover;
-      border-radius: 2px;
+      .border-radius(2px);
       margin-bottom: 30px;
 
       .content {
-        border-radius: 2px;
+        .border-radius(2px);
         color: #fff;
         padding: 30px;
         background: rgba(0,0,0,0.3);
-        box-shadow: inset 0 1px 2px rgba(0,0,0,0.2);
+        .box-shadow(inset 0 1px 2px rgba(0,0,0,0.2));
 
         h2 {
           margin-bottom: 20px;
@@ -274,7 +274,7 @@ ul {
           a {
             font-family: @serif_font;
             padding: 11px 20px;
-            border-radius: 2px;
+            .border-radius(2px);
             display: inline-block;
             margin: 0 4px;
 
@@ -326,17 +326,17 @@ ul {
           box-sizing: border-box;
           padding: 10px;
           width: 100%;
-          border-radius: 2px 0 0 2px;
+          .border-radius(2px 0 0 2px);
           border: 1px solid #dde1ed;
           border-right: 0;
-          box-shadow: inset 0 1px 2px rgba(0,0,0,0.2);
+          .box-shadow(inset 0 1px 2px rgba(0,0,0,0.2));
         }
 
         a {
           margin-left: -2px;
           font-family: @serif_font;
           padding: 11px 20px;
-          border-radius: 0 2px 2px 0;
+          .border-radius(0 2px 2px 0);
           display: inline-block;
           font-weight: bold;
           background: @strong_color;
@@ -347,7 +347,7 @@ ul {
 
     #projects {
       border: 1px solid #cdcecf;
-      border-radius: 2px;
+      .border-radius(2px);
 
       h2 {
         color: #3e4457;
@@ -399,14 +399,14 @@ ul {
           }
 
           .progress .bar {
-            border-radius: 4px;
+            .border-radius(4px);
             background: #eaecf2;
             height: 10px;
             width: 100%;
           }
 
           .progress .bar.inner {
-            box-shadow: inset 0 1px 2px rgba(0,0,0,0.2);
+            .box-shadow(inset 0 1px 2px rgba(0,0,0,0.2));
           }
 
           .progress .bar.red {
@@ -451,7 +451,7 @@ ul {
       }
 
       .header {
-        box-shadow: 0 1px 2px rgba(221,225,237,0.5);
+        .box-shadow(0 1px 2px rgba(221,225,237,0.5));
         margin-bottom: 2px;
         border-bottom: 1px solid #dde1ed;
 
@@ -463,7 +463,7 @@ ul {
       .footer {
         background: #f9fafb;
         color: #aaafbf;
-        box-shadow: inset 0 1px 2px rgba(221,225,237,0.2);
+        .box-shadow(inset 0 1px 2px rgba(221,225,237,0.2));
         border-top: 1px solid #dde1ed;
         text-align: right;
         font-family: @serif_font;

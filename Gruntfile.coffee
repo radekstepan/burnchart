@@ -24,7 +24,6 @@ module.exports = (grunt) ->
     'cssmin':
       bundle:
         files:
-          'public/css/app.min.css': 'public/css/app.css'
           'public/css/app.bundle.min.css': 'public/css/app.bundle.css'
 
     'gh-pages':
