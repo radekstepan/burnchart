@@ -23,18 +23,18 @@ module.exports = (milestone) ->
     # Milestones with no due date are always on track.
     return { isOverdue, isOnTime, isDone, isEmpty, 'progress': { points } } unless milestone.due_on?
 
-    a = +new Date milestone.created_at
-    b = +new Date
-    c = +new Date milestone.due_on
+    a = moment milestone.created_at
+    b = do moment.utc
+    c = moment milestone.due_on
 
     # Overdue?
-    isOverdue = yes if b > c
+    isOverdue = yes if b.isAfter c
 
     # Progress in time.
-    time = progress b - a, c - b
+    time = progress b.diff(a), c.diff(b)
 
     # How many days is 1% of the time?
-    days = (moment(b).diff(moment(a), 'days')) / 100
+    days = (b.diff(a, 'days')) / 100
 
     # Are we on time?
     isOnTime = points > time

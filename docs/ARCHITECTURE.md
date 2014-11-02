@@ -45,3 +45,5 @@ When developing in LESS, be aware that [LESS Hat](http://lesshat.madebysource.co
 ##Tests
 
 Tests run via Mocha and [Blanket](http://blanketjs.org/) for coverage. You can use [proxyquire](https://github.com/thlorenz/proxyquire) to override requires, but results in incorrect test coverage when used with Blanket.
+
+The `test/fixtures` folder contains example responses from GitHub.

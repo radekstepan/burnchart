@@ -6,7 +6,7 @@ module.exports =
 
   # Time from now.
   fromNow: _.memoize (jsonDate) ->
-    moment(new Date(jsonDate)).fromNow()
+    do moment(jsonDate).fromNow
 
   # When is a milestone due?
   due: (jsonDate) ->

@@ -1,4 +1,5 @@
 assert = require 'assert'
+moment = require 'moment'
 
 request = require '../src/modules/github/request.coffee'
 issues  = require '../src/modules/github/issues.coffee'
@@ -7,6 +8,15 @@ config  = require '../src/models/config.coffee'
 repo = { 'owner': 'asm-products', 'name': 'burnchart', 'milestone': 1 }
 
 module.exports =
+
+  'issues - time format': (done) ->
+    json = require './fixtures/issues.json'
+
+    # ISO 8601 dates are in UTC timezone.
+    utc = do moment(json[0].created_at).toDate().toUTCString
+    assert.equal utc, 'Fri, 22 Apr 2011 13:33:48 GMT'
+
+    do done
 
   'issues - all empty': (done) ->
     called = 0
