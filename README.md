@@ -52,13 +52,15 @@ $ make install
 
 ###Development
 
+Read the [Architecture](docs/ARCHITECTURE.md) document when contributing code.
+
 To create an unminified package with source maps for debugging:
 
 ```bash
 $ make watch
 ```
 
-You can then start a local http server with:
+You can then start a local http server on port `8080` with:
 
 ```bash
 $ make serve
@@ -75,8 +77,6 @@ And finally for code coverage:
 ```bash
 $ make coverage
 ```
-
-There is currently a bug that incorrectly shows code coverage (using [blanket.js](http://blanketjs.org/)) for modules that are loaded using [proxyquire](https://github.com/thlorenz/proxyquire).
 
 ###Production
 
