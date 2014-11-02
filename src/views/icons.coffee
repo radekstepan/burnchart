@@ -4,22 +4,21 @@ format = require '../utils/format.coffee'
 
 # Fontello icon hex codes.
 codes =
-  'cog':            '\e800'
-  'search':         '\e801'
-  'github':         '\e802'
-  'address':        '\e803'
-  'plus-circled':   '\e804'
-  'fire-station':   '\e805'
-  'sort-alphabet':  '\e806'
-  'down-open':      '\e807'
-  'spin6':          '\e808'
-  'megaphone':      '\e809'
-  'spin4':          '\e80a'
-  'spinner1':       '\e80b'
-  'attention':      '\e80c'
-  'download-cloud': '\e80d'
-  'heart':          '\e80e'
-  'lifebuoy':       '\e80f'
+  'spyglass':  '\e801' # Font Awesome - search
+  'plus':      '\e804' # Font Awesome - plus-circled
+  'settings':  '\e800' # Font Awesome - cog
+  'rocket':    '\e80a' # Font Awesome - rocket
+  'computer':  '\e807' # Font Awesome - desktop
+  'help':      '\e80f' # Font Awesome - lifebuoy
+  'github':    '\e802' # Font Awesome - github
+  'warning':   '\e80c' # Entypo - attention
+  'direction': '\e803' # Entypo - address
+  'megaphone': '\e808' # Entypo - megaphone
+  'heart':     '\e80e' # Typicons - heart
+  'sort':      '\e806' # Typicons - sort-alphabet
+  'spinner':   '\e80b' # MFG Labs - spinner1
+  'fire':      '\e805' # Maki - fire-station
+
 
 module.exports = Ractive.extend
 

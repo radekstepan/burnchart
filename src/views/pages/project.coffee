@@ -55,7 +55,7 @@ module.exports = Eventful.extend
       milestones.fetchAll project, cb
 
     fetchIssues = (allMilestones, cb) ->
-      return cb 'The project has no milestones' unless allMilestones.length
+      return cb 'This project has no milestones' unless allMilestones.length
 
       async.each allMilestones, (milestone, cb) ->
         # Maybe we have this milestone already?

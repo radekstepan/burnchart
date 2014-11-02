@@ -1,6 +1,6 @@
 <div id="projects">
   <div class="header">
-    <a class="sort" on-click="sortBy"><Icons icon="sort-alphabet"/> Sorted by {{projects.sortBy}}</a>
+    <a class="sort" on-click="sortBy"><Icons icon="sort"/> Sorted by {{projects.sortBy}}</a>
     <h2>Projects</h2>
   </div>
 
@@ -9,7 +9,7 @@
       {{#if errors}}
         <tr>
           <td colspan="3" class="repo">
-            <div class="project">{{owner}}/{{name}} <span class="error" title="{{errors.join('\n')}}"><Icons icon="attention"/></span></div>
+            <div class="project">{{owner}}/{{name}} <span class="error" title="{{errors.join('\n')}}"><Icons icon="warning"/></span></div>
           </td>
         </tr>
       {{/if}}
@@ -47,6 +47,6 @@
   </table>
 
   <div class="footer">
-    <!--<a href="#"><Icons icon="cog"/> Edit</a>-->
+    <!--<a href="#"><Icons icon="settings"/> Edit</a>-->
   </div>
 </div>

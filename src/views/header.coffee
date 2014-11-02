@@ -14,7 +14,7 @@ module.exports = Ractive.extend
   'data':
     'user': user
     # Default app icon.
-    'icon': 'fire-station'
+    'icon': 'fire'
 
   'components': { Icons }
 
@@ -28,4 +28,4 @@ module.exports = Ractive.extend
   onrender: ->
     # Switch loading icon with app icon.
     system.observe 'loading', (ya) =>
-      @set 'icon', if ya then 'spinner1' else 'fire-station'
+      @set 'icon', if ya then 'spinner' else 'fire'

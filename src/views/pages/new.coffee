@@ -6,6 +6,7 @@ firebase = require '../../models/firebase.coffee'
 system   = require '../../models/system.coffee'
 user     = require '../../models/user.coffee'
 key      = require '../../utils/key.coffee'
+Icons    = require '../icons.coffee'
 
 module.exports = Eventful.extend
 
@@ -14,6 +15,8 @@ module.exports = Eventful.extend
   'template': require '../../templates/pages/new.html'
 
   'data': { 'value': 'radekstepan/disposable', user }
+
+  'components': { Icons }
 
   'adapt': [ Ractive.adaptors.Ractive ]
 
@@ -36,7 +39,7 @@ module.exports = Eventful.extend
       do firebase.login
 
   onrender: ->
-    document.title = 'Add a new project'
+    document.title = 'Add a project'
 
     # TODO: autocomplete on our username if we are logged in or based
     #  on repos we already have.

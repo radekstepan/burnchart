@@ -33,7 +33,7 @@ module.exports = Eventful.extend
     
     # No issues?
     return @publish '!app/notify', {
-      'text': 'The milestone has no issues'
+      'text': 'This milestone has no issues'
       'type': 'warn'
       'system': yes
       'ttl': null
@@ -41,13 +41,13 @@ module.exports = Eventful.extend
 
     # Done?
     @publish '!app/notify', {
-      'text': 'The milestone is complete'
+      'text': 'This milestone is complete'
       'type': 'success'
     } if data.stats.isDone
 
     # Overdue?
     @publish '!app/notify', {
-      'text': 'The milestone is overdue'
+      'text': 'This milestone is overdue'
       'type': 'warn'
     } if data.stats.isOverdue
 
