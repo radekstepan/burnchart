@@ -3,10 +3,14 @@ module.exports = (grunt) ->
     
     pkg: grunt.file.readJSON("package.json")
 
-    'clean': [
-      'public/js'
-      'public/css'
-    ]
+    'clean':
+      public: [
+        'public/js'
+        'public/css'
+      ]
+      pages: [
+        '.grunt'
+      ]
 
     'mkdir':
       all:
@@ -48,7 +52,7 @@ module.exports = (grunt) ->
 
   # Cleanup public directories.
   grunt.registerTask('init', [
-    'clean'
+    'clean:public'
     'mkdir'
   ])  
 
@@ -56,4 +60,10 @@ module.exports = (grunt) ->
   grunt.registerTask('minify', [
     'uglify'
     'cssmin'
+  ])
+
+  # Publish to GitHub Pages.
+  grunt.registerTask('pages', [
+    'gh-pages'
+    'clean:pages'
   ])

@@ -43,7 +43,7 @@ build-css:
 
 # Publish to GitHub Pages.
 publish:
-	${GRUNT} gh-pages
+	${GRUNT} pages
 
 OPTS = --compilers coffee:coffee-script/register --ui exports
 
