@@ -8,8 +8,8 @@ module.exports = new Model
 
   'name': 'models/firebase'
 
-  # Login a user.
-  login: (cb) ->
+  # Sign-in a user.
+  signin: (cb) ->
     cb 'Not ready yet' unless @data.client
 
     @data.client.authWithOAuthPopup "github", (err, authData) =>      
@@ -24,15 +24,18 @@ module.exports = new Model
       'rememberMe': yes
       'scope': 'private_repo'
 
-  onAuth: (authData) ->
+  # When we sign-in/-out.
+  onAuth: (data={}) ->
     # Save user.
-    user.set authData
+    user.set data
     # Say we are done.
     user.set 'ready', yes
 
-  # Logout a user.
-  logout: ->
-    throw 'Implement'
+  # Sign-out a user.
+  signout: ->
+    do user.reset
+    user.set 'uid', null
+    do @data.client.unauth
 
   onrender: ->
     # Setup a new client.

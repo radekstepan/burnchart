@@ -34,9 +34,9 @@ module.exports = Eventful.extend
     window.location.hash = '#'
 
   onconstruct: ->
-    # Login user.
-    @on '!login', ->
-      do firebase.login
+    # Sign-in a user.
+    @on '!signin', ->
+      do firebase.signin
 
   onrender: ->
     document.title = 'Add a project'

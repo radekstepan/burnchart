@@ -59,4 +59,13 @@ coverage:
 coveralls:
 	${MOCHA} ${OPTS} --reporter mocha-lcov-reporter --require blanket | COVERALLS_REPO_TOKEN=$(TOKEN) COVERALLS_SERVICE_NAME=MOCHA ${COVERALLS}
 
+M = :speech_balloon:
+
+# Build app and make a commit with latest changes.
+commit:
+	${MAKE} build
+	git add -A
+	git commit -am "${M}"
+	git push -u origin master
+
 .PHONY: test

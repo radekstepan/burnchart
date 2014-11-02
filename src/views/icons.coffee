@@ -10,6 +10,7 @@ codes =
   'rocket':    '\e80a' # Font Awesome - rocket
   'computer':  '\e807' # Font Awesome - desktop
   'help':      '\e80f' # Font Awesome - lifebuoy
+  'signout':   '\e809' # Font Awesome - logout
   'github':    '\e802' # Font Awesome - github
   'warning':   '\e80c' # Entypo - attention
   'direction': '\e803' # Entypo - address

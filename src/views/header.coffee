@@ -21,9 +21,13 @@ module.exports = Ractive.extend
   'adapt': [ Ractive.adaptors.Ractive ]
   
   onconstruct: ->
-    # Login user.
-    @on '!login', ->
-      do firebase.login
+    # Sign-in a user.
+    @on '!signin', ->
+      do firebase.signin
+
+    # Sign-out a user.
+    @on '!signout', ->
+      do firebase.signout
 
   onrender: ->
     # Switch loading icon with app icon.

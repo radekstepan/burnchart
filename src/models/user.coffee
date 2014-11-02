@@ -4,3 +4,6 @@ Model = require '../utils/ractive/model.coffee'
 module.exports = new Model
 
   'name': 'models/user'
+
+  'data':
+    'uid': null
