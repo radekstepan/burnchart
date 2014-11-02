@@ -6,7 +6,7 @@ An app showing a burndown chart for issues in a GitHub milestone. A choice of st
 
 ##Community
 
-Anyone can contibute their time by working on issues. Ours are tracked in Assembly as [bounties](https://assembly.com/burnchart/bounties). You can use the contact form widget inside the app or [burnchart@helpful.io](mailto:burnchart@helpful.io) to contact the lead developer, Radek. You can also use [Tally](http://tally.tl/) to vote on upcoming features.
+Anyone can contibute their time by working on issues. Read the [Architecture](ARCHITECTURE.md) document to get oriented. Ours are tracked in Assembly as [bounties](https://assembly.com/burnchart/bounties). You can use the contact form widget inside the app or [burnchart@helpful.io](mailto:burnchart@helpful.io) to contact the lead developer, Radek. You can also use [Tally](http://tally.tl/) to vote on upcoming features.
 
 ##Background
 
