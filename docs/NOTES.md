@@ -1,7 +1,7 @@
 ##Notes
 
 - *payment gateways* in Canada: [Shopify](http://www.shopify.com/payment-gateways/canada), [Chargify](http://chargify.com/payment-gateways/) list; I get free processing on first $1000 with [Stripe](https://education.github.com/pack/offers)
-- [credit card form](http://designmodo.com/ux-credit-card-payment-form/) ux from Designmodo
+- [credit card form](http://designmodo.com/ux-credit-card-payment-form/) ux from Designmodo or [here](https://d13yacurqjgara.cloudfront.net/users/79914/screenshots/1048397/attachments/127794/payments_page.jpg).
 - workers: using a free instance of IronWorker and assuming 5s runtime each time gives us a poll every 6 minutes. Zapier would poll every 15 minutes but already integrates Stripe and FB.
 - $2.5 Node.js PaaS via Gandi with promo code `PAASLAUNCH-C50E-B077-A317`.
 

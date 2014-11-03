@@ -42,52 +42,23 @@ If you specify `LABELS` above, this is the place to set a regex used to parse a 
 "size_label": /^size (\d+)$/
 ```
 
-##Build
-
-The app is built using [Node](http://nodejs.org/). To install dev dependencies:
-
-```bash
-$ make install
-```
-
-###Development
+##Commands
 
 Read the [Architecture](docs/ARCHITECTURE.md) document when contributing code.
 
-To create an unminified package with source maps for debugging:
-
 ```bash
-$ make watch
-```
-
-You can then start a local http server on port `8080` with:
-
-```bash
-$ make serve
-```
-
-To test your changes run:
-
-```bash
-$ make test
-```
-
-And finally for code coverage:
-
-```bash
-$ make coverage
-```
-
-###Production
-
-To make a minified package for production:
-
-```bash
-$ make build
-```
-
-You can then publish the contents of the `public` folder to `gh-pages` branch with:
-
-```bash
-$ make publish
+rake build                  # Build everything & minify
+rake build:css              # Build the styles with LESS
+rake build:js               # Build the app with Browserify
+rake build:minify           # Minify build for production
+rake commit[message]        # Build app and make a commit with latest changes
+rake install                # Install dependencies with NPM
+rake publish                # Publish to GitHub Pages
+rake serve                  # Start a web server on port 8080
+rake test                   # Run tests with mocha
+rake test:coverage          # Run code coverage, mocha with Blanket.js
+rake test:coveralls[token]  # Run code coverage and publish to Coveralls
+rake watch                  # Watch everything
+rake watch:css              # Watch the styles
+rake watch:js               # Watch the app
 ```

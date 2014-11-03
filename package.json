@@ -16,8 +16,8 @@
     "url": "git://github.com/asm-products/burnchart.git"
   },
   "scripts": {
-    "start": "make serve",
-    "test": "make test"
+    "start": "rake serve",
+    "test": "rake test"
   },
   "dependencies": {
     "async": "~0.9.0",
