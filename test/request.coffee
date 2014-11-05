@@ -141,3 +141,15 @@ module.exports =
     request.allIssues { owner, name, milestone }, {}, (err) ->
       assert.equal err, 'Request has timed out'
       do done
+
+  'request - use tokens': (done) ->
+    user.set 'github.accessToken', 'ABC'
+
+    superagent.response = {}
+
+    owner = 'asm-products'
+    name = 'burnchart'
+    
+    request.repo { owner, name }, ->
+      assert.equal superagent.params.Authorization, 'token ABC'
+      do done

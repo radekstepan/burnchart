@@ -31,7 +31,7 @@ module.exports =
     ready ->
       data = _.defaults
         'path':   "/repos/#{owner}/#{name}"
-        'headers':  headers user.data.accessToken
+        'headers':  headers user.data.github?.accessToken
       , defaults.github
 
       request data, cb
@@ -44,7 +44,7 @@ module.exports =
       data = _.defaults
         'path':   "/repos/#{owner}/#{name}/milestones"
         'query':  { 'state': 'open', 'sort': 'due_date', 'direction': 'asc' }
-        'headers':  headers user.data.accessToken
+        'headers':  headers user.data.github?.accessToken
       , defaults.github
 
       request data, cb
@@ -57,7 +57,7 @@ module.exports =
       data = _.defaults
         'path':   "/repos/#{owner}/#{name}/milestones/#{milestone}"
         'query':  { 'state': 'open', 'sort': 'due_date', 'direction': 'asc' }
-        'headers':  headers user.data.accessToken
+        'headers':  headers user.data.github?.accessToken
       , defaults.github
 
       request data, cb
@@ -70,7 +70,7 @@ module.exports =
       data = _.defaults
         'path':   "/repos/#{owner}/#{name}/issues"
         'query':  _.extend query, { milestone, 'per_page': '100' }
-        'headers':  headers user.data.accessToken
+        'headers':  headers user.data.github?.accessToken
       , defaults.github
 
       request data, cb
@@ -86,7 +86,7 @@ request = ({ protocol, host, path, query, headers }, cb) ->
   req = superagent.get "#{protocol}://#{host}#{path}#{q}"
   # Add headers.
   ( req.set(k, v) for k, v of headers )
-  
+
   # Timeout for requests that do not finish... see #32.
   timeout = setTimeout ->
     exited = yes

@@ -22,7 +22,8 @@ module.exports = new Model
       @onAuth authData
     ,
       'rememberMe': yes
-      'scope': 'private_repo'
+      # See https://developer.github.com/v3/oauth/#scopes
+      'scope': 'repo'
 
   # When we sign-in/-out.
   onAuth: (data={}) ->
