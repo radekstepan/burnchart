@@ -24,7 +24,7 @@
     "d3": "~3.4.13",
     "d3-tip": "Caged/d3-tip",
     "director": "~1.2.3",
-    "firebase": "~1.1.2",
+    "firebase": "~2.0.1",
     "lodash": "~2.4.1",
     "lscache": "~1.0.2",
     "marked": "~0.3.2",
