@@ -1,4 +1,4 @@
-GRUNT = "grunt"
+GRUNT = "./node_modules/.bin/grunt"
 
 task :default => "build"
 
