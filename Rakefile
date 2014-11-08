@@ -78,7 +78,7 @@ namespace :test do
   MOCHA      = "./node_modules/.bin/mocha"
   COVERALLS  = "./node_modules/.bin/coveralls"
 
-  OPTS = "--compilers coffee:coffee-script/register --ui exports"
+  OPTS = "--compilers coffee:coffee-script/register --ui exports --bail"
 
   desc "Run code coverage, mocha with Blanket.js"
   task :coverage do

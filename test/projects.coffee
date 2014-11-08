@@ -1,6 +1,6 @@
-assert = require 'assert'
+{ assert } = require 'chai'
 
-projects = require '../src/models/projects.coffee'
+projects   = require '../src/models/projects.coffee'
 
 module.exports =
 

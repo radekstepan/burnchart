@@ -1,6 +1,6 @@
-proxy  = do require('proxyquire').noCallThru
-assert = require 'assert'
-path   = require 'path'
+proxy      = do require('proxyquire').noCallThru
+{ assert } = require 'chai'
+path       = require 'path'
 
 class Sa
 
@@ -48,7 +48,7 @@ module.exports =
     name = 'burnchart'
 
     request.allMilestones { owner, name }, (err, data) ->
-      assert.ifError err
+      assert.isNull err
       assert.deepEqual superagent.params,
         'uri': 'https://api.github.com/repos/asm-products/burnchart/milestones?state=open&sort=due_date&direction=asc'
         'Content-Type': 'application/json',
@@ -67,7 +67,7 @@ module.exports =
     milestone = 1
 
     request.oneMilestone { owner, name, milestone }, (err, data) ->
-      assert.ifError err
+      assert.isNull err
       assert.deepEqual superagent.params,
         'uri': 'https://api.github.com/repos/asm-products/burnchart/milestones/1?state=open&sort=due_date&direction=asc'
         'Content-Type': 'application/json',
@@ -88,7 +88,7 @@ module.exports =
     milestone = 0
     
     request.oneMilestone { owner, name, milestone }, (err) ->
-      assert.equal err, 'Not Found'
+      assert err, 'Not Found'
       do done
 
   'request - one milestone (500)': (done) ->
@@ -102,7 +102,7 @@ module.exports =
     milestone = 0
     
     request.oneMilestone { owner, name, milestone }, (err) ->
-      assert.equal err, 'Error'
+      assert err, 'Error'
       do done
 
   'request - all issues (ok)': (done) ->
@@ -116,7 +116,7 @@ module.exports =
     milestone = 0
     
     request.allIssues { owner, name, milestone }, {}, (err, data) ->
-      assert.ifError err
+      assert.isNull err
       assert.deepEqual superagent.params,
         'uri': 'https://api.github.com/repos/asm-products/burnchart/issues?milestone=0&per_page=100'
         'Content-Type': 'application/json',
@@ -139,7 +139,7 @@ module.exports =
     milestone = 0
     
     request.allIssues { owner, name, milestone }, {}, (err) ->
-      assert.equal err, 'Request has timed out'
+      assert err, 'Request has timed out'
       do done
 
   'request - use tokens': (done) ->
@@ -151,5 +151,5 @@ module.exports =
     name = 'burnchart'
     
     request.repo { owner, name }, ->
-      assert.equal superagent.params.Authorization, 'token ABC'
+      assert superagent.params.Authorization, 'token ABC'
       do done

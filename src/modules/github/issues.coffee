@@ -13,6 +13,7 @@ module.exports =
       _.partial(oneStatus, repo, 'open')
       _.partial(oneStatus, repo, 'closed')
     ], (err, [ open, closed ]) ->
+      err ?= null
       cb err, { open, closed }
 
 # Calculate size of either open or closed issues.

@@ -1,6 +1,6 @@
-proxy  = do require('proxyquire').noCallThru
-assert = require 'assert'
-path   = require 'path'
+proxy      = do require('proxyquire').noCallThru
+{ assert } = require 'chai'
+path       = require 'path'
 
 stats = require '../src/modules/stats.coffee'
 
@@ -13,9 +13,9 @@ module.exports =
         'closed': { 'size': 0 }
 
     { isEmpty, isOverdue, isOnTime } = stats milestone
-    assert.equal isEmpty, yes
-    assert.equal isOverdue, no
-    assert.equal isOnTime, yes
+    assert.isTrue isEmpty
+    assert.isFalse isOverdue
+    assert.isTrue isOnTime
     do done
 
   'stats - is milestone done?': (done) ->
@@ -25,7 +25,7 @@ module.exports =
         'closed': { 'size': 5 }
 
     { isDone } = stats milestone
-    assert.equal isDone, yes
+    assert.isTrue isDone
     do done
 
   'stats - is milestone overdue? has due date': (done) ->
@@ -36,7 +36,7 @@ module.exports =
         'closed': { 'size': 0 }
 
     { isOverdue } = stats milestone
-    assert.equal isOverdue, yes
+    assert.isTrue isOverdue
     do done
 
   'stats - is milestone on time? has due date, yes': (done) ->
@@ -50,7 +50,7 @@ module.exports =
         'closed': { 'size': 1 }
 
     { isOnTime } = stats milestone
-    assert.equal isOnTime, yes
+    assert.isTrue isOnTime
     do done
 
   'stats - is milestone on time? has due date, no': (done) ->
@@ -64,5 +64,5 @@ module.exports =
         'closed': { 'size': 1 }
 
     { isOnTime } = stats milestone
-    assert.equal isOnTime, no
+    assert.isFalse isOnTime
     do done

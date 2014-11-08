@@ -1,6 +1,6 @@
-assert = require 'assert'
+{ assert } = require 'chai'
 
-lines = require '../src/modules/chart/lines.coffee'
+lines      = require '../src/modules/chart/lines.coffee'
 
 module.exports =
 

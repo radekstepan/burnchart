@@ -1,4 +1,4 @@
-assert = require 'assert'
+{ assert } = require 'chai'
 
 RactiveEventful = require '../src/utils/ractive/eventful.coffee'
 
@@ -23,9 +23,9 @@ module.exports = ->
     do view.render()
 
     view.publish '!event'
-    assert.equal ctx.called, 1
+    assert ctx.called, 1
     do view.teardown
     view.publish '!event'
-    assert.equal ctx.called, 1
+    assert ctx.called, 1
 
     do done

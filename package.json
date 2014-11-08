@@ -40,6 +40,7 @@
   "devDependencies": {
     "blanket": "~1.1.6",
     "browserify": "~6.2.0",
+    "chai": "^1.9.2",
     "coffee-script": "~1.8.0",
     "coffeeify": "~0.7.0L",
     "coveralls": "~2.11.2",

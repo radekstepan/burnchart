@@ -1,5 +1,5 @@
-assert = require 'assert'
-moment = require 'moment'
+{ assert } = require 'chai'
+moment     = require 'moment'
 
 request = require '../src/modules/github/request.coffee'
 issues  = require '../src/modules/github/issues.coffee'
@@ -14,7 +14,7 @@ module.exports =
 
     # ISO 8601 dates are in UTC timezone.
     utc = do moment(json[0].created_at).toDate().toUTCString
-    assert.equal utc, 'Fri, 22 Apr 2011 13:33:48 GMT'
+    assert utc, 'Fri, 22 Apr 2011 13:33:48 GMT'
 
     do done
 
@@ -27,10 +27,10 @@ module.exports =
     config.set 'chart.points', 'ONE_SIZE'
 
     issues.fetchAll repo, (err, { open, closed }) ->
-      assert.ifError err
-      assert.equal called, 2
-      assert.equal open.size, 0
-      assert.equal closed.size, 0
+      assert.isNull err
+      assert called, 2
+      assert.strictEqual open.size, 0
+      assert.strictEqual closed.size, 0
       do done
 
   'issues - open empty': (done) ->
@@ -44,12 +44,12 @@ module.exports =
     config.set 'chart.points', 'ONE_SIZE'
 
     issues.fetchAll repo, (err, { open, closed }) ->
-      assert.ifError err
-      assert.equal called, 2
-      assert.equal open.size, 0
-      assert.equal open.list.length, 0
-      assert.equal closed.size, 1
-      assert.equal closed.list.length, 1
+      assert.isNull err
+      assert called, 2
+      assert.strictEqual open.size, 0
+      assert.strictEqual open.list.length, 0
+      assert closed.size, 1
+      assert closed.list.length, 1
       do done
 
   'issues - closed empty': (done) ->
@@ -63,10 +63,10 @@ module.exports =
     config.set 'chart.points', 'ONE_SIZE'
 
     issues.fetchAll repo, (err, { open, closed }) ->
-      assert.ifError err
-      assert.equal called, 2
-      assert.equal open.size, 1
-      assert.equal closed.size, 0
+      assert.isNull err
+      assert called, 2
+      assert open.size, 1
+      assert.strictEqual closed.size, 0
       do done
 
   'issues - both not empty': (done) ->
@@ -78,10 +78,10 @@ module.exports =
     config.set 'chart.points', 'ONE_SIZE'
 
     issues.fetchAll repo, (err, { open, closed }) ->
-      assert.ifError err
-      assert.equal called, 2
-      assert.equal open.size, 1
-      assert.equal closed.size, 1
+      assert.isNull err
+      assert called, 2
+      assert open.size, 1
+      assert closed.size, 1
       do done
 
   'issues - 99 results on a page': (done) ->
@@ -93,10 +93,10 @@ module.exports =
     config.set 'chart.points', 'ONE_SIZE'
 
     issues.fetchAll repo, (err, { open, closed }) ->
-      assert.ifError err
-      assert.equal called, 2
-      assert.equal open.size, 99
-      assert.equal closed.size, 99
+      assert.isNull err
+      assert called, 2
+      assert open.size, 99
+      assert closed.size, 99
       do done
 
   'issues - 100 results on a page': (done) ->
@@ -109,10 +109,10 @@ module.exports =
     config.set 'chart.points', 'ONE_SIZE'
 
     issues.fetchAll repo, (err, { open, closed }) ->
-      assert.ifError err
-      assert.equal called, 4
-      assert.equal open.size, 100
-      assert.equal closed.size, 100
+      assert.isNull err
+      assert called, 4
+      assert open.size, 100
+      assert closed.size, 100
       do done
 
   'issues - 101 total results': (done) ->
@@ -128,10 +128,10 @@ module.exports =
     config.set 'chart.points', 'ONE_SIZE'
 
     issues.fetchAll repo, (err, { open, closed }) ->
-      assert.ifError err
-      assert.equal called, 4
-      assert.equal open.size, 101
-      assert.equal closed.size, 101
+      assert.isNull err
+      assert called, 4
+      assert open.size, 101
+      assert closed.size, 101
       assert.deepEqual open.list[100], { number: 100, size: 1 }
       assert.deepEqual closed.list[100], { number: 100, size: 1 }
       do done
@@ -149,10 +149,10 @@ module.exports =
     config.set 'chart.points', 'ONE_SIZE'
 
     issues.fetchAll repo, (err, { open, closed }) ->
-      assert.ifError err
-      assert.equal called, 6
-      assert.equal open.size, 201
-      assert.equal closed.size, 201
+      assert.isNull err
+      assert called, 6
+      assert open.size, 201
+      assert closed.size, 201
       for { list } in [ open, closed ]
         for j in [ 100, 200 ]
           assert.deepEqual list[j], { number: j, size: 1 }
@@ -167,8 +167,8 @@ module.exports =
     config.set 'chart.points', 'ONE_SIZE'
 
     issues.fetchAll repo, (err, { open, closed }) ->
-      assert.equal err, 'Not Found'
-      assert.equal called, 1
+      assert err, 'Not Found'
+      assert called, 1
       do done
 
   'issues - size based on a label': (done) ->
@@ -182,9 +182,9 @@ module.exports =
       ]
 
     issues.fetchAll repo, (err, { open, closed }) ->
-      assert.ifError err
-      assert.equal open.size, 12
-      assert.equal open.list[0].size, 2
+      assert.isNull err
+      assert open.size, 12
+      assert open.list[0].size, 2
       do done
 
   'issues - filter when no labels': (done) ->
@@ -194,8 +194,8 @@ module.exports =
       cb null, [ { } ]
 
     issues.fetchAll repo, (err, { open, closed }) ->
-      assert.ifError err
-      assert.equal open.size, 0
+      assert.isNull err
+      assert.strictEqual open.size, 0
       do done  
 
   'issues - filter when empty labels': (done) ->
@@ -205,8 +205,8 @@ module.exports =
       cb null, [ { labels: [] } ]
 
     issues.fetchAll repo, (err, { open, closed }) ->
-      assert.ifError err
-      assert.equal open.size, 0
+      assert.isNull err
+      assert.strictEqual open.size, 0
       do done 
 
   'issues - filter when not matching regex': (done) ->
@@ -216,8 +216,8 @@ module.exports =
       cb null, [ { labels: [ { name: 'size 1A' } ] } ]
 
     issues.fetchAll repo, (err, { open, closed }) ->
-      assert.ifError err
-      assert.equal open.size, 0
+      assert.isNull err
+      assert.strictEqual open.size, 0
       do done
 
   'issues - filter when multiple match the regex': (done) ->
@@ -230,9 +230,9 @@ module.exports =
       ]
 
     issues.fetchAll repo, (err, { open, closed }) ->
-      assert.ifError err
-      assert.equal open.size, 11
+      assert.isNull err
+      assert open.size, 11
       [ a, b ] = open.list
-      assert.equal a.size, 7
-      assert.equal b.size, 4
+      assert a.size, 7
+      assert b.size, 4
       do done
