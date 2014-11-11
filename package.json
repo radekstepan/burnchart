@@ -13,7 +13,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git://github.com/asm-products/burnchart.git"
+    "url": "git://github.com/radekstepan/burnchart.git"
   },
   "scripts": {
     "start": "rake serve",

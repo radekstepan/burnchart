@@ -4,7 +4,7 @@ Captures how the app is build and what happens where.
 
 ##Build
 
-Vendor libraries are fetched through npm. For CSS libs we `@import` them in LESS, for JS libs we `require` them using [Browserify](https://github.com/substack/node-browserify). All app dependencies are in `package.dependencies` rather than `package.devDependencies`, so that [David](https://david-dm.org/asm-products/burnchart) can see them and we get a nice icon if things go out of date.
+Vendor libraries are fetched through npm. For CSS libs we `@import` them in LESS, for JS libs we `require` them using [Browserify](https://github.com/substack/node-browserify). All app dependencies are in `package.dependencies` rather than `package.devDependencies`, so that [David](https://david-dm.org/radekstepan/burnchart) can see them and we get a nice icon if things go out of date.
 
 ##Code
 

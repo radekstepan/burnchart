@@ -44,13 +44,13 @@ module.exports =
       'error': no
       'body': [ null ]
     
-    owner = 'asm-products'
+    owner = 'radekstepan'
     name = 'burnchart'
 
     request.allMilestones { owner, name }, (err, data) ->
       assert.isNull err
       assert.deepEqual superagent.params,
-        'uri': 'https://api.github.com/repos/asm-products/burnchart/milestones?state=open&sort=due_date&direction=asc'
+        'uri': 'https://api.github.com/repos/radekstepan/burnchart/milestones?state=open&sort=due_date&direction=asc'
         'Content-Type': 'application/json',
         'Accept': 'application/vnd.github.v3'
       assert.deepEqual data, [ null ]
@@ -62,14 +62,14 @@ module.exports =
       'error': no
       'body': [ null ]
     
-    owner = 'asm-products'
+    owner = 'radekstepan'
     name = 'burnchart'
     milestone = 1
 
     request.oneMilestone { owner, name, milestone }, (err, data) ->
       assert.isNull err
       assert.deepEqual superagent.params,
-        'uri': 'https://api.github.com/repos/asm-products/burnchart/milestones/1?state=open&sort=due_date&direction=asc'
+        'uri': 'https://api.github.com/repos/radekstepan/burnchart/milestones/1?state=open&sort=due_date&direction=asc'
         'Content-Type': 'application/json',
         'Accept': 'application/vnd.github.v3'
       assert.deepEqual data, [ null ]
@@ -83,7 +83,7 @@ module.exports =
         'documentation_url': "http://developer.github.com/v3"
         'message': "Not Found"
 
-    owner = 'asm-products'
+    owner = 'radekstepan'
     name = 'burnchart'
     milestone = 0
     
@@ -97,7 +97,7 @@ module.exports =
       'error': Error "Error"
       'body': null
 
-    owner = 'asm-products'
+    owner = 'radekstepan'
     name = 'burnchart'
     milestone = 0
     
@@ -111,14 +111,14 @@ module.exports =
       'error': no
       'body': [ null ]
 
-    owner = 'asm-products'
+    owner = 'radekstepan'
     name = 'burnchart'
     milestone = 0
     
     request.allIssues { owner, name, milestone }, {}, (err, data) ->
       assert.isNull err
       assert.deepEqual superagent.params,
-        'uri': 'https://api.github.com/repos/asm-products/burnchart/issues?milestone=0&per_page=100'
+        'uri': 'https://api.github.com/repos/radekstepan/burnchart/issues?milestone=0&per_page=100'
         'Content-Type': 'application/json',
         'Accept': 'application/vnd.github.v3'
       assert.deepEqual data, [ null ]
@@ -134,7 +134,7 @@ module.exports =
       'error': no
       'body': [ null ]
 
-    owner = 'asm-products'
+    owner = 'radekstepan'
     name = 'burnchart'
     milestone = 0
     
@@ -147,7 +147,7 @@ module.exports =
 
     superagent.response = {}
 
-    owner = 'asm-products'
+    owner = 'radekstepan'
     name = 'burnchart'
     
     request.repo { owner, name }, ->

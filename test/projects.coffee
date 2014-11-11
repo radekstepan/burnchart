@@ -11,7 +11,7 @@ module.exports =
   'projects - sorts on new milestones': (done) ->
     do projects.clear
 
-    project = { 'owner': 'asm-products', 'name': 'burnchart' }
+    project = { 'owner': 'radekstepan', 'name': 'burnchart' }
     milestone = 'title': '1.0.0', 'stats': {}
 
     projects.push 'list', project
@@ -26,7 +26,7 @@ module.exports =
 
     projects.set 'sortBy', 'progress'
 
-    project = { 'owner': 'asm-products', 'name': 'burnchart' }
+    project = { 'owner': 'radekstepan', 'name': 'burnchart' }
     milestone1 = 'title': '1.0.0', 'stats': {
       'progress': { 'points': 5 }
     }
@@ -48,7 +48,7 @@ module.exports =
 
     projects.set 'sortBy', 'priority'
 
-    project = { 'owner': 'asm-products', 'name': 'burnchart' }
+    project = { 'owner': 'radekstepan', 'name': 'burnchart' }
     milestone1 = 'title': '1.0.0', 'stats': {
       'progress': { 'points': 2, 'time': 1 }
       'days': 2
@@ -77,7 +77,7 @@ module.exports =
 
     projects.set 'sortBy', 'priority'
 
-    project = { 'owner': 'asm-products', 'name': 'burnchart' }
+    project = { 'owner': 'radekstepan', 'name': 'burnchart' }
     milestone1 = 'title': '1.0.0', 'stats': {
       'progress': { 'points': 3 }
     }
@@ -102,7 +102,7 @@ module.exports =
 
     projects.set 'sortBy', 'name'
 
-    project = { 'owner': 'asm-products', 'name': 'burnchart' }
+    project = { 'owner': 'radekstepan', 'name': 'burnchart' }
     milestone1 = 'title': 'B', 'stats': {}
     milestone2 = 'title': 'A', 'stats': {}
 
@@ -119,7 +119,7 @@ module.exports =
 
     projects.set 'sortBy', 'name'
 
-    project = { 'owner': 'asm-products', 'name': 'burnchart' }
+    project = { 'owner': 'radekstepan', 'name': 'burnchart' }
     milestone1 = 'title': '1.2.5', 'stats': {}
     milestone2 = 'title': '1.1.x', 'stats': {}
     milestone3 = 'title': '1.1.7', 'stats': {}

@@ -5,7 +5,7 @@ request = require '../src/modules/github/request.coffee'
 issues  = require '../src/modules/github/issues.coffee'
 config  = require '../src/models/config.coffee'
 
-repo = { 'owner': 'asm-products', 'name': 'burnchart', 'milestone': 1 }
+repo = { 'owner': 'radekstepan', 'name': 'burnchart', 'milestone': 1 }
 
 module.exports =
 

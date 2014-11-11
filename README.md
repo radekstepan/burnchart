@@ -1,15 +1,15 @@
 *Existing users: The url mapping has been preserved from the original app, we are just using a different domain. If you'd like to use the previous version(s), grab the tags `v1`, `v2`.*
 
-#[burnchart](http://burnchart.io)
+#[burnchart](http://radekstepan.com/burnchart)
 
 GitHub Burndown Chart as a Service. Answers the question "are my projects on track"?
 
 ![Build Status](http://img.shields.io/codeship/<ID HERE>.svg?style=flat)
-[![Coverage](http://img.shields.io/coveralls/asm-products/burnchart/master.svg?style=flat)](<https://coveralls.io/r/asm-products/burnchart>)
-[![Dependencies](http://img.shields.io/david/asm-products/burnchart.svg?style=flat)](https://david-dm.org/asm-products/burnchart)
+[![Coverage](http://img.shields.io/coveralls/radekstepan/burnchart/master.svg?style=flat)](<https://coveralls.io/r/radekstepan/burnchart>)
+[![Dependencies](http://img.shields.io/david/radekstepan/burnchart.svg?style=flat)](https://david-dm.org/radekstepan/burnchart)
 [![License](http://img.shields.io/badge/license-AGPL--3.0-red.svg?style=flat)](LICENSE)
 
-![image](https://raw.githubusercontent.com/asm-products/burnchart/master/public/screenshots.jpg)
+![image](https://raw.githubusercontent.com/radekstepan/burnchart/master/public/screenshots.jpg)
 
 ##Features
 
