@@ -1,5 +1,3 @@
-*Existing users: The url mapping has been preserved from the original app, we are just using a different domain. If you'd like to use the previous version(s), grab the tags `v1`, `v2`.*
-
 #[burnchart](http://radekstepan.com/burnchart)
 
 GitHub Burndown Chart as a Service. Answers the question "are my projects on track"?
