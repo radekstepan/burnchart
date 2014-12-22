@@ -4,8 +4,9 @@ superagent = require 'superagent'
 # Lodash mixins.
 require '../../utils/mixins.coffee'
 
-config = require '../../models/config.coffee'
-user   = require '../../models/user.coffee'
+config   = require '../../models/config.coffee'
+user     = require '../../models/user.coffee'
+mediator = require '../mediator.coffee'
 
 # Custom JSON parser.
 superagent.parse =
@@ -107,11 +108,7 @@ request = ({ protocol, host, path, query, headers }, cb) ->
 response = (err, data, cb) ->
   return cb error err if err
   # 2xx?
-  if data.statusType isnt 2
-    # Do we have a message from GitHub?
-    return cb data.body.message if data?.body?.message?
-    # Use SA one.
-    return cb data.error.message
+  return cb error data.body if data.statusType isnt 2
   # All good.
   cb null, data.body
 
@@ -153,16 +150,22 @@ user.observe 'ready', (val) ->
 error = (err) ->
   switch
     when _.isString err
-      message = err
+      text = err
     when _.isArray err
-      message = err[1]
+      text = err[1]
     when _.isObject(err) and _.isString(err.message)
-      message = err.message
+      text = err.message
 
-  unless message
+  unless text
     try
-      message = JSON.stringify err
+      text = JSON.stringify err
     catch
-      message = do err.toString
+      text = do err.toString
 
-  message
+  # API rate limit exceeded? Flash a message to that effect.
+  # https://developer.github.com/v3/#rate-limiting
+  if /API rate limit exceeded/.test text
+    type = 'warn'
+    mediator.fire '!app/notify', { type, text }
+
+  text

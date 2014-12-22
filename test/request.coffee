@@ -36,6 +36,9 @@ user.set 'ready', yes
 # Get config so we can fudge timeout.
 config = require '../src/models/config.coffee'
 
+# Global mediator.
+mediator = require '../src/modules/mediator.coffee'
+
 module.exports =
 
   'request - all milestones (ok)': (done) ->
@@ -54,6 +57,29 @@ module.exports =
         'Content-Type': 'application/json',
         'Accept': 'application/vnd.github.v3'
       assert.deepEqual data, [ null ]
+      do done
+
+  'request - all milestones (403)': (done) ->
+    superagent.response =
+      'statusType': 4
+      'error': no
+      'body':
+        'message': 'API rate limit exceeded'
+
+    owner = 'radekstepan'
+    name = 'burnchart'
+    milestone = 0
+    
+    notified = no
+    mediator.on '!app/notify', ->
+      notified = yes
+
+    request.oneMilestone { owner, name, milestone }, (err) ->
+      assert err, 'Error'
+      assert.isTrue notified
+
+      mediator.off '!app/notify'
+
       do done
 
   'request - one milestone (ok)': (done) ->
