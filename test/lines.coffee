@@ -1,4 +1,5 @@
 { assert } = require 'chai'
+moment = require 'moment'
 
 lines      = require '../src/modules/chart/lines.coffee'
 
@@ -35,12 +36,14 @@ module.exports =
 
   'lines - trend': (done) ->
     issues = [
-      { 'date': 1, 'points': 4 }
-      { 'date': 2, 'points': 1 }
-      { 'date': 3, 'points': 1 }
+      { 'date': '2011-04-02T00:00:00.000Z', 'points': 4 }
+      { 'date': '2011-04-03T00:00:00.000Z', 'points': 1 }
+      { 'date': '2011-04-04T00:00:00.000Z', 'points': 1 }
     ]
 
-    line = (Math.round(points) for { points } in lines.trend(issues, 1, new Date))
+    opts = [ issues, '2011-04-02T00:00:00.000Z', do moment.utc ]
+
+    line = (Math.round(points) for { points } in lines.trend.apply null, opts)
 
     assert.deepEqual line, [ 2, 1 ]
 

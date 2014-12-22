@@ -23,13 +23,13 @@ module.exports = (milestone) ->
     # Milestones with no due date are always on track.
     return { isOverdue, isOnTime, isDone, isEmpty, 'progress': { points } } unless milestone.due_on?
 
-    a = moment milestone.created_at
+    a = moment milestone.created_at, moment.ISO_8601
     b = do moment.utc
-    c = moment milestone.due_on
+    c = moment milestone.due_on, moment.ISO_8601
 
     # Overdue? Regardless of the date, if we have closed all
     #  issues, we are no longer overdue.
-    isOverdue = yes if b.isAfter c and not isDone
+    isOverdue = yes if b.isAfter(c) and not isDone
 
     # Progress in time.
     time = progress b.diff(a), c.diff(b)

@@ -12,7 +12,7 @@ module.exports =
   # `total`:      total number of points (open & closed issues)
   actual: (issues, created_at, total) ->
     head = [ {
-      'date': do moment(created_at).toJSON
+      'date': moment(created_at, moment.ISO_8601).toJSON()
       'points': total
     } ]
     
@@ -26,7 +26,7 @@ module.exports =
       max = size if size > max
 
       # Dropping points remaining.
-      issue.date = do moment(closed_at).toJSON
+      issue.date = moment(closed_at, moment.ISO_8601).toJSON()
       issue.points = total -= size
       issue
     
@@ -47,9 +47,9 @@ module.exports =
     # Swap if end is before the start...
     [ b, a ] = [ a, b ] if b < a
 
-    a = moment a
+    a = moment a, moment.ISO_8601
     # Do we have a due date?
-    b = if b? then moment b else do moment.utc
+    b = if b? then moment(b, moment.ISO_8601) else do moment.utc
 
     # Go through the beginning to the end skipping off days.
     days = [] ; length = 0
@@ -87,11 +87,11 @@ module.exports =
 
     [ first, ..., last ] = actual
 
-    start = moment first.date
+    start = moment first.date, moment.ISO_8601
 
     # Values is a list of time from the start and points remaining.
     values = _.map actual, ({ date, points }) ->
-      [ moment(date).diff(start), points ]
+      [ moment(date, moment.ISO_8601).diff(start), points ]
 
     # Now is an actual point too.
     now = do moment.utc
@@ -111,11 +111,11 @@ module.exports =
     fn = (x) -> slope * x + intercept
 
     # Milestone always has a creation date.
-    created_at = moment created_at
+    created_at = moment created_at, moment.ISO_8601
     
     # Due date specified.
     if due_on
-      due_on = moment due_on
+      due_on = moment due_on, moment.ISO_8601
       # In the past?
       due_on = now if now > due_on
     # No due date

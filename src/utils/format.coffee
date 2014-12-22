@@ -6,7 +6,7 @@ module.exports =
 
   # Time from now.
   fromNow: _.memoize (jsonDate) ->
-    do moment(jsonDate).fromNow
+    moment(jsonDate, moment.ISO_8601).fromNow()
 
   # When is a milestone due?
   due: (jsonDate) ->
@@ -14,8 +14,7 @@ module.exports =
     [ 'due', @fromNow jsonDate ].join(' ')
 
   # Markdown formatting.
-  markdown: (markup) ->
-    marked markup
+  'markdown': marked
 
   # Format milestone title.
   title: (text) ->
