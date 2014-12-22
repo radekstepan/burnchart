@@ -27,8 +27,9 @@ module.exports = (milestone) ->
     b = do moment.utc
     c = moment milestone.due_on
 
-    # Overdue?
-    isOverdue = yes if b.isAfter c
+    # Overdue? Regardless of the date, if we have closed all
+    #  issues, we are no longer overdue.
+    isOverdue = yes if b.isAfter c and not isDone
 
     # Progress in time.
     time = progress b.diff(a), c.diff(b)
@@ -38,6 +39,9 @@ module.exports = (milestone) ->
 
     # Are we on time?
     isOnTime = points > time
+
+    # If we have closed all issues, we are "on time".
+    isOnTime = yes if isDone
 
     {
       isDone, days, isOnTime, isOverdue
