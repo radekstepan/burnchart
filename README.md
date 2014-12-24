@@ -18,6 +18,14 @@ GitHub Burndown Chart as a Service. Answers the question "are my projects on tra
 1. **Trend line**; to see if you can make it to the deadline at this pace.
 1. Different **point counting** strategies; select from 1 issues = 1 point or read size from issue label.
 
+##Quick Start
+
+```bash
+$ npm install burnchart -g
+$ burnchart 5000
+# burnchart/2.0.5 started on http://0.0.0.0:5000
+```
+
 ##Configuration
 
 At the moment, there is no ui exposed to change the app settings. You have to edit the `src/models/config.coffee` file.
