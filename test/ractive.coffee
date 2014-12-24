@@ -20,7 +20,7 @@ module.exports = ->
         # Need to deal with multiple teardown handlers
         do this._super
 
-    do view.render()
+    do view.render
 
     view.publish '!event'
     assert ctx.called, 1
