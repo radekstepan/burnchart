@@ -18,7 +18,6 @@ module.exports = Ractive.extend
     # Total number of points in the milestone.
     total = issues.open.size + issues.closed.size
 
-
     # An issue may have been closed before the start of a milestone.
     head = issues.closed.list[0].closed_at
     if issues.length and milestone.created_at > head
@@ -65,6 +64,16 @@ module.exports = Ractive.extend
     .attr("height", height + margin.top + margin.bottom)
     .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+
+    # Add the clip path so that lines are not drawn outside of the boundary.
+    svg.append("defs").append("svg:clipPath")
+    .attr("id", "clip")
+    .append("svg:rect")
+    .attr("id", "clip-rect")
+    .attr("x", 0)
+    .attr("y", 0)
+    .attr("width", width)
+    .attr("height", height)
 
     # Add the days x-axis.
     svg.append("g")
