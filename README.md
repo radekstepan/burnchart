@@ -48,9 +48,18 @@ If you specify `LABELS` above, this is the place to set a regex used to parse a 
 "size_label": /^size (\d+)$/
 ```
 
-##Commands
+##Development
 
-Read the [Architecture](docs/ARCHITECTURE.md) document when contributing code.
+[Rake](https://www.ruby-lang.org/en/documentation/installation/) is used as a tool to execute tasks, the steps would be roughly as follows:
+
+```bash
+apt-get install ruby-full
+gem install rake
+rake build
+rake serve
+```
+
+You can run the following tasks:
 
 ```bash
 rake build                  # Build everything & minify
@@ -68,3 +77,5 @@ rake watch                  # Watch everything
 rake watch:css              # Watch the styles
 rake watch:js               # Watch the app
 ```
+
+Please read the [Architecture](docs/ARCHITECTURE.md) document when contributing code.

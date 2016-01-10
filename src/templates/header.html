@@ -1,7 +1,7 @@
 <div id="head">
   {{#with user}}
     {{#ready}}
-      <div class="right" intro="fade">
+      <div class="right">
         {{#if uid}}
           <a on-click="!signout"><Icons icon="signout" /> Sign Out {{github.displayName}}</a>
         {{else}}

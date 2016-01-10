@@ -1,7 +1,6 @@
 Ractive = require 'ractive'
 
 # Load Ractive transitions and adapters.
-require 'ractive-transitions-fade'
 require 'ractive-ractive'
 
 # Will load projects from localStorage.
