@@ -2,6 +2,7 @@
 var stat = require('node-static'),
     path = require('path'),
     http = require('http'),
+    exec = require('child_process').exec,
     pakg = require('../package.json');
 
 var opts = {
@@ -20,5 +21,5 @@ var server = http.createServer(function(req, res) {
 
 server.on('listening', function() {
   var addr = server.address();
-  console.log('burnchart/' + pakg.version + ' started on http://' + addr.address + ':' + addr.port);
+  console.log('burnchart/' + pakg.version + ' started on port ' + addr.port);
 });

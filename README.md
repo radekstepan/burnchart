@@ -23,7 +23,7 @@ GitHub Burndown Chart as a Service. Answers the question "are my projects on tra
 ```bash
 $ npm install burnchart -g
 $ burnchart 8080
-# burnchart/2.0.8 started on http://0.0.0.0:8080
+# burnchart/2.0.8 started on port 8080
 ```
 
 ##Configuration

@@ -3,10 +3,8 @@ node_modules/
 .build_cache~
 .grunt/
 build/*.map
-public/js/app.bundle.js
 public/js/.app.bundle.js
 public/js/app.js
-public/css/app.bundle.css
 public/css/.app.bundle.css
 public/css/app.css
 .DS_Store
