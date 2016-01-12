@@ -16,7 +16,11 @@ export default React.createClass({
     let link = App.link(route.to, route.params, route.query);
 
     return (
-      <a href={'#!' + link} onClick={this._route.bind(this, link)}>
+      <a
+        {...this.props}
+        href={'#!' + link}
+        onClick={this._route.bind(this, link)}
+      >
         {this.props.children}
       </a>
     );

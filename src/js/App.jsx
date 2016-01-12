@@ -14,7 +14,7 @@ delete RouterMixin.handleClick;
 // Values are function names below.
 let routes = {
   '/': 'projects',
-  '/new/project': 'add',
+  '/new/project': 'addProject',
   '/:owner/:name': 'milestones',
   '/:owner/:name/:milestone': 'chart',
   '/demo': 'demo'
@@ -87,7 +87,7 @@ export default React.createClass({
   },
 
   // Add a project.
-  add() {
+  addProject() {
     return <AddProjectPage />;
   },
 
