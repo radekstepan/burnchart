@@ -21,7 +21,7 @@ build-js:
 	${BROWSERIFY} -e -s $(NAME) ./src/js/index.jsx -t babelify | ${UGLIFY} - > public/js/bundle.js
 
 build-css:
-	${LESS} src/less/app.less > public/css/bundle.css
+	${LESS} src/less/burnchart.less > public/css/bundle.css
 
 build:
 	${MAKE} build-js

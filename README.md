@@ -1,4 +1,4 @@
-burnchart v3
+#[burnchart v3](http://radekstepan.com/burnchart)
 
 A [React](http://facebook.github.io/react/) app utilizing a [Flux](http://facebook.github.io/flux/) architecture.
 
