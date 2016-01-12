@@ -2,8 +2,10 @@ import React from 'react';
 import { RouterMixin, navigate } from 'react-mini-router';
 import _ from 'lodash';
 
-import BlogPage from './pages/BlogPage.jsx';
-import ArticlePage from './pages/ArticlePage.jsx';
+import ProjectsPage from './pages/ProjectsPage.jsx';
+import MilestonesPage from './pages/MilestonesPage.jsx';
+import ChartPage from './pages/ChartPage.jsx';
+import AddProjectPage from './pages/AddProjectPage.jsx';
 import NotFoundPage from './pages/NotFoundPage.jsx';
 
 // Will fire even if event is prevented from propagating.
@@ -11,8 +13,11 @@ delete RouterMixin.handleClick;
 
 // Values are function names below.
 let routes = {
-  '/': 'blog',
-  '/article/:id': 'article'
+  '/': 'projects',
+  '/new/project': 'add',
+  '/:owner/:name': 'milestones',
+  '/:owner/:name/:milestone': 'chart',
+  '/demo': 'demo'
 };
 
 let blank = false;
@@ -66,14 +71,33 @@ export default React.createClass({
     navigate: navigate
   },
 
-  blog() {
-    return <BlogPage />;
+  // Show projects.
+  projects() {
+    return <ProjectsPage />;
   },
 
-  article(id) {
-    return <ArticlePage id={id} />;
+  // Show project milestones.
+  milestones(owner, name) {
+    return <MilestonesPage owner={owner} name={name} />;
   },
 
+  // Show a project milestone chart.
+  chart(owner, name, milestone) {
+    return <ChartPage owner={owner} name={name} milestone={milestone} />;
+  },
+
+  // Add a project.
+  add() {
+    return <AddProjectPage />;
+  },
+
+  // TODO: Add demo projects.
+  demo() {
+    // mediator.fire '!projects/demo'
+    // window.location.hash = '#'
+  },
+
+  // 404.
   notFound(path) {
     return <NotFoundPage path={path} />;
   },
@@ -86,6 +110,10 @@ export default React.createClass({
       return <div />;
     } else {
       blank = true;
+
+      // TODO: Hide any notifications.
+      // mediator.fire '!app/notify/hide'
+
       return this.renderCurrentRoute();
     }
   }
