@@ -27,7 +27,7 @@ export default React.createClass({
 
     // Sign-in/out.
     let user;
-    if (props.user.uid) {
+    if (props.user && 'uid' in props.user) {
       user = (
         <div className="right">
           <a onClick={this._onSignOut}>
