@@ -1,14 +1,33 @@
-import store from '../stores/appStore.js';
+import _ from 'lodash';
+
+import appStore from '../stores/appStore.js';
+import projectsStore from '../stores/projectsStore.js';
+
+let stores = {
+  'app': appStore,
+  'projects': projectsStore
+};
 
 export default {
 
   // Get the POJO of the store.
-  _getData() {
-    return store.get();
+  _getData(store) {
+    let obj = {};
+    if (store) {
+      obj[store] = stores[store].get();
+    } else {
+      // Get all stores.
+      let key;
+      for (key in stores) {
+        obj[key] = stores[key].get();
+      }
+    }
+
+    return obj;
   },
 
-  _onChange(val, key) {
-    this.setState(this._getData());
+  _onChange(store, val, key) {;
+    this.setState(this._getData(store));
   },
 
   getInitialState() {
@@ -17,11 +36,17 @@ export default {
 
   // Listen to all events (data changes).
   componentDidMount() {
-    store.onAny(this._onChange);
+    let key;
+    for (key in stores) {
+      stores[key].onAny(_.partial(this._onChange, key));
+    }
   },
 
   componentWillUnmount() {
-    store.offAny(this._onChange);
-  },
+    let key;
+    for (key in stores) {
+      stores[key].offAny(this._onChange); 
+    }
+  }
 
 };

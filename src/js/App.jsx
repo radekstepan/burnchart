@@ -8,6 +8,8 @@ import ChartPage from './pages/ChartPage.jsx';
 import AddProjectPage from './pages/AddProjectPage.jsx';
 import NotFoundPage from './pages/NotFoundPage.jsx';
 
+import actions from './actions/appActions.js';
+
 // Will fire even if event is prevented from propagating.
 delete RouterMixin.handleClick;
 
@@ -73,6 +75,7 @@ export default React.createClass({
 
   // Show projects.
   projects() {
+    actions.emit('projects.load');
     return <ProjectsPage />;
   },
 
@@ -113,6 +116,9 @@ export default React.createClass({
 
       // TODO: Hide any notifications.
       // mediator.fire '!app/notify/hide'
+
+      // Each page is starting in a loaded state.
+      actions.emit('system.loading', false);
 
       return this.renderCurrentRoute();
     }

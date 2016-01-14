@@ -20,7 +20,8 @@ export default React.createClass({
   },
 
   render() {
-    let props = this.props;
+    // From app store.
+    let props = this.props.app;
 
     // Switch loading icon with app icon.
     let icon = [ 'fire', 'spinner' ][ +props.system.loading ];

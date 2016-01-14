@@ -16,7 +16,7 @@ class AppStore extends Store {
   constructor() {
     super({
       system: {
-        loading: true
+        loading: false
       },
       user: {}
     });
@@ -37,7 +37,7 @@ class AppStore extends Store {
   }
 
   onUserSignin() {
-    client.authWithOAuthPopup("github", function(err, data) {
+    client.authWithOAuthPopup("github", (err, data) => {
       if (!err) return actions.emit('firebase.auth', data);
 
       actions.emit('notify', {
@@ -61,6 +61,10 @@ class AppStore extends Store {
   // Called by Firebase.
   onFirebaseAuth(data) {
     this.set('user', data);
+  }
+
+  onSystemLoading(state) {
+    this.set('system.loading', state);
   }
 
 }
