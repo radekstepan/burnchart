@@ -5,6 +5,9 @@ import Page from '../mixins/Page.js';
 import Notify from '../components/Notify.jsx';
 import Header from '../components/Header.jsx';
 
+import Projects from '../components/Projects.jsx';
+import Hero from '../components/Hero.jsx';
+
 export default React.createClass({
 
   displayName: 'ProjectsPage.jsx',
@@ -12,12 +15,30 @@ export default React.createClass({
   mixins: [ Page ],
 
   render() {
+    let projects = this.state.projects;
+
+    let content;
+    if (!this.state.app.loading) {
+      if (projects.list.length) {
+        // Show a list of projects.
+        content = (
+          <div>
+            <Projects />
+          </div>
+        );
+      } else {
+        content = <Hero />;
+      }
+    }
+
     return (
       <div>
         <Notify />
         <Header {...this.state} />
 
-        <div id="page" />
+        <div id="page">
+          <div id="content" className="wrap">{content}</div>
+        </div>
 
         <div id="footer">
           <div className="wrap">

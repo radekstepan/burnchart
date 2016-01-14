@@ -12,8 +12,8 @@ class ProjectsStore extends Store {
       list: [ ]
     });
 
-    // Listen to all app actions.
-    actions.onAny((obj, event) => {
+    // Listen to only projects actions.
+    actions.on('projects.*', (obj, event) => {
       let fn = ('on.' + event).replace(/[.]+(\w|$)/g, (m, p) => {
         return p.toUpperCase();
       });
@@ -23,7 +23,14 @@ class ProjectsStore extends Store {
   }
 
   onProjectsLoad() {
-    console.log('load projects');
+    let list = this.get('list');
+
+    // Quit if we have no projects.
+    if (!list.length) {
+      return;
+    }
+
+    actions.emit('system.loading', true);
   }
 
 }
