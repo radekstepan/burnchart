@@ -15,17 +15,12 @@ export default React.createClass({
   mixins: [ Page ],
 
   render() {
-    let projects = this.state.projects;
-
     let content;
     if (!this.state.app.loading) {
+      let projects = this.state.projects;
       if (projects.list.length) {
         // Show a list of projects.
-        content = (
-          <div>
-            <Projects />
-          </div>
-        );
+        content = <div><Projects projects={projects} /></div>;
       } else {
         content = <Hero />;
       }

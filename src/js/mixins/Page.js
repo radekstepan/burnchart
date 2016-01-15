@@ -1,7 +1,8 @@
 import _ from 'lodash';
 
-import appStore from '../stores/appStore.js';
+// TODO: the app store needs to go last because it loads user.
 import projectsStore from '../stores/projectsStore.js';
+import appStore from '../stores/appStore.js';
 
 let stores = {
   'app': appStore,

@@ -13,9 +13,9 @@ export default {
   // When is a milestone due?
   _due(jsonDate) {
     if (!jsonDate) {
-      return '&nbsp;';
+      return '\u00a0'; // for React
     } else {
-      return [ 'due', this.fromNow(jsonDate) ].join(' ');
+      return [ 'due', this._fromNow(jsonDate) ].join(' ');
     }
   },
 

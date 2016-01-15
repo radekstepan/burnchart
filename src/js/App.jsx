@@ -76,7 +76,7 @@ export default React.createClass({
   // Show projects.
   projects() {
     document.title = 'Burnchart: GitHub Burndown Chart as a Service';
-    actions.emit('projects.load');
+    process.nextTick(() => actions.emit('projects.load'));
     return <ProjectsPage />;
   },
 
@@ -118,8 +118,8 @@ export default React.createClass({
       // TODO: Hide any notifications.
       // mediator.fire '!app/notify/hide'
 
-      // Each page is starting in a loaded state.
-      actions.emit('system.loading', false);
+      // Each page is starting in a loading state.
+      actions.emit('system.loading', true);
 
       return this.renderCurrentRoute();
     }

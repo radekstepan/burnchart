@@ -49,6 +49,19 @@ export default class Store extends EventEmitter {
     });
   }
 
+  // TODO: Unit-test.
+  push(key, val) {
+    let obj = this.get(key);
+    if (_.isArray(obj)) {
+      // TODO: Don't assume a string.
+      this.set(`${key}.${obj.length}`, val);
+      return obj.length - 1;
+    } else {
+      this.set(key, [ val ]);
+      return 0;
+    }
+  }
+
   // Get this key path or everything. Pass truthy value as a 2nd param to get
   //  a deep clone of the object (expensive).
   get(path, clone=false) {

@@ -33,14 +33,14 @@ class AppStore extends Store {
     client = new Firebase("https://" + config.firebase + ".firebaseio.com");
 
     // When user is already authenticated.
-    client.onAuth((data={}) => actions.emit('firebase.auth', data));
+    client.onAuth((data={}) => actions.emit('user.ready', data));
   }
 
   onUserSignin() {
     client.authWithOAuthPopup("github", (err, data) => {
       if (!err) return actions.emit('firebase.auth', data);
 
-      actions.emit('notify', {
+      actions.emit('system.notify', {
         'text': err.toString(),
         'type': 'alert',
         'system': true          
@@ -59,8 +59,8 @@ class AppStore extends Store {
   }
 
   // Called by Firebase.
-  onFirebaseAuth(data) {
-    this.set('user', data);
+  onUserReady(user) {
+    this.set('user', user || {});
   }
 
   onSystemLoading(state) {
