@@ -27,8 +27,11 @@ export default {
     return obj;
   },
 
-  _onChange(store, val, key) {;
-    this.setState(this._getData(store));
+  _onChange(store, val, key) {
+    // TODO: this is not the right approach!
+    if (this.isMounted()) {
+      this.setState(this._getData(store));
+    }
   },
 
   getInitialState() {

@@ -54,7 +54,7 @@ export default class Store extends EventEmitter {
     let obj = this.get(key);
     if (_.isArray(obj)) {
       // TODO: Don't assume a string.
-      this.set(`${key}.${obj.length}`, val);
+      this.set(`${key}.${obj.length}`, val); // TODO: won't emit for root key
       return obj.length - 1;
     } else {
       this.set(key, [ val ]);

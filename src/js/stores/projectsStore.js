@@ -45,9 +45,11 @@ class ProjectsStore extends Store {
       this.set('user', user);
     });
 
-    // Persist projects in local storage (sans milestones).
-    this.on('list', (projects) => {
-      lscache.set('projects', _.pluckMany(projects, [ 'owner', 'name' ]));
+    // Persist projects in local storage (sans milestones and issues).
+    this.on('list.*', () => {
+      if (process.browser) {
+        lscache.set('projects', _.pluckMany(this.get('list'), [ 'owner', 'name' ]));
+      }
     });
 
     // Reset our index and re-sort.
@@ -62,13 +64,22 @@ class ProjectsStore extends Store {
   onProjectsLoad() {
     let list = this.get('list');
 
+    let done = (err) => {
+      actions.emit('system.loading', false);
+    };
+
     // Quit if we have no projects.
-    if (!list.length) return;
+    if (!list.length) return done();
+
+    actions.emit('system.loading', true);
 
     // Wait for the user to get resolved.
     this.get('user', (user) => {
       // For all projects.
       async.map(list, (project, cb) => {
+        // Skip any projects that already have milestones.
+        if ('milestones' in project) return cb();
+
         // Fetch their milestones.
         milestones.fetchAll(user, project, (err, list) => {
           // Save the error if project does not exist.
@@ -109,10 +120,7 @@ class ProjectsStore extends Store {
             });
           }, cb);
         });
-      // All done, any errors are ignored as saved on projects.
-      }, (err) => {
-        actions.emit('system.loading', false);
-      });
+      }, done);
     });
   }
 

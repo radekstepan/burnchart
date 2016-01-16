@@ -15,7 +15,7 @@ $ npm start
 # Server started on port 8080
 ```
 
-##CHANGELOG
+##Changelog
 
-3.0.0
+###v3.0.0
 - switch to React & Flux architecture

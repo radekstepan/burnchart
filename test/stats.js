@@ -1,9 +1,6 @@
 import { assert } from 'chai';
-import { noCallThru } from 'proxyquire';
 import path from 'path';
 import moment from 'moment';
-
-let proxy = noCallThru();
 
 import stats from '../src/js/modules/stats.js';
 

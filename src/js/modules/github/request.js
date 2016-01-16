@@ -148,7 +148,7 @@ let isValid = (obj) => {
   let rules = {
     owner: (x) => { return (typeof x !== "undefined" && x !== null); },
     name: (x) => { return (typeof x !== "undefined" && x !== null); },
-    milestone: (x) => { return _.isFinite(x); }
+    milestone: (x) => { return _.isInt(x); } // mixin
   };
   
   for (let key in obj) { 

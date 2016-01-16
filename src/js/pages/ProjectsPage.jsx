@@ -4,7 +4,6 @@ import Page from '../mixins/Page.js';
 
 import Notify from '../components/Notify.jsx';
 import Header from '../components/Header.jsx';
-
 import Projects from '../components/Projects.jsx';
 import Hero from '../components/Hero.jsx';
 

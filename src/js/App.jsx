@@ -1,6 +1,7 @@
 import React from 'react';
 import { RouterMixin, navigate } from 'react-mini-router';
 import _ from 'lodash';
+import lodash from './mixins/lodash.js';
 
 import ProjectsPage from './pages/ProjectsPage.jsx';
 import MilestonesPage from './pages/MilestonesPage.jsx';
@@ -70,13 +71,14 @@ export default React.createClass({
     },
 
     // Route to a link.
+    // TODO: make this a named route.
     navigate: navigate
   },
 
   // Show projects.
   projects() {
     document.title = 'Burnchart: GitHub Burndown Chart as a Service';
-    actions.emit('projects.load');
+    process.nextTick(() => { actions.emit('projects.load'); });
     return <ProjectsPage />;
   },
 
@@ -92,6 +94,7 @@ export default React.createClass({
 
   // Add a project.
   addProject() {
+    document.title = 'Add a project';
     return <AddProjectPage />;
   },
 
@@ -114,13 +117,7 @@ export default React.createClass({
       return <div />;
     } else {
       blank = true;
-
-      // TODO: Hide any notifications.
-      // mediator.fire '!app/notify/hide'
-
-      // Each page is starting in a loading state.
-      actions.emit('system.loading', true);
-
+      actions.emit('system.loading', false);
       return this.renderCurrentRoute();
     }
   }
