@@ -76,7 +76,7 @@ export default React.createClass({
   // Show projects.
   projects() {
     document.title = 'Burnchart: GitHub Burndown Chart as a Service';
-    process.nextTick(() => actions.emit('projects.load'));
+    actions.emit('projects.load');
     return <ProjectsPage />;
   },
 

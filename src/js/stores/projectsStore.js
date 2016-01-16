@@ -18,7 +18,7 @@ class ProjectsStore extends Store {
   // Initial payload.
   constructor() {
     // Init the projects.
-    let list = lscache.get('projects') || [ ];
+    let list = lscache.get('projects') || [];
 
     super({
       // A stack of projects.
@@ -27,7 +27,7 @@ class ProjectsStore extends Store {
       'index': [],
       // The default sort order.
       'sortBy': 'priority',
-      // Sort functions.
+      // Sort functions to toggle through.
       'sortFns': [ 'progress', 'priority', 'name' ]
     });
 
@@ -53,7 +53,7 @@ class ProjectsStore extends Store {
 
     // Reset our index and re-sort.
     this.on('sortBy', () => {
-      this.set('index', null);
+      this.set('index', []);
       // Run the sort again.
       this.sort();
     });
@@ -123,6 +123,16 @@ class ProjectsStore extends Store {
     }
   }
 
+  // Cycle through projects sort order.
+  onProjectsSort() {
+    let { sortBy, sortFns } = this.get();
+
+    let idx = 1 + sortFns.indexOf(sortBy);
+    if (idx === sortFns.length) idx = 0;
+
+    this.set('sortBy', sortFns[idx]);
+  }
+
   // Demonstration projects.
   onProjectsDemo() {
     this.set({
@@ -153,7 +163,9 @@ class ProjectsStore extends Store {
     let defaults = (arr, hash) => {
       for (let item of arr) {
         for (let key in hash) {
-          opa.set(item, key, hash[key]);
+          if (!opa.has(item, key)) {
+            opa.set(item, key, hash[key]);
+          }
         }
       }
     };
@@ -248,17 +260,18 @@ class ProjectsStore extends Store {
     // Get the existing index.
     let index = this.get('index');
    
-    // Do one.
+    // Index one milestone in an already sorted index.
     if (ref) {
       idx = sortedIndex(index, data, this.comparator());
       index.splice(idx, 0, ref);
-    // Do all.
+    // Sort them all.
     } else {
       let list = this.get('list');
       for (let i = 0; i < list.length; i++) {
         let p = list[i];
         // TODO: need to show projects that failed too...
         if (p.milestones == null) continue;
+        // Walk the milestones.
         for (let j = 0; j < p.milestones.length; j++) {
           let m = p.milestones[j];
           // Run a comparator here inserting into index.

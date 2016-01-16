@@ -22,9 +22,9 @@ export default (milestone) => {
   a = milestone.issues.closed.size;
   b = milestone.issues.open.size;
   if (a + b > 0) {
-      isEmpty = false;
-      points = progress(a, b);
-      if (points === 100) isDone = true;
+    isEmpty = false;
+    points = progress(a, b);
+    if (points === 100) isDone = true;
   }
 
   // Milestones with no due date are always on track.

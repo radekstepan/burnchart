@@ -28,6 +28,6 @@ build:
 	${MAKE} build-css
 
 test:
-	${MOCHA} --compilers js:babel/register --ui exports --timeout 5000 --bail --reporter spec
+	${MOCHA} --compilers js:babel-register --ui exports --timeout 5000 --bail --reporter spec
 
 .PHONY: test

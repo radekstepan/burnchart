@@ -20,7 +20,7 @@ export default React.createClass({
       let projects = this.state.projects;
       if (projects.list.length) {
         // Show a list of projects.
-        content = <div><Projects projects={projects} /></div>;
+        content = <Projects projects={projects} />;
       } else {
         content = <Hero />;
       }

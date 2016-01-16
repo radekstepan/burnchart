@@ -67,6 +67,11 @@ class AppStore extends Store {
     this.set('system.loading', state);
   }
 
+  // TODO: implement.
+  onSystemNotify() {
+
+  }
+
 }
 
 export default new AppStore();

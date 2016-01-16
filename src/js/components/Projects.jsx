@@ -4,6 +4,8 @@ import cls from 'classnames';
 
 import Format from '../mixins/Format.js';
 
+import actions from '../actions/appActions.js';
+
 import Icon from './Icon.jsx';
 import Link from './Link.jsx';
 
@@ -13,9 +15,8 @@ export default React.createClass({
 
   mixins: [ Format ],
 
-  // TODO: implement
   _onSort() {
-
+    actions.emit('projects.sort');
   },
 
   render() {
