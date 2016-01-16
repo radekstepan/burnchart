@@ -1,5 +1,6 @@
 import _ from 'lodash';
 
+// TODO: add `onOnce` fn.
 export default class EventEmitter {
 
   constructor() {

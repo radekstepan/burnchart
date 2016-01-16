@@ -62,11 +62,19 @@ export default class Store extends EventEmitter {
     }
   }
 
-  // Get this key path or everything. Pass truthy value as a 2nd param to get
-  //  a deep clone of the object (expensive).
-  get(path, clone=false) {
-    let fn = clone ? _.cloneDeep : _.identity;
-    return fn(opa.get(this[DATA], path));
+  // Get this key path or everything. Pass a callback to be
+  //  provided with value once it is set.
+  get(path, cb) {
+    let val = opa.get(this[DATA], path);
+    if (!_.isFunction(cb)) return val;
+    
+    if (opa.has(this[DATA], path)) return cb(val);
+    
+    // TODO: unit-test.
+    this.on(path, (...args) => {
+      this.off(path, cb);
+      cb.apply(this, args);
+    });
   }
 
 }

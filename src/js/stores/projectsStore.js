@@ -42,7 +42,6 @@ class ProjectsStore extends Store {
 
     // Listen to when user is ready and save info on us.
     actions.on('user.ready', (user) => {
-      // TODO: this is not guaranteed to arrive before our projects load!
       this.set('user', user);
     });
 
@@ -66,53 +65,54 @@ class ProjectsStore extends Store {
     // Quit if we have no projects.
     if (!list.length) return;
 
-    let user = this.get('user') || {};
-
-    // For all projects.
-    async.map(list, (project, cb) => {
-      // Fetch their milestones.
-      milestones.fetchAll(user, project, (err, list) => {
-        // Save the error if project does not exist.
-        if (err) {
-          this.saveError(project, err);
-          return cb();
-        }
-
-        // Now add in the issues.
-        async.each(list, (milestone, cb) => {
-          // Do we have this milestone already?
-          if (_.find(project.milestones, (arg) => {
-            var number;
-            number = arg.number;
-            return milestone.number === number;
-          })) {
-            return cb(null);
+    // Wait for the user to get resolved.
+    this.get('user', (user) => {
+      // For all projects.
+      async.map(list, (project, cb) => {
+        // Fetch their milestones.
+        milestones.fetchAll(user, project, (err, list) => {
+          // Save the error if project does not exist.
+          if (err) {
+            this.saveError(project, err);
+            return cb();
           }
 
-          // OK fetch all the issues for this milestone then.
-          issues.fetchAll(user, {
-            'owner': project.owner,
-            'name': project.name,
-            'milestone': milestone.number
-          }, (err, obj) => {
-            // Save any errors on the project.
-            if (err) {
-              this.saveError(project, err);
-              return cb();
+          // Now add in the issues.
+          async.each(list, (milestone, cb) => {
+            // Do we have this milestone already?
+            if (_.find(project.milestones, (arg) => {
+              var number;
+              number = arg.number;
+              return milestone.number === number;
+            })) {
+              return cb(null);
             }
 
-            // Add in the issues to the milestone.
-            _.extend(milestone, { 'issues': obj });
-            // Save the milestone.
-            this.addMilestone(project, milestone);
-            // Done.
-            cb();
-          });
-        }, cb);
+            // OK fetch all the issues for this milestone then.
+            issues.fetchAll(user, {
+              'owner': project.owner,
+              'name': project.name,
+              'milestone': milestone.number
+            }, (err, obj) => {
+              // Save any errors on the project.
+              if (err) {
+                this.saveError(project, err);
+                return cb();
+              }
+
+              // Add in the issues to the milestone.
+              _.extend(milestone, { 'issues': obj });
+              // Save the milestone.
+              this.addMilestone(project, milestone);
+              // Done.
+              cb();
+            });
+          }, cb);
+        });
+      // All done, any errors are ignored as saved on projects.
+      }, (err) => {
+        actions.emit('system.loading', false);
       });
-    // All done, any errors are ignored as saved on projects.
-    }, (err) => {
-      actions.emit('system.loading', false);
     });
   }
 
