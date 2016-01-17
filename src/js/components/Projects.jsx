@@ -71,6 +71,9 @@ export default React.createClass({
       );
     });
 
+    // Wait for something to show.
+    if (!errors.length && !list.length) return false;
+
     return (
       <div id="projects">
         <div className="header">

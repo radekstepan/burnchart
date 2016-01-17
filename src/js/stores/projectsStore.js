@@ -1,6 +1,5 @@
 import _ from 'lodash';
 import lscache from 'lscache';
-import async from 'async';
 import opa from 'object-path';
 import semver from 'semver';
 import sortedIndex from 'sortedindex-compare';
@@ -62,39 +61,28 @@ class ProjectsStore extends Store {
 
   // Start fetching milestones and issues for projects.
   onProjectsLoad() {
-    let list = this.get('list');
-
-    // Empty callback.
-    let done = () => { };
+    let projects = this.get('list');
 
     // Quit if we have no projects.
-    if (!list.length) return done();
+    if (!projects.length) return;
 
     // Wait for the user to get resolved.
     this.get('user', this.cb((user) => { // async
       // For all projects.
-      // TODO: this is generally bad since we are updating the store
-      //  piece by piece but can't recover if we end half-way through,
-      //  a better way would be to transact and save all the data as
-      //  they arrive completely, checking if we are hanging or not.
-      async.map(list, (project, cb) => {
+      projects.forEach((project) => {
         // Fetch their milestones.
-        milestones.fetchAll(user, project, this.cb((err, list) => { // async
+        milestones.fetchAll(user, project, this.cb((err, milestones) => { // async
           // Save the error if project does not exist.
-          if (err) {
-            this.saveError(project, err);
-            return cb();
-          }
-
+          if (err) return this.saveError(project, err);
           // Now add in the issues.
-          async.each(list, (milestone, cb) => {
+          milestones.forEach((milestone) => {
             // Do we have this milestone already? Skip fetching issues then.
             if (_.find(project.milestones, ({ number }) => {
               return milestone.number === number;
             })) {
-              return cb(null);
+              return;
             }
-
+            
             // OK fetch all the issues for this milestone then.
             issues.fetchAll(user, {
               'owner': project.owner,
@@ -102,21 +90,15 @@ class ProjectsStore extends Store {
               'milestone': milestone.number
             }, this.cb((err, obj) => { // async
               // Save any errors on the project.
-              if (err) {
-                this.saveError(project, err);
-                return cb();
-              }
-
+              if (err) return this.saveError(project, err);
               // Add in the issues to the milestone.
               _.extend(milestone, { 'issues': obj });
               // Save the milestone.
               this.addMilestone(project, milestone);
-              // Done.
-              cb();
             }));
-          }, cb);
+          });
         }));
-      }, done);
+      });
     }));
   }
 
