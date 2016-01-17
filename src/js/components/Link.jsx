@@ -6,20 +6,20 @@ export default React.createClass({
 
   displayName: 'Link.jsx',
 
-  _route(link, evt) {
+  _navigate(link, evt) {
     App.navigate(link);
     evt.preventDefault();
   },
 
   render() {
     let route = this.props.route;
-    let link = App.link(route.to, route.params, route.query);
+    let link = App.link(route);
 
     return (
       <a
         {...this.props}
         href={'#!' + link}
-        onClick={this._route.bind(this, link)}
+        onClick={this._navigate.bind(this, link)}
       >
         {this.props.children}
       </a>

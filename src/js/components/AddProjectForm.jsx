@@ -30,7 +30,7 @@ export default React.createClass({
     let [ owner, name ] = this.state.val.split('/');
     actions.emit('projects.add', { owner, name });
     // Redirect to the dashboard.
-    App.navigate('/');
+    App.navigate({ 'to': 'projects' });
   },
 
   getInitialState() {
