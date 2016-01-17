@@ -19,6 +19,10 @@ export default React.createClass({
     actions.emit('user.signout');
   },
 
+  _onDemo() {
+    actions.emit('projects.demo');
+  },
+
   render() {
     // From app store.
     let props = this.props.app;

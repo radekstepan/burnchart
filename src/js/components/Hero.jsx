@@ -1,11 +1,17 @@
 import React from 'react';
 
+import actions from '../actions/appActions.js';
+
 import Icon from './Icon.jsx';
 import Link from './Link.jsx';
 
 export default React.createClass({
 
   displayName: 'Hero.jsx',
+
+  _onDemo() {
+    actions.emit('projects.demo');
+  },
 
   render() {
     return (

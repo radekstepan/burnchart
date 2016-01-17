@@ -124,11 +124,8 @@ class ProjectsStore extends Store {
     this.set({
       'list': [
         { 'owner': 'mbostock', 'name': 'd3' },
-        { 'owner': 'medic', 'name': 'medic-webapp' },
-        { 'owner': 'ractivejs', 'name': 'ractive' },
         { 'owner': 'radekstepan', 'name': 'disposable' },
-        { 'owner': 'rails', 'name': 'rails' },
-        { 'owner': 'rails', 'name': 'spring' }
+        { 'owner': 'rails', 'name': 'rails' }
       ],
       'index': []
     });

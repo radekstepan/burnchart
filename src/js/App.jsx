@@ -106,10 +106,11 @@ export default React.createClass({
     return <AddProjectPage />;
   },
 
-  // TODO: Add demo projects.
+  // Demo projects.
   demo() {
-    // mediator.fire '!projects/demo'
-    // window.location.hash = '#'
+    actions.emit('projects.demo');
+    navigate(find({ 'to': 'projects' }));
+    return <div />;
   },
 
   // 404.
