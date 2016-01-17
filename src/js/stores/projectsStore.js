@@ -64,14 +64,11 @@ class ProjectsStore extends Store {
   onProjectsLoad() {
     let list = this.get('list');
 
-    let done = (err) => {
-      // actions.emit('system.loading', false);
-    };
+    // Empty callback.
+    let done = () => { };
 
     // Quit if we have no projects.
     if (!list.length) return done();
-
-    // actions.emit('system.loading', true);
 
     // Wait for the user to get resolved.
     this.get('user', this.cb((user) => { // async

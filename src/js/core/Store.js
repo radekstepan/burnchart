@@ -5,6 +5,8 @@ import { diff } from 'deep-diff';
 
 import EventEmitter from './EventEmitter.js';
 
+import actions from '../actions/appActions.js';
+
 const DATA = 'data';
 
 export default class Store extends EventEmitter {
@@ -17,24 +19,28 @@ export default class Store extends EventEmitter {
     this._cbs = {};
   }
 
-  // Register an async function callback.
+  // Register an async function callback, handle loading state.
   // TODO: unit-test.
   cb(fn) {
     let id = _.uniqueId();
+    actions.emit('system.loading', true);
     return this._cbs[id] = (...args) => {
       // Still running?
-      if (!(id in this._cbs)) return console.log(`stop ${id}`);
+      if (!(id in this._cbs)) return;
       fn.apply(this, args);
       delete this._cbs[id];
+      if (!(Object.keys(this._cbs).length)) {
+        actions.emit('system.loading', false);
+      }
     };
   };
 
   // Cleanup callbacks because a View has changed thus long-running
   //  functions need to end. Unreference any onChange events too.
   clean(onChange) {
-    console.log('cleaning up');
     for (let id in this._cbs) delete this._cbs[id];
     if (_.isFunction(onChange)) this.offAny(onChange);
+    actions.emit('system.loading', false);
   }
 
   // Set a value on a key. Pass falsy value as 3rd param to not emit changes.

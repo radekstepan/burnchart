@@ -15,10 +15,10 @@ class AppStore extends Store {
   // Initial payload.
   constructor() {
     super({
-      system: {
-        loading: false
+      'system': {
+        'loading': false,
       },
-      user: {}
+      'user': {}
     });
 
     // Listen to all app actions.
