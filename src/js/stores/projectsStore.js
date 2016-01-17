@@ -65,23 +65,24 @@ class ProjectsStore extends Store {
     let list = this.get('list');
 
     let done = (err) => {
-      actions.emit('system.loading', false);
+      // actions.emit('system.loading', false);
     };
 
     // Quit if we have no projects.
     if (!list.length) return done();
 
-    actions.emit('system.loading', true);
+    // actions.emit('system.loading', true);
 
     // Wait for the user to get resolved.
-    this.get('user', (user) => {
+    this.get('user', this.cb((user) => { // async
       // For all projects.
+      // TODO: this is generally bad since we are updating the store
+      //  piece by piece but can't recover if we end half-way through,
+      //  a better way would be to transact and save all the data as
+      //  they arrive completely, checking if we are hanging or not.
       async.map(list, (project, cb) => {
-        // Skip any projects that already have milestones.
-        if ('milestones' in project) return cb();
-
         // Fetch their milestones.
-        milestones.fetchAll(user, project, (err, list) => {
+        milestones.fetchAll(user, project, this.cb((err, list) => { // async
           // Save the error if project does not exist.
           if (err) {
             this.saveError(project, err);
@@ -90,10 +91,8 @@ class ProjectsStore extends Store {
 
           // Now add in the issues.
           async.each(list, (milestone, cb) => {
-            // Do we have this milestone already?
-            if (_.find(project.milestones, (arg) => {
-              var number;
-              number = arg.number;
+            // Do we have this milestone already? Skip fetching issues then.
+            if (_.find(project.milestones, ({ number }) => {
               return milestone.number === number;
             })) {
               return cb(null);
@@ -104,7 +103,7 @@ class ProjectsStore extends Store {
               'owner': project.owner,
               'name': project.name,
               'milestone': milestone.number
-            }, (err, obj) => {
+            }, this.cb((err, obj) => { // async
               // Save any errors on the project.
               if (err) {
                 this.saveError(project, err);
@@ -117,11 +116,11 @@ class ProjectsStore extends Store {
               this.addMilestone(project, milestone);
               // Done.
               cb();
-            });
+            }));
           }, cb);
-        });
+        }));
       }, done);
-    });
+    }));
   }
 
   // Push to the stack unless it exists already.
@@ -229,6 +228,7 @@ class ProjectsStore extends Store {
   }
 
   // Add a milestone for a project.
+  // TODO: check if this milestone exists already.
   addMilestone(project, milestone) {
     // Add in the stats.
     let i, j;

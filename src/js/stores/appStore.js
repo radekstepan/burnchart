@@ -16,7 +16,7 @@ class AppStore extends Store {
   constructor() {
     super({
       system: {
-        loading: true
+        loading: false
       },
       user: {}
     });

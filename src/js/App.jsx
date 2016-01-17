@@ -11,6 +11,8 @@ import NotFoundPage from './pages/NotFoundPage.jsx';
 
 import actions from './actions/appActions.js';
 
+import appStore from './stores/appStore.js';
+
 // Will fire even if event is prevented from propagating.
 delete RouterMixin.handleClick;
 
@@ -117,7 +119,6 @@ export default React.createClass({
       return <div />;
     } else {
       blank = true;
-      actions.emit('system.loading', false);
       return this.renderCurrentRoute();
     }
   }

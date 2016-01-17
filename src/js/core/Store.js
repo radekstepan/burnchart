@@ -13,6 +13,28 @@ export default class Store extends EventEmitter {
     super();
     // Initial payload.
     this[DATA] = data || {};
+    // Callbacks to cleanup.
+    this._cbs = {};
+  }
+
+  // Register an async function callback.
+  // TODO: unit-test.
+  cb(fn) {
+    let id = _.uniqueId();
+    return this._cbs[id] = (...args) => {
+      // Still running?
+      if (!(id in this._cbs)) return console.log(`stop ${id}`);
+      fn.apply(this, args);
+      delete this._cbs[id];
+    };
+  };
+
+  // Cleanup callbacks because a View has changed thus long-running
+  //  functions need to end. Unreference any onChange events too.
+  clean(onChange) {
+    console.log('cleaning up');
+    for (let id in this._cbs) delete this._cbs[id];
+    if (_.isFunction(onChange)) this.offAny(onChange);
   }
 
   // Set a value on a key. Pass falsy value as 3rd param to not emit changes.

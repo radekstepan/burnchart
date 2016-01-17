@@ -28,10 +28,7 @@ export default {
   },
 
   _onChange(store, val, key) {
-    // TODO: this is not the right approach!
-    if (this.isMounted()) {
-      this.setState(this._getData(store));
-    }
+    this.setState(this._getData(store));
   },
 
   getInitialState() {
@@ -49,7 +46,8 @@ export default {
   componentWillUnmount() {
     let key;
     for (key in stores) {
-      stores[key].offAny(this._onChange); 
+      console.log('cleanup');
+      stores[key].clean(this._onChange); 
     }
   }
 
