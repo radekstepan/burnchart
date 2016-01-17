@@ -82,7 +82,7 @@ class ProjectsStore extends Store {
             })) {
               return;
             }
-            
+
             // OK fetch all the issues for this milestone then.
             issues.fetchAll(user, {
               'owner': project.owner,
@@ -241,8 +241,6 @@ class ProjectsStore extends Store {
   // Sort projects (update the index). Can pass reference to the
   //  project and milestone index in the stack.
   sort(ref, data) {
-    //console.log(ref, data);
-
     let idx;
     // Get the existing index.
     let index = this.get('index');

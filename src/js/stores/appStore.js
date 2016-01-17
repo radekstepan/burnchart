@@ -16,9 +16,8 @@ class AppStore extends Store {
   constructor() {
     super({
       'system': {
-        'loading': false,
-      },
-      'user': {}
+        'loading': false
+      }
     });
 
     // Listen to all app actions.
@@ -60,7 +59,7 @@ class AppStore extends Store {
 
   // Called by Firebase.
   onUserReady(user) {
-    this.set('user', user || {});
+    this.set('user', user);
   }
 
   onSystemLoading(state) {

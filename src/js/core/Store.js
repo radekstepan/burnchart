@@ -95,7 +95,7 @@ export default class Store extends EventEmitter {
   get(path, cb) {
     let val = opa.get(this[DATA], path);
     if (!_.isFunction(cb)) return val;
-    
+
     if (opa.has(this[DATA], path)) return cb(val);
     
     // TODO: unit-test.

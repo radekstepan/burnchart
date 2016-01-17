@@ -32,7 +32,7 @@ export default {
     if (!isValid(args)) return cb('Request is malformed');
     let { owner, name } = args;
 
-    let token = (user.github != null) ? user.github.accessToken : null;
+    let token = (user && user.github != null) ? user.github.accessToken : null;
     let data = _.defaults({
       'path': `/repos/${owner}/${name}`,
       'headers': headers(token)
@@ -46,7 +46,7 @@ export default {
     if (!isValid(args)) return cb('Request is malformed');
     let { owner, name } = args;
 
-    let token = (user.github != null) ? user.github.accessToken : null;
+    let token = (user && user.github != null) ? user.github.accessToken : null;
     let data = _.defaults({
       'path': `/repos/${owner}/${name}/milestones`,
       'query': { 'state': 'open', 'sort': 'due_date', 'direction': 'asc' },
@@ -61,7 +61,7 @@ export default {
     if (!isValid(args)) return cb('Request is malformed');
     let { owner, name, milestone } = args;
 
-    let token = (user.github != null) ? user.github.accessToken : null;
+    let token = (user && user.github != null) ? user.github.accessToken : null;
     let data = _.defaults({
       'path': `/repos/${owner}/${name}/milestones/${milestone}`,
       'query': { 'state': 'open', 'sort': 'due_date', 'direction': 'asc' },
@@ -76,7 +76,7 @@ export default {
     if (!isValid(args)) return cb('Request is malformed');
     let { owner, name, milestone } = args;
 
-    let token = (user.github != null) ? user.github.accessToken : null;
+    let token = (user && user.github != null) ? user.github.accessToken : null;
     let data = _.defaults({
       'path': `/repos/${owner}/${name}/issues`,
       'query': _.extend(query, { milestone, 'per_page': '100' }),
