@@ -11,7 +11,7 @@ import Link from './Link.jsx';
 
 export default React.createClass({
 
-  displayName: 'Projects.jsx',
+  displayName: 'Milestones.jsx',
 
   mixins: [ Format ],
 
@@ -20,7 +20,7 @@ export default React.createClass({
   },
 
   render() {
-    let projects = this.props.projects;
+    let { projects, project } = this.props;
 
     // Show the projects with errors first.
     let errors = _(projects.list).filter('errors').map((project, i) => {
@@ -36,12 +36,16 @@ export default React.createClass({
       );
     }).value();
 
-    // Now for the list of projects.
-    let list = _.map(projects.index, ([ pI, mI ]) => {
+    // Now for the list of milestones.
+    let list = [];
+    _.each(projects.index, ([ pI, mI ]) => {
       let { owner, name, milestones } = projects.list[pI];
       let milestone = milestones[mI];
 
-      return (
+      // Filter down?
+      if (!(!project || (project.owner == owner && project.name == name))) return;
+
+      list.push(
         <tr className={cls({ 'done': milestone.stats.isDone })} key={`${pI}-${mI}`}>
           <td className="repo">
             <Link route={{ 'to': 'milestones', 'params': { owner, name } }} className="project">
@@ -74,21 +78,38 @@ export default React.createClass({
     // Wait for something to show.
     if (!errors.length && !list.length) return false;
 
-    return (
-      <div id="projects">
-        <div className="header">
-          <a className="sort" onClick={this._onSort}><Icon name="sort"/> Sorted by {projects.sortBy}</a>
-          <h2>Projects</h2>
+    if (project) {
+      return (
+        <div id="projects">
+          <div className="header">
+            <a className="sort" onClick={this._onSort}><Icon name="sort"/> Sorted by {projects.sortBy}</a>
+            <h2>Milestones</h2>
+          </div>
+          <table>
+            <tbody>
+              {list}
+            </tbody>
+          </table>
+          <div className="footer" />
         </div>
-        <table>
-          <tbody>
-            {errors}
-            {list}
-          </tbody>
-        </table>
-        <div className="footer" />
-      </div>
-    );
+      );
+    } else {
+      return (
+        <div id="projects">
+          <div className="header">
+            <a className="sort" onClick={this._onSort}><Icon name="sort"/> Sorted by {projects.sortBy}</a>
+            <h2>Projects</h2>
+          </div>
+          <table>
+            <tbody>
+              {errors}
+              {list}
+            </tbody>
+          </table>
+          <div className="footer" />
+        </div>
+      );
+    }
   }
 
 });

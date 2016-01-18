@@ -92,6 +92,8 @@ export default React.createClass({
 
   // Show project milestones.
   milestones(owner, name) {
+    document.title = `${owner}/${name}`;
+    process.nextTick(() => { actions.emit('projects.load', { owner, name }); });
     return <MilestonesPage owner={owner} name={name} />;
   },
 

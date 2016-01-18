@@ -59,46 +59,62 @@ class ProjectsStore extends Store {
     });
   }
 
-  // Start fetching milestones and issues for projects.
-  onProjectsLoad() {
+  // Fetch milestones and issues for a project(s).
+  onProjectsLoad(project) {
     let projects = this.get('list');
 
     // Quit if we have no projects.
     if (!projects.length) return;
 
+    // Fetch milestones and issues for a project.
+    let get = (user, p) => {
+      // Fetch their milestones.
+      milestones.fetchAll(user, p, this.cb((err, milestones) => { // async
+        // Save the error if project does not exist.
+        if (err) return this.saveError(p, err);
+        // Now add in the issues.
+        milestones.forEach((milestone) => {
+          // Do we have this milestone already? Skip fetching issues then.
+          if (_.find(p.milestones, ({ number }) => {
+            return milestone.number === number;
+          })) {
+            return;
+          }
+
+          // OK fetch all the issues for this milestone then.
+          issues.fetchAll(user, {
+            'owner': p.owner,
+            'name': p.name,
+            'milestone': milestone.number
+          }, this.cb((err, obj) => { // async
+            // Save any errors on the project.
+            if (err) return this.saveError(p, err);
+            // Add in the issues to the milestone.
+            _.extend(milestone, { 'issues': obj });
+            // Save the milestone.
+            this.addMilestone(p, milestone);
+          }));
+        });
+      }));
+    };
+
     // Wait for the user to get resolved.
     this.get('user', this.cb((user) => { // async
-      // For all projects.
-      projects.forEach((project) => {
-        // Fetch their milestones.
-        milestones.fetchAll(user, project, this.cb((err, milestones) => { // async
-          // Save the error if project does not exist.
-          if (err) return this.saveError(project, err);
-          // Now add in the issues.
-          milestones.forEach((milestone) => {
-            // Do we have this milestone already? Skip fetching issues then.
-            if (_.find(project.milestones, ({ number }) => {
-              return milestone.number === number;
-            })) {
-              return;
-            }
-
-            // OK fetch all the issues for this milestone then.
-            issues.fetchAll(user, {
-              'owner': project.owner,
-              'name': project.name,
-              'milestone': milestone.number
-            }, this.cb((err, obj) => { // async
-              // Save any errors on the project.
-              if (err) return this.saveError(project, err);
-              // Add in the issues to the milestone.
-              _.extend(milestone, { 'issues': obj });
-              // Save the milestone.
-              this.addMilestone(project, milestone);
-            }));
-          });
-        }));
-      });
+      if (project) {
+        // For a single project.
+        _.find(this.get('list'), (obj) => {
+          if (project.owner == obj.owner && project.name == obj.name) {
+            project = obj; // expand by saved properties
+            return true;
+          };
+          return false;
+        });
+        // For a single project.
+        get(user, project);
+      } else {
+        // For all projects.
+        projects.forEach(_.partial(get, user));
+      }
     }));
   }
 
