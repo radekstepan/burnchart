@@ -28,10 +28,7 @@ let defaults = {
 export default {
 
   // Get a repo.
-  repo: (user, args, cb) => {
-    if (!isValid(args)) return cb('Request is malformed');
-    let { owner, name } = args;
-
+  repo: (user, { owner, name }, cb) => {
     let token = (user && user.github != null) ? user.github.accessToken : null;
     let data = _.defaults({
       'path': `/repos/${owner}/${name}`,
@@ -42,10 +39,7 @@ export default {
   },
 
   // Get all open milestones.
-  allMilestones: (user, args, cb) => {
-    if (!isValid(args)) return cb('Request is malformed');
-    let { owner, name } = args;
-
+  allMilestones: (user, { owner, name }, cb) => {
     let token = (user && user.github != null) ? user.github.accessToken : null;
     let data = _.defaults({
       'path': `/repos/${owner}/${name}/milestones`,
@@ -57,10 +51,7 @@ export default {
   },
 
   // Get one open milestone.
-  oneMilestone: (user, args, cb) => {
-    if (!isValid(args)) return cb('Request is malformed');
-    let { owner, name, milestone } = args;
-
+  oneMilestone: (user, { owner, name, milestone }, cb) => {
     let token = (user && user.github != null) ? user.github.accessToken : null;
     let data = _.defaults({
       'path': `/repos/${owner}/${name}/milestones/${milestone}`,
@@ -72,10 +63,7 @@ export default {
   },
 
   // Get all issues for a state..
-  allIssues: (user, args, query, cb) => {
-    if (!isValid(args)) return cb('Request is malformed');
-    let { owner, name, milestone } = args;
-
+  allIssues: (user, { owner, name, milestone }, query, cb) => {
     let token = (user && user.github != null) ? user.github.accessToken : null;
     let data = _.defaults({
       'path': `/repos/${owner}/${name}/issues`,
@@ -141,24 +129,6 @@ let headers = (token) => {
   if (token) h.Authorization = `token ${token}`;
   
   return h;
-};
-
-// Validate args.
-let isValid = (obj) => {
-  let rules = {
-    owner: (x) => { return (typeof x !== "undefined" && x !== null); },
-    name: (x) => { return (typeof x !== "undefined" && x !== null); },
-    milestone: (x) => { return _.isInt(x); } // mixin
-  };
-  
-  for (let key in obj) { 
-    let val = obj[key];
-    if (key in rules && !rules[key](val)) {
-      return false;
-    }
-  }
-
-  return true;
 };
 
 // Parse an error.

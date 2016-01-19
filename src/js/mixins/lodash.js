@@ -13,10 +13,5 @@ _.mixin({
       }
       return obj;
     });
-  },
-
-  isInt: (val) => {
-    return !isNaN(val) && parseInt(Number(val)) === val &&
-      !isNaN(parseInt(val, 10));
   }
 });

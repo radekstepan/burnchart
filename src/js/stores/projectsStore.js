@@ -59,61 +59,86 @@ class ProjectsStore extends Store {
     });
   }
 
-  // Fetch milestones and issues for a project(s).
-  onProjectsLoad(project) {
+  // Fetch milestones and issues for a project.
+  getProject(user, p) {
+    // Fetch their milestones.
+    milestones.fetchAll(user, p, this.cb((err, milestones) => { // async
+      // Save the error if project does not exist.
+      if (err) return this.saveError(p, err);
+      // Now add in the issues.
+      milestones.forEach((milestone) => {
+        // Do we have this milestone already? Skip fetching issues then.
+        if (!_.find(p.milestones, ({ number }) => {
+          return milestone.number === number;
+        })) {
+          // Fetch all the issues for this milestone.
+          this.getIssues(user, p, milestone);
+        }
+      });
+    }));
+  }
+
+  // Fetch a single milestone.
+  getMilestone(user, p, m) {
+    // Fetch the single milestone.
+    milestones.fetch(user, {
+      'owner': p.owner,
+      'name': p.name,
+      'milestone': m
+    }, this.cb((err, milestone) => { // async
+      // Save the error if project does not exist.
+      if (err) return this.saveError(p, err);
+      // Now add in the issues.
+      this.getIssues(user, p, milestone);
+    }));
+  }
+
+  // Fetch all issues for a milestone.
+  getIssues(user, p, m) {
+    issues.fetchAll(user, {
+      'owner': p.owner,
+      'name': p.name,
+      'milestone': m.number
+    }, this.cb((err, obj) => { // async
+      // Save any errors on the project.
+      if (err) return this.saveError(p, err);
+      // Add in the issues to the milestone.
+      _.extend(m, { 'issues': obj });
+      // Save the milestone.
+      this.addMilestone(p, m);
+    }));
+  }
+
+  // Fetch milestone(s) and issues for a project(s).
+  onProjectsLoad(args) {
     let projects = this.get('list');
 
     // Quit if we have no projects.
     if (!projects.length) return;
 
-    // Fetch milestones and issues for a project.
-    let get = (user, p) => {
-      // Fetch their milestones.
-      milestones.fetchAll(user, p, this.cb((err, milestones) => { // async
-        // Save the error if project does not exist.
-        if (err) return this.saveError(p, err);
-        // Now add in the issues.
-        milestones.forEach((milestone) => {
-          // Do we have this milestone already? Skip fetching issues then.
-          if (_.find(p.milestones, ({ number }) => {
-            return milestone.number === number;
-          })) {
-            return;
-          }
-
-          // OK fetch all the issues for this milestone then.
-          issues.fetchAll(user, {
-            'owner': p.owner,
-            'name': p.name,
-            'milestone': milestone.number
-          }, this.cb((err, obj) => { // async
-            // Save any errors on the project.
-            if (err) return this.saveError(p, err);
-            // Add in the issues to the milestone.
-            _.extend(milestone, { 'issues': obj });
-            // Save the milestone.
-            this.addMilestone(p, milestone);
-          }));
-        });
-      }));
-    };
-
     // Wait for the user to get resolved.
     this.get('user', this.cb((user) => { // async
-      if (project) {
-        // For a single project.
-        _.find(this.get('list'), (obj) => {
-          if (project.owner == obj.owner && project.name == obj.name) {
-            project = obj; // expand by saved properties
-            return true;
-          };
-          return false;
-        });
-        // For a single project.
-        get(user, project);
+      if (args) {
+        if ('milestone' in args) {
+          // For a single milestone.
+          this.getMilestone(user, {
+            'owner': args.owner,
+            'name': args.name
+          }, args.milestone);
+        } else {
+          // For a single project.
+          _.find(this.get('list'), (obj) => {
+            if (args.owner == obj.owner && args.name == obj.name) {
+              args = obj; // expand by saved properties
+              return true;
+            };
+            return false;
+          });
+          this.getProject(user, args);
+        }
       } else {
         // For all projects.
-        projects.forEach(_.partial(get, user));
+        projects.forEach(_.partial(this.getProject, user));
       }
     }));
   }

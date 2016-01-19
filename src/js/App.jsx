@@ -93,12 +93,18 @@ export default React.createClass({
   // Show project milestones.
   milestones(owner, name) {
     document.title = `${owner}/${name}`;
-    process.nextTick(() => { actions.emit('projects.load', { owner, name }); });
+    process.nextTick(() => {
+      actions.emit('projects.load', { owner, name });
+    });
     return <MilestonesPage owner={owner} name={name} />;
   },
 
   // Show a project milestone chart.
   chart(owner, name, milestone) {
+    document.title = `${owner}/${name}/${milestone}`;
+    process.nextTick(() => {
+      actions.emit('projects.load', { owner, name, milestone });
+    });
     return <ChartPage owner={owner} name={name} milestone={milestone} />;
   },
 

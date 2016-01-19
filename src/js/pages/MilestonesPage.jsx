@@ -5,7 +5,6 @@ import Page from '../mixins/Page.js';
 import Notify from '../components/Notify.jsx';
 import Header from '../components/Header.jsx';
 import Milestones from '../components/Milestones.jsx';
-import Hero from '../components/Hero.jsx';
 
 export default React.createClass({
 

@@ -8,6 +8,8 @@
   "dependencies": {
     "async": "^1.5.2",
     "classnames": "^2.2.3",
+    "d3": "^3.5.12",
+    "d3-tip": "^0.6.7",
     "deep-diff": "^0.3.3",
     "firebase": "^2.3.2",
     "lesshat": "^3.0.2",

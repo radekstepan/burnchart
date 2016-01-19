@@ -22,7 +22,7 @@ export default {
   // Markdown formatting.
   // TODO: works?
   _markdown(...args) {
-    marked.apply(args);
+    marked.apply(null, args);
   },
 
   // Format milestone title.
