@@ -59,56 +59,6 @@ class ProjectsStore extends Store {
     });
   }
 
-  // Fetch milestones and issues for a project.
-  getProject(user, p) {
-    // Fetch their milestones.
-    milestones.fetchAll(user, p, this.cb((err, milestones) => { // async
-      // Save the error if project does not exist.
-      if (err) return this.saveError(p, err);
-      // Now add in the issues.
-      milestones.forEach((milestone) => {
-        // Do we have this milestone already? Skip fetching issues then.
-        if (!_.find(p.milestones, ({ number }) => {
-          return milestone.number === number;
-        })) {
-          // Fetch all the issues for this milestone.
-          this.getIssues(user, p, milestone);
-        }
-      });
-    }));
-  }
-
-  // Fetch a single milestone.
-  getMilestone(user, p, m) {
-    // Fetch the single milestone.
-    milestones.fetch(user, {
-      'owner': p.owner,
-      'name': p.name,
-      'milestone': m
-    }, this.cb((err, milestone) => { // async
-      // Save the error if project does not exist.
-      if (err) return this.saveError(p, err);
-      // Now add in the issues.
-      this.getIssues(user, p, milestone);
-    }));
-  }
-
-  // Fetch all issues for a milestone.
-  getIssues(user, p, m) {
-    issues.fetchAll(user, {
-      'owner': p.owner,
-      'name': p.name,
-      'milestone': m.number
-    }, this.cb((err, obj) => { // async
-      // Save any errors on the project.
-      if (err) return this.saveError(p, err);
-      // Add in the issues to the milestone.
-      _.extend(m, { 'issues': obj });
-      // Save the milestone.
-      this.addMilestone(p, m);
-    }));
-  }
-
   // Fetch milestone(s) and issues for a project(s).
   onProjectsLoad(args) {
     let projects = this.get('list');
@@ -138,7 +88,7 @@ class ProjectsStore extends Store {
         }
       } else {
         // For all projects.
-        projects.forEach(_.partial(this.getProject, user));
+        _.each(projects, _.partial(this.getProject, user), this);
       }
     }));
   }
@@ -244,14 +194,73 @@ class ProjectsStore extends Store {
     }
   }
 
+  // Fetch milestones and issues for a project.
+  getProject(user, p) {
+    // Fetch their milestones.
+    milestones.fetchAll(user, p, this.cb((err, milestones) => { // async
+      // Save the error if project does not exist.
+      if (err) return this.saveError(p, err);
+      // Now add in the issues.
+      milestones.forEach((milestone) => {
+        // Do we have this milestone already? Skip fetching issues then.
+        if (!_.find(p.milestones, ({ number }) => {
+          return milestone.number === number;
+        })) {
+          // Fetch all the issues for this milestone.
+          this.getIssues(user, p, milestone);
+        }
+      });
+    }));
+  }
+
+  // Fetch a single milestone.
+  getMilestone(user, p, m) {
+    // Fetch the single milestone.
+    milestones.fetch(user, {
+      'owner': p.owner,
+      'name': p.name,
+      'milestone': m
+    }, this.cb((err, milestone) => { // async
+      // Save the error if project does not exist.
+      if (err) return this.saveError(p, err);
+      // Now add in the issues.
+      this.getIssues(user, p, milestone);
+    }));
+  }
+
+  // Fetch all issues for a milestone.
+  getIssues(user, p, m) {
+    issues.fetchAll(user, {
+      'owner': p.owner,
+      'name': p.name,
+      'milestone': m.number
+    }, this.cb((err, obj) => { // async
+      // Save any errors on the project.
+      if (err) return this.saveError(p, err);
+      // Add in the issues to the milestone.
+      _.extend(m, { 'issues': obj });
+      // Save the milestone.
+      this.addMilestone(p, m);
+    }));
+  }
+
   // Add a milestone for a project.
-  // TODO: check if this milestone exists already.
   addMilestone(project, milestone) {
     // Add in the stats.
     let i, j;
     _.extend(milestone, { 'stats': stats(milestone) });
     // We are supposed to exist already.
     if ((i = this.findIndex(project)) < 0) { throw 500; } 
+
+    // Does the milestone exist already?
+    let milestones;
+    if (milestones = this.get(`list.${i}.milestones`)) {
+      j = _.findIndex(milestones, { 'number': milestone.number });
+      // Just make an update then.
+      if (j != -1) {
+        return this.set(`list.${i}.milestones.${j}`, milestone);
+      }
+    }
 
     // Push the milestone and return the index.
     j = this.push(`list.${i}.milestones`, milestone);
