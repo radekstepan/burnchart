@@ -41,10 +41,12 @@ export default React.createClass({
     let total = issues.open.size + issues.closed.size;
 
     // An issue may have been closed before the start of a milestone.
-    let head = issues.closed.list[0].closed_at;
-    if (issues.length && milestone.created_at > head) {
-      // This is the new start.
-      milestone.created_at = head;
+    if (issues.closed.size > 0) {    
+        let head = issues.closed.list[0].closed_at;
+        if (issues.length && milestone.created_at > head) {
+          // This is the new start.
+          milestone.created_at = head;
+        }
     }
 
     // Actual, ideal & trend lines.

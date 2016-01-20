@@ -74,7 +74,7 @@ class ProjectsStore extends Store {
           this.getMilestone(user, {
             'owner': args.owner,
             'name': args.name
-          }, args.milestone);
+          }, args.milestone, true); // notify as well
         } else {
           // For a single project.
           _.find(this.get('list'), (obj) => {
@@ -214,7 +214,7 @@ class ProjectsStore extends Store {
   }
 
   // Fetch a single milestone.
-  getMilestone(user, p, m) {
+  getMilestone(user, p, m, say) {
     // Fetch the single milestone.
     milestones.fetch(user, {
       'owner': p.owner,
@@ -222,33 +222,63 @@ class ProjectsStore extends Store {
       'milestone': m
     }, this.cb((err, milestone) => { // async
       // Save the error if project does not exist.
-      if (err) return this.saveError(p, err);
+      if (err) return this.saveError(p, err, say);
       // Now add in the issues.
-      this.getIssues(user, p, milestone);
+      this.getIssues(user, p, milestone, say);
     }));
   }
 
   // Fetch all issues for a milestone.
-  getIssues(user, p, m) {
+  getIssues(user, p, m, say) {
     issues.fetchAll(user, {
       'owner': p.owner,
       'name': p.name,
       'milestone': m.number
     }, this.cb((err, obj) => { // async
       // Save any errors on the project.
-      if (err) return this.saveError(p, err);
+      if (err) return this.saveError(p, err, say);
       // Add in the issues to the milestone.
       _.extend(m, { 'issues': obj });
       // Save the milestone.
-      this.addMilestone(p, m);
+      this.addMilestone(p, m, say);
     }));
   }
 
+  // Talk about the stats of a milestone.
+  notify(stats) {
+    if (stats.isEmpty) {
+      return actions.emit('system.notify', {
+        'text': 'This milestone has no issues',
+        'type': 'warn',
+        'system': true,
+        'ttl': null
+      });
+    }
+
+    if (stats.isDone) {
+      actions.emit('system.notify', {
+        'text': 'This milestone is complete',
+        'type': 'success'
+      });
+    }
+
+    if (stats.isOverdue) {
+      actions.emit('system.notify', {
+        'text': 'This milestone is overdue',
+        'type': 'warn'
+      });
+    }
+  }
+
   // Add a milestone for a project.
-  addMilestone(project, milestone) {
+  addMilestone(project, milestone, say) {
     // Add in the stats.
     let i, j;
     _.extend(milestone, { 'stats': stats(milestone) });
+
+    // Notify?
+    if (say) this.notify(milestone.stats);
+
     // We are supposed to exist already.
     if ((i = this.findIndex(project)) < 0) { throw 500; } 
 
@@ -275,14 +305,23 @@ class ProjectsStore extends Store {
   }
 
   // Save an error from loading milestones or issues
-  saveError(project, err) {
+  saveError(project, err, say=false) {
     var idx;
     if ((idx = this.findIndex(project)) > -1) {
-      return this.push(`list.${idx}.errors`, err);
+      this.push(`list.${idx}.errors`, err);
     } else {
       // We are supposed to exist already.
       throw 500;  
     }
+
+    // Notify?
+    if (!say) return;
+    actions.emit('system.notify', {
+      'text': err,
+      'type': 'alert',
+      'system': true,
+      'ttl': null
+    });
   }
 
   // Sort projects (update the index). Can pass reference to the

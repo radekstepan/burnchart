@@ -16,7 +16,8 @@ class AppStore extends Store {
   constructor() {
     super({
       'system': {
-        'loading': false
+        'loading': false,
+        'notification': null
       }
     });
 
@@ -66,9 +67,12 @@ class AppStore extends Store {
     this.set('system.loading', state);
   }
 
-  // TODO: implement.
-  onSystemNotify() {
-
+  // Show a notification.
+  // TODO: multiple notifications & ttl
+  onSystemNotify(args) {
+    if (!_.isObject(args)) args = { 'text': args };
+    args.id = _.uniqueId('m-');
+    this.set('system.notification', args);
   }
 
 }

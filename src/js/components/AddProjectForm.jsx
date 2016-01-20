@@ -39,7 +39,7 @@ export default React.createClass({
 
   render() {
     let user;
-    if (!('uid' in this.props.user)) {
+    if (!(this.props.user != null && 'uid' in this.props.user)) {
       user = (
         <span><S />If you'd like to add a private GitHub repo,
         <S /><a onClick={this._onSignIn}>Sign In</a> first.</span>

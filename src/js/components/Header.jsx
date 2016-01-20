@@ -2,6 +2,7 @@ import React from 'react';
 
 import actions from '../actions/appActions.js';
 
+import Notify from './Notify.jsx';
 import Icon from './Icon.jsx';
 import Link from './Link.jsx';
 
@@ -51,25 +52,28 @@ export default React.createClass({
     }
 
     return (
-      <div id="head">
-        {user}
+      <div>
+        <Notify {...props.system.notification} />
+        <div id="head">
+          {user}
 
-        <Link route={{ to: 'projects' }} id="icon">
-          <Icon name={icon} />
-        </Link>
+          <Link route={{ to: 'projects' }} id="icon">
+            <Icon name={icon} />
+          </Link>
 
-        <ul>
-          <li>
-            <Link route={{ to: 'addProject' }}>
-              <Icon name="plus" /> Add a Project
-            </Link>
-          </li>
-          <li>
-            <Link route={{ to: 'demo' }}>
-              <Icon name="computer" /> See Examples
-            </Link>
-          </li>
-        </ul>
+          <ul>
+            <li>
+              <Link route={{ to: 'addProject' }}>
+                <Icon name="plus" /> Add a Project
+              </Link>
+            </li>
+            <li>
+              <Link route={{ to: 'demo' }}>
+                <Icon name="computer" /> See Examples
+              </Link>
+            </li>
+          </ul>
+        </div>
       </div>
     );
   }
