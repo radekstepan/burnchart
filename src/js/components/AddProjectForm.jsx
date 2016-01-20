@@ -59,7 +59,7 @@ export default React.createClass({
             <tbody>
               <tr>
                 <td>
-                  <input type="text" placeholder="user/repo" autoComplete="off"
+                  <input type="text" ref="el" placeholder="user/repo" autoComplete="off"
                   onChange={this._onChange} value={this.state.val} onKeyUp={this._onKeyUp} />
                 </td>
                 <td><a onClick={this._onAdd}>Add</a></td>
@@ -74,6 +74,10 @@ export default React.createClass({
         </div>
       </div>
     );
+  },
+
+  componentDidMount() {
+    this.refs.el.focus();
   }
 
 });
