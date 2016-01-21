@@ -6,7 +6,6 @@ import request from './request.js';
 
 // Fetch issues for a milestone.
 export default {
-  
   fetchAll: (user, repo, cb) => {
     // For each `open` and `closed` issues in parallel.
     async.parallel([
@@ -16,7 +15,6 @@ export default {
       cb(err, { open, closed });
     });
   }
-
 };
 
 // Calculate size of either open or closed issues.
@@ -27,7 +25,8 @@ let calcSize = (list) => {
   switch (config.chart.points) {
     case 'ONE_SIZE':
       size = list.length;
-      for (let issue of list) { issue.size = 1; }
+      // TODO: check we have an object?
+      for (let issue of list) issue.size = 1;
       break;
 
     case 'LABELS':
