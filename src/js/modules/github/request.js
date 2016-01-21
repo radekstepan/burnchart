@@ -3,7 +3,7 @@ import superagent from 'superagent';
 
 import actions from '../../actions/appActions.js';
 
-import config from '../../models/config.js';
+import config from '../../../config.js';
 
 // Custom JSON parser.
 superagent.parse = {
@@ -111,7 +111,7 @@ let request = ({ protocol, host, path, query, headers }, cb) => {
 
 // How do we respond to a response?
 let response = (err, data, cb) => {
-  if (err) return cb(error(err));
+  if (err) return cb(error(data.body || err));
   // 2xx?
   if (data.statusType !== 2) return cb(error(data.body));
   // All good.
@@ -134,7 +134,7 @@ let headers = (token) => {
 // Parse an error.
 let error = (err) => {
   let text, type;
-  
+
   switch (false) {
     case !_.isString(err):
       text = err;
@@ -154,13 +154,6 @@ let error = (err) => {
     } catch (_err) {
       text = err.toString();
     }
-  }
-
-  // API rate limit exceeded? Flash a message to that effect.
-  // https://developer.github.com/v3/#rate-limiting
-  if (/API rate limit exceeded/.test(text)) {
-    type = 'warn';
-    actions.emit('system.notify', { type, text });
   }
   
   return text;

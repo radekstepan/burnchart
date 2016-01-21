@@ -1,6 +1,6 @@
 import { assert } from 'chai';
 
-import EventEmitter from '../src/js/core/EventEmitter.js';
+import EventEmitter from '../src/js/lib/EventEmitter.js';
 
 export default {
   EventEmitter: {

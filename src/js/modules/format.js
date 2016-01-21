@@ -6,36 +6,36 @@ export default {
 
   // Time from now.
   // TODO: Memoize.
-  _fromNow(jsonDate) {
+  fromNow(jsonDate) {
     return moment(jsonDate, moment.ISO_8601).fromNow();
   },
 
   // When is a milestone due?
-  _due(jsonDate) {
+  due(jsonDate) {
     if (!jsonDate) {
       return '\u00a0'; // for React
     } else {
-      return [ 'due', this._fromNow(jsonDate) ].join(' ');
+      return `due ${this.fromNow(jsonDate)}`;
     }
   },
 
   // Markdown formatting.
   // TODO: works?
-  _markdown(...args) {
+  markdown(...args) {
     marked.apply(null, args);
   },
 
   // Format milestone title.
-  _title(text) {
+  title(text) {
     if (text.toLowerCase().indexOf('milestone') > -1) {
       return text;
     } else {
-      return [ 'Milestone', text ].join(' ');
+      return `Milestone ${text}`;
     }
   },
 
   // Hex to decimal.
-  _hexToDec(hex) {
+  hexToDec(hex) {
     return parseInt(hex, 16);
   }
 

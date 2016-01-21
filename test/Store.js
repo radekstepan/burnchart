@@ -1,6 +1,6 @@
 import { assert } from 'chai';
 
-import Store from '../src/js/core/Store.js';
+import Store from '../src/js/lib/Store.js';
 
 export default {
   Store: {

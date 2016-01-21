@@ -1,10 +1,11 @@
 import React from 'react';
 
-import Page from '../mixins/Page.js';
+import Page from '../../lib/PageMixin.js';
 
-import Notify from '../components/Notify.jsx';
-import Header from '../components/Header.jsx';
-import Milestones from '../components/Milestones.jsx';
+import Notify from '../Notify.jsx';
+import Header from '../Header.jsx';
+import Footer from '../Footer.jsx';
+import Milestones from '../Milestones.jsx';
 
 export default React.createClass({
 
@@ -33,11 +34,7 @@ export default React.createClass({
           <div id="content" className="wrap">{content}</div>
         </div>
 
-        <div id="footer">
-          <div className="wrap">
-            &copy; 2012-2016 <a href="https:/radekstepan.com" target="_blank">Radek Stepan</a>
-          </div>
-        </div>
+        <Footer />
       </div>
     );
   }

@@ -20,12 +20,12 @@ export default React.createClass({
     this.setState({ 'val': evt.target.value });
   },
 
+  // Add the project (via Enter keypress).
   _onKeyUp(evt) {
-    if (evt.key == 'Enter') {
-      this._onAdd();
-    }
+    if (evt.key == 'Enter') this._onAdd();
   },
 
+  // Add the project.
   _onAdd() {
     let [ owner, name ] = this.state.val.split('/');
     actions.emit('projects.add', { owner, name });
@@ -33,6 +33,7 @@ export default React.createClass({
     App.navigate({ 'to': 'projects' });
   },
 
+  // Blank input.
   getInitialState() {
     return { 'val': '' };
   },
@@ -76,6 +77,7 @@ export default React.createClass({
     );
   },
 
+  // Focus input field on mount.
   componentDidMount() {
     this.refs.el.focus();
   }

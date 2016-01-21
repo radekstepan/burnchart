@@ -9,15 +9,20 @@ let Notify = React.createClass({
 
   displayName: 'Notify.jsx',
 
+  // Close notification.
   _onClose() {
     actions.emit('system.notify');
   },
 
   getDefaultProps() {
     return {
+      // No text.
       'text': null,
+      // Grey style.
       'type': '',
+      // Top notification.
       'system': false,
+      // Just announcing.
       'icon': 'megaphone'
     };
   },
@@ -25,6 +30,7 @@ let Notify = React.createClass({
   render() {
     let { text, system, type, icon, ttl } = this.props;
 
+    // No text = no message.
     if (!text) return false;
 
     if (system) {
@@ -53,6 +59,7 @@ export default React.createClass({
   render() {
     if (!this.props.id) return false; // TODO: fix ghost
 
+    // Top bar or center positioned?
     let name = (this.props.system) ? 'animCenter' : 'animTop';
 
     return (

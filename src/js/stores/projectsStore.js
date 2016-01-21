@@ -4,7 +4,7 @@ import opa from 'object-path';
 import semver from 'semver';
 import sortedIndex from 'sortedindex-compare';
 
-import Store from '../core/Store.js';
+import Store from '../lib/Store.js';
 
 import actions from '../actions/appActions.js';
 
@@ -16,7 +16,7 @@ class ProjectsStore extends Store {
 
   // Initial payload.
   constructor() {
-    // Init the projects.
+    // Init the projects from local storage.
     let list = lscache.get('projects') || [];
 
     super({
@@ -32,17 +32,13 @@ class ProjectsStore extends Store {
 
     // Listen to only projects actions.
     actions.on('projects.*', (obj, event) => {
-      let fn = ('on.' + event).replace(/[.]+(\w|$)/g, (m, p) => {
-        return p.toUpperCase();
-      });
-
+      let fn = `on.${event}`.replace(/[.]+(\w|$)/g, (m, p) => p.toUpperCase());
+      // Run?
       (fn in this) && this[fn](obj);
     });
 
     // Listen to when user is ready and save info on us.
-    actions.on('user.ready', (user) => {
-      this.set('user', user);
-    });
+    actions.on('user.ready', (user) => this.set('user', user));
 
     // Persist projects in local storage (sans milestones and issues).
     this.on('list.*', () => {
@@ -304,7 +300,8 @@ class ProjectsStore extends Store {
     return _.findIndex(this.get('list'), { owner, name });
   }
 
-  // Save an error from loading milestones or issues
+  // Save an error from loading milestones or issues.
+  // TODO: clear these when we fetch all projects anew.
   saveError(project, err, say=false) {
     var idx;
     if ((idx = this.findIndex(project)) > -1) {

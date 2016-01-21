@@ -4,7 +4,7 @@ import opa from 'object-path';
 import { noCallThru } from 'proxyquire'
 let proxy = noCallThru();
 
-import config from '../src/js/models/config.js';
+import config from '../src/config.js';
 
 class Sa {
   constructor() {

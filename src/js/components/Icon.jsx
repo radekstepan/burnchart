@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Format from '../mixins/Format.js';
+import format from '../modules/format.js';
 
 // Fontello icon hex codes.
 let codes = {
@@ -25,17 +25,15 @@ export default React.createClass({
 
   displayName: 'Icon.jsx',
   
-  mixins: [ Format ],
-
   render() {
     let name = this.props.name;
 
     if (name && name in codes) {
-      let code = this._hexToDec(codes[name]);
+      let code = format.hexToDec(codes[name]);
       return (
         <span
-          className={'icon ' + name}
-          dangerouslySetInnerHTML={{ '__html': '&#' + code + ';' }}
+          className={`icon ${name}`}
+          dangerouslySetInnerHTML={{ '__html': `&#${code};` }}
         />
       );
     }

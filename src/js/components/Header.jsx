@@ -20,6 +20,7 @@ export default React.createClass({
     actions.emit('user.signout');
   },
 
+  // Add example projects.
   _onDemo() {
     actions.emit('projects.demo');
   },
@@ -28,12 +29,9 @@ export default React.createClass({
     // From app store.
     let props = this.props.app;
 
-    // Switch loading icon with app icon.
-    let icon = [ 'fire', 'spinner' ][ +props.system.loading ];
-
     // Sign-in/out.
     let user;
-    if (props.user && 'uid' in props.user) {
+    if (props.user != null && 'uid' in props.user) {
       user = (
         <div className="right">
           <a onClick={this._onSignOut}>
@@ -51,24 +49,27 @@ export default React.createClass({
       );
     }
 
+    // Switch loading icon with app icon.
+    let icon = [ 'fire', 'spinner' ][ +props.system.loading ];
+
     return (
       <div>
         <Notify {...props.system.notification} />
         <div id="head">
           {user}
 
-          <Link route={{ to: 'projects' }} id="icon">
+          <Link route={{ 'to': 'projects' }} id="icon">
             <Icon name={icon} />
           </Link>
 
           <ul>
             <li>
-              <Link route={{ to: 'addProject' }}>
+              <Link route={{ 'to': 'addProject' }}>
                 <Icon name="plus" /> Add a Project
               </Link>
             </li>
             <li>
-              <Link route={{ to: 'demo' }}>
+              <Link route={{ 'to': 'demo' }}>
                 <Icon name="computer" /> See Examples
               </Link>
             </li>

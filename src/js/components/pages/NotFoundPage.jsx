@@ -1,7 +1,8 @@
 import React from 'react';
 
-import Page from '../mixins/Page.js';
+import Page from '../../lib/PageMixin.js';
 
+// TODO: implement
 export default React.createClass({
 
   displayName: 'NotFoundPage.jsx',

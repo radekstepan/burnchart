@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import async from 'async';
 
-import config from '../../models/config.js';
+import config from '../../../config.js';
 import request from './request.js';
 
 // Fetch issues for a milestone.

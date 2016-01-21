@@ -1,13 +1,13 @@
 import React from 'react';
 import { RouterMixin, navigate } from 'react-mini-router';
 import _ from 'lodash';
-import lodash from './mixins/lodash.js';
+import './modules/lodash.js';
 
-import ProjectsPage from './pages/ProjectsPage.jsx';
-import MilestonesPage from './pages/MilestonesPage.jsx';
-import ChartPage from './pages/ChartPage.jsx';
-import AddProjectPage from './pages/AddProjectPage.jsx';
-import NotFoundPage from './pages/NotFoundPage.jsx';
+import ProjectsPage from './components/pages/ProjectsPage.jsx';
+import MilestonesPage from './components/pages/MilestonesPage.jsx';
+import ChartPage from './components/pages/ChartPage.jsx';
+import AddProjectPage from './components/pages/AddProjectPage.jsx';
+import NotFoundPage from './components/pages/NotFoundPage.jsx';
 
 import actions from './actions/appActions.js';
 
@@ -33,7 +33,7 @@ let find = ({ to, params, query }) => {
   let re = /:[^\/]+/g;
 
   // Skip empty objects.
-  [ params, query ] = [_.isObject(params) ? params : {}, query ].map(o => _.pick(o, _.identity));
+  [ params, query ] = [ _.isObject(params) ? params : {}, query ].map(o => _.pick(o, _.identity));
 
   // Find among the routes.
   _.find(routes, (name, url) => {
@@ -73,9 +73,7 @@ export default React.createClass({
 
   statics: {
     // Build a link to a page.
-    link: (route) => {
-      return find(route);
-    },
+    link: (route) => find(route),
     // Route to a link.
     navigate: (route) => {
       let fn = _.isString(route) ? _.identity : find;
@@ -86,25 +84,21 @@ export default React.createClass({
   // Show projects.
   projects() {
     document.title = 'Burnchart: GitHub Burndown Chart as a Service';
-    process.nextTick(() => { actions.emit('projects.load'); });
+    process.nextTick(() => actions.emit('projects.load'));
     return <ProjectsPage />;
   },
 
   // Show project milestones.
   milestones(owner, name) {
     document.title = `${owner}/${name}`;
-    process.nextTick(() => {
-      actions.emit('projects.load', { owner, name });
-    });
+    process.nextTick(() => actions.emit('projects.load', { owner, name }));
     return <MilestonesPage owner={owner} name={name} />;
   },
 
   // Show a project milestone chart.
   chart(owner, name, milestone) {
     document.title = `${owner}/${name}/${milestone}`;
-    process.nextTick(() => {
-      actions.emit('projects.load', { owner, name, milestone });
-    });
+    process.nextTick(() => actions.emit('projects.load', { owner, name, milestone }));
     return <ChartPage owner={owner} name={name} milestone={milestone} />;
   },
 
@@ -134,6 +128,8 @@ export default React.createClass({
       return <div />;
     } else {
       blank = true;
+      // Clear any notifications.
+      process.nextTick(() => actions.emit('system.notify'));
       return this.renderCurrentRoute();
     }
   }

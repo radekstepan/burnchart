@@ -1,11 +1,11 @@
 import _ from 'lodash';
 import Firebase from 'firebase';
 
-import Store from '../core/Store.js';
+import Store from '../lib/Store.js';
 
 import actions from '../actions/appActions.js';
 
-import config from '../models/config.js';
+import config from '../../config.js';
 
 // Setup a new client.
 let client;
@@ -23,14 +23,12 @@ class AppStore extends Store {
 
     // Listen to all app actions.
     actions.onAny((obj, event) => {
-      let fn = ('on.' + event).replace(/[.]+(\w|$)/g, (m, p) => {
-        return p.toUpperCase();
-      });
-
+      let fn = `on.${event}`.replace(/[.]+(\w|$)/g, (m, p) => p.toUpperCase());
+      // Run?
       (fn in this) && this[fn](obj);
     });
 
-    client = new Firebase("https://" + config.firebase + ".firebaseio.com");
+    client = new Firebase(`https://${config.firebase}.firebaseio.com`);
 
     // When user is already authenticated.
     client.onAuth((data={}) => actions.emit('user.ready', data));

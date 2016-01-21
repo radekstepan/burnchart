@@ -5,7 +5,7 @@ import opa from 'object-path';
 
 import request from '../src/js/modules/github/request.js';
 import issues from '../src/js/modules/github/issues.js';
-import config from '../src/js/models/config.js';
+import config from '../src/config.js';
 
 import json from './fixtures/issues.json';
 

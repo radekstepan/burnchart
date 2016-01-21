@@ -2,7 +2,7 @@ import React from 'react';
 import _ from 'lodash';
 import cls from 'classnames';
 
-import Format from '../mixins/Format.js';
+import format from '../modules/format.js';
 
 import actions from '../actions/appActions.js';
 
@@ -13,8 +13,7 @@ export default React.createClass({
 
   displayName: 'Milestones.jsx',
 
-  mixins: [ Format ],
-
+  // Cycle through milestones sort order.
   _onSort() {
     actions.emit('projects.sort');
   },
@@ -36,7 +35,7 @@ export default React.createClass({
       );
     }).value();
 
-    // Now for the list of milestones.
+    // Now for the list of milestones, index sorted.
     let list = [];
     _.each(projects.index, ([ pI, mI ]) => {
       let { owner, name, milestones } = projects.list[pI];
@@ -48,12 +47,18 @@ export default React.createClass({
       list.push(
         <tr className={cls({ 'done': milestone.stats.isDone })} key={`${pI}-${mI}`}>
           <td className="repo">
-            <Link route={{ 'to': 'milestones', 'params': { owner, name } }} className="project">
+            <Link
+              route={{ 'to': 'milestones', 'params': { owner, name } }}
+              className="project"
+            >
               {owner}/{name}
             </Link>
           </td>
           <td>
-            <Link route={{ 'to': 'chart', 'params': { owner, name, 'milestone': milestone.number } }} className="milestone">
+            <Link
+              route={{ 'to': 'chart', 'params': { owner, name, 'milestone': milestone.number } }}
+              className="milestone"
+            >
               {milestone.title}
             </Link>
           </td>
@@ -61,7 +66,7 @@ export default React.createClass({
             <div className="progress">
               <span className="percent">{Math.floor(milestone.stats.progress.points)}%</span>
               <span className={cls('due', { 'red': milestone.stats.isOverdue })}>
-                {this._due(milestone.due_on)}
+                {format.due(milestone.due_on)}
               </span>
               <div className="outer bar">
                 <div
@@ -79,6 +84,7 @@ export default React.createClass({
     if (!errors.length && !list.length) return false;
 
     if (project) {
+      // List of projects and their milestones.
       return (
         <div id="projects">
           <div className="header">
@@ -86,14 +92,13 @@ export default React.createClass({
             <h2>Milestones</h2>
           </div>
           <table>
-            <tbody>
-              {list}
-            </tbody>
+            <tbody>{list}</tbody>
           </table>
           <div className="footer" />
         </div>
       );
     } else {
+      // Project-specific milestones.
       return (
         <div id="projects">
           <div className="header">

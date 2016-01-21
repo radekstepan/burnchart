@@ -6,6 +6,7 @@ export default React.createClass({
 
   displayName: 'Link.jsx',
 
+  // Navigate to a route.
   _navigate(link, evt) {
     App.navigate(link);
     evt.preventDefault();
@@ -18,7 +19,7 @@ export default React.createClass({
     return (
       <a
         {...this.props}
-        href={'#!' + link}
+        href={`#!${link}`}
         onClick={this._navigate.bind(this, link)}
       >
         {this.props.children}

@@ -1,10 +1,9 @@
 import React from 'react';
 import d3 from 'd3';
 import d3Tip from 'd3-tip';
-
 d3Tip(d3);
 
-import Format from '../mixins/Format.js';
+import format from '../modules/format.js';
 
 import lines from '../modules/chart/lines.js';
 import axes from '../modules/chart/axes.js';
@@ -13,8 +12,6 @@ export default React.createClass({
 
   displayName: 'Chart.jsx',
 
-  mixins: [ Format ],
-
   render() {
     let milestone = this.props.milestone;
 
@@ -22,9 +19,9 @@ export default React.createClass({
       <div>
         <div id="title">
           <div className="wrap">
-            <h2 className="title">{this._title(milestone.title)}</h2>
-            <span className="sub">{this._due(milestone.due_on)}</span>
-            <div className="description">{this._markdown(milestone.description)}</div>
+            <h2 className="title">{format.title(milestone.title)}</h2>
+            <span className="sub">{format.due(milestone.due_on)}</span>
+            <div className="description">{format.markdown(milestone.description)}</div>
           </div>
         </div>
         <div id="content" className="wrap">
@@ -35,8 +32,8 @@ export default React.createClass({
   },
 
   componentDidMount() {
-    let milestone = this.props.milestone,
-        issues = milestone.issues;
+    let milestone = this.props.milestone;
+    let issues = milestone.issues;
     // Total number of points in the milestone.
     let total = issues.open.size + issues.closed.size;
 
