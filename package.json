@@ -1,10 +1,6 @@
 {
   "name": "burnchart",
   "version": "3.0.0-alpha",
-  "scripts": {
-    "start": "./node_modules/.bin/superstatic public --port 8080",
-    "test": "make test"
-  },
   "dependencies": {
     "async": "^1.5.2",
     "classnames": "^2.2.3",
@@ -35,6 +31,7 @@
     "babelify": "^7.2.0",
     "browserify": "^13.0.0",
     "chai": "^3.4.1",
+    "clean-css": "^3.4.9",
     "coffeeify": "^2.0.1",
     "less": "^2.5.3",
     "mocha": "^2.3.4",
