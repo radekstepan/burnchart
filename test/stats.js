@@ -125,5 +125,32 @@ export default {
     assert.isTrue(isOnTime);
 
     done();
+  },
+
+  // Make sure milestone hasn't been created after closing an issue; #100.
+  'stats - milestone created_at': (done) => {
+    let now = moment.utc();
+    let a = now.clone().subtract(1, 'week').toISOString(),
+        b = now.clone().subtract(1, 'day').toISOString()
+
+    let milestone = {
+      'created_at': b,
+      'issues': {
+        'open': {
+          'size': 0
+        },
+        'closed': {
+          'size': 1,
+          'list': [ { 'closed_at': a } ]
+        }
+      }
+    };
+
+    // By ref.
+    stats(milestone);
+
+    assert.equal(milestone.created_at, a);
+
+    done();
   }
 };

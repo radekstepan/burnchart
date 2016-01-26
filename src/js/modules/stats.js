@@ -1,4 +1,5 @@
 import moment from 'moment';
+import _ from 'lodash';
 
 // Progress in %.
 let progress = (a, b) => {
@@ -25,6 +26,13 @@ export default (milestone) => {
     isEmpty = false;
     points = progress(a, b);
     if (points === 100) isDone = true;
+  }
+
+  // Check that milestone hasn't been created after issue close; #100.
+  if (milestone.issues.closed.size) {
+    milestone.created_at = _.reduce(milestone.issues.closed.list
+    , (x, { closed_at }) => (x > closed_at) ? closed_at : x
+    , milestone.created_at);
   }
 
   // Milestones with no due date are always on track.
