@@ -5,12 +5,15 @@ BROWSERIFY = ./node_modules/.bin/browserify
 UGLIFY     = ./node_modules/.bin/uglifyjs
 CLEANCSS   = ./node_modules/.bin/cleancss
 MOCHA      = ./node_modules/.bin/mocha
-SERVER     = ./node_modules/.bin/superstatic
+BIN        = ./bin/burnchart.js
 
 MOCHA-OPTS = --compilers js:babel-register --ui exports --timeout 5000 --bail
 
-serve:
-	${SERVER} --port 8080
+start:
+	${BIN}
+
+start-dev:
+	${BIN} --dev
 
 watch-js: build-js
 	${WATCHIFY} -e -s burnchart ./src/js/index.jsx -t babelify -o public/js/bundle.js -d -v
