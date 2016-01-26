@@ -7,9 +7,31 @@ export default {
   'store - set': (done) => {
     let s = new Store();
     
-    s.set('A.B', 1);
+    s.set('A.B', 1); // key as a string
+    s.set([ 'A', 'C' ], 2); // key as an array
+
+    assert.deepEqual({ A: { B: 1, C: 2 }}, s.get());
+
+    done();
+  },
+
+  'store - push': (done) => {
+    let s = new Store({ 'list': [ 'A' ] });
     
-    assert.deepEqual({ A: { B: 1 }}, s.get());
+    s.push('list', 'B'); // key as a string
+    s.push([ 'list' ], 'C'); // key as an array
+
+    assert.deepEqual({ 'list': [ 'A', 'B', 'C' ] }, s.get());
+
+    done();
+  },
+
+  'store - push with init': (done) => {
+    let s = new Store();
+    
+    s.push('list', 'A');
+    
+    assert.deepEqual({ 'list': [ 'A' ] }, s.get());
 
     done();
   },
@@ -62,11 +84,11 @@ export default {
 
     let called = false;
     let cb = s.cb(() => called = true);
-    assert.equal(Object.keys(s._cbs).length, 1);
+    assert.equal(1, Object.keys(s._cbs).length);
     cb();
     assert.ok(called);
-    assert.equal(Object.keys(s._cbs).length, 0);
-    assert.deepEqual(events, [ true, false ]);
+    assert.equal(0, Object.keys(s._cbs).length);
+    assert.deepEqual([ true, false ], events);
 
     done();
   },
@@ -79,14 +101,14 @@ export default {
 
     let called = false;
     let cb = s.cb(() => called = true);
-    assert.equal(Object.keys(s._cbs).length, 1);
+    assert.equal(1, Object.keys(s._cbs).length);
     setTimeout(cb, 10);
     s.clean();
-    assert.equal(Object.keys(s._cbs).length, 0);
+    assert.equal(0, Object.keys(s._cbs).length);
 
     setTimeout(() => {
       assert.ok(!called);
-      assert.deepEqual(events, [ true, false ]);
+      assert.deepEqual([ true, false ], events);
       done();
     }, 20);
   }

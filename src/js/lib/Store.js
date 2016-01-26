@@ -45,9 +45,9 @@ export default class Store extends EventEmitter {
   // Set a value on a key. Pass falsy value as 3rd param to not emit changes.
   set(...args) {
     if (args.length == 1) {
-      var val = args[0];
+      var val = args[0]; // keep var!
     } else {
-      var [ key, val, emit=true ] = args;
+      var [ key, val, emit=true ] = args; // keep var!
     }
 
     // A list of changes.
@@ -76,12 +76,14 @@ export default class Store extends EventEmitter {
     });
   }
 
-  // TODO: Unit-test.
+  // Push a value on an array or init it.
   push(key, val) {
+    // Make sure the key is an array.
+    if (!_.isArray(key)) key = key.split('.');
+
     let obj = this.get(key);
     if (_.isArray(obj)) {
-      // TODO: Don't assume a string.
-      this.set(`${key}.${obj.length}`, val); // TODO: won't emit for root key
+      this.set(key.concat(obj.length), val); // TODO: won't emit for root key
       return obj.length - 1;
     } else {
       this.set(key, [ val ]);
