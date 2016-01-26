@@ -1,7 +1,7 @@
 public/js/.bundle.js
-public/js/bundle.js
 public/css/.bundle.css
-public/css/bundle.css
+public/js/.bundle.min.js
+public/css/.bundle.min.css
 /node_modules
 *.log
 .DS_Store

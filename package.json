@@ -1,6 +1,9 @@
 {
   "name": "burnchart",
-  "version": "3.0.0-alpha",
+  "version": "3.0.0",
+  "description": "GitHub Burndown Chart as a Service",
+  "author": "Radek Stepan <dev@radekstepan.com> (http://radekstepan.com)",
+  "license": "AGPL-3.0",
   "bin": {
     "burnchart": "./bin/burnchart.js"
   },

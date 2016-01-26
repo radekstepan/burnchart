@@ -59,6 +59,6 @@ var server = http.createServer(function(req, res) {
 
 server.on('listening', function() {
   var addr = server.address();
-  var dev = args.dev ? ' (' + clrs.bold('dev') + ')' : '';
+  var dev = args.dev ? ' (' + clrs.yellow.bold('dev') + ')' : '';
   console.log('burnchart/' + pakg.version + dev + ' started on port ' + addr.port);
 });
