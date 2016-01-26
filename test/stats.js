@@ -26,6 +26,23 @@ export default {
     done();
   },
 
+  'stats - has no progress been made?': (done) => {
+    let milestone = {
+      'issues': {
+        'open': {
+          'size': 1
+        },
+        'closed': {
+          'size': 0
+        }
+      }
+    };
+
+    assert.isTrue(stats(milestone).isEmpty);
+
+    done();
+  },
+
   'stats - is milestone done?': (done) => {
     let milestone = {
       'issues': {

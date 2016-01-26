@@ -33,6 +33,10 @@ export default React.createClass({
 
   componentDidMount() {
     let milestone = this.props.milestone;
+    
+    // Skip charts that have nothing to show.
+    if (milestone.stats.isEmpty) return;
+
     let issues = milestone.issues;
     // Total number of points in the milestone.
     let total = issues.open.size + issues.closed.size;

@@ -22,10 +22,12 @@ export default (milestone) => {
   // Progress in points.
   a = milestone.issues.closed.size;
   b = milestone.issues.open.size;
-  if (a + b > 0) {
+  if (a) {
     isEmpty = false;
-    points = progress(a, b);
-    if (points === 100) isDone = true;
+    if (a + b > 0) {
+      points = progress(a, b);
+      if (points === 100) isDone = true;
+    }
   }
 
   // Check that milestone hasn't been created after issue close; #100.
@@ -60,5 +62,5 @@ export default (milestone) => {
   // If we have closed all issues, we are "on time".
   if (isDone) isOnTime = true;
 
-  return { isDone, days, isOnTime, isOverdue, 'progress': { points, time } };
+  return { isOverdue, isOnTime, isDone, isEmpty, days, 'progress': { points, time } };
 };

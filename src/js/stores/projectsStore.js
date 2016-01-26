@@ -241,24 +241,33 @@ class ProjectsStore extends Store {
   }
 
   // Talk about the stats of a milestone.
-  notify(stats) {
-    if (stats.isEmpty) {
-      return actions.emit('system.notify', {
-        'text': 'This milestone has no issues',
-        'type': 'warn',
-        'system': true,
-        'ttl': null
-      });
+  notify(milestone) {
+    if (milestone.stats.isEmpty) {
+      let left;
+      if (left = milestone.issues.open.size) {
+        return actions.emit('system.notify', {
+          'text': `No progress has been made, ${left} point${(left > 1) ? 's' : ''} left`,
+          'system': true,
+          'ttl': null
+        });
+      } else {
+        return actions.emit('system.notify', {
+          'text': 'This milestone has no issues',
+          'type': 'warn',
+          'system': true,
+          'ttl': null
+        });
+      }
     }
 
-    if (stats.isDone) {
+    if (milestone.stats.isDone) {
       actions.emit('system.notify', {
         'text': 'This milestone is complete',
         'type': 'success'
       });
     }
 
-    if (stats.isOverdue) {
+    if (milestone.stats.isOverdue) {
       actions.emit('system.notify', {
         'text': 'This milestone is overdue',
         'type': 'warn'
@@ -273,7 +282,7 @@ class ProjectsStore extends Store {
     _.extend(milestone, { 'stats': stats(milestone) });
 
     // Notify?
-    if (say) this.notify(milestone.stats);
+    if (say) this.notify(milestone);
 
     // We are supposed to exist already.
     if ((i = this.findIndex(project)) < 0) { throw 500; } 
