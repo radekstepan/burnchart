@@ -36,6 +36,30 @@ export default {
     done();
   },
 
+  'store - get': (done) => {
+    let s = new Store({ 'A': [ 1, 2 ], 'B': { 'C': 3 } });
+
+    assert.equal(2, s.get('A.1')); // key as a string
+    assert.equal(3, s.get([ 'B', 'C' ])); // key as an array
+
+    done();
+  },
+
+  'store - get with callback': (done) => {
+    let s = new Store({ 'A': 1 });
+
+    let vals = [];
+    let cb = (val) => vals.push(val);
+
+    s.get('A', cb);
+    s.get('B', cb);
+    s.set('B', 2); // value provided only now
+
+    assert.deepEqual([ 1, 2 ], vals);
+
+    done();
+  },
+
   'store - setSilent': (done) => {
     let s = new Store();
 

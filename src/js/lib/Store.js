@@ -99,7 +99,6 @@ export default class Store extends EventEmitter {
 
     if (opa.has(this[DATA], path)) return cb(val);
     
-    // TODO: unit-test.
     this.on(path, (...args) => {
       this.off(path, cb);
       cb.apply(this, args);
