@@ -2,7 +2,7 @@
 
 GitHub Burndown Chart as a Service. Answers the question "are my projects on track"?
 
-![Build Status](http://img.shields.io/codeship/5645c5d0-4b7e-0132-641d-623ee7e48d08/master.svg?style=flat)
+[![Build Status](https://img.shields.io/travis/radekstepan/burnchart/master.svg?style=flat)](https://travis-ci.org/radekstepan/burnchart)
 [![Dependencies](http://img.shields.io/david/radekstepan/burnchart.svg?style=flat)](https://david-dm.org/radekstepan/burnchart)
 [![License](http://img.shields.io/badge/license-AGPL--3.0-red.svg?style=flat)](LICENSE)
 
