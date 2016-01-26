@@ -20,7 +20,6 @@ export default class Store extends EventEmitter {
   }
 
   // Register an async function callback, handle loading state.
-  // TODO: unit-test.
   cb(fn) {
     let id = _.uniqueId();
     actions.emit('system.loading', true);
