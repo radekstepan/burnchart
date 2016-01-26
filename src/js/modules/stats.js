@@ -16,17 +16,23 @@ export default (milestone) => {
   // Makes testing easier...
   if (milestone.stats != null) return milestone.stats;
 
-  let isDone = false, isOnTime = true, isOverdue = false,
-      isEmpty = true, points = 0, a, b, c, time, days;
+  let points = 0, a, b, c, time, days, span;
+
+  let stats = {
+    'isDone': false,
+    'isOnTime': true,
+    'isOverdue': false,
+    'isEmpty': true
+  };
 
   // Progress in points.
-  a = milestone.issues.closed.size;
-  b = milestone.issues.open.size;
-  if (a) {
-    isEmpty = false;
-    if (a + b > 0) {
-      points = progress(a, b);
-      if (points === 100) isDone = true;
+  let i = milestone.issues.closed.size,
+      j = milestone.issues.open.size;
+  if (i) {
+    stats.isEmpty = false;
+    if (i + j > 0) {
+      points = progress(i, j);
+      if (points === 100) stats.isDone = true;
     }
   }
 
@@ -37,30 +43,33 @@ export default (milestone) => {
     , milestone.created_at);
   }
 
-  // Milestones with no due date are always on track.
-  if (!(milestone.due_on != null)) {
-    return { isOverdue, isOnTime, isDone, isEmpty, 'progress': { points } };
-  }
-
+  // The dates in this milestone.
   a = moment(milestone.created_at, moment.ISO_8601);
   b = moment.utc();
   c = moment(milestone.due_on, moment.ISO_8601);
 
+  // Milestones with no due date are always on track.
+  if (!(milestone.due_on != null)) {
+    // The number of days from start to now.
+    span = b.diff(a, 'days');
+    return _.extend(stats, { span, 'progress': { points } });
+  }
+
   // Overdue? Regardless of the date, if we have closed all
   //  issues, we are no longer overdue.
-  if (b.isAfter(c) && !isDone) isOverdue = true;
+  if (b.isAfter(c) && !stats.isDone) stats.isOverdue = true;
 
   // Progress in time.
   time = progress(b.diff(a), c.diff(b));
 
-  // How many days is 1% of the time?
+  // Number of days between start and due date or today if overdue.
+  span = (stats.isOverdue ? b : c).diff(a, 'days');
+
+  // How many days is 1% of the time until now?
   days = (b.diff(a, 'days')) / 100;
 
-  // Are we on time?
-  isOnTime = points > time;
-
   // If we have closed all issues, we are "on time".
-  if (isDone) isOnTime = true;
+  stats.isOnTime = stats.isDone || points > time;
 
-  return { isOverdue, isOnTime, isDone, isEmpty, days, 'progress': { points, time } };
+  return _.extend(stats, { days, span, 'progress': { points, time } });
 };

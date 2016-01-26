@@ -67,8 +67,8 @@ export default React.createClass({
     let y = d3.scale.linear().range([ height, 0 ]);
 
     // Axes.
-    let xAxis = axes.horizontal(height, x);
-    let yAxis = axes.vertical(width, y);
+    let xAxis = axes.time(height, x, milestone.stats.span);
+    let yAxis = axes.points(width, y);
 
     // Line generator.
     let line = d3.svg.line()
@@ -104,22 +104,13 @@ export default React.createClass({
     .attr("transform", `translate(0,${height})`)
     .call(xAxis);
 
-    // Add the months x-axis.
-    let m = [
-      'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
-    ];
-
-    let mAxis = xAxis
-    .orient("top")
-    .tickSize(height)
-    .tickFormat((d) => m[d.getMonth()])
-    .ticks(2);
+    // Add the years x-axis?
+    let yrAxis = axes.year(height, xAxis, milestone.stats.span);
 
     svg.append("g")
-    .attr("class", "x axis month")
+    .attr("class", "x axis year")
     .attr("transform", `translate(0,${height})`)
-    .call(mAxis);
+    .call(yrAxis);
 
     // Add the y-axis.
     svg.append("g")
