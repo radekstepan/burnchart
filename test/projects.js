@@ -1,6 +1,13 @@
 import { assert } from 'chai';
+import path from 'path';
+import { noCallThru } from 'proxyquire'
+let proxy = noCallThru();
 
-import projects from '../src/js/stores/projectsStore.js';
+let request = {};
+
+// Proxy the request module.
+let lib = path.resolve(__dirname, '../src/js/stores/projectsStore.js');
+let projects = proxy(lib, { '../modules/github/request.js': request }).default;
 
 export default {
   'projects - initializes empty': (done) => {
@@ -203,6 +210,37 @@ export default {
     
     assert.deepEqual(projects.get('index'), [[0, 2], [0, 1], [0, 0]]);
     
+    done();
+  },
+
+  'projects - search': (done) => {
+    projects.set({ 'list': [
+      { 'owner': 'radek', 'name': 'A' }
+    ], 'index': [], 'sortBy': 'name', 'user': null });
+
+    // Skip search.
+    request.repos = (user, owner, cb) => assert(false);
+    projects.onProjectsSearch();
+
+    // Search on text.
+    request.repos = (user, owner, cb) => assert(owner == undefined);
+    projects.onProjectsSearch('radek');
+
+    // Search on owner.
+    request.repos = (user, owner, cb) => assert(owner == 'radek');
+    projects.onProjectsSearch('radek/project');
+
+    request.repos = (user, owner, cb) => {
+      cb(null, [
+        { 'has_issues': true, 'owner': { 'login': 'Radek' }, 'name': 'A', 'full_name': 'Radek/A' }, // exists
+        { 'has_issues': true, 'owner': { 'login': 'radek' }, 'name': 'aA', 'full_name': 'radek/aA' }, // ok
+        { 'has_issues': true, 'owner': { 'login': 'a' }, 'name': 'A', 'full_name': 'a/A' }, // wrong owner
+        { 'has_issues': false, 'owner': { 'login': 'radek' }, 'name': 'aaa', 'full_name': 'radek/aaa' } // no issues
+      ]);
+    };
+    projects.onProjectsSearch('radek/a');
+    assert.deepEqual(projects.get('suggestions'), [ 'radek/aA' ]);
+
     done();
   }
 };

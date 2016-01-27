@@ -1,4 +1,5 @@
 import React from 'react';
+import Autosuggest from 'react-autosuggest';
 
 import App from '../App.jsx';
 
@@ -16,13 +17,23 @@ export default React.createClass({
     actions.emit('user.signin');
   },
 
-  _onChange(evt) {
-    this.setState({ 'val': evt.target.value });
+  _onChange(evt, { newValue }) {
+    this.setState({ 'val': newValue });
   },
 
-  // Add the project (via Enter keypress).
-  _onKeyUp(evt) {
-    if (evt.key == 'Enter') this._onAdd();
+  // Get a list of repo suggestions.
+  _onGetList({ value }) {
+    actions.emit('projects.search', value);
+  },
+
+  // What should be the value of the suggestion.
+  _getListValue(value) {
+    return value;
+  },
+
+  // How do we render the repo?
+  _renderListValue(value) {
+    return value;
   },
 
   // Add the project.
@@ -40,6 +51,7 @@ export default React.createClass({
 
   render() {
     let user;
+
     if (!(this.props.user != null && 'uid' in this.props.user)) {
       user = (
         <span><S />If you'd like to add a private GitHub repo,
@@ -60,8 +72,23 @@ export default React.createClass({
             <tbody>
               <tr>
                 <td>
-                  <input type="text" ref="el" placeholder="user/repo" autoComplete="off"
-                  onChange={this._onChange} value={this.state.val} onKeyUp={this._onKeyUp} />
+                  <Autosuggest
+                    suggestions={this.props.suggestions || []}
+                    getSuggestionValue={this._getListValue}
+                    onSuggestionsUpdateRequested={this._onGetList}
+                    renderSuggestion={this._renderListValue}
+                    theme={{
+                      'container': 'suggest',
+                      'suggestionsContainer': 'list',
+                      'suggestion': 'item',
+                      'suggestionFocused': 'item focused'
+                    }}
+                    inputProps={{
+                      'placeholder': 'user/repo',
+                      'value': this.state.val,
+                      'onChange': this._onChange
+                    }}
+                  />
                 </td>
                 <td><a onClick={this._onAdd}>Add</a></td>
               </tr>
@@ -79,7 +106,7 @@ export default React.createClass({
 
   // Focus input field on mount.
   componentDidMount() {
-    this.refs.el.focus();
+    if ('el' in this.refs) this.refs.el.focus();
   }
 
 });

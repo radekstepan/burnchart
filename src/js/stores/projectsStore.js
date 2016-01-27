@@ -9,7 +9,7 @@ import Store from '../lib/Store.js';
 import actions from '../actions/appActions.js';
 
 import stats from '../modules/stats.js';
-import milestones from '../modules/github/milestones.js';
+import request from '../modules/github/request.js';
 import issues from '../modules/github/issues.js';
 
 class ProjectsStore extends Store {
@@ -53,6 +53,11 @@ class ProjectsStore extends Store {
       // Run the sort again.
       this.sort();
     });
+
+    // Debounce.
+    if (process.browser) { // easier to test
+      this.onProjectsSearch = _.debounce(this.onProjectsSearch, 500);
+    }
   }
 
   // Fetch milestone(s) and issues for a project(s).
@@ -116,6 +121,50 @@ class ProjectsStore extends Store {
       ],
       'index': []
     });
+  }
+
+  // Search for projects.
+  onProjectsSearch(text) {
+    if (!text || !text.length) return;
+
+    // Wait for the user to get resolved.
+    this.get('user', this.cb((user) => { // async
+      // Can we get the owner (and name) from the text?
+      if (/\//.test(text)) {
+        var [ owner, name ] = text.split('/');
+      } else {
+        text = new RegExp(`^${text}`, 'i');
+      }
+
+      // No owner and no user means nothing to go by.
+      if (!owner && !user) return;
+      
+      // Make the request.
+      request.repos(user, owner, this.cb((err, res) => {
+        if (err) return; // ignore errors
+
+        let list = _(res)
+        .filter((repo) => {
+          // Remove repos with no issues.
+          if (!repo.has_issues) return;
+
+          // Remove repos we have already.
+          if (this.has(repo.owner.login, repo.name)) return;
+
+          // Match on owner or name.
+          if (owner) {
+            if (!new RegExp(`^${owner}`, 'i').test(repo.owner.login)) return;
+            if (!name || new RegExp(`^${name}`, 'i').test(repo.name)) return true;
+          } else {
+            return text.test(repo.owner.login) || text.test(repo.name);
+          }
+        })
+        .map(({ full_name }) => full_name)
+        .value();
+
+        this.set('suggestions', list);
+      }));
+    }));
   }
 
   // Return a sort order comparator.
@@ -193,7 +242,7 @@ class ProjectsStore extends Store {
   // Fetch milestones and issues for a project.
   getProject(user, p) {
     // Fetch their milestones.
-    milestones.fetchAll(user, p, this.cb((err, milestones) => { // async
+    request.allMilestones(user, p, this.cb((err, milestones) => { // async
       // Save the error if project does not exist.
       if (err) return this.saveError(p, err);
       // Now add in the issues.
@@ -212,7 +261,7 @@ class ProjectsStore extends Store {
   // Fetch a single milestone.
   getMilestone(user, p, m, say) {
     // Fetch the single milestone.
-    milestones.fetch(user, {
+    request.oneMilestone(user, {
       'owner': p.owner,
       'name': p.name,
       'milestone': m
@@ -359,6 +408,14 @@ class ProjectsStore extends Store {
     }
 
     this.set('index', index);
+  }
+
+  // Do we have this project? Case-insensitive.
+  has(o, n) {
+    o = o.toUpperCase() ; n = n.toUpperCase();
+    return !!_.find(this.get('list'), ({ owner, name }) => {
+      return o == owner.toUpperCase() && n == name.toUpperCase();
+    });
   }
 
 }

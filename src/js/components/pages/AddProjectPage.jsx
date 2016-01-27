@@ -23,7 +23,10 @@ export default React.createClass({
 
         <div id="page">
           <div id="content" className="wrap">
-            <AddProjectForm user={this.state.app.user} />
+            <AddProjectForm
+              user={this.state.app.user}
+              suggestions={this.state.projects.suggestions}
+            />
           </div>
         </div>
 

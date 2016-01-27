@@ -38,6 +38,23 @@ export default {
     request(data, cb);
   },
 
+  // Get repos user has access to or are public to owner.
+  repos: (user, ...args) => {
+    if (args.length = 2) {
+      var [ owner, cb ] = args;
+    } else { // assumes 1
+      var [ cb ]  = args;
+    }
+
+    let token = (user && user.github != null) ? user.github.accessToken : null;
+    let data = _.defaults({
+      'path': owner ? `/users/${owner}/repos` : '/user/repos',
+      'headers': headers(token)
+    }, defaults.github);
+
+    request(data, cb);
+  },
+
   // Get all open milestones.
   allMilestones: (user, { owner, name }, cb) => {
     let token = (user && user.github != null) ? user.github.accessToken : null;
