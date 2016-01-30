@@ -138,7 +138,7 @@ class ProjectsStore extends Store {
 
       // No owner and no user means nothing to go by.
       if (!owner && !user) return;
-      
+
       // Make the request.
       request.repos(user, owner, this.cb((err, res) => {
         if (err) return; // ignore errors
@@ -198,7 +198,7 @@ class ProjectsStore extends Store {
           // Simple points difference.
           return aM.stats.progress.points - bM.stats.progress.points;
         });
-    
+
       // From most delayed in days.
       case 'priority':
         return deIdx(([ , aM ], [ , bM ]) => {
@@ -208,10 +208,10 @@ class ProjectsStore extends Store {
           let [ $a, $b ] = _.map([ aM, bM ], ({ stats }) => {
             return (stats.progress.points - stats.progress.time) * stats.days;
           });
-          
+
           return $b - $a;
         });
-    
+
       // Based on project then milestone name including semver.
       case 'name':
         return deIdx(([ aP, aM ], [ bP, bM ]) => {
@@ -232,7 +232,7 @@ class ProjectsStore extends Store {
             return bM.title.localeCompare(aM.title);
           }
         });
-      
+
       // The "whatever" sort order...
       default:
         return () => { return 0; }
@@ -334,7 +334,7 @@ class ProjectsStore extends Store {
     if (say) this.notify(milestone);
 
     // We are supposed to exist already.
-    if ((i = this.findIndex(project)) < 0) { throw 500; } 
+    if ((i = this.findIndex(project)) < 0) { throw 500; }
 
     // Does the milestone exist already?
     let milestones;
@@ -365,8 +365,8 @@ class ProjectsStore extends Store {
     if ((idx = this.findIndex(project)) > -1) {
       this.push(`list.${idx}.errors`, err);
     } else {
-      // We are supposed to exist already.
-      throw 500;  
+      // Create the stub project behind the scenes.
+      this.push('list', _.extend({}, project, { 'errors': [ err ] }));
     }
 
     // Notify?
@@ -385,7 +385,7 @@ class ProjectsStore extends Store {
     let idx;
     // Get the existing index.
     let index = this.get('index');
-   
+
     // Index one milestone in an already sorted index.
     if (ref) {
       idx = sortedIndex(index, data, this.comparator());

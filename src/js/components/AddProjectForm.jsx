@@ -38,7 +38,11 @@ export default React.createClass({
 
   // Add the project.
   _onAdd() {
-    let [ owner, name ] = this.state.val.split('/');
+    let val = this.state.val;
+    // Validate input.
+    if (!/^[^\s\/]+\/[^\s\/]+$/.test(val)) return;
+
+    let [ owner, name ] = val.split('/');
     actions.emit('projects.add', { owner, name });
     // Redirect to the dashboard.
     App.navigate({ 'to': 'projects' });
