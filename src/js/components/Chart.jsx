@@ -1,4 +1,5 @@
 import React from 'react';
+import moment from 'moment';
 import d3 from 'd3';
 import d3Tip from 'd3-tip';
 d3Tip(d3);
@@ -15,13 +16,18 @@ export default React.createClass({
   render() {
     let milestone = this.props.milestone;
 
+    let description;
+    if (milestone.description) {
+      description = format.markdown(milestone.description);
+    }
+
     return (
       <div>
         <div id="title">
           <div className="wrap">
             <h2 className="title">{format.title(milestone.title)}</h2>
             <span className="sub">{format.due(milestone.due_on)}</span>
-            <div className="description">{format.markdown(milestone.description)}</div>
+            <div className="description">{description}</div>
           </div>
         </div>
         <div id="content" className="wrap">
@@ -33,7 +39,7 @@ export default React.createClass({
 
   componentDidMount() {
     let milestone = this.props.milestone;
-    
+
     // Skip charts that have nothing to show.
     if (milestone.stats.isEmpty) return;
 
@@ -42,13 +48,18 @@ export default React.createClass({
     let total = issues.open.size + issues.closed.size;
 
     // An issue may have been closed before the start of a milestone.
-    if (issues.closed.size > 0) {    
+    if (issues.closed.size > 0) {
         let head = issues.closed.list[0].closed_at;
         if (issues.length && milestone.created_at > head) {
           // This is the new start.
           milestone.created_at = head;
         }
     }
+
+    // Set created date to the beginning of the day, makes for a better display
+    //  when issues get closed right at the beginning.
+    milestone.created_at = moment(milestone.created_at, moment.ISO_8601)
+    .startOf('day').toISOString();
 
     // Actual, ideal & trend lines.
     let actual = lines.actual(issues.closed.list, milestone.created_at, total);
