@@ -301,7 +301,7 @@ ul {
       }
     }
 
-    #add {    
+    #add {
       h2 {
         color: #3e4457;
       }
@@ -458,9 +458,16 @@ ul {
           &:first-child {
             color: #3e4457;
           }
+
+          &.action {
+            text-align: right;
+            cursor: pointer;
+            color: #77000e;
+            .user-select(none);
+          }
         }
 
-        tr {        
+        tr {
           &:nth-child(even) td {
             background: #fefefe;
           }
@@ -500,6 +507,7 @@ ul {
         border-top: 1px solid #dde1ed;
         text-align: right;
         font-family: @serif_font;
+        font-size: 14px;
 
         .icon {
           color: #aaafbf;

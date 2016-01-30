@@ -77,6 +77,7 @@ export default class Store extends EventEmitter {
   }
 
   // Push a value on an array or init it.
+  // TODO: emit flag
   push(key, val) {
     // Make sure the key is an array.
     if (!_.isArray(key)) key = key.split('.');
@@ -98,11 +99,22 @@ export default class Store extends EventEmitter {
     if (!_.isFunction(cb)) return val;
 
     if (opa.has(this[DATA], path)) return cb(val);
-    
+
     this.on(path, (...args) => {
       this.off(path, cb);
       cb.apply(this, args);
     });
+  }
+
+  // Delete a path.
+  // TODO: emit flag
+  del(path) {
+    // Make sure the key is an array.
+    if (!_.isArray(path)) path = path.split('.');
+    // Actually delete.
+    opa.del(this[DATA], path);
+    // Emit event.
+    this.emit(path, this.get(path.splice(-1,1).join('.')));
   }
 
 }

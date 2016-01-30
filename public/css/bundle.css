@@ -369,8 +369,8 @@ th {
 }
 @font-face {
   font-family: 'Fontello';
-  src: url("../fonts/fontello.eot?74672344");
-  src: url("../fonts/fontello.eot?74672344#iefix") format('embedded-opentype'), url("../fonts/fontello.woff?74672344") format('woff'), url("../fonts/fontello.ttf?74672344") format('truetype'), url("../fonts/fontello.svg?74672344#fontello") format('svg');
+  src: url("../fonts/fontello.eot");
+  src: url("../fonts/fontello.eot#iefix") format('embedded-opentype'), url("../fonts/fontello.woff") format('woff'), url("../fonts/fontello.ttf") format('truetype'), url("../fonts/fontello.svg#fontello") format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -966,6 +966,15 @@ ul li {
 #page #content #projects table tr td:first-child {
   color: #3e4457;
 }
+#page #content #projects table tr td.action {
+  text-align: right;
+  cursor: pointer;
+  color: #77000e;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
 #page #content #projects table tr:nth-child(even) td {
   background: #fefefe;
 }
@@ -1003,6 +1012,7 @@ ul li {
   border-top: 1px solid #dde1ed;
   text-align: right;
   font-family: 'MuseoSlab500Regular', serif;
+  font-size: 14px;
 }
 #page #content #projects .footer .icon {
   color: #aaafbf;

@@ -84,7 +84,7 @@ export default React.createClass({
     if (!errors.length && !list.length) return false;
 
     if (project) {
-      // List of projects and their milestones.
+      // Project-specific milestones.
       return (
         <div id="projects">
           <div className="header">
@@ -98,7 +98,7 @@ export default React.createClass({
         </div>
       );
     } else {
-      // Project-specific milestones.
+      // List of projects and their milestones.
       return (
         <div id="projects">
           <div className="header">
@@ -111,7 +111,9 @@ export default React.createClass({
               {list}
             </tbody>
           </table>
-          <div className="footer" />
+          <div className="footer">
+            <a onClick={this.props.onToggleMode}>Edit Projects</a>
+          </div>
         </div>
       );
     }

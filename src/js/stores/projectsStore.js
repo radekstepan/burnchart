@@ -167,6 +167,16 @@ class ProjectsStore extends Store {
     }));
   }
 
+  // Delete a project.
+  onProjectsDelete(project) {
+    let i = this.findIndex(project);
+    // Delete the project.
+    this.del(`list.${i}`);
+    // And the index, sorting again.
+    this.set('index', []);
+    this.sort();
+  }
+
   // Return a sort order comparator.
   comparator() {
     let { list, sortBy } = this.get();

@@ -14,7 +14,7 @@ export default {
     assert.deepEqual(projects.get('list'), []);
     done();
   },
-  
+
   'projects - sorts on new milestones': (done) => {
     projects.set({ 'list': [], 'index': [] });
 
@@ -26,12 +26,12 @@ export default {
       'title': '1.0.0',
       'stats': {}
     };
-    
+
     projects.push('list', project);
     projects.addMilestone(project, milestone);
 
     assert.deepEqual(projects.get('index'), [[0, 0]]);
-    
+
     done();
   },
 
@@ -62,9 +62,9 @@ export default {
     projects.push('list', project);
     projects.addMilestone(project, milestone1);
     projects.addMilestone(project, milestone2);
-    
+
     assert.deepEqual(projects.get('index'), [[0, 1], [0, 0]]);
-    
+
     done();
   },
 
@@ -110,9 +110,9 @@ export default {
     projects.addMilestone(project, milestone1);
     projects.addMilestone(project, milestone2);
     projects.addMilestone(project, milestone3);
-    
+
     assert.deepEqual(projects.get('index'), [[0, 2], [0, 0], [0, 1]]);
-    
+
     done();
   },
 
@@ -152,9 +152,9 @@ export default {
     projects.addMilestone(project, milestone1);
     projects.addMilestone(project, milestone2);
     projects.addMilestone(project, milestone3);
-    
+
     assert.deepEqual(projects.get('index'), [[0, 2], [0, 1], [0, 0]]);
-    
+
     done();
   },
 
@@ -177,9 +177,9 @@ export default {
     projects.push('list', project);
     projects.addMilestone(project, milestone1);
     projects.addMilestone(project, milestone2);
-    
+
     assert.deepEqual(projects.get('index'), [[0, 1], [0, 0]]);
-    
+
     done();
   },
 
@@ -207,9 +207,9 @@ export default {
     projects.addMilestone(project, milestone1);
     projects.addMilestone(project, milestone2);
     projects.addMilestone(project, milestone3);
-    
+
     assert.deepEqual(projects.get('index'), [[0, 2], [0, 1], [0, 0]]);
-    
+
     done();
   },
 
@@ -240,6 +240,26 @@ export default {
     };
     projects.onProjectsSearch('radek/a');
     assert.deepEqual(projects.get('suggestions'), [ 'radek/aA' ]);
+
+    done();
+  },
+
+  'projects - delete': (done) => {
+    let a = { 'owner': 'company', 'name': 'netflix', 'milestones': [ { 'title': 'A', 'stats': {} } ] };
+    let b = { 'owner': 'company', 'name': 'space-x' };
+    let c = { 'owner': 'company', 'name': 'tesla-m', 'milestones': [ { 'title': 'C', 'stats': {} } ] };
+
+    projects.set({
+      'list': [ a, b, c ],
+      'index': [ [ 0, 0 ], [ 1, 0 ], [ 2, 0 ] ],
+      'sortBy': 'name',
+      'user': null
+    });
+
+    projects.onProjectsDelete(b);
+
+    assert.deepEqual(projects.get('list'), [ a, c ]);
+    assert.deepEqual(projects.get('index'), [ [ 0, 0 ], [ 1, 0 ] ]);
 
     done();
   }
