@@ -1,6 +1,6 @@
 {
   "name": "burnchart",
-  "version": "3.0.3",
+  "version": "3.0.4",
   "description": "GitHub Burndown Chart as a Service",
   "author": "Radek Stepan <dev@radekstepan.com> (http://radekstepan.com)",
   "license": "AGPL-3.0",
@@ -27,7 +27,6 @@
     "chai": "^3.4.1",
     "classnames": "^2.2.3",
     "clean-css": "^3.4.9",
-    "coffeeify": "^2.0.1",
     "d3": "^3.5.12",
     "d3-tip": "^0.6.7",
     "deep-diff": "^0.3.3",
@@ -46,6 +45,7 @@
     "react": "^0.14.6",
     "react-addons-css-transition-group": "^0.14.6",
     "react-autosuggest": "^3.3.5",
+    "react-dom": "^0.14.7",
     "react-mini-router": "^2.0.0",
     "semver": "^5.1.0",
     "sortedindex-compare": "0.0.1",
