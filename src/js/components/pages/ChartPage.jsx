@@ -18,7 +18,7 @@ export default React.createClass({
 
   render() {
     let content;
-    if (!this.state.app.loading) {
+    if (!this.state.app.system.loading) {
       let projects = this.state.projects;
       // Find the milestone.
       let milestone;

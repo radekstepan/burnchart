@@ -12,7 +12,7 @@ export default React.createClass({
   displayName: 'Chart.jsx',
 
   render() {
-    return <div id="chart" ref="el" />;
+    return <div id="chart" ref="el" style={this.props.style} />;
   },
 
   componentDidMount() {

@@ -29,7 +29,7 @@ export default React.createClass({
 
   render() {
     let content;
-    if (!this.state.app.loading) {
+    if (!this.state.app.system.loading) {
       let projects = this.state.projects;
       if (projects.list.length) {
         if (!this.state.edit) {
