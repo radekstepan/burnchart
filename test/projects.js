@@ -1,5 +1,6 @@
 import { assert } from 'chai';
 import path from 'path';
+import _ from 'lodash';
 import { noCallThru } from 'proxyquire'
 let proxy = noCallThru();
 
@@ -260,6 +261,25 @@ export default {
 
     assert.deepEqual(projects.get('list'), [ a, c ]);
     assert.deepEqual(projects.get('index'), [ [ 0, 0 ], [ 1, 0 ] ]);
+
+    done();
+  },
+
+  // Issue #116.
+  'projects - add milestone (project behind the scenes)': (done) => {
+    projects.set({ 'list': [], 'index': [], 'sortBy': 'progress' });
+
+    let p = { 'name': 'zcash', 'owner': 'zcash' };
+    let m = { 'issues': {
+      'closed': { 'list': [], 'size': 0 },
+      'open':   { 'list': [], 'size': 0 }
+    }};
+
+    projects.addMilestone(p, m);
+
+    assert.deepEqual(projects.get('list'), [
+      _.extend(p, { 'milestones': [ m ] })
+    ]);
 
     done();
   }

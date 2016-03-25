@@ -64,9 +64,6 @@ class ProjectsStore extends Store {
   onProjectsLoad(args) {
     let projects = this.get('list');
 
-    // Quit if we have no projects.
-    if (!projects.length) return;
-
     // Wait for the user to get resolved.
     this.get('user', this.cb((user) => { // async
       if (args) {
@@ -343,8 +340,10 @@ class ProjectsStore extends Store {
     // Notify?
     if (say) this.notify(milestone);
 
-    // We are supposed to exist already.
-    if ((i = this.findIndex(project)) < 0) { throw 500; }
+    // If project hasn't been found, add it behind the scenes.
+    if ((i = this.findIndex(project)) < 0) {
+      i = this.push('list', project);
+    }
 
     // Does the milestone exist already?
     let milestones;
