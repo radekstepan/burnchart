@@ -4,25 +4,34 @@ import _ from 'lodash';
 export default {
 
   time(height, x, span) {
-    // Tick time format based on number of days we display.
-    let specifier = (span < 4) ? '' : (span < 14) ? '%a' : (span < 32) ? '%m/%d' : '%b';
-    let format = d3.time.format.utc(specifier);
-
     return d3.svg.axis().scale(x)
     .orient("bottom")
     // Show vertical lines...
     .tickSize(-height)
+    //  limit the number of ticks
+    .ticks(7)
     //  tick time format...
-    .tickFormat(format)
-    //  and give us a spacer.
-    .tickPadding(10);
+    .tickFormat(d3.time.format((() => {
+      switch (true) {
+        case span < 4:
+          return '';
+        // Two weeks.
+        case span < 14:
+          return '%a';
+        // 3 months.
+        case span < 3 * 30:
+          return '%m/%d';
+        default:
+          return '%b';
+      }
+    })()));
   },
 
   year(height, xAxis, span) {
     return xAxis
     .orient("top")
     .tickSize(height)
-    .tickFormat(d3.time.format.utc('%Y'))
+    .tickFormat((d) => d.getFullYear())
     .ticks(span / 365);
   },
 
