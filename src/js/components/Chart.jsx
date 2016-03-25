@@ -4,8 +4,6 @@ import d3 from 'd3';
 import d3Tip from 'd3-tip';
 d3Tip(d3);
 
-import format from '../modules/format.js';
-
 import lines from '../modules/chart/lines.js';
 import axes from '../modules/chart/axes.js';
 
@@ -14,57 +12,37 @@ export default React.createClass({
   displayName: 'Chart.jsx',
 
   render() {
-    let milestone = this.props.milestone;
-
-    let description;
-    if (milestone.description) {
-      description = format.markdown(milestone.description);
-    }
-
-    return (
-      <div>
-        <div id="title">
-          <div className="wrap">
-            <h2 className="title">{format.title(milestone.title)}</h2>
-            <span className="sub">{format.due(milestone.due_on)}</span>
-            <div className="description">{description}</div>
-          </div>
-        </div>
-        <div id="content" className="wrap">
-          <div id="chart" ref="el" />
-        </div>
-      </div>
-    );
+    return <div id="chart" ref="el" />;
   },
 
   componentDidMount() {
-    let milestone = this.props.milestone;
+    let { data } = this.props;
 
     // Skip charts that have nothing to show.
-    if (milestone.stats.isEmpty) return;
+    if (data.stats.isEmpty) return;
 
-    let issues = milestone.issues;
+    let issues = data.issues;
     // Total number of points in the milestone.
     let total = issues.open.size + issues.closed.size;
 
     // An issue may have been closed before the start of a milestone.
     if (issues.closed.size > 0) {
-        let head = issues.closed.list[0].closed_at;
-        if (issues.length && milestone.created_at > head) {
-          // This is the new start.
-          milestone.created_at = head;
-        }
+      let head = issues.closed.list[0].closed_at;
+      if (issues.length && data.created_at > head) {
+        // This is the new start.
+        data.created_at = head;
+      }
     }
 
     // Set created date to the beginning of the day, makes for a better display
     //  when issues get closed right at the beginning.
-    milestone.created_at = moment(milestone.created_at, moment.ISO_8601)
+    data.created_at = moment(data.created_at, moment.ISO_8601)
     .startOf('day').toISOString();
 
     // Actual, ideal & trend lines.
-    let actual = lines.actual(issues.closed.list, milestone.created_at, total);
-    let ideal = lines.ideal(milestone.created_at, milestone.due_on, total);
-    let trend = lines.trend(actual, milestone.created_at, milestone.due_on);
+    let actual = lines.actual(issues.closed.list, data.created_at, total);
+    let ideal = lines.ideal(data.created_at, data.due_on, total);
+    let trend = lines.trend(actual, data.created_at, data.due_on);
 
     // Get available space.
     let { height, width } = this.refs.el.getBoundingClientRect();
@@ -78,7 +56,7 @@ export default React.createClass({
     let y = d3.scale.linear().range([ height, 0 ]);
 
     // Axes.
-    let xAxis = axes.time(height, x, milestone.stats.span);
+    let xAxis = axes.time(height, x, data.stats.span);
     let yAxis = axes.points(width, y);
 
     // Line generator.
@@ -116,7 +94,7 @@ export default React.createClass({
     .call(xAxis);
 
     // Add the years x-axis?
-    let yrAxis = axes.year(height, xAxis, milestone.stats.span);
+    let yrAxis = axes.year(height, xAxis, data.stats.span);
 
     svg.append("g")
     .attr("class", "x axis year")
