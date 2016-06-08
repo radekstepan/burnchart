@@ -17,7 +17,7 @@ superagent.parse = {
 };
 
 // Default args.
-let defaults = {
+const defaults = {
   'github': {
     'host': 'api.github.com',
     'protocol': 'https'
@@ -96,7 +96,7 @@ export default {
 // Make a request using SuperAgent.
 let request = ({ protocol, host, path, query, headers }, cb) => {
   let exited = false;
-  
+
   // Make the query params.
   let q = '';
   if (query) {
@@ -128,7 +128,7 @@ let request = ({ protocol, host, path, query, headers }, cb) => {
 
 // How do we respond to a response?
 let response = (err, data, cb) => {
-  if (err) return cb(error(data.body || err));
+  if (err) return cb(error(data ? data.body : err));
   // 2xx?
   if (data.statusType !== 2) return cb(error(data.body));
   // All good.
@@ -144,7 +144,7 @@ let headers = (token) => {
   };
   // Add token?
   if (token) h.Authorization = `token ${token}`;
-  
+
   return h;
 };
 
@@ -156,11 +156,11 @@ let error = (err) => {
     case !_.isString(err):
       text = err;
       break;
-    
+
     case !_.isArray(err):
       text = err[1];
       break;
-    
+
     case !(_.isObject(err) && _.isString(err.message)):
       text = err.message;
   }
@@ -172,6 +172,6 @@ let error = (err) => {
       text = err.toString();
     }
   }
-  
+
   return text;
 };

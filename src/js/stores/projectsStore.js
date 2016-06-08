@@ -112,7 +112,7 @@ class ProjectsStore extends Store {
   onProjectsDemo() {
     this.set({
       'list': [
-        { 'owner': 'mbostock', 'name': 'd3' },
+        { 'owner': 'd3', 'name': 'd3' },
         { 'owner': 'radekstepan', 'name': 'disposable' },
         { 'owner': 'rails', 'name': 'rails' }
       ],
