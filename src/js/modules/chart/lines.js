@@ -16,7 +16,7 @@ export default {
       'date': moment(created_at, moment.ISO_8601).toJSON(),
       'points': total
     }];
-    
+
     min = +Infinity , max = -Infinity;
 
     // Generate the actual closes.
@@ -31,7 +31,7 @@ export default {
       issue.points = total -= size;
       return issue;
     });
-    
+
     // Now add a radius in a range (will be used for a circle).
     let range = d3.scale.linear().domain([ min, max ]).range([ 5, 8 ]);
 
@@ -51,6 +51,9 @@ export default {
     // Swap if end is before the start...
     if (b < a) [ b, a ] = [ a, b ];
 
+    // Make sure off days are numbers.
+    const off_days = _.map(config.chart.off_days, (n) => parseInt(n, 10));
+
     a = moment(a, moment.ISO_8601);
     // Do we have a due date?
     b = (b != null) ? moment(b, moment.ISO_8601) : moment.utc();
@@ -65,7 +68,7 @@ export default {
       let day_of;
       if (!(day_of = day.weekday())) day_of = 7;
 
-      if (config.chart.off_days.indexOf(day_of) != -1) {
+      if (off_days.indexOf(day_of) != -1) {
         days.push({ 'date': day.toJSON(), 'off_day': true });
       } else {
         length += 1;
@@ -74,11 +77,11 @@ export default {
 
       // Go again?
       if (!(day > b)) once(inc + 1);
-    })(0); 
+    })(0);
 
     // Map points on the array of days now.
     let velocity = total / (length - 1);
-    
+
     days = _.map(days, (day, i) => {
       day.points = total;
       if (days[i] && !days[i].off_day) total -= velocity;

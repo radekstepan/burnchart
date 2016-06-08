@@ -27,7 +27,9 @@ $ burnchart --port 8080
 
 ##Configuration
 
-At the moment, there is no ui exposed to change the app settings. You have to edit the `src/config.js` file.
+At the moment, there is no UI exposed to change the app settings. You have to either edit the `src/config.js` file or use URL query string parameters to override these on a per-user basis.
+
+###Config Fields
 
 An array of days when we are not working where Monday = 1. The ideal progression line won't *drop* on these days.
 
@@ -51,6 +53,14 @@ You can also create your own app theme. Create a LESS file following the example
 
 ```js
 "theme": "monza"
+```
+
+###URL Query String
+
+The main config file can be overriden by passing URL query string parameters. This allows app customization on a per-user basis. We use the [qs](https://github.com/ljharb/qs) library to parse and [lodash](http://devdocs.io/lodash~3/index#merge) to merge in the new values. The following example will switch off the main theme and set off days to fall on the weekend:
+
+```
+?theme=raw&chart[off_days][0]=0&chart[off_days][1]=6
 ```
 
 ##Development

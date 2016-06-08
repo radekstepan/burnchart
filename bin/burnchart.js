@@ -45,7 +45,7 @@ index = index.replace(/bundle\.min/gm, 'bundle');
 var server = http.createServer(function(req, res) {
   req.addListener('end', function() {
     // Serve a custom index file in dev mode.
-    if (args.dev && req.url == '/') {
+    if (args.dev && req.url.split('?')[0] == '/') {
       res.writeHead(200, {
         'Content-Length': index.length,
         'Content-Type': 'text/html'

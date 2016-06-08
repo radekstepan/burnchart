@@ -109,10 +109,12 @@ let request = ({ protocol, host, path, query, headers }, cb) => {
   _.each(headers, (v, k) => { req.set(k, v); });
 
   // Timeout for requests that do not finish... see #32.
+  let ms = config.request.timeout;
+  ms = (_.isString(ms)) ? parseInt(ms, 10) : ms;
   let timeout = setTimeout(() => {
     exited = true;
     cb('Request has timed out');
-  }, config.request.timeout);
+  }, ms);
 
   // Send.
   req.end((err, data) => {
