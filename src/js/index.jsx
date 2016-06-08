@@ -3,4 +3,11 @@ import ReactDOM from 'react-dom';
 
 import App from './App.jsx';
 
-ReactDOM.render(<App />, document.getElementById('app'));
+import config from '../config.js';
+
+let el = document.getElementById('app');
+// Set the theme.
+el.className = `theme--${config.theme}`;
+
+// Start the router.
+ReactDOM.render(<App />, el);

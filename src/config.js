@@ -29,5 +29,7 @@ export default {
   "request": {
     // Default timeout of 5s.
     "timeout": 5e3
-  }
+  },
+  // The app theme; 'monza' is the default red theme.
+  "theme": "monza"
 };

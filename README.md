@@ -47,6 +47,12 @@ If you specify `LABELS` above, this is the place to set a regex used to parse a 
 "size_label": /^size (\d+)$/
 ```
 
+You can also create your own app theme. Create a LESS file following the example of the default app theme, "monza", in `src/less/themes/monza.less`, include the file in `src/less/burnchart.less` and finally specify the theme in the config:
+
+```js
+"theme": "monza"
+```
+
 ##Development
 
 To run your local version of the app, install all the NPM dependencies, watch the source files in one window, and start the static file server in the other in `--dev` mode.

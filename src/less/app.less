@@ -1,8 +1,11 @@
+// Fonts.
 @serif_font: 'MuseoSlab500Regular', serif;
 @sans_serif_font: 'MuseoSans500Regular', sans-serif;
 
-@strong_color: #C1041C;
-@highlight_color: #FFBB2A;
+// Alerts.
+@red: #C1041C;
+@green: #00b361;
+@yellow: #ea9712;
 
 html, body {
   margin: 0;
@@ -83,18 +86,18 @@ ul {
   }
 
   &.success, &.ok, &.good {
-    border-top-color: #00b361;
-    color: #00b361;
+    border-top-color: @green;
+    color: @green;
   }
 
   &.warn, &.trouble {
-    border-top-color: #ea9712;
-    color: #ea9712;
+    border-top-color: @yellow;
+    color: @yellow;
   }
 
-  &.alert, &.bad, &.fucked {
-    border-top-color: @strong_color;
-    color: @strong_color;
+  &.alert, &.bad {
+    border-top-color: @red;
+    color: @red;
   }
 
   .icon, p {
@@ -115,7 +118,6 @@ ul {
 }
 
 #head {
-  background: @strong_color;
   height: 64px;
 
   #icon {
@@ -125,9 +127,7 @@ ul {
     line-height: 44px;
     height: 44px;
     width: 74px;
-    background: #77000e;
     display: inline-block;
-    color: @strong_color;
     margin: 0;
     text-align: center;
   }
@@ -140,7 +140,6 @@ ul {
 
     .icon {
       position: absolute;
-      color: @strong_color;
 
       &.search {
         top: 8px;
@@ -154,7 +153,6 @@ ul {
     }
 
     input {
-      background: #77000e;
       border: 0;
       padding: 10px 12px 10px 36px;
       font-size: 14px;
@@ -174,24 +172,16 @@ ul {
   }
 
   a {
-    color: #e0808d;
     font-weight: bold;
-
-    &.active, &:hover {
-      color: #fff;
-    }
   }
 
   .right {
     float: right;
     margin-right: 20px;
     line-height: 64px;
-    color: #e0808d;
 
     .button {
       .border-radius(2px);
-      background: @highlight_color;
-      color: @strong_color;
       padding: 11px 20px;
     }
   }
@@ -288,13 +278,11 @@ ul {
 
             &.primary {
               font-weight: bold;
-              background: @strong_color;
               color: #fff;
             }
 
             &.secondary {
               background: #fff;
-              color: @strong_color;
             }
           }
         }
@@ -347,7 +335,6 @@ ul {
           .border-radius(0 2px 2px 0);
           display: inline-block;
           font-weight: bold;
-          background: @strong_color;
           color: #fff;
         }
 
@@ -406,7 +393,6 @@ ul {
 
           .project .error {
             cursor: help;
-            color: @strong_color;
           }
 
           a.project {
@@ -443,15 +429,15 @@ ul {
           }
 
           .progress .bar.red {
-            background: @strong_color;
+            background: @red;
           }
 
           .progress .bar.green {
-            background: #00b361;
+            background: @green;
           }
 
           .progress .due.red {
-            color: @strong_color;
+            color: @red;
             font-weight: bold;
           }
 
@@ -462,7 +448,6 @@ ul {
           &.action {
             text-align: right;
             cursor: pointer;
-            color: #77000e;
             .user-select(none);
           }
         }
@@ -480,7 +465,7 @@ ul {
             background: #ebf6f1;
 
             .milestone, .percent, .due {
-              color: #00b361;
+              color: @green;
             }
           }
         }

@@ -609,8 +609,7 @@ ul li {
   color: #ea9712;
 }
 #notify.alert,
-#notify.bad,
-#notify.fucked {
+#notify.bad {
   border-top-color: #C1041C;
   color: #C1041C;
 }
@@ -629,7 +628,6 @@ ul li {
   text-align: justify;
 }
 #head {
-  background: #C1041C;
   height: 64px;
 }
 #head #icon {
@@ -638,9 +636,7 @@ ul li {
   line-height: 44px;
   height: 44px;
   width: 74px;
-  background: #77000e;
   display: inline-block;
-  color: #C1041C;
   margin: 0;
   text-align: center;
 }
@@ -652,7 +648,6 @@ ul li {
 }
 #head .q .icon {
   position: absolute;
-  color: #C1041C;
 }
 #head .q .icon.search {
   top: 8px;
@@ -663,7 +658,6 @@ ul li {
   right: 12px;
 }
 #head .q input {
-  background: #77000e;
   border: 0;
   padding: 10px 12px 10px 36px;
   font-size: 14px;
@@ -683,18 +677,12 @@ ul li {
   margin-left: 30px;
 }
 #head a {
-  color: #e0808d;
   font-weight: bold;
-}
-#head a.active,
-#head a:hover {
-  color: #fff;
 }
 #head .right {
   float: right;
   margin-right: 20px;
   line-height: 64px;
-  color: #e0808d;
 }
 #head .right .button {
   -webkit-border-radius: 2px;
@@ -703,8 +691,6 @@ ul li {
   -moz-background-clip: padding;
   border-radius: 2px;
   background-clip: padding-box;
-  background: #FFBB2A;
-  color: #C1041C;
   padding: 11px 20px;
 }
 #title {
@@ -806,12 +792,10 @@ ul li {
 }
 #page #content #hero .content .cta a.primary {
   font-weight: bold;
-  background: #C1041C;
   color: #fff;
 }
 #page #content #hero .content .cta a.secondary {
   background: #fff;
-  color: #C1041C;
 }
 #page #content #add h2 {
   color: #3e4457;
@@ -864,7 +848,6 @@ ul li {
   background-clip: padding-box;
   display: inline-block;
   font-weight: bold;
-  background: #C1041C;
   color: #fff;
 }
 #page #content #add .form .suggest {
@@ -917,7 +900,6 @@ ul li {
 }
 #page #content #projects table tr td .project .error {
   cursor: help;
-  color: #C1041C;
 }
 #page #content #projects table tr td a.project {
   font-weight: bold;
@@ -969,7 +951,6 @@ ul li {
 #page #content #projects table tr td.action {
   text-align: right;
   cursor: pointer;
-  color: #77000e;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -1038,4 +1019,46 @@ ul li {
   text-align: center;
   padding: 30px;
   font-family: 'MuseoSlab500Regular', serif;
+}
+#app.theme--monza #head {
+  background: #C1041C;
+}
+#app.theme--monza #head #icon {
+  background: #760211;
+  color: #C1041C;
+}
+#app.theme--monza #head .q .icon {
+  color: #C1041C;
+}
+#app.theme--monza #head .q input {
+  background: #760211;
+}
+#app.theme--monza #head a {
+  color: #e0828e;
+}
+#app.theme--monza #head a.active,
+#app.theme--monza #head a:hover {
+  color: #fff;
+}
+#app.theme--monza #head .right {
+  color: #e0828e;
+}
+#app.theme--monza #head .right .button {
+  background: #FFBB2A;
+  color: #C1041C;
+}
+#app.theme--monza #page #content #hero .content .cta a.primary {
+  background: #C1041C;
+}
+#app.theme--monza #page #content #hero .content .cta a.secondary {
+  color: #C1041C;
+}
+#app.theme--monza #page #content #add .form a {
+  background: #C1041C;
+}
+#app.theme--monza #page #content #projects table tr td .project .error {
+  color: #C1041C;
+}
+#app.theme--monza #page #content #projects table tr td.action {
+  background: #760211;
 }

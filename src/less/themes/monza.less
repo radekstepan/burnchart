@@ -1,0 +1,83 @@
+#app.theme--monza {
+  // Theme colors.
+  @strong_color: #C1041C;
+  @highlight_color: #FFBB2A;
+
+  #head {
+    background: @strong_color;
+
+    #icon {
+      background: darken(@strong_color, 15%);
+      color: @strong_color;
+    }
+
+    .q {
+      .icon {
+        color: @strong_color;
+      }
+
+      input {
+        background: darken(@strong_color, 15%);
+      }
+    }
+
+    a {
+      color: mix(@strong_color, #FFF, 50%);
+
+      &.active, &:hover {
+        color: #fff;
+      }
+    }
+
+    .right {
+      color: mix(@strong_color, #FFF, 50%);
+
+      .button {
+        background: @highlight_color;
+        color: @strong_color;
+      }
+    }
+  }
+
+  #page {
+    #content {
+      #hero {
+        .content {
+          .cta {
+            a {
+              &.primary {
+                background: @strong_color;
+              }
+
+              &.secondary {
+                color: @strong_color;
+              }
+            }
+          }
+        }
+      }
+
+      #add {
+        .form {
+          a {
+            background: @strong_color;
+          }
+        }
+      }
+
+      #projects {
+        table {
+          tr td {
+            .project .error {
+              color: @strong_color;
+            }
+
+            &.action {
+              background: darken(@strong_color, 15%);
+            }
+          }
+        }
+      }
+    }
+  }
+}
