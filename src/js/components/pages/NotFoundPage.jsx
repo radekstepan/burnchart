@@ -1,16 +1,18 @@
 import React from 'react';
 
-import Page from '../../lib/PageMixin.js';
+import Page from '../../lib/PageClass.js';
 
 // TODO: implement
-export default React.createClass({
+export default class NotFoundPage extends Page {
 
-  displayName: 'NotFoundPage.jsx',
+  displayName: 'NotFoundPage.jsx'
 
-  mixins: [ Page ],
+  constructor(props) {
+    super(props);
+  }
 
   render() {
     return <div>Page {this.props.path} not found</div>;
   }
 
-});
+}

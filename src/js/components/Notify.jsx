@@ -5,17 +5,14 @@ import actions from '../actions/appActions.js';
 
 import Icon from './Icon.jsx';
 
-let Notify = React.createClass({
+class Notify extends React.Component {
 
-  displayName: 'Notify.jsx',
+  displayName: 'Notify.jsx'
 
-  // Close notification.
-  _onClose() {
-    actions.emit('system.notify');
-  },
+  constructor(props) {
+    super(props);
 
-  getDefaultProps() {
-    return {
+    this.props = {
       // No text.
       'text': null,
       // Grey style.
@@ -25,7 +22,12 @@ let Notify = React.createClass({
       // Just announcing.
       'icon': 'megaphone'
     };
-  },
+  }
+
+  // Close notification.
+  _onClose() {
+    actions.emit('system.notify');
+  }
 
   render() {
     let { text, system, type, icon, ttl } = this.props;
@@ -51,9 +53,9 @@ let Notify = React.createClass({
     }
   }
 
-});
+}
 
-export default React.createClass({
+export default class NotifyWrapper extends React.Component {
 
   // TODO: animate in
   render() {
@@ -73,4 +75,4 @@ export default React.createClass({
     );
   }
 
-});
+}

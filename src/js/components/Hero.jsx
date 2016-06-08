@@ -5,14 +5,18 @@ import actions from '../actions/appActions.js';
 import Icon from './Icon.jsx';
 import Link from './Link.jsx';
 
-export default React.createClass({
+export default class Hero extends React.Component {
 
-  displayName: 'Hero.jsx',
+  displayName: 'Hero.jsx'
+
+  constructor(props) {
+    super(props);
+  }
 
   // Add example projects.
   _onDemo() {
     actions.emit('projects.demo');
-  },
+  }
 
   render() {
     return (
@@ -35,4 +39,4 @@ export default React.createClass({
     );
   }
 
-});
+}

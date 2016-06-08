@@ -3,7 +3,7 @@ import React from 'react';
 import format from '../modules/format.js';
 
 // Fontello icon hex codes.
-let codes = {
+const codes = {
   'delete':    '\e800', // Font Awesome - trash-empty
   'settings':  '\e801', // Font Awesome - cog
   'pencil':    '\e802', // Font Awesome - pencil
@@ -20,18 +20,22 @@ let codes = {
   'megaphone': '\e80d', // Entypo - megaphone
   'sort':      '\e80e', // Typicons - sort-alphabet
   'spinner':   '\e80f', // MFG Labs - spinner1
-  'fire':      '\e810'  // Maki - fire-station  
+  'fire':      '\e810'  // Maki - fire-station
 };
 
-export default React.createClass({
+export default class Icon extends React.Component {
 
-  displayName: 'Icon.jsx',
+  displayName: 'Icon.jsx'
+
+  constructor(props) {
+    super(props);
+  }
 
   render() {
-    let name = this.props.name;
+    const name = this.props.name;
 
     if (name && name in codes) {
-      let code = format.hexToDec(codes[name]);
+      const code = format.hexToDec(codes[name]);
       return (
         <span
           className={`icon ${name}`}
@@ -43,4 +47,4 @@ export default React.createClass({
     return false;
   }
 
-});
+}

@@ -2,18 +2,20 @@ import React from 'react';
 
 import actions from '../../actions/appActions.js';
 
-import Page from '../../lib/PageMixin.js';
+import Page from '../../lib/PageClass.js';
 
 import Notify from '../Notify.jsx';
 import Header from '../Header.jsx';
 import Footer from '../Footer.jsx';
 import AddProjectForm from '../AddProjectForm.jsx';
 
-export default React.createClass({
+export default class AddProjectPage extends Page {
 
-  displayName: 'AddProjectPage.jsx',
+  displayName: 'AddProjectPage.jsx'
 
-  mixins: [ Page ],
+  constructor(props) {
+    super(props);
+  }
 
   render() {
     return (
@@ -35,4 +37,4 @@ export default React.createClass({
     );
   }
 
-});
+}

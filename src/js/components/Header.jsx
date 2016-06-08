@@ -6,24 +6,28 @@ import Notify from './Notify.jsx';
 import Icon from './Icon.jsx';
 import Link from './Link.jsx';
 
-export default React.createClass({
+export default class Header extends React.Component {
 
-  displayName: 'Header.jsx',
+  displayName: 'Header.jsx'
+
+  constructor(props) {
+    super(props);
+  }
 
   // Sign user in.
   _onSignIn() {
     actions.emit('user.signin');
-  },
+  }
 
   // Sign user out.
   _onSignOut() {
     actions.emit('user.signout');
-  },
+  }
 
   // Add example projects.
   _onDemo() {
     actions.emit('projects.demo');
-  },
+  }
 
   render() {
     // From app store.
@@ -79,4 +83,4 @@ export default React.createClass({
     );
   }
 
-});
+}

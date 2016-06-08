@@ -39,13 +39,13 @@ let find = ({ to, params, query }) => {
   _.find(routes, (name, url) => {
     if (name != to) return;
     let matches = url.match(re);
-    
+
     // Do not match on the number of params.
     if (_.keys(params).length != (matches || []).length) return;
-    
+
     // Do not match on the name of params.
     if (!_.every(matches, m => m.slice(1) in params)) return;
-    
+
     // Fill in the params.
     $url = url.replace(re, m => params[m.slice(1)]);
 

@@ -8,33 +8,42 @@ import actions from '../actions/appActions.js';
 import Icon from './Icon.jsx';
 import S from './Space.jsx';
 
-export default React.createClass({
+export default class AddProjectForm extends React.Component {
 
-  displayName: 'AddProjectForm.jsx',
+  displayName: 'AddProjectForm.jsx'
+
+  constructor(props) {
+    super(props);
+    // Blank input.
+    this.state = { 'val': '' };
+    // Bindings.
+    this._onChange = this._onChange.bind(this);
+    this._onAdd = this._onAdd.bind(this);
+  }
 
   // Sign user in.
   _onSignIn() {
     actions.emit('user.signin');
-  },
+  }
 
   _onChange(evt, { newValue }) {
     this.setState({ 'val': newValue });
-  },
+  }
 
   // Get a list of repo suggestions.
   _onGetList({ value }) {
     actions.emit('projects.search', value);
-  },
+  }
 
   // What should be the value of the suggestion.
   _getListValue(value) {
     return value;
-  },
+  }
 
   // How do we render the repo?
   _renderListValue(value) {
     return value;
-  },
+  }
 
   // Add the project.
   _onAdd() {
@@ -46,12 +55,7 @@ export default React.createClass({
     actions.emit('projects.add', { owner, name });
     // Redirect to the dashboard.
     App.navigate({ 'to': 'projects' });
-  },
-
-  // Blank input.
-  getInitialState() {
-    return { 'val': '' };
-  },
+  }
 
   render() {
     let user;
@@ -106,11 +110,6 @@ export default React.createClass({
         </div>
       </div>
     );
-  },
-
-  // Focus input field on mount.
-  componentDidMount() {
-    if ('el' in this.refs) this.refs.el.focus();
   }
 
-});
+}

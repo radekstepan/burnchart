@@ -1,8 +1,12 @@
 import React from 'react';
 
-export default React.createClass({
+export default class Footer extends React.Component {
 
-  displayName: 'Footer.jsx',
+  displayName: 'Footer.jsx'
+
+  constructor(props) {
+    super(props);
+  }
 
   render() {
     return (
@@ -14,4 +18,4 @@ export default React.createClass({
     );
   }
 
-});
+}

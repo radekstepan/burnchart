@@ -7,13 +7,17 @@ d3Tip(d3);
 import lines from '../modules/chart/lines.js';
 import axes from '../modules/chart/axes.js';
 
-export default React.createClass({
+export default class Chart extends React.Component {
 
-  displayName: 'Chart.jsx',
+  displayName: 'Chart.jsx'
+
+  constructor(props) {
+    super(props);
+  }
 
   render() {
     return <div id="chart" ref="el" style={this.props.style} />;
-  },
+  }
 
   componentDidMount() {
     let { data } = this.props;
@@ -154,4 +158,4 @@ export default React.createClass({
     .on('mouseout', tooltip.hide);
   }
 
-});
+}

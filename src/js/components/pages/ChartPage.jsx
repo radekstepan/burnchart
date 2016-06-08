@@ -1,7 +1,7 @@
 import React from 'react';
 import _ from 'lodash';
 
-import Page from '../../lib/PageMixin.js';
+import Page from '../../lib/PageClass.js';
 
 import format from '../../modules/format.js';
 
@@ -10,11 +10,13 @@ import Header from '../Header.jsx';
 import Footer from '../Footer.jsx';
 import Chart from '../Chart.jsx';
 
-export default React.createClass({
+export default class ChartPage extends Page {
 
-  displayName: 'ChartPage.jsx',
+  displayName: 'ChartPage.jsx'
 
-  mixins: [ Page ],
+  constructor(props) {
+    super(props);
+  }
 
   render() {
     let content;
@@ -70,4 +72,4 @@ export default React.createClass({
     );
   }
 
-});
+}

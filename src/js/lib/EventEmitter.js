@@ -21,12 +21,12 @@ export default class EventEmitter {
   // Add a listener on this path/regex.
   on(path, cb) {
     if (!_.isRegExp(path)) path = new RegExp(`^${path}$`);
-    this.list.push({ pattern: path, cb: cb });
+    this.list.push({ 'pattern': path, cb: cb });
   }
 
   // Add a listener to all events.
   onAny(cb) {
-    this.list.push({ pattern: /./, cb: cb });
+    this.list.push({ 'pattern': /./, cb: cb });
   }
 
   // Assume we can have multiple.

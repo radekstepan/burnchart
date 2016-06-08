@@ -1,7 +1,7 @@
 import React from 'react';
 import _ from 'lodash';
 
-import Page from '../../lib/PageMixin.js';
+import Page from '../../lib/PageClass.js';
 
 import Notify from '../Notify.jsx';
 import Header from '../Header.jsx';
@@ -9,17 +9,18 @@ import Footer from '../Footer.jsx';
 import Milestones from '../Milestones.jsx';
 import Chart from '../Chart.jsx';
 
-export default React.createClass({
+export default class MilestonePage extends Page {
 
-  displayName: 'MilestonesPage.jsx',
+  displayName: 'MilestonesPage.jsx'
 
-  mixins: [ Page ],
+  constructor(props) {
+    super(props);
+  }
 
   render() {
     let content;
     if (!this.state.app.system.loading) {
       let projects = this.state.projects;
-
       // Create the all milestones payload.
       let data;
       _.find(projects.list, (obj) => {
@@ -83,4 +84,4 @@ export default React.createClass({
     );
   }
 
-});
+}

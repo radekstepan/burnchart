@@ -1,12 +1,16 @@
 import React from 'react';
 
 // Inserts a space before rendering text.
-export default React.createClass({
+export default class Space extends React.Component {
 
-  displayName: 'Space.jsx',
+  displayName: 'Space.jsx'
+
+  constructor(props) {
+    super(props);
+  }
 
   render() {
     return <span>&nbsp;</span>;
   }
 
-});
+}

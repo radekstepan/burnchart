@@ -9,14 +9,18 @@ import actions from '../actions/appActions.js';
 import Icon from './Icon.jsx';
 import Link from './Link.jsx';
 
-export default React.createClass({
+export default class Milestones extends React.Component {
 
-  displayName: 'Milestones.jsx',
+  displayName: 'Milestones.jsx'
+
+  constructor(props) {
+    super(props);
+  }
 
   // Cycle through milestones sort order.
   _onSort() {
     actions.emit('projects.sort');
-  },
+  }
 
   render() {
     let { projects, project } = this.props;
@@ -119,4 +123,4 @@ export default React.createClass({
     }
   }
 
-});
+}

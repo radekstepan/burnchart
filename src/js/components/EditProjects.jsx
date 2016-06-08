@@ -7,13 +7,17 @@ import actions from '../actions/appActions.js';
 import Icon from './Icon.jsx';
 import Link from './Link.jsx';
 
-export default React.createClass({
+export default class EditProjects extends React.Component {
 
-  displayName: 'EditProjects.jsx',
+  displayName: 'EditProjects.jsx'
+
+  constructor(props) {
+    super(props);
+  }
 
   _onDelete(project) {
     actions.emit('projects.delete', project);
-  },
+  }
 
   render() {
     let { projects } = this.props;
@@ -55,4 +59,4 @@ export default React.createClass({
     );
   }
 
-});
+}
