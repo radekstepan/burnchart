@@ -5,10 +5,16 @@ import { noCallThru } from 'proxyquire'
 let proxy = noCallThru();
 
 let request = {};
+let lscache = {
+  get: () => [],
+  set: () => {}
+};
 
 // Proxy the request module.
 let lib = path.resolve(__dirname, '../src/js/stores/projectsStore.js');
-let projects = proxy(lib, { '../modules/github/request.js': request }).default;
+let projects = proxy(lib, {
+  lscache, '../modules/github/request.js': request
+}).default;
 
 export default {
   'projects - initializes empty': (done) => {
