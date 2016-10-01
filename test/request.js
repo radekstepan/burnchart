@@ -23,7 +23,7 @@ class Sa {
     this.params[key] = value;
     return this;
   }
-  
+
   // Call back with the response, async.
   end(cb) {
     setTimeout(() => cb(null, this.response), this.timeout);
@@ -71,7 +71,7 @@ export default {
     let owner = 'radekstepan';
     let name = 'burnchart';
     let milestone = 0;
-    
+
     request.oneMilestone({}, { owner, name, milestone }, (err) => {
       assert(err, 'Error');
       done();
@@ -88,7 +88,7 @@ export default {
     let owner = 'radekstepan';
     let name = 'burnchart';
     let milestone = 1;
-    
+
     request.oneMilestone({}, { owner, name, milestone }, (err, data) => {
       assert.isNull(err);
       assert.deepEqual(superagent.params, {
@@ -114,7 +114,7 @@ export default {
     let owner = 'radekstepan';
     let name = 'burnchart';
     let milestone = 0;
-    
+
     request.oneMilestone({}, { owner, name, milestone }, (err) => {
       assert(err, 'Not Found');
       done();
@@ -131,7 +131,7 @@ export default {
     let owner = 'radekstepan';
     let name = 'burnchart';
     let milestone = 0;
-    
+
     request.oneMilestone({}, { owner, name, milestone }, (err) => {
       assert(err, 'Error');
       done();
@@ -148,7 +148,7 @@ export default {
     let owner = 'radekstepan';
     let name = 'burnchart';
     let milestone = 0;
-    
+
     request.allIssues({}, { owner, name, milestone }, {}, (err, data) => {
       assert.isNull(err);
       assert.deepEqual(superagent.params, {
@@ -163,18 +163,18 @@ export default {
 
   'request - timeout': (done) => {
     opa.set(config, 'request.timeout', 10);
-    
+
     superagent.timeout = 20;
     superagent.response = {
       'statusType': 2,
       'error': false,
       'body': [ null ]
     };
-    
+
     let owner = 'radekstepan';
     let name = 'burnchart';
     let milestone = 0;
-    
+
     request.allIssues({}, { owner, name, milestone }, {}, (err) => {
       assert(err, 'Request has timed out');
       done();
@@ -183,8 +183,8 @@ export default {
 
   'request - use tokens': (done) => {
     superagent.response = {};
-    
-    let user = { 'github': { 'accessToken': 'ABC' }};
+
+    let user = { 'credential': { 'accessToken': 'ABC' }};
     let owner = 'radekstepan';
     let name = 'burnchart';
 
