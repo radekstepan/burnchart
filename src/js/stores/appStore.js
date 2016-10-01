@@ -1,5 +1,6 @@
 import _ from 'lodash';
-import Firebase from 'firebase';
+import firebase from 'firebase/app';
+import 'firebase/auth';
 
 import Store from '../lib/Store.js';
 
@@ -28,32 +29,36 @@ class AppStore extends Store {
       (fn in this) && this[fn](obj);
     });
 
-    client = new Firebase(`https://${config.firebase}.firebaseio.com`);
+      // Initialize Firebase
+    client = firebase.initializeApp(config.firebase);
 
-    // When user is already authenticated.
-    client.onAuth((data={}) => actions.emit('user.ready', data));
+    actions.emit('user.ready', {});
   }
 
   onUserSignin() {
-    client.authWithOAuthPopup("github", (err, data) => {
-      if (!err) return actions.emit('firebase.auth', data);
+    const provider = new firebase.auth.GithubAuthProvider();
+    // See https://developer.github.com/v3/oauth/#scopes
+    provider.addScope('repo');
 
-      actions.emit('system.notify', {
-        'text': err.toString(),
-        'type': 'alert',
-        'system': true          
+    client.auth().signInWithPopup(provider).then((res) => {
+      actions.emit('user.ready', {
+        'github': res.user.providerData[0],
+        'credential': res.credential,
       });
-    }, {
-      'rememberMe': true,
-      // See https://developer.github.com/v3/oauth/#scopes
-      'scope': 'repo'
+    }).catch((err) => {
+      // Handle Errors here.
+      actions.emit('system.notify', {
+        'text': 'message' in err ? err.message : err.toString(),
+        'type': 'alert',
+        'system': true
+      });
     });
   }
 
   // Sign-out a user.
   onUserSignout() {
-    this.set('user', {});
-    client.unauth();
+    actions.emit('user.ready', {}); // projectsStore references user
+    client.auth().signOut();
   }
 
   // Called by Firebase.

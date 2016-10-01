@@ -991,12 +991,19 @@ ul li {
   -moz-box-shadow: inset 0 1px 2px rgba(221, 225, 237, 0.2);
   box-shadow: inset 0 1px 2px rgba(221, 225, 237, 0.2);
   border-top: 1px solid #dde1ed;
-  text-align: right;
   font-family: 'MuseoSlab500Regular', serif;
   font-size: 14px;
 }
 #page #content #projects .footer .icon {
   color: #aaafbf;
+}
+#page #content #projects .footer > a:first-child {
+  float: right;
+}
+#page #content #projects .footer:after {
+  clear: both;
+  display: block;
+  content: "";
 }
 #page #content .protip {
   border: 1px solid #EFEFEF;

@@ -29,7 +29,7 @@ export default {
 
   // Get a repo.
   repo: (user, { owner, name }, cb) => {
-    let token = (user && user.github != null) ? user.github.accessToken : null;
+    let token = (user && user.credential != null) ? user.credential.accessToken : null;
     let data = _.defaults({
       'path': `/repos/${owner}/${name}`,
       'headers': headers(token)
@@ -46,7 +46,7 @@ export default {
       var [ cb ]  = args;
     }
 
-    let token = (user && user.github != null) ? user.github.accessToken : null;
+    let token = (user && user.credential != null) ? user.credential.accessToken : null;
     let data = _.defaults({
       'path': owner ? `/users/${owner}/repos` : '/user/repos',
       'headers': headers(token)
@@ -57,7 +57,7 @@ export default {
 
   // Get all open milestones.
   allMilestones: (user, { owner, name }, cb) => {
-    let token = (user && user.github != null) ? user.github.accessToken : null;
+    let token = (user && user.credential != null) ? user.credential.accessToken : null;
     let data = _.defaults({
       'path': `/repos/${owner}/${name}/milestones`,
       'query': { 'state': 'open', 'sort': 'due_date', 'direction': 'asc' },
@@ -69,7 +69,7 @@ export default {
 
   // Get one open milestone.
   oneMilestone: (user, { owner, name, milestone }, cb) => {
-    let token = (user && user.github != null) ? user.github.accessToken : null;
+    let token = (user && user.credential != null) ? user.credential.accessToken : null;
     let data = _.defaults({
       'path': `/repos/${owner}/${name}/milestones/${milestone}`,
       'query': { 'state': 'open', 'sort': 'due_date', 'direction': 'asc' },
@@ -81,7 +81,7 @@ export default {
 
   // Get all issues for a state..
   allIssues: (user, { owner, name, milestone }, query, cb) => {
-    let token = (user && user.github != null) ? user.github.accessToken : null;
+    let token = (user && user.credential != null) ? user.credential.accessToken : null;
     let data = _.defaults({
       'path': `/repos/${owner}/${name}/issues`,
       'query': _.extend(query, { milestone, 'per_page': '100' }),

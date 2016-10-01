@@ -22,6 +22,10 @@ export default class Milestones extends React.Component {
     actions.emit('projects.sort');
   }
 
+  _onRefresh() {
+    actions.emit('projects.load');
+  }
+
   render() {
     let { projects, project } = this.props;
 
@@ -117,6 +121,7 @@ export default class Milestones extends React.Component {
           </table>
           <div className="footer">
             <a onClick={this.props.onToggleMode}>Edit Projects</a>
+            <a onClick={this._onRefresh}>Refresh Projects</a>
           </div>
         </div>
       );

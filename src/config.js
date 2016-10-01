@@ -1,6 +1,12 @@
 export default {
-  // Firebase app name.
-  "firebase": "burnchart",
+  // Firebase.
+  "firebase": {
+    apiKey: "AIzaSyD_kfzkAPA87PoRFIZa8JEzZkT66CqUDpU",
+    authDomain: "burnchart.firebaseapp.com",
+    databaseURL: "https://burnchart.firebaseio.com",
+    storageBucket: "firebase-burnchart.appspot.com",
+    messagingSenderId: "185222099419"
+  },
   // Data source provider.
   "provider": "github",
   // Fields to keep from GH responses.

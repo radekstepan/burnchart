@@ -35,7 +35,7 @@ export default class Header extends React.Component {
 
     // Sign-in/out.
     let user;
-    if (props.user != null && 'uid' in props.user) {
+    if (props.user && props.user.github) {
       user = (
         <div className="right">
           <a onClick={this._onSignOut}>

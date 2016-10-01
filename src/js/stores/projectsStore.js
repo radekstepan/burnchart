@@ -64,6 +64,9 @@ class ProjectsStore extends Store {
   onProjectsLoad(args) {
     let projects = this.get('list');
 
+    // Reset first.
+    projects = _.each(projects, (p) => delete p.errors);
+
     // Wait for the user to get resolved.
     this.get('user', this.cb((user) => { // async
       if (args) {
