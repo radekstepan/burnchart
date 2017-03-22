@@ -1,4 +1,4 @@
-#[burnchart](http://radekstepan.com/burnchart)
+# [burnchart](http://radekstepan.com/burnchart)
 
 GitHub Burndown Chart as a Service. Answers the question "are my projects on track"?
 
@@ -8,7 +8,7 @@ GitHub Burndown Chart as a Service. Answers the question "are my projects on tra
 
 ![image](https://raw.githubusercontent.com/radekstepan/burnchart/master/screenshots.jpg)
 
-##Features
+## Features
 
 1. Running from the **browser**, apart from GitHub account sign in which uses Firebase backend.
 1. **Private repos**; sign in with your GitHub account.
@@ -17,7 +17,7 @@ GitHub Burndown Chart as a Service. Answers the question "are my projects on tra
 1. **Trend line**; to see if you can make it to the deadline at this pace.
 1. Different **point counting** strategies; select from 1 issues = 1 point or read size from issue label.
 
-##Quickstart
+## Quickstart
 
 ```bash
 $ npm install burnchart -g
@@ -25,11 +25,11 @@ $ burnchart --port 8080
 # burnchart/3.0.0 started on port 8080
 ```
 
-##Configuration
+## Configuration
 
 At the moment, there is no UI exposed to change the app settings. You have to either edit the `src/config.js` file or use URL query string parameters to override these on a per-user basis.
 
-###Config Fields
+### Config Fields
 
 An array of days when we are not working where Monday = 1. The ideal progression line won't *drop* on these days.
 
@@ -55,7 +55,7 @@ You can also create your own app theme. Create a LESS file following the example
 "theme": "monza"
 ```
 
-###URL Query String
+### URL Query String
 
 The main config file can be overriden by passing URL query string parameters. This allows app customization on a per-user basis. We use the [qs](https://github.com/ljharb/qs) library to parse and [lodash](http://devdocs.io/lodash~3/index#merge) to merge in the new values. The following example will switch off the main theme and set off days to fall on the weekend:
 
@@ -63,7 +63,7 @@ The main config file can be overriden by passing URL query string parameters. Th
 ?theme=raw&chart[off_days][0]=0&chart[off_days][1]=6
 ```
 
-##Development
+## Development
 
 To run your local version of the app, install all the NPM dependencies, watch the source files in one window, and start the static file server in the other in `--dev` mode.
 
@@ -75,7 +75,7 @@ $ make start-dev
 # burnchart/3.0.0 (dev) started on port 8080
 ```
 
-###GitHub Pages
+### GitHub Pages
 
 To serve the app from GitHub Pages that are in sync with master branch, add these two lines to `.git/config`, in the `[remote "origin"]` section:
 
