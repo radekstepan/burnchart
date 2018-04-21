@@ -12,7 +12,7 @@ export default class Footer extends React.Component {
     return (
       <div id="footer">
         <div className="wrap">
-          &copy; 2012-2016 <a href="https:/radekstepan.com" target="_blank">Radek Stepan</a>
+          &copy; 2012-2018 <a href="https:/radekstepan.com" target="_blank">Radek Stepan</a>
         </div>
       </div>
     );

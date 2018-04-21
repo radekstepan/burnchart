@@ -36,8 +36,8 @@ let superagent = new Sa();
 let lib = path.resolve(__dirname, '../src/js/modules/github/request.js');
 let request = proxy(lib, { superagent }).default;
 
-export default {
-  'request - all milestones (ok)': (done) => {
+describe('request', () => {
+  it('all milestones (ok)', done => {
     superagent.response = {
       'statusType': 2,
       'error': false,
@@ -57,9 +57,9 @@ export default {
       assert.deepEqual(data, [null]);
       done();
     });
-  },
+  });
 
-  'request - all milestones (403)': (done) => {
+  it('all milestones (403)', done => {
     superagent.response = {
       'statusType': 4,
       'error': false,
@@ -76,9 +76,9 @@ export default {
       assert(err, 'Error');
       done();
     });
-  },
+  });
 
-  'request - one milestone (ok)': (done) => {
+  it('one milestone (ok)', done => {
     superagent.response = {
       'statusType': 2,
       'error': false,
@@ -99,9 +99,9 @@ export default {
       assert.deepEqual(data, [null]);
       done();
     });
-  },
+  });
 
-  'request - one milestone (404)': (done) => {
+  it('one milestone (404)', done => {
     superagent.response = {
       'statusType': 4,
       'error': Error("cannot GET undefined (404)"),
@@ -119,9 +119,9 @@ export default {
       assert(err, 'Not Found');
       done();
     });
-  },
+  });
 
-  'request - one milestone (500)': (done) => {
+  it('one milestone (500)', done => {
     superagent.response = {
       'statusType': 5,
       'error': Error("Error"),
@@ -136,9 +136,9 @@ export default {
       assert(err, 'Error');
       done();
     });
-  },
+  });
 
-  'request - all issues (ok)': (done) => {
+  it('all issues (ok)', done => {
     superagent.response = {
       'statusType': 2,
       'error': false,
@@ -159,9 +159,9 @@ export default {
       assert.deepEqual(data, [ null ]);
       done();
     });
-  },
+  });
 
-  'request - timeout': (done) => {
+  it('timeout', done => {
     opa.set(config, 'request.timeout', 10);
 
     superagent.timeout = 20;
@@ -179,9 +179,9 @@ export default {
       assert(err, 'Request has timed out');
       done();
     });
-  },
+  });
 
-  'request - use tokens': (done) => {
+  it('use tokens', done => {
     superagent.response = {};
 
     let user = { 'credential': { 'accessToken': 'ABC' }};
@@ -192,5 +192,5 @@ export default {
       assert(superagent.params.Authorization, 'token ABC');
       done();
     });
-  }
-};
+  });
+});

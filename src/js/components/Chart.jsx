@@ -154,7 +154,9 @@ export default class Chart extends React.Component {
     .attr("cx", ({ date }) => x(new Date(date)))
     .attr("cy", ({ points }) => y(points))
     .attr("r", ({ radius }) => 5)
-    .on('mouseover', tooltip.show)
+    .on('mouseover', function(d, i) {
+      tooltip.show(d, this);
+    })
     .on('mouseout', tooltip.hide);
   }
 

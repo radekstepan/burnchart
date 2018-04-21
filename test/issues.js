@@ -15,15 +15,15 @@ let repo = {
   'milestone': 1
 };
 
-export default {
-  'issues - time format': (done) => {
+describe('issues', () => {
+  it('time format', done => {
     // ISO 8601 dates are in UTC timezone.
     let utc = moment(json[0].created_at).toDate().toUTCString();
     assert(utc, 'Fri, 22 Apr 2011 13:33:48 GMT');
     done();
-  },
+  });
 
-  'issues - all empty': (done) => {
+  it('all empty', done => {
     let called = 0;
     request.allIssues = (user, repo, opts, cb) => {
       called += 1;
@@ -31,7 +31,7 @@ export default {
     };
 
     opa.set(config, 'chart.points', 'ONE_SIZE');
-    
+
     issues.fetchAll({}, repo, (err, { open, closed }) => {
       assert.isNull(err);
       assert(called, 2);
@@ -39,9 +39,9 @@ export default {
       assert.strictEqual(closed.size, 0);
       done();
     });
-  },
+  });
 
-  'issues - open empty': (done) => {
+  it('open empty', done => {
     let called = 0;
     request.allIssues = (user, repo, opts, cb) => {
       called += 1;
@@ -49,7 +49,7 @@ export default {
     };
 
     opa.set(config, 'chart.points', 'ONE_SIZE');
-    
+
     issues.fetchAll({}, repo, (err, { open, closed }) => {
       assert.isNull(err);
       assert(called, 2);
@@ -59,9 +59,9 @@ export default {
       assert(closed.list.length, 1);
       done();
     });
-  },
+  });
 
-  'issues - closed empty': (done) => {
+  it('closed empty', done => {
     let called = 0;
     request.allIssues = (user, repo, opts, cb) => {
       called += 1;
@@ -69,7 +69,7 @@ export default {
     };
 
     opa.set(config, 'chart.points', 'ONE_SIZE');
-    
+
     issues.fetchAll({}, repo, (err, { open, closed }) => {
       assert.isNull(err);
       assert(called, 2);
@@ -77,9 +77,9 @@ export default {
       assert.strictEqual(closed.size, 0);
       done();
     });
-  },
+  });
 
-  'issues - both not empty': (done) => {
+  it('both not empty', done => {
     let called = 0;
     request.allIssues = (user, repo, opts, cb) => {
       called += 1;
@@ -87,7 +87,7 @@ export default {
     };
 
     opa.set(config, 'chart.points', 'ONE_SIZE');
-    
+
     issues.fetchAll({}, repo, (err, { open, closed }) => {
       assert.isNull(err);
       assert(called, 2);
@@ -95,9 +95,9 @@ export default {
       assert(closed.size, 1);
       done();
     });
-  },
+  });
 
-  'issues - 99 results on a page': (done) => {
+  it('99 results on a page', done => {
     let called = 0;
     request.allIssues = (user, repo, opts, cb) => {
       called += 1;
@@ -105,7 +105,7 @@ export default {
     };
 
     opa.set(config, 'chart.points', 'ONE_SIZE');
-    
+
     issues.fetchAll({}, repo, (err, { open, closed }) => {
       assert.isNull(err);
       assert(called, 2);
@@ -113,9 +113,9 @@ export default {
       assert(closed.size, 99);
       done();
     });
-  },
+  });
 
-  'issues - 100 results on a page': (done) => {
+  it('100 results on a page', done => {
     let called = 0;
     request.allIssues = (user, repo, opts, cb) => {
       called += 1;
@@ -130,7 +130,7 @@ export default {
     };
 
     opa.set(config, 'chart.points', 'ONE_SIZE');
-    
+
     issues.fetchAll({}, repo, function(err, { open, closed }) {
       assert.isNull(err);
       assert(called, 4);
@@ -138,9 +138,9 @@ export default {
       assert(closed.size, 100);
       done();
     });
-  },
+  });
 
-  'issues - 101 total results': (done) => {
+  it('101 total results', done => {
     let called = 0;
     request.allIssues = (user, repo, opts, cb) => {
       called += 1;
@@ -155,7 +155,7 @@ export default {
     };
 
     opa.set(config, 'chart.points', 'ONE_SIZE');
-    
+
     issues.fetchAll({}, repo, (err, { open, closed }) => {
       assert.isNull(err);
       assert(called, 4);
@@ -165,9 +165,9 @@ export default {
       assert.deepEqual(closed.list[100], { 'number': 100, 'size': 1 });
       done();
     });
-  },
+  });
 
-  'issues - 201 total results': (done) => {
+  it('201 total results', done => {
     let called = 0;
     request.allIssues = (user, repo, opts, cb) => {
       called += 1;
@@ -180,11 +180,11 @@ export default {
           return cb(null,  [{ 'number': 200 }]);
         default:
           assert(false);
-      }      
+      }
     };
 
     opa.set(config, 'chart.points', 'ONE_SIZE');
-    
+
     issues.fetchAll({}, repo, (err, { open, closed }) => {
       assert.isNull(err);
       assert(called, 6);
@@ -197,9 +197,9 @@ export default {
       });
       done();
     });
-  },
+  });
 
-  'issues - get all when not found': (done) => {
+  it('get all when not found', done => {
     let called = 0;
     request.allIssues = (user, repo, opts, cb) => {
       called += 1;
@@ -207,17 +207,17 @@ export default {
     };
 
     opa.set(config, 'chart.points', 'ONE_SIZE');
-    
+
     issues.fetchAll({}, repo, (err, { open, closed }) => {
       assert(err, 'Not Found');
       assert(called, 1);
       done();
     });
-  },
+  });
 
-  'issues - size based on a label': (done) => {
+  it('size based on a label', done => {
     opa.set(config, 'chart.points', 'LABELS');
-    
+
     request.allIssues = (user, repo, opts, cb) => {
       cb(null, [
         { 'labels': [{ 'name': 'size 2' }]},
@@ -232,23 +232,23 @@ export default {
       assert(open.list[0].size, 2);
       done();
     });
-  },
+  });
 
-  'issues - filter when no labels': (done) => {
+  it('filter when no labels', done => {
     opa.set(config, 'chart.points', 'LABELS');
-    
+
     request.allIssues = (user, repo, opts, cb) => cb(null, [{}]);
-    
+
     issues.fetchAll({}, repo, (err, { open, closed }) => {
       assert.isNull(err);
       assert.strictEqual(open.size, 0);
       done();
     });
-  },
+  });
 
-  'issues - filter when empty labels': (done) => {
+  it('filter when empty labels', done => {
     opa.set(config, 'chart.points', 'LABELS');
-    
+
     request.allIssues = (user, repo, opts, cb) => {
       cb(null, [{ 'labels': [] }]);
     };
@@ -258,11 +258,11 @@ export default {
       assert.strictEqual(open.size, 0);
       done();
     });
-  },
+  });
 
-  'issues - filter when not matching regex': (done) => {
+  it('filter when not matching regex', done => {
     opa.set(config, 'chart.points', 'LABELS');
-    
+
     request.allIssues = (user, repo, opts, cb) => {
       cb(null, [{ 'labels': [{ 'name': 'size 1A' }] }]);
     };
@@ -272,11 +272,11 @@ export default {
       assert.strictEqual(open.size, 0);
       done();
     });
-  },
+  });
 
-  'issues - filter when multiple match the regex': (done) => {
+  it('filter when multiple match the regex', done => {
     opa.set(config, 'chart.points', 'LABELS');
-    
+
     request.allIssues = (user, repo, opts, cb) => {
       cb(null, [
         { 'labels': [ { 'name': 'size 1' }, { 'name': 'size 6' } ]},
@@ -292,5 +292,5 @@ export default {
       assert(b.size, 4);
       done();
     });
-  }
-};
+  });
+});

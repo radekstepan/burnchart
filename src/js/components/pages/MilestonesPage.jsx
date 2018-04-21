@@ -33,13 +33,14 @@ export default class MilestonePage extends Page {
                   'open':   { 'list': [], 'size': 0 }
                 };
             // Merge all the milestone issues together.
-            _(obj.milestones).filter((m) => !m.stats.isEmpty).each((m) => {
+            _(obj.milestones).filter((m) => !m.stats.isEmpty).map(m => {
               if (m.created_at < created_at) created_at = m.created_at;
               if (m.due_on > due_on) due_on = m.due_on;
               _.each([ 'closed', 'open' ], (k) => {
                 issues[k].list = issues[k].list.concat(m.issues[k].list);
                 issues[k].size += m.issues[k].size;
               });
+              return m;
             }).value();
 
             issues.closed.list = _.sortBy(issues.closed.list, 'closed_at');

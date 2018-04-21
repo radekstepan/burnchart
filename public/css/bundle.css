@@ -398,7 +398,9 @@ lesshat-selector {
 @-webkit-keyframes spin{ from { -webkit-transform: rotate(0deg); } to { -webkit-transform: rotate(360deg); }}
 @-moz-keyframes spin{ from { -moz-transform: rotate(0deg); } to { -moz-transform: rotate(360deg); }}
 @-o-keyframes spin{ from { -o-transform: rotate(0deg); } to { -o-transform: rotate(360deg); }}
-@keyframes spin{ from {-webkit-transform: rotate(0deg);-moz-transform: rotate(0deg);-ms-transform: rotate(0deg);transform: rotate(0deg); } to {-webkit-transform: rotate(360deg);-moz-transform: rotate(360deg);-ms-transform: rotate(360deg);transform: rotate(360deg); };
+@keyframes spin{ from {-webkit-transform: rotate(0deg);-moz-transform: rotate(0deg);-ms-transform: rotate(0deg);transform: rotate(0deg); } to {-webkit-transform: rotate(360deg);-moz-transform: rotate(360deg);-ms-transform: rotate(360deg);transform: rotate(360deg); }}
+[not-existing] {
+  zoom: 1;
 }
 #chart {
   height: 300px;
@@ -590,8 +592,8 @@ ul li {
   width: 500px;
   -webkit-transform: translateX(-50%) translateY(-50%);
   -moz-transform: translateX(-50%) translateY(-50%);
-  -o-transform: translateX(-50%) translateY(-50%);
   -ms-transform: translateX(-50%) translateY(-50%);
+  -o-transform: translateX(-50%) translateY(-50%);
   transform: translateX(-50%) translateY(-50%);
 }
 #notify.system p {

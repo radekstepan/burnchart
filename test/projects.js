@@ -16,13 +16,13 @@ let projects = proxy(lib, {
   lscache, '../modules/github/request.js': request
 }).default;
 
-export default {
-  'projects - initializes empty': (done) => {
+describe('projects', () => {
+  it('initializes empty', done => {
     assert.deepEqual(projects.get('list'), []);
     done();
-  },
+  });
 
-  'projects - sorts on new milestones': (done) => {
+  it('sorts on new milestones', done => {
     projects.set({ 'list': [], 'index': [] });
 
     let project = {
@@ -40,9 +40,9 @@ export default {
     assert.deepEqual(projects.get('index'), [[0, 0]]);
 
     done();
-  },
+  });
 
-  'projects - sort by progress': (done) => {
+  it('sort by progress', done => {
     projects.set({ 'list': [], 'index': [], 'sortBy': 'progress' });
 
     let project = {
@@ -73,9 +73,9 @@ export default {
     assert.deepEqual(projects.get('index'), [[0, 1], [0, 0]]);
 
     done();
-  },
+  });
 
-  'projects - sort by priority': (done) => {
+  it('sort by priority', done => {
     projects.set({ 'list': [], 'index': [], 'sortBy': 'priority' });
 
     let project = {
@@ -121,9 +121,9 @@ export default {
     assert.deepEqual(projects.get('index'), [[0, 2], [0, 0], [0, 1]]);
 
     done();
-  },
+  });
 
-  'projects - sort by priority defaults': (done) => {
+  it('sort by priority defaults', done => {
     projects.set({ 'list': [], 'index': [], 'sortBy': 'priority' });
 
     let project = {
@@ -163,9 +163,9 @@ export default {
     assert.deepEqual(projects.get('index'), [[0, 2], [0, 1], [0, 0]]);
 
     done();
-  },
+  });
 
-  'projects - sort by name': (done) => {
+  it('sort by name', done => {
     projects.set({ 'list': [], 'index': [], 'sortBy': 'name' });
 
     let project = {
@@ -188,9 +188,9 @@ export default {
     assert.deepEqual(projects.get('index'), [[0, 1], [0, 0]]);
 
     done();
-  },
+  });
 
-  'projects - sort by name semver': (done) => {
+  it('sort by name semver', done => {
     projects.set({ 'list': [], 'index': [], 'sortBy': 'name' });
 
     let project = {
@@ -218,9 +218,9 @@ export default {
     assert.deepEqual(projects.get('index'), [[0, 2], [0, 1], [0, 0]]);
 
     done();
-  },
+  });
 
-  'projects - search': (done) => {
+  it('search', done => {
     projects.set({ 'list': [
       { 'owner': 'radek', 'name': 'A' }
     ], 'index': [], 'sortBy': 'name', 'user': null });
@@ -249,9 +249,9 @@ export default {
     assert.deepEqual(projects.get('suggestions'), [ 'radek/aA' ]);
 
     done();
-  },
+  });
 
-  'projects - delete': (done) => {
+  it('delete', done => {
     let a = { 'owner': 'company', 'name': 'netflix', 'milestones': [ { 'title': 'A', 'stats': {} } ] };
     let b = { 'owner': 'company', 'name': 'space-x' };
     let c = { 'owner': 'company', 'name': 'tesla-m', 'milestones': [ { 'title': 'C', 'stats': {} } ] };
@@ -269,10 +269,10 @@ export default {
     assert.deepEqual(projects.get('index'), [ [ 0, 0 ], [ 1, 0 ] ]);
 
     done();
-  },
+  });
 
   // Issue #116.
-  'projects - add milestone (project behind the scenes)': (done) => {
+  it('add milestone (project behind the scenes)', done => {
     projects.set({ 'list': [], 'index': [], 'sortBy': 'progress' });
 
     let p = { 'name': 'zcash', 'owner': 'zcash' };
@@ -288,5 +288,5 @@ export default {
     ]);
 
     done();
-  }
-};
+  });
+});

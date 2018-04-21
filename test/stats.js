@@ -18,7 +18,7 @@ export default {
     };
 
     let { isEmpty, isOverdue, isOnTime } = stats(milestone);
-    
+
     assert.isTrue(isEmpty);
     assert.isFalse(isOverdue);
     assert.isTrue(isOnTime);
@@ -54,10 +54,10 @@ export default {
         }
       }
     };
-    
+
     let { isDone } = stats(milestone);
     assert.isTrue(isDone);
-    
+
     done();
   },
 
@@ -74,10 +74,10 @@ export default {
         }
       }
     };
-    
+
     let { isOverdue } = stats(milestone);
     assert.isTrue(isOverdue);
-    
+
     done();
   },
 
@@ -95,7 +95,7 @@ export default {
         }
       }
     };
-    
+
     let { isOnTime } = stats(milestone);
     assert.isTrue(isOnTime);
 

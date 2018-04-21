@@ -7,7 +7,7 @@ CLEANCSS   = ./node_modules/.bin/cleancss
 MOCHA      = ./node_modules/.bin/mocha
 BIN        = ./bin/burnchart.js
 
-MOCHA-OPTS = --compilers js:babel-register --ui exports --timeout 5000 --bail
+MOCHA-OPTS = --require babel-register --ui exports --timeout 5000 --bail
 
 start:
 	${BIN}
@@ -28,7 +28,7 @@ build-js:
 	${BROWSERIFY} -e -s burnchart ./src/js/index.jsx -t babelify > public/js/bundle.js
 
 build-css:
-	${LESS} src/less/burnchart.less > public/css/bundle.css
+	${LESS} --js src/less/burnchart.less > public/css/bundle.css
 
 build: build-js build-css
 

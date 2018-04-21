@@ -3,49 +3,49 @@ import { assert } from 'chai';
 import Store from '../src/js/lib/Store.js';
 import actions from '../src/js/actions/appActions.js';
 
-export default {
-  'store - set': (done) => {
+describe('Store', () => {
+  it('set', done => {
     let s = new Store();
-    
+
     s.set('A.B', 1); // key as a string
     s.set([ 'A', 'C' ], 2); // key as an array
 
     assert.deepEqual({ A: { B: 1, C: 2 }}, s.get());
 
     done();
-  },
+  });
 
-  'store - push': (done) => {
+  it('push', done => {
     let s = new Store({ 'list': [ 'A' ] });
-    
+
     s.push('list', 'B'); // key as a string
     s.push([ 'list' ], 'C'); // key as an array
 
     assert.deepEqual({ 'list': [ 'A', 'B', 'C' ] }, s.get());
 
     done();
-  },
+  });
 
-  'store - push with init': (done) => {
+  it('push with init', done => {
     let s = new Store();
-    
+
     s.push('list', 'A');
-    
+
     assert.deepEqual({ 'list': [ 'A' ] }, s.get());
 
     done();
-  },
+  });
 
-  'store - get': (done) => {
+  it('get', done => {
     let s = new Store({ 'A': [ 1, 2 ], 'B': { 'C': 3 } });
 
     assert.equal(2, s.get('A.1')); // key as a string
     assert.equal(3, s.get([ 'B', 'C' ])); // key as an array
 
     done();
-  },
+  });
 
-  'store - get with callback': (done) => {
+  it('get with callback', done => {
     let s = new Store({ 'A': 1 });
 
     let vals = [];
@@ -58,9 +58,9 @@ export default {
     assert.deepEqual([ 1, 2 ], vals);
 
     done();
-  },
+  });
 
-  'store - setSilent': (done) => {
+  it('setSilent', done => {
     let s = new Store();
 
     let val;
@@ -74,9 +74,9 @@ export default {
     assert.equal(1, val);
 
     done();
-  },
+  });
 
-  'store - assign': (done) => {
+  it('assign', done => {
     let s = new Store({ A: 1 });
 
     s.set({ B: 1 });
@@ -84,11 +84,11 @@ export default {
     assert.deepEqual({ A: 1, B: 1 }, s.get());
 
     done();
-  },
+  });
 
-  'store - changes': (done) => {
+  it('changes', done => {
     let s = new Store({ A: { B: { C: 1 } } });
-    
+
     let key;
 
     s.onAny((v, k) => key = k);
@@ -98,9 +98,9 @@ export default {
     assert.equal('A.B.C', key);
 
     done();
-  },
+  });
 
-  'store - cb called': (done) => {
+  it('cb called', done => {
     let s = new Store();
 
     let events = [];
@@ -115,9 +115,9 @@ export default {
     assert.deepEqual([ true, false ], events);
 
     done();
-  },
+  });
 
-  'store - cb cancelled': (done) => {
+  it('cb cancelled', done => {
     let s = new Store();
 
     let events = [];
@@ -135,5 +135,5 @@ export default {
       assert.deepEqual([ true, false ], events);
       done();
     }, 20);
-  }
-};
+  });
+});

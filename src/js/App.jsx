@@ -33,7 +33,7 @@ let find = ({ to, params, query }) => {
   let re = /:[^\/]+/g;
 
   // Skip empty objects.
-  [ params, query ] = [ _.isObject(params) ? params : {}, query ].map(o => _.pick(o, _.identity));
+  [ params, query ] = [ _.isObject(params) ? params : {}, query ].map(o => _.pick(o, _.keys(o)));
 
   // Find among the routes.
   _.find(routes, (name, url) => {

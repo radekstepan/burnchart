@@ -89,7 +89,7 @@ class ProjectsStore extends Store {
         }
       } else {
         // For all projects.
-        _.each(projects, _.partial(this.getProject, user), this);
+        _.each(projects, project => this.getProject(user, project));
       }
     }));
   }
