@@ -4,6 +4,7 @@ import superagent from 'superagent';
 import actions from '../../actions/appActions.js';
 
 import config from '../../../config.js';
+import graphqlQueries from './graphql.js';
 
 // Custom JSON parser.
 superagent.parse = {
@@ -76,45 +77,6 @@ export default {
       'headers': headers(token)
     }, defaults.github);
 
-    const query = `query {
-      repository(owner:"twbs", name:"bootstrap"){
-        project(number: 14) {
-          createdAt
-          closedAt
-          columns(first: 10) {
-            nodes {
-              name
-              cards(first: 100) {
-                nodes {
-                  content {
-                    ... on Issue {
-                      number
-                      title
-                      createdAt
-                      state
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-    `;
-    let graphqlReq = _.defaults({
-      path: '/graphql',
-      body: JSON.stringify({query}),
-      headers: {
-        'Authorization': `bearer ${token}`,
-      },
-      method: 'POST',
-    }, defaults.github);
-    console.log(graphqlReq);
-    request(graphqlReq, (err, result) => {
-      console.log('graphql response!', err, result);
-    });
-
     request(data, function(err, data) {
       console.log('oneMilestone', data);
       cb(err, data);
@@ -131,8 +93,66 @@ export default {
     }, defaults.github);
 
     return request(data, cb);
-  }
+  },
 
+  allProjects: (user, { owner, name }, cb) => {
+    let token = (user && user.credential != null) ? user.credential.accessToken : null;
+
+    let data = _.defaults({
+      path: '/graphql',
+      body: JSON.stringify(name ? {
+        query: graphqlQueries.allProjectsForRepo,
+        variables: {
+          owner,
+          name
+        }
+      } : {
+        query: graphqlQueries.allProjectsForOrg,
+        variables: {
+          login: owner
+        }
+      }),
+      headers: {
+        'Authorization': `bearer ${token}`,
+      },
+      method: 'POST',
+    }, defaults.github);
+    request(data, (err, result) => {
+      console.log('graphql response!', err, result);
+      cb(err, result);
+    });
+  },
+
+  oneProject: (user, { owner, name, project }, cb) => {
+    let token = (user && user.credential != null) ? user.credential.accessToken : null;
+
+    let data = _.defaults({
+      path: '/graphql',
+      body: JSON.stringify(name ? {
+        query: graphqlQueries.allProjectsForRepo,
+        variables: {
+          owner,
+          name,
+          project
+        }
+      } : {
+        query: graphqlQueries.oneOrgProject,
+        variables: {
+          owner,
+          project
+        }
+      }),
+      headers: {
+        'Authorization': `bearer ${token}`,
+      },
+      method: 'POST',
+    }, defaults.github);
+    request(data, (err, result) => {
+      console.log('graphql response!', err, result);
+      // Filter down to cards that are issues (as opposed to notes) here?
+      cb(err, result);
+    });
+  }
 };
 
 // Make a request using SuperAgent.
@@ -150,7 +170,6 @@ let request = ({ protocol, host, method, path, query, headers, body }, cb) => {
   let req = method === 'POST' ? superagent.post(url) : superagent.get(url);
   // Add headers.
   _.each(headers, (v, k) => { req.set(k, v); });
-  console.log(`Requesting ${url}`);
 
   // Timeout for requests that do not finish... see #32.
   let ms = config.request.timeout;

@@ -22,6 +22,10 @@ let routes = {
   '/new/project': 'addProject',
   '/:owner/:name': 'milestones',
   '/:owner/:name/:milestone': 'chart',
+  '/:owner/:name/projects': 'githubProjects',
+  '/:owner/projects': 'orgProjects',
+  '/:owner/project/:project': 'orgProjectChart',
+  '/:owner/:name/project/:project': 'projectChart',
   '/demo': 'demo'
 };
 
@@ -95,11 +99,25 @@ export default React.createClass({
     return <MilestonesPage owner={owner} name={name} />;
   },
 
+  // Show projects (i.e. boards) for a repo.
+  projects(owner, name) {
+    document.title = `${owner}/${name} projects`;
+    process.nextTick(() => actions.emit('projects.load', { owner, name }));
+    return <GitHubProjectsPage owner={owner} name={name} />;
+  },
+
   // Show a project milestone chart.
   chart(owner, name, milestone) {
     document.title = `${owner}/${name}/${milestone}`;
     process.nextTick(() => actions.emit('projects.load', { owner, name, milestone }));
     return <ChartPage owner={owner} name={name} milestone={milestone} />;
+  },
+
+  // Show a GitHub project (i.e. board) chart.
+  projectChart(owner, name, project) {
+    document.title = `${owner}/${name}/${project}`;
+    process.nextTick(() => actions.emit('projects.load', { owner, name, milestone }));
+    return <ProjectChartPage owner={owner} name={name} project={project} />;
   },
 
   // Add a project.

@@ -76,6 +76,8 @@ class ProjectsStore extends Store {
             'owner': args.owner,
             'name': args.name
           }, args.milestone, true); // notify as well
+        } else if ('project' in args) {
+          // ...
         } else {
           // For a single project.
           _.find(this.get('list'), (obj) => {
