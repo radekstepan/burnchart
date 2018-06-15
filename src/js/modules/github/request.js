@@ -76,7 +76,49 @@ export default {
       'headers': headers(token)
     }, defaults.github);
 
-    request(data, cb);
+    const query = `query {
+      repository(owner:"twbs", name:"bootstrap"){
+        project(number: 14) {
+          createdAt
+          closedAt
+          columns(first: 10) {
+            nodes {
+              name
+              cards(first: 100) {
+                nodes {
+                  content {
+                    ... on Issue {
+                      number
+                      title
+                      createdAt
+                      state
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    `;
+    let graphqlReq = _.defaults({
+      path: '/graphql',
+      body: JSON.stringify({query}),
+      headers: {
+        'Authorization': `bearer ${token}`,
+      },
+      method: 'POST',
+    }, defaults.github);
+    console.log(graphqlReq);
+    request(graphqlReq, (err, result) => {
+      console.log('graphql response!', err, result);
+    });
+
+    request(data, function(err, data) {
+      console.log('oneMilestone', data);
+      cb(err, data);
+    });
   },
 
   // Get all issues for a state..
@@ -94,7 +136,7 @@ export default {
 };
 
 // Make a request using SuperAgent.
-let request = ({ protocol, host, path, query, headers }, cb) => {
+let request = ({ protocol, host, method, path, query, headers, body }, cb) => {
   let exited = false;
 
   // Make the query params.
@@ -104,9 +146,11 @@ let request = ({ protocol, host, path, query, headers }, cb) => {
   }
 
   // The URI.
-  let req = superagent.get(`${protocol}://${host}${path}${q}`);
+  const url = `${protocol}://${host}${path}${q}`;
+  let req = method === 'POST' ? superagent.post(url) : superagent.get(url);
   // Add headers.
   _.each(headers, (v, k) => { req.set(k, v); });
+  console.log(`Requesting ${url}`);
 
   // Timeout for requests that do not finish... see #32.
   let ms = config.request.timeout;
@@ -115,6 +159,10 @@ let request = ({ protocol, host, path, query, headers }, cb) => {
     exited = true;
     cb('Request has timed out');
   }, ms);
+
+  if (body) {
+    req.send(body);
+  }
 
   // Send.
   req.end((err, data) => {
@@ -145,7 +193,9 @@ let headers = (token) => {
     'Accept': 'application/vnd.github.v3'
   };
   // Add token?
-  if (token) h.Authorization = `token ${token}`;
+  if (token) {
+    h.Authorization = `token ${token}`;
+  }
 
   return h;
 };
@@ -177,3 +227,6 @@ let error = (err) => {
 
   return text;
 };
+
+// oneMilestone:
+// - returns lists of open and closed issues.
