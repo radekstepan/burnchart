@@ -44,6 +44,11 @@ export default {
                       title
                       createdAt
                       state
+                      labels(first: 10) {
+                        nodes {
+                          name
+                        }
+                      }
                     }
                   }
                 }
