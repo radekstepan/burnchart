@@ -77,6 +77,23 @@ $ make start-dev
 
 ### GitHub Pages
 
+#### 1. GitHub
+
+To serve the app from GitHub Pages set the "Source branch" in the `/settings` page of your repository.
+
+#### 2. Firebase
+
+Then, signup for Firebase and go to your [console](http://console.firebase.google.com) and create a new project there.
+
+You can leave the Database/Storage section as is, you only want to configure your "Authentication". There, enable "GitHub" and add your domain in "Authorised domains". Mine is set to `radekstepan.com` and `type: Custom`. If you want to run the app locally, you may want to add `localhost` and/or `0.0.0.0` as well.
+
+Since you are using your own Firebase project, you want to copy a couple of keys/ids into the `firebase.*` section of `src/config.js`.
+
+- `firebase.apiKey` is "Web API key" from the "Settings" page (in "Project Overview")
+- `firebase.authDomain` is one of the authorised domains in "Authentication", then "Sign-in method"
+
+#### Sync with `master` branch
+
 To serve the app from GitHub Pages that are in sync with master branch, add these two lines to `.git/config`, in the `[remote "origin"]` section:
 
 ```
