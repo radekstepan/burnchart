@@ -38,7 +38,7 @@
     "firebase": "3.4.1",
     "less": "3.0.1",
     "lesshat": "4.1.0",
-    "lodash": "4.17.5",
+    "lodash": "4.17.13",
     "lscache": "1.0.5",
     "marked": "0.3.19",
     "mocha": "5.1.1",
