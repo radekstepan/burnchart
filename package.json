@@ -45,7 +45,7 @@
     "moment": "2.22.1",
     "normalize.less": "1.0.0",
     "object-assign": "4.1.1",
-    "object-path": "0.11.4",
+    "object-path": "0.11.8",
     "proxyquire": "2.0.1",
     "qs": "6.5.1",
     "react": "0.14.7",
