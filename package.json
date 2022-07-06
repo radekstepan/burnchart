@@ -42,7 +42,7 @@
     "lscache": "1.0.5",
     "marked": "0.3.19",
     "mocha": "5.1.1",
-    "moment": "2.22.1",
+    "moment": "2.29.4",
     "normalize.less": "1.0.0",
     "object-assign": "4.1.1",
     "object-path": "0.11.4",
