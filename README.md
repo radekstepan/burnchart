@@ -1,4 +1,4 @@
-# [burnchart](http://radekstepan.com/burnchart)
+# [burnchart](https://burnchart.netlify.app)
 
 GitHub Burndown Chart as a Service. Answers the question "are my projects on track"?
 
