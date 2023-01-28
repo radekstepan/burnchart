@@ -8,7 +8,7 @@ function Footer() {
       padding={16}
       justifyContent="center"
     >
-      <Text>
+      <Text size={300}>
         &copy; 2012-2023 Radek Stepan &amp; Contributors
       </Text>
     </Pane>

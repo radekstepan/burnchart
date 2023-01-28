@@ -1,10 +1,13 @@
-import React, {memo, useEffect, useState} from 'react';
+import React, {memo, useEffect, useState, useContext} from 'react';
 import { useOatmilk } from 'oatmilk'
 import {Button, Link, Pane} from 'evergreen-ui';
 import Icon from './Icon';
+import { FirebaseContext } from '../providers/FirebaseProvider';
 
 function Header() {
   const oatmilk = useOatmilk();
+
+  const {signIn} = useContext(FirebaseContext);
 
   return (
     <Pane
@@ -24,7 +27,10 @@ function Header() {
         </Link>
       </Pane>
       <Pane>
-        <Button appearance='primary'>Sign In</Button>
+        <Button
+          appearance='primary'
+          onClick={signIn}
+        >Sign In</Button>
       </Pane>
     </Pane>
   );
