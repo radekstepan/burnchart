@@ -1,12 +1,20 @@
 import React, {memo, useEffect, useState} from 'react';
+import Oatmilk from 'oatmilk'
 
 function Header() {
   return (
     <div id="header">
-      <div className="logo" />
+      <Oatmilk.Link
+        routeName='home'
+        className="logo"
+      >Burnchart</Oatmilk.Link>
       <ul className="links">
-        <li>Add a Project</li>
-        <li>See Examples</li>
+        <li>
+          <Oatmilk.Link routeName='newProject'>Add a Project</Oatmilk.Link>
+        </li>
+        <li>
+          See Examples
+        </li>
       </ul>
       <div className="signIn">Sign In</div>
     </div>
