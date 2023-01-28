@@ -3,7 +3,7 @@ import React, {memo, useEffect, useState} from 'react';
 function NotFound() {
   return (
     <div id="notFound">
-      NotFound
+      Not Found
     </div>
   );
 }

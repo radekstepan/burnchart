@@ -1,15 +1,26 @@
 import React, {memo, useEffect, useState} from 'react';
 import Oatmilk from 'oatmilk'
+import { Pane, Table } from 'evergreen-ui';
 
 function Projects() {
   return (
-    <div id="projects">
-      Projects
-      <Oatmilk.Link
-        routeName='milestones'
-        state={{org: '111', project: '222'}}
-      >111 - 222</Oatmilk.Link>
-    </div>
+    <Pane flex={1} display="flex">
+      <Table width="100%">
+        <Table.Body>
+          <Table.Row>
+            <Table.TextCell>
+              radekstepan/disposable
+            </Table.TextCell>
+            <Table.TextCell>
+              Empty milestone
+            </Table.TextCell>
+            <Table.TextCell>
+              due 7 years ago
+            </Table.TextCell>
+          </Table.Row>
+        </Table.Body>
+      </Table>
+    </Pane>
   );
 }
 

@@ -3,7 +3,7 @@ import React, {memo, useEffect, useState} from 'react';
 function NewProject() {
   return (
     <div id="newProject">
-      NewProject
+      New Project
     </div>
   );
 }

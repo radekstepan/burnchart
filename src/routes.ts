@@ -8,6 +8,11 @@ const routes: Oatmilk.IRoute[] = [
     view: React.lazy(() => import('./components/pages/Projects')),
   },
   {
+    name: 'newProject',
+    path: '/new/project',
+    view: React.lazy(() => import('./components/pages/NewProject')),
+  },
+  {
     name: 'milestones',
     path: '/:org/:project',
     view: React.lazy(() => import('./components/pages/Milestones')),
@@ -16,11 +21,6 @@ const routes: Oatmilk.IRoute[] = [
     name: 'milestone',
     path: '/:org/:project/:id',
     view: React.lazy(() => import('./components/pages/Milestone')),
-  },
-  {
-    name: 'newProject',
-    path: '/new/project',
-    view: React.lazy(() => import('./components/pages/NewProject')),
   },
   {
     name: 'notFound',

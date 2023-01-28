@@ -1,23 +1,32 @@
 import React, {memo, useEffect, useState} from 'react';
-import Oatmilk from 'oatmilk'
+import { useOatmilk } from 'oatmilk'
+import {Button, Link, Pane} from 'evergreen-ui';
+import Icon from './Icon';
 
 function Header() {
+  const oatmilk = useOatmilk();
+
   return (
-    <div id="header">
-      <Oatmilk.Link
-        routeName='home'
-        className="logo"
-      >Burnchart</Oatmilk.Link>
-      <ul className="links">
-        <li>
-          <Oatmilk.Link routeName='newProject'>Add a Project</Oatmilk.Link>
-        </li>
-        <li>
+    <Pane
+      borderBottom
+      display="flex"
+      padding={16}
+    >
+      <Pane flex={1} display="flex">
+        <Link href={oatmilk.getHref('newProject')}>
+          <Icon name="fire" />
+        </Link>
+        <Link href={oatmilk.getHref('newProject')}>
+          Add a Project
+        </Link>
+        <Link>
           See Examples
-        </li>
-      </ul>
-      <div className="signIn">Sign In</div>
-    </div>
+        </Link>
+      </Pane>
+      <Pane>
+        <Button appearance='primary'>Sign In</Button>
+      </Pane>
+    </Pane>
   );
 }
 
