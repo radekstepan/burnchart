@@ -1,11 +1,7 @@
-import React, {memo, useEffect, useState} from 'react';
+import React, { memo, useEffect, useState } from "react";
 
 function NewProject() {
-  return (
-    <div id="newProject">
-      New Project
-    </div>
-  );
+  return <div id="newProject">New Project</div>;
 }
 
 export default NewProject;

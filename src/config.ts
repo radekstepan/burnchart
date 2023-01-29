@@ -1,14 +1,14 @@
 const config = {
   // Firebase.
-  "firebase": {
+  firebase: {
     apiKey: "AIzaSyD_kfzkAPA87PoRFIZa8JEzZkT66CqUDpU",
-    authDomain: "burnchart.firebaseapp.com"
+    authDomain: "burnchart.firebaseapp.com",
   },
   // Data source provider.
-  "provider": "github",
+  provider: "github",
   // Fields to keep from GH responses.
-  "fields": {
-    "milestone": [
+  fields: {
+    milestone: [
       "closed_issues",
       "created_at",
       "description",
@@ -16,25 +16,25 @@ const config = {
       "number",
       "open_issues",
       "title",
-      "updated_at"
-    ]
+      "updated_at",
+    ],
   },
   // Chart configuration.
-  "chart": {
+  chart: {
     // Days we are not working. Mon = 1
-    "off_days": [ ],
+    off_days: [],
     // How does a size label look like?
-    "size_label": /^size (\d+)$/,
+    size_label: /^size (\d+)$/,
     // Process all issues as one size (ONE_SIZE) or use labels (LABELS).
-    "points": 'ONE_SIZE'
+    points: "ONE_SIZE",
   },
   // Request pertaining.
-  "request": {
+  request: {
     // Default timeout of 10s.
-    "timeout": 1e4
+    timeout: 1e4,
   },
   // The app theme; 'monza' is the default red theme.
-  "theme": "monza"
+  theme: "monza",
 };
 
 export default config;

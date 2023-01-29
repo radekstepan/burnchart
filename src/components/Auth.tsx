@@ -1,10 +1,10 @@
-import React, {memo, useContext, useEffect, useState} from 'react';
-import { Button, Link, Pane, Spinner } from 'evergreen-ui';
-import { FirebaseContext } from '../providers/FirebaseProvider';
-import Icon from './Icon';
+import React, { memo, useContext, useEffect, useState } from "react";
+import { Button, Link, Pane, Spinner } from "evergreen-ui";
+import { FirebaseContext } from "../providers/FirebaseProvider";
+import Icon from "./Icon";
 
 function Auth() {
-  const {user, signIn, signOut} = useContext(FirebaseContext);
+  const { user, signIn, signOut } = useContext(FirebaseContext);
 
   if (user) {
     return (
@@ -17,10 +17,9 @@ function Auth() {
   }
 
   return (
-    <Button
-      appearance='primary'
-      onClick={signIn}
-    >Sign In</Button>
+    <Button appearance="primary" onClick={signIn}>
+      Sign In
+    </Button>
   );
 }
 

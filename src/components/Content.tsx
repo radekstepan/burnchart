@@ -1,7 +1,7 @@
-import React, {memo, useEffect, useState} from 'react';
-import Oatmilk from 'oatmilk'
-import { Pane } from 'evergreen-ui';
-import Loading from './Loading';
+import React, { memo, useEffect, useState } from "react";
+import Oatmilk from "oatmilk";
+import { Pane } from "evergreen-ui";
+import Loading from "./Loading";
 
 function Content() {
   return (

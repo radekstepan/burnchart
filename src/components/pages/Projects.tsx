@@ -1,6 +1,6 @@
-import React, {memo, useEffect, useState} from 'react';
-import Oatmilk from 'oatmilk'
-import { Pane, Table } from 'evergreen-ui';
+import React, { memo, useEffect, useState } from "react";
+import Oatmilk from "oatmilk";
+import { Pane, Table } from "evergreen-ui";
 
 function Projects() {
   return (
@@ -8,15 +8,9 @@ function Projects() {
       <Table width="100%">
         <Table.Body>
           <Table.Row>
-            <Table.TextCell>
-              radekstepan/disposable
-            </Table.TextCell>
-            <Table.TextCell>
-              Empty milestone
-            </Table.TextCell>
-            <Table.TextCell>
-              due 7 years ago
-            </Table.TextCell>
+            <Table.TextCell>radekstepan/disposable</Table.TextCell>
+            <Table.TextCell>Empty milestone</Table.TextCell>
+            <Table.TextCell>due 7 years ago</Table.TextCell>
           </Table.Row>
         </Table.Body>
       </Table>
