@@ -1,8 +1,11 @@
 import React, { memo, useEffect, useState } from "react";
 import Oatmilk from "oatmilk";
 import { Pane, Table } from "evergreen-ui";
+import { useRepos } from "../hooks/useGithub";
 
 function Repos() {
+  const repos = useRepos();
+
   return (
     <Pane flex={1} display="flex">
       <Table width="100%">

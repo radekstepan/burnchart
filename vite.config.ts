@@ -7,4 +7,9 @@ export default defineConfig({
     port: 1234,
   },
   plugins: [react()],
+  resolve: {
+    alias: {
+      "node-fetch": "cross-fetch",
+    },
+  },
 });

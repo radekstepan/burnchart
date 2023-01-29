@@ -51,9 +51,14 @@ const FirebaseProvider: React.FC<Props> = ({ children }) => {
         }
 
         const res = await signInWithPopup(auth, provider);
-        const accessToken = await res.user.getIdToken();
+        const credential = GithubAuthProvider.credentialFromResult(res);
+
+        if (!credential?.accessToken) {
+          return;
+        }
+
         setUser({
-          accessToken,
+          accessToken: credential.accessToken,
           ...res.user.providerData[0],
         });
       },

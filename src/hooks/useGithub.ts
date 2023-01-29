@@ -1,14 +1,17 @@
 import { Octokit, RestEndpointMethodTypes } from "@octokit/rest";
 import { useMemo } from "react";
 import { useAsync } from "react-use";
-import { sortBy } from "../utils/sort";
 import useFirebase from "./useFirebase";
 
 const useOctokit = () => {
   const { user } = useFirebase();
 
   return useMemo(
-    () => new Octokit(user ? { auth: user.accessToken } : undefined),
+    () =>
+      new Octokit({
+        userAgent: "radekstepan/burnchart",
+        auth: user ? user.accessToken : undefined,
+      }),
     [user]
   );
 };
@@ -71,30 +74,18 @@ export const useMilestone = (
   return res;
 };
 
-// Get all issues for a state.
+// Get all (pages of) issues for a state.
 export const useIssues = (
   params: RestEndpointMethodTypes["issues"]["listForRepo"]["parameters"]
 ) => {
   const octokit = useOctokit();
 
-  const res = useAsync(async () => {
-    // GET /repos/{owner}/{repo}/issues
-    let page = 1;
-    let res: RestEndpointMethodTypes["issues"]["listForRepo"]["response"]["data"] =
-      [];
-    while (page) {
-      const { data } = await octokit.issues.listForRepo({
-        ...params,
-        page,
-        per_page: 100,
-      });
-      res = res.concat(data);
-      if (!data.length || data.length < 100) {
-        return sortBy(res, "closed_at");
-      }
-      page += 1;
-    }
-  }, [params, octokit]);
+  const res = useAsync(
+    async () =>
+      // GET /repos/{owner}/{repo}/issues
+      octokit.paginate(octokit.issues.listForRepo, params),
+    [params, octokit]
+  );
 
   return res;
 };
