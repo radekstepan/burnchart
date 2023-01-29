@@ -2,7 +2,7 @@ import React, { memo, useEffect, useState } from "react";
 import Oatmilk from "oatmilk";
 import { Pane, Table } from "evergreen-ui";
 
-function Projects() {
+function Repos() {
   return (
     <Pane flex={1} display="flex">
       <Table width="100%">
@@ -18,4 +18,4 @@ function Projects() {
   );
 }
 
-export default Projects;
+export default Repos;

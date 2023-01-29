@@ -10,6 +10,7 @@
     "@apollo/client": "3.7.1",
     "@firebase/app": "^0.9.1",
     "@firebase/auth": "^0.21.1",
+    "@octokit/rest": "^19.0.7",
     "@tanstack/react-query": "^4.16.1",
     "@types/react": "^18.0.25",
     "@types/react-dom": "^18.0.9",

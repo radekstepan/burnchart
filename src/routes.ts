@@ -5,21 +5,21 @@ const routes: Oatmilk.IRoute[] = [
   {
     name: "home",
     path: "/",
-    view: React.lazy(() => import("./components/pages/Projects")),
+    view: React.lazy(() => import("./components/pages/Repos")),
   },
   {
-    name: "newProject",
-    path: "/new/project",
-    view: React.lazy(() => import("./components/pages/NewProject")),
+    name: "addRepo",
+    path: "/add/repo",
+    view: React.lazy(() => import("./components/pages/AddRepo")),
   },
   {
     name: "milestones",
-    path: "/:org/:project",
+    path: "/:org/:repo",
     view: React.lazy(() => import("./components/pages/Milestones")),
   },
   {
     name: "milestone",
-    path: "/:org/:project/:id",
+    path: "/:org/:repo/:id",
     view: React.lazy(() => import("./components/pages/Milestone")),
   },
   {

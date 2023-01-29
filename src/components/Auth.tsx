@@ -2,9 +2,10 @@ import React, { memo, useContext, useEffect, useState } from "react";
 import { Button, Link, Pane, Spinner } from "evergreen-ui";
 import { FirebaseContext } from "../providers/FirebaseProvider";
 import Icon from "./Icon";
+import useFirebase from "../hooks/useFirebase";
 
 function Auth() {
-  const { user, signIn, signOut } = useContext(FirebaseContext);
+  const { user, signIn, signOut } = useFirebase();
 
   if (user) {
     return (

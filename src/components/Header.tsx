@@ -13,7 +13,7 @@ function Header() {
         <Link href={oatmilk.getHref("home")}>
           <Icon name="fire" />
         </Link>
-        <Link href={oatmilk.getHref("newProject")}>Add a Project</Link>
+        <Link href={oatmilk.getHref("addRepo")}>Add a Repo</Link>
         <Link>See Examples</Link>
       </Pane>
       <Pane>
