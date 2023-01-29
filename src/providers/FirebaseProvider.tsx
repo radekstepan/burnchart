@@ -1,14 +1,24 @@
 import React, { useMemo, useState } from 'react';
 import { initializeApp} from '@firebase/app';
-import {getAuth, GithubAuthProvider, signInWithPopup} from '@firebase/auth';
+import {getAuth, GithubAuthProvider, signInWithPopup, signOut} from '@firebase/auth';
 import config from '../config';
+
+interface User {
+  displayName: string|null;
+  email: string|null;
+  accessToken: string;
+}
 
 interface ContextValue {
   signIn: () => void;
+  signOut: () => void;
+  user: User|null;
 }
 
 const defaultValue = {
-  signIn: () => {}
+  signIn: () => {},
+  signOut: () => {},
+  user: null
 };
 
 export const FirebaseContext = React.createContext<ContextValue>(defaultValue);
@@ -16,12 +26,6 @@ export const FirebaseContext = React.createContext<ContextValue>(defaultValue);
 interface Props {
   children?: React.ReactNode;
 };
-
-interface User {
-  displayName: string|null;
-  email: string|null;
-  accessToken: string;
-}
 
 const FirebaseProvider: React.FC<Props> = ({children}) => {
   const [user, setUser] = useState<User|null>(null);
@@ -34,6 +38,7 @@ const FirebaseProvider: React.FC<Props> = ({children}) => {
   provider.addScope('repo');
 
   const value = useMemo(() => ({
+    user,
     signIn: async () => {
       if (user) {
         return;
@@ -45,6 +50,10 @@ const FirebaseProvider: React.FC<Props> = ({children}) => {
         accessToken,
         ...res.user.providerData[0]
       });
+    },
+    signOut: async () => {
+      setUser(null);
+      await signOut(auth);
     }
   }), [user]);
 
