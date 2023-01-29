@@ -1,20 +1,9 @@
 import { Octokit, RestEndpointMethodTypes } from "@octokit/rest";
 import { useMemo } from "react";
 import { useAsync } from "react-use";
+import { sortBy } from "../utils/sort";
 import useFirebase from "./useFirebase";
-
-const useOctokit = () => {
-  const { user } = useFirebase();
-
-  return useMemo(
-    () =>
-      new Octokit({
-        userAgent: "radekstepan/burnchart",
-        auth: user ? user.accessToken : undefined,
-      }),
-    [user]
-  );
-};
+import useOctokit from "./useOctokit";
 
 // Get repos user has access to or are public to owner.
 export const useRepos = (username?: string) => {
@@ -80,12 +69,11 @@ export const useIssues = (
 ) => {
   const octokit = useOctokit();
 
-  const res = useAsync(
-    async () =>
-      // GET /repos/{owner}/{repo}/issues
-      octokit.paginate(octokit.issues.listForRepo, params),
-    [params, octokit]
-  );
+  const res = useAsync(async () => {
+    // GET /repos/{owner}/{repo}/issues
+    const res = await octokit.paginate(octokit.issues.listForRepo, params);
+    return sortBy(res, "closed_at");
+  }, [params, octokit]);
 
   return res;
 };

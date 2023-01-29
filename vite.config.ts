@@ -12,4 +12,7 @@ export default defineConfig({
       "node-fetch": "cross-fetch",
     },
   },
+  define: {
+    global: "window",
+  },
 });

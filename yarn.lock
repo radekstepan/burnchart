@@ -472,6 +472,11 @@
   dependencies:
     "@octokit/openapi-types" "^16.0.0"
 
+"@rehooks/local-storage@^2.4.4":
+  version "2.4.4"
+  resolved "https://registry.yarnpkg.com/@rehooks/local-storage/-/local-storage-2.4.4.tgz#ccf40f60c2dcbab86dc88f9e3ea898d1fb8bea2d"
+  integrity sha512-zE+kfOkG59n/1UTxdmbwktIosclr67Nlbf2MzUJ9mNtCSypVscNHeD1qT6JCSo5Pjj8DO893IKWNLJqKKzDL/Q==
+
 "@segment/react-tiny-virtual-list@^2.2.1":
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/@segment/react-tiny-virtual-list/-/react-tiny-virtual-list-2.2.1.tgz#658da8a93cfb83537235c89307818d6f1741aeb3"
