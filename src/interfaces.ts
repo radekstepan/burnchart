@@ -11,10 +11,13 @@ export type APIMilestone =
 export interface Milestone extends APIMilestone, Repo {}
 
 export interface Stats {
+  days: number;
+  span: number;
   isOverdue: boolean;
   isOnTime: boolean;
   progress: {
     points: number;
+    time: number;
   };
 }
 

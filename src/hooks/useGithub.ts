@@ -72,7 +72,6 @@ export const useGetMilestones = (repos: Repo[] | null) => {
     loop();
 
     return () => {
-      console.log("cancel");
       cancel();
     };
   }, [repos, octokit]);

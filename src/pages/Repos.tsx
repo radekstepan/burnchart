@@ -1,7 +1,7 @@
 import React, { memo, useEffect, useState } from "react";
 import Oatmilk from "oatmilk";
 import { Pane, Table } from "evergreen-ui";
-import { useReposStorage } from "../hooks/useStorage";
+import { useReposStore } from "../hooks/useStore";
 import useRepos from "../hooks/useRepos";
 import ProgressBar from "../components/ProgressBar";
 // import { useRepos } from "../hooks/useGithub";

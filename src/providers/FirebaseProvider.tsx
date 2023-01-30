@@ -1,17 +1,18 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { initializeApp } from "@firebase/app";
 import {
   getAuth,
   GithubAuthProvider,
+  signInWithCredential,
   signInWithPopup,
   signOut,
 } from "@firebase/auth";
 import config from "../config";
+import { useTokenStore } from "../hooks/useStore";
 
 interface User {
   displayName: string | null;
   email: string | null;
-  accessToken: string;
 }
 
 interface ContextValue {
@@ -42,6 +43,25 @@ const FirebaseProvider: React.FC<Props> = ({ children }) => {
   // See https://developer.github.com/v3/oauth/#scopes
   provider.addScope("repo");
 
+  const [token, setToken] = useTokenStore();
+
+  // Check if the stored token is still valid.
+  useEffect(() => {
+    if (user || !token) {
+      return;
+    }
+
+    // TODO clear the token if no longer valid.
+    const signIn = async () => {
+      const credential = GithubAuthProvider.credential(token);
+      const res = await signInWithCredential(auth, credential);
+
+      setUser(res.user.providerData[0]);
+    };
+
+    signIn();
+  }, [user, token]);
+
   const value = useMemo(
     () => ({
       user,
@@ -57,10 +77,8 @@ const FirebaseProvider: React.FC<Props> = ({ children }) => {
           return;
         }
 
-        setUser({
-          accessToken: credential.accessToken,
-          ...res.user.providerData[0],
-        });
+        setToken(credential.accessToken);
+        setUser(res.user.providerData[0]);
       },
       signOut: async () => {
         setUser(null);

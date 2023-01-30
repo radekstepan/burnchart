@@ -3,10 +3,10 @@ import { useEffect, useMemo, useState } from "react";
 import { APIMilestone, Milestone, Repo, WithStats } from "../interfaces";
 import { useGetMilestones } from "./useGithub";
 import useOctokit from "./useOctokit";
-import { useReposStorage } from "./useStorage";
+import { useReposStore } from "./useStore";
 
 const useRepos = () => {
-  const [repos] = useReposStorage();
+  const [repos] = useReposStore();
 
   const milestones = useGetMilestones(repos);
 

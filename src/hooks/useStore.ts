@@ -5,6 +5,7 @@ import {
   useLocalStorage,
 } from "@rehooks/local-storage";
 import { Repo } from "../interfaces";
+import { AuthCredential } from "@firebase/auth";
 
 const isRepo = (obj: unknown): obj is Repo =>
   !!obj &&
@@ -14,7 +15,7 @@ const isRepo = (obj: unknown): obj is Repo =>
   "repo" in obj &&
   typeof obj["repo"] === "string";
 
-export const useReposStorage = () => {
+export const useReposStore = () => {
   return useLocalStorage<Repo[]>("repos");
 
   // useEffect(() => {
@@ -25,3 +26,5 @@ export const useReposStorage = () => {
 
   // return repos;
 };
+
+export const useTokenStore = () => useLocalStorage<string>("token");
