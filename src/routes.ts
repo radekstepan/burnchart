@@ -1,12 +1,14 @@
 import React from "react";
 import Oatmilk from "oatmilk";
+import Repos from "./pages/Repos";
 import Milestones from "./pages/Milestones";
 
 const routes: Oatmilk.IRoute[] = [
   {
     name: "home",
     path: "/",
-    view: React.lazy(() => import("./pages/Repos")),
+    // view: React.lazy(() => import("./pages/Repos")),
+    view: Repos,
   },
   {
     name: "addRepo",
