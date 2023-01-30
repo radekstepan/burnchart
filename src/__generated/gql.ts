@@ -1,6 +1,6 @@
 /* eslint-disable */
-import * as types from "./graphql";
-import { TypedDocumentNode as DocumentNode } from "@graphql-typed-document-node/core";
+import * as types from './graphql';
+import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 
 /**
  * Map of all GraphQL operations in the project.
@@ -13,8 +13,7 @@ import { TypedDocumentNode as DocumentNode } from "@graphql-typed-document-node/
  * Therefore it is highly recommended to use the babel-plugin for production.
  */
 const documents = {
-  "#graphql\n  query GetMilestones($owner: String!, $name: String!) {\n    repository(owner: $owner, name: $name) {\n      id\n      milestones(\n        first: 100,\n        states: [OPEN],\n        orderBy: {field: DUE_DATE, direction: ASC}\n      ) {\n        nodes {\n          id\n        }\n      }\n    }\n  }\n":
-    types.GetMilestonesDocument,
+    "\n  #graphql\n  query GetMilestones($owner: String!, $name: String!) {\n    repository(owner: $owner, name: $name) {\n      id\n      milestones(\n        first: 100\n        states: [OPEN]\n        orderBy: { field: DUE_DATE, direction: ASC }\n      ) {\n        nodes {\n          id\n        }\n      }\n    }\n  }\n": types.GetMilestonesDocument,
 };
 
 /**
@@ -34,13 +33,10 @@ export function graphql(source: string): unknown;
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(
-  source: "#graphql\n  query GetMilestones($owner: String!, $name: String!) {\n    repository(owner: $owner, name: $name) {\n      id\n      milestones(\n        first: 100,\n        states: [OPEN],\n        orderBy: {field: DUE_DATE, direction: ASC}\n      ) {\n        nodes {\n          id\n        }\n      }\n    }\n  }\n"
-): (typeof documents)["#graphql\n  query GetMilestones($owner: String!, $name: String!) {\n    repository(owner: $owner, name: $name) {\n      id\n      milestones(\n        first: 100,\n        states: [OPEN],\n        orderBy: {field: DUE_DATE, direction: ASC}\n      ) {\n        nodes {\n          id\n        }\n      }\n    }\n  }\n"];
+export function graphql(source: "\n  #graphql\n  query GetMilestones($owner: String!, $name: String!) {\n    repository(owner: $owner, name: $name) {\n      id\n      milestones(\n        first: 100\n        states: [OPEN]\n        orderBy: { field: DUE_DATE, direction: ASC }\n      ) {\n        nodes {\n          id\n        }\n      }\n    }\n  }\n"): (typeof documents)["\n  #graphql\n  query GetMilestones($owner: String!, $name: String!) {\n    repository(owner: $owner, name: $name) {\n      id\n      milestones(\n        first: 100\n        states: [OPEN]\n        orderBy: { field: DUE_DATE, direction: ASC }\n      ) {\n        nodes {\n          id\n        }\n      }\n    }\n  }\n"];
 
 export function graphql(source: string) {
   return (documents as any)[source] ?? {};
 }
 
-export type DocumentType<TDocumentNode extends DocumentNode<any, any>> =
-  TDocumentNode extends DocumentNode<infer TType, any> ? TType : never;
+export type DocumentType<TDocumentNode extends DocumentNode<any, any>> = TDocumentNode extends DocumentNode<  infer TType,  any>  ? TType  : never;
