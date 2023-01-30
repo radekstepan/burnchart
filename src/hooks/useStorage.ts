@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import {
   writeStorage,
   deleteFromStorage,
@@ -14,4 +14,14 @@ const isRepo = (obj: unknown): obj is Repo =>
   "repo" in obj &&
   typeof obj["repo"] === "string";
 
-export const useReposStorage = () => useLocalStorage<Repo[]>("repos");
+export const useReposStorage = () => {
+  return useLocalStorage<Repo[]>("repos");
+
+  // useEffect(() => {
+  //   if (!repos) {
+  //     setRepos([{owner: 'rails', repo: 'rails'}]);
+  //   }
+  // }, [repos]);
+
+  // return repos;
+};

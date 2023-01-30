@@ -3,6 +3,7 @@ import Oatmilk from "oatmilk";
 import { Pane, Table } from "evergreen-ui";
 import { useReposStorage } from "../hooks/useStorage";
 import useRepos from "../hooks/useRepos";
+import ProgressBar from "../components/ProgressBar";
 // import { useRepos } from "../hooks/useGithub";
 
 function Repos() {
@@ -11,6 +12,8 @@ function Repos() {
   if (!milestones.length) {
     return null;
   }
+
+  console.log(milestones);
 
   return (
     <Pane flex={1} display="flex">
@@ -22,7 +25,7 @@ function Repos() {
                 {d.owner}/{d.repo}
               </Table.TextCell>
               <Table.TextCell>{d.title}</Table.TextCell>
-              <Table.TextCell>due 7 years ago</Table.TextCell>
+              {/**<Table.TextCell><ProgressBar milestone={d} /></Table.TextCell>*/}
             </Table.Row>
           ))}
         </Table.Body>

@@ -1,6 +1,8 @@
 import { Octokit, RestEndpointMethodTypes } from "@octokit/rest";
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useAsync } from "react-use";
+import { Milestone, Repo, WithStats } from "../interfaces";
+import { series } from "../utils/jobs";
 import { sortBy } from "../utils/sort";
 import useFirebase from "./useFirebase";
 import useOctokit from "./useOctokit";
@@ -24,23 +26,58 @@ export const useRepos = (username?: string) => {
 };
 
 // Get all open milestones.
-export const useMilestones = (
-  params: RestEndpointMethodTypes["issues"]["listMilestones"]["parameters"]
-) => {
+export const useGetMilestones = (repos: Repo[] | null) => {
   const octokit = useOctokit();
+  const [milestones, setMilestones] = useState<Milestone[]>([]);
 
-  const res = useAsync(async () => {
-    // GET /repos/{owner}/{repo}/milestones
-    const { data } = await octokit.issues.listMilestones({
-      ...params,
-      state: "open",
-      sort: "due_on",
-      direction: "asc",
-    });
-    return data;
-  }, [params, octokit]);
+  useEffect(() => {
+    if (!repos) {
+      return;
+    }
 
-  return res;
+    const get = async ({
+      owner,
+      repo,
+    }: RestEndpointMethodTypes["issues"]["listMilestones"]["parameters"]) => {
+      // GET /repos/{owner}/{repo}/milestones
+      const { data } = await octokit.issues.listMilestones({
+        owner,
+        repo,
+        state: "open",
+        sort: "due_on",
+        direction: "asc",
+      });
+      return data.map((d) => ({ ...d, owner, repo }));
+    };
+
+    let promise;
+    let cancel = () => {};
+
+    const loop = async () => {
+      [promise, cancel] = series(
+        repos.map(
+          ({ owner, repo }) =>
+            () =>
+              get({ owner, repo })
+        )
+      );
+
+      const res = await promise;
+      if (!res) {
+        return;
+      }
+      setMilestones(res);
+    };
+
+    loop();
+
+    return () => {
+      console.log("cancel");
+      cancel();
+    };
+  }, [repos, octokit]);
+
+  return milestones;
 };
 
 // Get one open milestone.

@@ -1,0 +1,42 @@
+// Alerts.
+@red: #c1041c;
+@green: #00b361;
+@yellow: #ea9712;
+
+.progress {
+  width: 200px;
+
+  .percent,
+  .due {
+    color: #9399ad;
+    font-size: 13px;
+  }
+
+  .percent {
+    float: right;
+  }
+
+  .bar {
+    border-radius: 4px;
+    background: #eaecf2;
+    height: 10px;
+    width: 100%;
+
+    &.inner {
+      box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.2);
+    }
+
+    &.red {
+      background: @red;
+    }
+
+    &.green {
+      background: @green;
+    }
+  }
+
+  .due.red {
+    color: @red;
+    font-weight: bold;
+  }
+}
