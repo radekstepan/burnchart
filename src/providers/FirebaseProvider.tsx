@@ -43,7 +43,7 @@ const FirebaseProvider: React.FC<Props> = ({ children }) => {
   // See https://developer.github.com/v3/oauth/#scopes
   provider.addScope("repo");
 
-  const [token, setToken] = useTokenStore();
+  const [token, setToken, deleteToken] = useTokenStore();
 
   // Check if the stored token is still valid.
   useEffect(() => {
@@ -51,12 +51,15 @@ const FirebaseProvider: React.FC<Props> = ({ children }) => {
       return;
     }
 
-    // TODO clear the token if no longer valid.
     const signIn = async () => {
-      const credential = GithubAuthProvider.credential(token);
-      const res = await signInWithCredential(auth, credential);
-
-      setUser(res.user.providerData[0]);
+      try {
+        const credential = GithubAuthProvider.credential(token);
+        const res = await signInWithCredential(auth, credential);
+        setUser(res.user.providerData[0]);
+      } catch (err) {
+        // err.code = auth/invalid-credentia
+        deleteToken();
+      }
     };
 
     signIn();
