@@ -1,8 +1,14 @@
 import { graphql } from "../__generated";
 
 export default graphql(`#graphql
-  query GetMilestones($owner: String!, $name: String!) {
-    repository(owner: $owner, name: $name) {
+  query GetRepoIssues(
+    $owner: String!
+    $repo: String!
+  ) {
+    repository(
+      owner: $owner,
+      name: $repo
+    ) {
       id
       milestones(
         first: 20 # TODO pagination
@@ -16,9 +22,11 @@ export default graphql(`#graphql
           description
           createdAt
           dueOn
-          issues(
-            first: 100 # TODO pagination
-          ) {
+          issues(first: 10) {
+            pageInfo {
+              endCursor
+              hasNextPage
+            }
             nodes {
               id
               closedAt

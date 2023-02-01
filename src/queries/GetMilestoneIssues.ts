@@ -1,0 +1,44 @@
+import { graphql } from "../__generated";
+
+export default graphql(`#graphql
+  query GetMilestoneIssues(
+    $owner: String!
+    $repo: String!
+    $milestone: Int!
+    $cursor: String
+  ) {
+    repository(
+      owner: $owner,
+      name: $repo
+    ) {
+      id
+      milestone(number: $milestone) {
+        id
+        number
+        title
+        description
+        createdAt
+        dueOn
+        issues(
+          after: $cursor
+          first: 10
+        ) {
+          pageInfo {
+            endCursor
+            hasNextPage
+          }
+          nodes {
+            id
+            closedAt
+            labels(first: 10) {
+              nodes {
+                id
+                description
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`);
