@@ -12,6 +12,7 @@ export default graphql(`#graphql
       name: $repo
     ) {
       id
+      nameWithOwner
       milestone(number: $milestone) {
         id
         number
@@ -33,7 +34,7 @@ export default graphql(`#graphql
             labels(first: 10) {
               nodes {
                 id
-                description
+                name
               }
             }
           }

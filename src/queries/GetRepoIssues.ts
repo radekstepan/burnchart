@@ -10,6 +10,7 @@ export default graphql(`#graphql
       name: $repo
     ) {
       id
+      nameWithOwner
       milestones(
         first: 20 # TODO pagination
         states: [OPEN]
@@ -33,7 +34,7 @@ export default graphql(`#graphql
               labels(first: 10) {
                 nodes {
                   id
-                  description
+                  name
                 }
               }
             }

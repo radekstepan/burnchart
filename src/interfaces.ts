@@ -1,14 +1,16 @@
-import { RestEndpointMethodTypes } from "@octokit/rest";
-
-export interface Repo {
-  owner: string;
-  repo: string;
+export interface Milestone {
+  id: string;
+  title: string;
+  description: string | null;
+  createdAt: string;
+  dueOn: string | null;
+  issues: Issue[];
 }
 
-export type APIMilestone =
-  RestEndpointMethodTypes["issues"]["listMilestones"]["response"]["data"][number];
-
-export interface Milestone extends APIMilestone, Repo {}
+export interface Issue {
+  closedAt: string | null;
+  labels: string[];
+}
 
 export interface Stats {
   days: number;
