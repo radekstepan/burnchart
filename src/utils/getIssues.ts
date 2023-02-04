@@ -7,11 +7,10 @@ import {
   type GetRepoIssuesQuery,
   type GetMilestoneIssuesQuery,
 } from "../__generated/graphql";
+import k from "./keys";
 
 const CONCURRENCY = 1;
 const API_URL = "https://api.github.com/graphql";
-
-const k = (...args: any[]) => args.join("/");
 
 type Nodes =
   | ({
@@ -45,7 +44,6 @@ const formatIssues = (nodes: Nodes) =>
 
 export type Job = [owner: string, repo: string, milestone?: number];
 
-// TODO run all jobs/repos.
 const getIssues = (
   token: string,
   jobs: Job[],
@@ -61,10 +59,13 @@ const getIssues = (
     },
   });
 
-  // TODO wrap requests in try/catch and return varables so we can
-  //  can get owner/repo.
-
   const all = new Map<string, Milestone>();
+
+  const onExit = () => {
+    exited = true;
+    abortController.abort();
+    q.clear();
+  };
 
   q.on("completed", (res: GetRepoIssuesQuery | GetMilestoneIssuesQuery) => {
     if (!res || !res.repository) {
@@ -78,6 +79,7 @@ const getIssues = (
       }
       for (const milestone of milestones) {
         if (milestone) {
+          // TODO return variables so we can get the owner/repo.
           const [owner, repo] = res.repository.nameWithOwner.split("/");
           const id = k(owner, repo, milestone.number);
           all.set(id, {
@@ -127,27 +129,40 @@ const getIssues = (
     }
   });
 
+  q.on("error", (err: Error) => {
+    if (!exited) {
+      onExit();
+      cb(err, all);
+    }
+  });
+
   q.on("idle", () => {
     if (!exited) {
+      onExit();
       cb(null, all);
     }
   });
 
-  console.log("start", jobs);
+  for (const [owner, repo, milestone] of jobs) {
+    if (milestone !== undefined) {
+      q.add(() =>
+        client.request(GetMilestoneIssues, {
+          owner,
+          repo,
+          milestone,
+        })
+      );
+    } else {
+      q.add(() =>
+        client.request(GetRepoIssues, {
+          owner,
+          repo,
+        })
+      );
+    }
+  }
 
-  // Fetch all repo milestones and their issues.
-  q.add(() =>
-    client.request(GetRepoIssues, {
-      owner: "rails",
-      repo: "rails",
-    })
-  );
-
-  return () => {
-    exited = true;
-    abortController.abort();
-    q.clear();
-  };
+  return onExit;
 };
 
 export default getIssues;

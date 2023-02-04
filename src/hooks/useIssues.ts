@@ -3,34 +3,41 @@ import { useDeepCompareEffect } from "react-use";
 import sortOn from "sort-on";
 import { Milestone } from "../interfaces";
 import getIssues, { Job } from "../utils/getIssues";
+import k from "../utils/keys";
 import { useTokenStore } from "./useStore";
+import * as map from "../utils/map";
+
+const data = new Map<string, Milestone>();
 
 const useIssues = (jobs: Job[] | null) => {
   const [token] = useTokenStore();
   const [state, setState] = useState<{
     error: Error | null;
     loading: boolean;
-    data: Map<string, Milestone> | null;
-  }>({ error: null, loading: false, data: null });
+  }>({ error: null, loading: false });
 
   useDeepCompareEffect(() => {
     if (!jobs || !token) {
       return;
     }
 
-    setState((prev) => ({ ...prev, loading: true }));
+    setState({ error: null, loading: true });
 
     let exited = false;
-    const cancel = getIssues(token, jobs, (error, data) => {
+
+    const cancel = getIssues(token, jobs, (error, res) => {
       if (exited) {
         return;
       }
-      if (data) {
-        for (const [, milestone] of data) {
-          milestone.issues = sortOn(milestone.issues, "closedAt");
+      if (res) {
+        for (const [key, milestone] of res) {
+          data.set(key, {
+            ...milestone,
+            issues: sortOn(milestone.issues, "closedAt"),
+          });
         }
       }
-      setState((prev) => ({ ...prev, error, data, loading: false }));
+      setState({ error, loading: false });
     });
 
     return () => {
@@ -39,14 +46,30 @@ const useIssues = (jobs: Job[] | null) => {
     };
   }, [token, jobs]);
 
-  return useMemo(
-    () => ({
-      error: state.error,
-      loading: state.loading,
-      issues: state.data,
-    }),
-    [state.error, state.loading, state.data]
-  );
+  return useMemo(() => {
+    const issues: Milestone[] = [];
+
+    if (jobs && !state.loading && !state.error) {
+      for (const [owner, repo, milestone] of jobs) {
+        if (milestone !== undefined) {
+          const key = k(owner, repo, milestone);
+          const d = map.get(data, key);
+          if (d) {
+            issues.push(d);
+          }
+        } else {
+          const key = new RegExp(`^${owner}\/${repo}`);
+          const d = map.get(data, key);
+          issues.push(...d);
+        }
+      }
+    }
+
+    return {
+      ...state,
+      issues,
+    };
+  }, [state.error, state.loading]);
 };
 
 export default useIssues;
