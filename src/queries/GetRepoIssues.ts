@@ -23,6 +23,7 @@ export default graphql(`#graphql
           description
           createdAt
           dueOn
+          # TODO sort by closedAt
           issues(first: 10) {
             pageInfo {
               endCursor

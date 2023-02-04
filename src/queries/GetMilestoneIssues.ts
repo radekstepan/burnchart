@@ -20,6 +20,7 @@ export default graphql(`#graphql
         description
         createdAt
         dueOn
+        # TODO sort by closedAt
         issues(
           after: $cursor
           first: 10

@@ -4,8 +4,12 @@ import {
   deleteFromStorage,
   useLocalStorage,
 } from "@rehooks/local-storage";
-import { Repo } from "../interfaces";
 import { AuthCredential } from "@firebase/auth";
+
+interface Repo {
+  owner: string;
+  repo: string;
+}
 
 const isRepo = (obj: unknown): obj is Repo =>
   !!obj &&

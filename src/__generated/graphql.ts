@@ -1941,7 +1941,7 @@ export type CloneTemplateRepositoryPayload = {
 
 /** An object that can be closed */
 export type Closable = {
-  /** `true` if the object is closed (definition of closed may depend on type) */
+  /** Indicates if the object is closed (definition of closed may depend on type) */
   closed: Scalars['Boolean'];
   /** Identifies the date and time when the object was closed. */
   closedAt?: Maybe<Scalars['DateTime']>;
@@ -5139,7 +5139,7 @@ export type DisconnectedEvent = Node & {
 };
 
 /** A discussion in a repository. */
-export type Discussion = Comment & Deletable & Labelable & Lockable & Node & Reactable & RepositoryNode & Subscribable & Updatable & Votable & {
+export type Discussion = Closable & Comment & Deletable & Labelable & Lockable & Node & Reactable & RepositoryNode & Subscribable & Updatable & Votable & {
   __typename?: 'Discussion';
   /** Reason that the conversation was locked. */
   activeLockReason?: Maybe<LockReason>;
@@ -5161,6 +5161,10 @@ export type Discussion = Comment & Deletable & Labelable & Lockable & Node & Rea
   bodyText: Scalars['String'];
   /** The category for this discussion. */
   category: DiscussionCategory;
+  /** Indicates if the object is closed (definition of closed may depend on type) */
+  closed: Scalars['Boolean'];
+  /** Identifies the date and time when the object was closed. */
+  closedAt?: Maybe<Scalars['DateTime']>;
   /** The replies to the discussion. */
   comments: DiscussionCommentConnection;
   /** Identifies the date and time when the object was created. */
@@ -7975,7 +7979,7 @@ export type Issue = Assignable & Closable & Comment & Labelable & Lockable & Nod
   bodyText: Scalars['String'];
   /** The http URL for this issue body */
   bodyUrl: Scalars['URI'];
-  /** `true` if the object is closed (definition of closed may depend on type) */
+  /** Indicates if the object is closed (definition of closed may depend on type) */
   closed: Scalars['Boolean'];
   /** Identifies the date and time when the object was closed. */
   closedAt?: Maybe<Scalars['DateTime']>;
@@ -9674,7 +9678,7 @@ export enum MigrationState {
 /** Represents a Milestone object on a given repository. */
 export type Milestone = Closable & Node & UniformResourceLocatable & {
   __typename?: 'Milestone';
-  /** `true` if the object is closed (definition of closed may depend on type) */
+  /** Indicates if the object is closed (definition of closed may depend on type) */
   closed: Scalars['Boolean'];
   /** Identifies the date and time when the object was closed. */
   closedAt?: Maybe<Scalars['DateTime']>;
@@ -14700,7 +14704,7 @@ export type Project = Closable & Node & Updatable & {
   body?: Maybe<Scalars['String']>;
   /** The projects description body rendered to HTML. */
   bodyHTML: Scalars['HTML'];
-  /** `true` if the object is closed (definition of closed may depend on type) */
+  /** Indicates if the object is closed (definition of closed may depend on type) */
   closed: Scalars['Boolean'];
   /** Identifies the date and time when the object was closed. */
   closedAt?: Maybe<Scalars['DateTime']>;
