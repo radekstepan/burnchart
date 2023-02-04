@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { useDeepCompareEffect } from "react-use";
 import sortOn from "sort-on";
 import { Milestone } from "../interfaces";
@@ -46,7 +46,6 @@ const useIssues = (ask: Job[] | null) => {
     let exited = false;
 
     const cancel = getIssues(token, jobs, (error, res) => {
-      console.log("here", error, res);
       if (exited) {
         return;
       }

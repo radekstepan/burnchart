@@ -9,9 +9,7 @@ import useIssues from "../hooks/useIssues";
 function Repos() {
   const [repos] = useReposStore();
 
-  const res = useIssues(repos?.map(({ owner, repo }) => [owner, repo]) || null);
-
-  console.log("Repos", res);
+  useIssues(repos?.map(({ owner, repo }) => [owner, repo]) || null);
 
   return null;
 

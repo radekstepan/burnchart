@@ -1,6 +1,6 @@
 import { GraphQLClient } from "graphql-request";
 import PQueue from "p-queue";
-import { Milestone } from "../interfaces";
+import { Milestone, Issue } from "../interfaces";
 import GetRepoIssues from "../queries/GetRepoIssues";
 import GetMilestoneIssues from "../queries/GetMilestoneIssues";
 import {
@@ -109,12 +109,23 @@ const getIssues = (
       if (!milestone) {
         return;
       }
-      const [owner, repo] = res.repository.nameWithOwner.split("/");
-      const ref = all.get(k(owner, repo, milestone.number));
-      if (!ref || !milestone.issues.nodes) {
+      if (!milestone.issues.nodes) {
         return;
       }
-      ref.issues = ref.issues.concat(formatIssues(milestone.issues.nodes));
+      const [owner, repo] = res.repository.nameWithOwner.split("/");
+      const id = k(owner, repo, milestone.number);
+      const d = all.get(id) || {
+        ...milestone,
+        id,
+        description: milestone.description || null,
+        dueOn: milestone.dueOn || null,
+        issues: [] as Issue[],
+      };
+      all.set(id, {
+        ...d,
+        issues: d.issues.concat(formatIssues(milestone.issues.nodes)),
+      });
+
       const { hasNextPage, endCursor } = milestone.issues.pageInfo || {};
       if (hasNextPage && endCursor) {
         q.add(() =>
