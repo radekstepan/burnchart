@@ -8,9 +8,42 @@ import {
   type GetMilestoneIssuesQuery,
 } from "../__generated/graphql";
 
-export type Job = [owner: string, repo: string, milestone?: number];
+const CONCURRENCY = 1;
+const API_URL = "https://api.github.com/graphql";
 
 const k = (...args: any[]) => args.join("/");
+
+type Nodes =
+  | ({
+      id: string;
+      closedAt?: string;
+      labels?:
+        | {
+            nodes?:
+              | ({
+                  name: string;
+                } | null)[]
+              | null
+              | undefined;
+          }
+        | null
+        | undefined;
+    } | null)[]
+  | null
+  | undefined;
+
+const formatIssues = (nodes: Nodes) =>
+  (nodes || []).flatMap((d) =>
+    d
+      ? {
+          ...d,
+          closedAt: d.closedAt || null,
+          labels: (d.labels?.nodes || []).flatMap((l) => (l ? l.name : [])),
+        }
+      : []
+  );
+
+export type Job = [owner: string, repo: string, milestone?: number];
 
 // TODO run all jobs/repos.
 const getIssues = (
@@ -19,9 +52,9 @@ const getIssues = (
   cb: (err: Error | null, res: Map<string, Milestone>) => void
 ) => {
   let exited = false;
-  const q = new PQueue({ concurrency: 1 });
+  const q = new PQueue({ concurrency: CONCURRENCY });
   const abortController = new AbortController();
-  const client = new GraphQLClient("https://api.github.com/graphql", {
+  const client = new GraphQLClient(API_URL, {
     signal: abortController.signal,
     headers: {
       authorization: `token ${token}`,
@@ -52,18 +85,7 @@ const getIssues = (
             id,
             description: milestone.description || null,
             dueOn: milestone.dueOn || null,
-            // TODO reuse
-            issues: (milestone.issues.nodes || []).flatMap((d) =>
-              d
-                ? {
-                    ...d,
-                    closedAt: d.closedAt || null,
-                    labels: (d.labels?.nodes || []).flatMap((l) =>
-                      l ? l.name : []
-                    ),
-                  }
-                : []
-            ),
+            issues: formatIssues(milestone.issues.nodes),
           });
           const { hasNextPage, endCursor } = milestone.issues.pageInfo || {};
           if (hasNextPage && endCursor) {
@@ -90,20 +112,7 @@ const getIssues = (
       if (!ref || !milestone.issues.nodes) {
         return;
       }
-      // TODO reuse
-      ref.issues = ref.issues.concat(
-        (milestone.issues.nodes || []).flatMap((d) =>
-          d
-            ? {
-                ...d,
-                closedAt: d.closedAt || null,
-                labels: (d.labels?.nodes || []).flatMap((l) =>
-                  l ? l.name : []
-                ),
-              }
-            : []
-        )
-      );
+      ref.issues = ref.issues.concat(formatIssues(milestone.issues.nodes));
       const { hasNextPage, endCursor } = milestone.issues.pageInfo || {};
       if (hasNextPage && endCursor) {
         q.add(() =>

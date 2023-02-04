@@ -23,8 +23,10 @@ export default graphql(`#graphql
           description
           createdAt
           dueOn
-          # TODO sort by closedAt
-          issues(first: 10) {
+          issues(
+            first: 10
+            orderBy: { field: UPDATED_AT, direction: ASC }
+          ) {
             pageInfo {
               endCursor
               hasNextPage
@@ -34,7 +36,6 @@ export default graphql(`#graphql
               closedAt
               labels(first: 10) {
                 nodes {
-                  id
                   name
                 }
               }

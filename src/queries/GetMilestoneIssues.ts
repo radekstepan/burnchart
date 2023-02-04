@@ -20,10 +20,10 @@ export default graphql(`#graphql
         description
         createdAt
         dueOn
-        # TODO sort by closedAt
         issues(
           after: $cursor
           first: 10
+          orderBy: { field: UPDATED_AT, direction: ASC }
         ) {
           pageInfo {
             endCursor
@@ -34,7 +34,6 @@ export default graphql(`#graphql
             closedAt
             labels(first: 10) {
               nodes {
-                id
                 name
               }
             }
