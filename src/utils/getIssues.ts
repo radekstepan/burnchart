@@ -85,6 +85,8 @@ const getIssues = (
           all.set(id, {
             ...milestone,
             id,
+            owner,
+            repo,
             description: milestone.description || null,
             dueOn: milestone.dueOn || null,
             issues: formatIssues(milestone.issues.nodes),
@@ -117,6 +119,8 @@ const getIssues = (
       const d = all.get(id) || {
         ...milestone,
         id,
+        owner,
+        repo,
         description: milestone.description || null,
         dueOn: milestone.dueOn || null,
         issues: [] as Issue[],

@@ -1,5 +1,7 @@
 export interface Milestone {
   id: string;
+  owner: string;
+  repo: string;
   title: string;
   description: string | null;
   createdAt: string;
@@ -13,13 +15,19 @@ export interface Issue {
 }
 
 export interface Stats {
+  // How many days is 1% of the time until now?
   days: number;
+  // The number of days from start to now.
   span: number;
-  isOverdue: boolean;
-  isOnTime: boolean;
   progress: {
     points: number;
     time: number;
+  };
+  meta: {
+    isDone: boolean;
+    isOnTime: boolean;
+    isOverdue: boolean;
+    isEmpty: boolean;
   };
 }
 

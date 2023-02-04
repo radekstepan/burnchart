@@ -9,27 +9,40 @@ import useIssues from "../hooks/useIssues";
 function Repos() {
   const [repos] = useReposStore();
 
-  useIssues(repos?.map(({ owner, repo }) => [owner, repo]) || null);
+  // TODO sort order
+  const { error, loading, data } = useIssues(
+    repos?.map(({ owner, repo }) => [owner, repo]) || null
+  );
 
-  return null;
+  if (!repos?.length) {
+    // TODO show a hero banner
+    return null;
+  }
 
-  // return (
-  //   <Pane flex={1} display="flex">
-  //     <Table width="100%">
-  //       <Table.Body>
-  //         {milestones.map((d) => (
-  //           <Table.Row key={d.node_id}>
-  //             <Table.TextCell>
-  //               {d.owner}/{d.repo}
-  //             </Table.TextCell>
-  //             <Table.TextCell>{d.title}</Table.TextCell>
-  //             {/**<Table.TextCell><ProgressBar milestone={d} /></Table.TextCell>*/}
-  //           </Table.Row>
-  //         ))}
-  //       </Table.Body>
-  //     </Table>
-  //   </Pane>
-  // );
+  if (error || loading) {
+    // TODO
+    return null;
+  }
+
+  console.log(data);
+
+  return (
+    <Pane flex={1} display="flex">
+      <Table width="100%">
+        <Table.Body>
+          {data.map((d) => (
+            <Table.Row key={d.id}>
+              <Table.TextCell>
+                {d.owner}/{d.repo}
+              </Table.TextCell>
+              <Table.TextCell>{d.title}</Table.TextCell>
+              {/**<Table.TextCell><ProgressBar milestone={d} /></Table.TextCell>*/}
+            </Table.Row>
+          ))}
+        </Table.Body>
+      </Table>
+    </Pane>
+  );
 }
 
 export default Repos;

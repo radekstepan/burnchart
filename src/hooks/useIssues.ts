@@ -6,6 +6,7 @@ import getIssues, { Job } from "../utils/getIssues";
 import k from "../utils/keys";
 import { useTokenStore } from "./useStore";
 import * as map from "../utils/map";
+import addStats from "../utils/addStats";
 
 const store = new Map<string, Milestone>();
 
@@ -56,10 +57,14 @@ const useIssues = (ask: Job[] | null) => {
       if (res) {
         // Save the data.
         for (const [key, milestone] of res) {
-          store.set(key, {
-            ...milestone,
-            issues: sortOn(milestone.issues, "closedAt"),
-          });
+          const sorted = sortOn(milestone.issues, "closedAt");
+          store.set(
+            key,
+            addStats({
+              ...milestone,
+              issues: sorted,
+            })
+          );
         }
 
         // Populate the result.
