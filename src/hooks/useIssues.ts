@@ -1,21 +1,21 @@
 import { useState } from "react";
 import { useDeepCompareEffect } from "react-use";
 import sortOn from "sort-on";
-import { Milestone } from "../interfaces";
+import { Milestone, WithStats } from "../interfaces";
 import getIssues, { Job } from "../utils/getIssues";
 import k from "../utils/keys";
 import { useTokenStore } from "./useStore";
 import * as map from "../utils/map";
 import addStats from "../utils/addStats";
 
-const store = new Map<string, Milestone>();
+const store = new Map<string, WithStats<Milestone>>();
 
 const useIssues = (ask: Job[] | null) => {
   const [token] = useTokenStore();
   const [state, setState] = useState<{
     error: Error | null;
     loading: boolean;
-    data: Milestone[];
+    data: WithStats<Milestone>[];
   }>({ error: null, loading: false, data: [] });
 
   useDeepCompareEffect(() => {
@@ -68,7 +68,7 @@ const useIssues = (ask: Job[] | null) => {
         }
 
         // Populate the result.
-        const data: Milestone[] = [];
+        const data: WithStats<Milestone>[] = [];
         for (const [owner, repo, milestone] of ask) {
           if (milestone !== undefined) {
             const key = k(owner, repo, milestone);
