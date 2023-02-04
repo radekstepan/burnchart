@@ -7,69 +7,96 @@ import k from "../utils/keys";
 import { useTokenStore } from "./useStore";
 import * as map from "../utils/map";
 
-const data = new Map<string, Milestone>();
+const store = new Map<string, Milestone>();
 
-const useIssues = (jobs: Job[] | null) => {
+const useIssues = (ask: Job[] | null) => {
   const [token] = useTokenStore();
   const [state, setState] = useState<{
     error: Error | null;
     loading: boolean;
-  }>({ error: null, loading: false });
+    data: Milestone[];
+  }>({ error: null, loading: false, data: [] });
 
   useDeepCompareEffect(() => {
-    if (!jobs || !token) {
+    if (!ask || !token) {
       return;
     }
 
-    setState({ error: null, loading: true });
+    const jobs: Job[] = [];
+    for (const job of ask) {
+      const [owner, repo, milestone] = job;
+      if (milestone !== undefined) {
+        const key = k(owner, repo, milestone);
+        const d = map.get(store, key);
+        if (!d) {
+          jobs.push(job);
+        }
+        continue;
+      }
+
+      const key = new RegExp(`^${owner}\/${repo}`);
+      const d = map.get(store, key);
+      if (!d.length) {
+        jobs.push(job);
+      }
+    }
+
+    setState({ error: null, loading: true, data: [] });
 
     let exited = false;
 
     const cancel = getIssues(token, jobs, (error, res) => {
+      console.log("here", error, res);
       if (exited) {
         return;
       }
+      if (error) {
+        setState({ error, loading: false, data: [] });
+        return;
+      }
       if (res) {
+        // Save the data.
         for (const [key, milestone] of res) {
-          data.set(key, {
+          store.set(key, {
             ...milestone,
             issues: sortOn(milestone.issues, "closedAt"),
           });
         }
+
+        // Populate the result.
+        const data: Milestone[] = [];
+        for (const [owner, repo, milestone] of ask) {
+          if (milestone !== undefined) {
+            const key = k(owner, repo, milestone);
+            const d = map.get(store, key);
+            if (!d) {
+              // TODO should not happen
+              continue;
+            }
+            data.push(d);
+            continue;
+          }
+
+          const key = new RegExp(`^${owner}\/${repo}`);
+          const d = map.get(store, key);
+          if (!d.length) {
+            // TODO should not happen
+            continue;
+          }
+          data.push(...d);
+        }
+
+        setState({ error, loading: false, data });
       }
-      setState({ error, loading: false });
     });
 
     return () => {
       exited = false;
       cancel();
     };
-  }, [token, jobs]);
+  }, [token, ask]);
 
-  return useMemo(() => {
-    const issues: Milestone[] = [];
-
-    if (jobs && !state.loading && !state.error) {
-      for (const [owner, repo, milestone] of jobs) {
-        if (milestone !== undefined) {
-          const key = k(owner, repo, milestone);
-          const d = map.get(data, key);
-          if (d) {
-            issues.push(d);
-          }
-        } else {
-          const key = new RegExp(`^${owner}\/${repo}`);
-          const d = map.get(data, key);
-          issues.push(...d);
-        }
-      }
-    }
-
-    return {
-      ...state,
-      issues,
-    };
-  }, [state.error, state.loading]);
+  return state;
 };
 
 export default useIssues;

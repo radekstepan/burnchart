@@ -143,6 +143,12 @@ const getIssues = (
     }
   });
 
+  // Nothing to do, early return.
+  if (!jobs.length) {
+    onExit();
+    cb(null, all);
+  }
+
   for (const [owner, repo, milestone] of jobs) {
     if (milestone !== undefined) {
       q.add(() =>
