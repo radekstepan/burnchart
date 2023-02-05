@@ -24,9 +24,7 @@ function Repos() {
     }
   }, [sortOrder]);
 
-  const sorted = useMemo(() => {
-    return sortBy(data, sortOrder);
-  }, [data, sortOrder]); // TODO always a new object
+  const sorted = useMemo(() => sortBy(data, sortOrder), [data, sortOrder]);
 
   if (!repos?.length) {
     // TODO show a hero banner

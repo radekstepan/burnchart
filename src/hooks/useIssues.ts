@@ -10,13 +10,19 @@ import addStats from "../utils/addStats";
 
 const store = new Map<string, WithStats<Milestone>>();
 
+const defaultState = {
+  error: null,
+  loading: false,
+  data: [],
+};
+
 const useIssues = (ask: Job[] | null) => {
   const [token] = useTokenStore();
   const [state, setState] = useState<{
     error: Error | null;
     loading: boolean;
     data: WithStats<Milestone>[];
-  }>({ error: null, loading: false, data: [] });
+  }>(defaultState);
 
   useDeepCompareEffect(() => {
     if (!ask || !token) {
@@ -42,7 +48,7 @@ const useIssues = (ask: Job[] | null) => {
       }
     }
 
-    setState({ error: null, loading: true, data: [] });
+    setState({ error: null, loading: true, data: defaultState.data });
 
     let exited = false;
 
@@ -51,7 +57,7 @@ const useIssues = (ask: Job[] | null) => {
         return;
       }
       if (error) {
-        setState({ error, loading: false, data: [] });
+        setState({ error, loading: false, data: defaultState.data });
         return;
       }
       if (res) {
