@@ -1,10 +1,4 @@
-import { useEffect, useMemo } from "react";
-import {
-  writeStorage,
-  deleteFromStorage,
-  useLocalStorage,
-} from "@rehooks/local-storage";
-import { AuthCredential } from "@firebase/auth";
+import { useLocalStorage } from "@rehooks/local-storage";
 
 interface Repo {
   owner: string;
@@ -19,16 +13,6 @@ const isRepo = (obj: unknown): obj is Repo =>
   "repo" in obj &&
   typeof obj["repo"] === "string";
 
-export const useReposStore = () => {
-  return useLocalStorage<Repo[]>("repos");
-
-  // useEffect(() => {
-  //   if (!repos) {
-  //     setRepos([{owner: 'rails', repo: 'rails'}]);
-  //   }
-  // }, [repos]);
-
-  // return repos;
-};
+export const useReposStore = () => useLocalStorage<Repo[]>("repos");
 
 export const useTokenStore = () => useLocalStorage<string>("token");

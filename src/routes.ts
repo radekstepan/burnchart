@@ -17,13 +17,13 @@ const routes: Oatmilk.IRoute[] = [
   },
   {
     name: "milestones",
-    path: "/:org/:repo",
+    path: "/:owner/:repo",
     // view: React.lazy(() => import("./pages/Milestones")),
     view: Milestones,
   },
   {
     name: "milestone",
-    path: "/:org/:repo/:id",
+    path: "/:owner/:repo/:milestone",
     view: React.lazy(() => import("./pages/Milestone")),
   },
   {
