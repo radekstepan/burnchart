@@ -58,7 +58,7 @@ const addStats = (milestone: Milestone): WithStats<Milestone> => {
       ...milestone,
       stats: {
         meta,
-        days: 0,
+        days: 1e3,
         // The number of days from start to now.
         span: b.diff(a, "days"),
         progress: { points, time: 0 },
