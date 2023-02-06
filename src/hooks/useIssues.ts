@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useDeepCompareEffect } from "react-use";
-import sortOn from "sort-on";
 import { Milestone, WithStats } from "../interfaces";
 import getIssues, { Job } from "../utils/getIssues";
 import k from "../utils/keys";
@@ -63,14 +62,7 @@ const useIssues = (ask: Job[] | null) => {
       if (res) {
         // Save the data.
         for (const [key, milestone] of res) {
-          const sorted = sortOn(milestone.issues, "closedAt");
-          store.set(
-            key,
-            addStats({
-              ...milestone,
-              issues: sorted,
-            })
-          );
+          store.set(key, addStats(milestone));
         }
 
         // Populate the result.

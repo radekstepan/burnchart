@@ -24,7 +24,7 @@ export default graphql(`#graphql
           createdAt
           dueOn
           issues(
-            first: 10
+            first: 50
             orderBy: { field: UPDATED_AT, direction: ASC }
           ) {
             pageInfo {

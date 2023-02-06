@@ -1,22 +1,21 @@
 import React, { useCallback, useMemo, useState } from "react";
 import { Pane, Heading, Text, Strong, Table as UITable } from "evergreen-ui";
 import ProgressBar from "./ProgressBar";
+import Link from "./Link";
 import useIssues from "../hooks/useIssues";
 import { sortBy, SortBy } from "../utils/sort";
-import { Job } from "../utils/getIssues";
 import "./table.less";
-import Link from "./Link";
 
 const sortFns = [SortBy.priority, SortBy.name, SortBy.progress];
 
-interface Props {
+type UseIssues = ReturnType<typeof useIssues>;
+
+interface Props extends UseIssues {
   heading: string;
-  jobs: Job[];
 }
 
-const Table: React.FC<Props> = ({ heading, jobs }) => {
+const Table: React.FC<Props> = ({ heading, error, loading, data }) => {
   const [sortOrder, setSortOrder] = useState<SortBy>(SortBy.priority);
-  const { error, loading, data } = useIssues(jobs);
 
   const onSort = useCallback(() => {
     const i = 1 + sortFns.indexOf(sortOrder);
@@ -39,7 +38,7 @@ const Table: React.FC<Props> = ({ heading, jobs }) => {
       <Pane display="flex" flex={1}>
         <Heading size={600}>{heading}</Heading>
         <Pane flexGrow={1} className="sort" onClick={onSort}>
-          Sorted by {sortOrder}
+          <Text size={300}>Sorted by {sortOrder}</Text>
         </Pane>
       </Pane>
       <UITable width="100%">

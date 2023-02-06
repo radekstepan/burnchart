@@ -31,4 +31,20 @@ export interface Stats {
   };
 }
 
-export type WithStats<T> = T & { stats: Stats };
+export type WithSize<T extends Issue> = T & {
+  size: number;
+};
+
+export type WithStats<T extends Milestone> = Omit<T, "issues"> & {
+  issues: {
+    open: {
+      size: number;
+      nodes: WithSize<T["issues"][number]>[];
+    };
+    closed: {
+      size: number;
+      nodes: WithSize<T["issues"][number]>[];
+    };
+  };
+  stats: Stats;
+};

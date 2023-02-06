@@ -65,6 +65,7 @@ const FirebaseProvider: React.FC<Props> = ({ children }) => {
     signIn();
   }, [user, token]);
 
+  // TODO fix popup closed by user error
   const value = useMemo(
     () => ({
       user,

@@ -1,6 +1,7 @@
 import moment from "moment";
-import { Milestone, WithStats } from "../interfaces";
-import { size } from "./issues";
+import sortOn from "sort-on";
+import config from "../config";
+import { Issue, Milestone, WithSize, WithStats } from "../interfaces";
 
 // Progress in %.
 let progress = (a: number, b: number) => {
@@ -10,8 +11,44 @@ let progress = (a: number, b: number) => {
   return 100 * (a / (b + a));
 };
 
+// Get an issue size.
+const calc = (issue: Issue) => {
+  switch (config.chart.points) {
+    // Sum of the labels (numbers).
+    case "LABELS":
+      return issue.labels.reduce((sum, label) => {
+        let matches;
+        if (!(matches = label.match(config.chart.size_label))) {
+          return sum;
+        }
+        return (sum += parseInt(matches[1], 10));
+      }, 0);
+
+    case "ONE_SIZE":
+    default:
+      return 1;
+  }
+};
+
 // Calculate the stats for a milestone.
 const addStats = (milestone: Milestone): WithStats<Milestone> => {
+  // Sort the issues and add their size.
+  const sorted = sortOn(milestone.issues, "closedAt");
+  const i = sorted.findIndex((d) => !d.closedAt);
+  const [closed, open] = [sorted.slice(0, i), sorted.slice(i)].map((issues) => {
+    const [size, nodes] = issues.reduce(
+      (acc, issue) => {
+        const $size = calc(issue);
+        return [acc[0] + $size, acc[1].concat([{ ...issue, size: $size }])];
+      },
+      [0, [] as WithSize<Issue>[]]
+    );
+
+    return { nodes, size };
+  });
+
+  // Progress in points.
+
   let points = 0;
 
   const meta = {
@@ -21,25 +58,17 @@ const addStats = (milestone: Milestone): WithStats<Milestone> => {
     isEmpty: true,
   };
 
-  // Progress in points.
-  const [closedSize, openSize] = milestone.issues.reduce(
-    (acc, issue) =>
-      issue.closedAt
-        ? [acc[0] + size(issue), acc[1]]
-        : [acc[0], acc[1] + size(issue)],
-    [0, 0]
-  );
-
-  if (closedSize) {
+  if (closed.size) {
     meta.isEmpty = false;
-    if (closedSize + openSize > 0) {
-      points = progress(closedSize, openSize);
+    if (closed.size + open.size > 0) {
+      points = progress(closed.size, open.size);
       if (points === 100) {
         meta.isDone = true;
       }
     }
 
     // Check that milestone hasn't been created after issue close; #100.
+    // TODO refactor using sorted
     milestone.createdAt = milestone.issues.reduce(
       (min, { closedAt }) =>
         closedAt ? (min > closedAt ? closedAt : min) : min,
@@ -56,6 +85,7 @@ const addStats = (milestone: Milestone): WithStats<Milestone> => {
     const span = b.diff(a, "days");
     return {
       ...milestone,
+      issues: { open, closed },
       stats: {
         meta,
         days: 1e3,
@@ -88,6 +118,7 @@ const addStats = (milestone: Milestone): WithStats<Milestone> => {
 
   return {
     ...milestone,
+    issues: { open, closed },
     stats: {
       meta,
       days,

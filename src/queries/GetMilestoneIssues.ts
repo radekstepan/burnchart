@@ -22,7 +22,7 @@ export default graphql(`#graphql
         dueOn
         issues(
           after: $cursor
-          first: 10
+          first: 50
           orderBy: { field: UPDATED_AT, direction: ASC }
         ) {
           pageInfo {

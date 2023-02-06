@@ -1,19 +1,23 @@
 import React, { useMemo } from "react";
 import { Pane } from "evergreen-ui";
-import { useReposStore } from "../hooks/useStore";
 import Table from "../components/Table";
+import { useReposStore } from "../hooks/useStore";
+import useIssues from "../hooks/useIssues";
+import { Job } from "../utils/getIssues";
 
 function Repos() {
   const [repos] = useReposStore();
 
-  const jobs = useMemo(
+  const jobs = useMemo<Job[] | null>(
     () => repos?.map((d) => [d.owner, d.repo]) || null,
     [repos]
   );
 
+  const res = useIssues(jobs);
+
   return (
     <Pane flex={1}>
-      <Table heading="Projects" jobs={jobs} />
+      <Table heading="Projects" {...res} />
     </Pane>
   );
 }
