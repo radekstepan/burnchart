@@ -7,29 +7,50 @@ import React, {
 } from "react";
 import { Link as UILink } from "evergreen-ui";
 import { useOatmilk } from "oatmilk";
+import "./link.less";
+import { cls } from "../utils/css";
 
 interface Props {
-  routeName: string;
+  routeName?: string;
   state?: { [key: string]: string };
+  onClick?: (evt: unknown) => void;
   children: ReactNode;
+  [key: string]: unknown;
 }
 
-const Link: React.FC<Props> = ({ routeName, state, children, ...rest }) => {
+const Link: React.FC<Props> = ({
+  routeName,
+  state,
+  onClick,
+  children,
+  className,
+  ...rest
+}) => {
   const { getHref, goTo } = useOatmilk();
 
-  const onClick = useCallback(
+  const $onClick = useCallback(
+    // TODO type
     (evt: any) => {
-      // TODO type
       evt.preventDefault();
-      goTo(routeName, state);
+      if (routeName) {
+        goTo(routeName, state);
+      }
+      if (onClick) {
+        onClick(evt);
+      }
     },
-    [goTo]
+    [goTo, onClick]
   );
 
   return (
-    <UILink href={getHref(routeName, state)} onClick={onClick} {...rest}>
+    <a
+      className={cls("link", className)}
+      href={routeName ? getHref(routeName, state) : undefined}
+      onClick={$onClick}
+      {...rest}
+    >
       {children}
-    </UILink>
+    </a>
   );
 };
 

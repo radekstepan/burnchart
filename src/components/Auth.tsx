@@ -1,7 +1,8 @@
 import React, { memo, useContext, useEffect, useState } from "react";
-import { Button, Link, Pane, Spinner, Text } from "evergreen-ui";
+import { Button, Pane, Spinner, Text } from "evergreen-ui";
 import { FirebaseContext } from "../providers/FirebaseProvider";
 import Icon from "./Icon";
+import Link from "./Link";
 import useFirebase from "../hooks/useFirebase";
 import { useTokenStore } from "../hooks/useStore";
 
@@ -11,11 +12,9 @@ function Auth() {
 
   if (user) {
     return (
-      <Text onClick={signOut}>
-        <Icon name="signout" />
-        Sign Out
-        {user.displayName}
-      </Text>
+      <Link onClick={signOut}>
+        <Icon name="signout" /> Sign Out {user.displayName}
+      </Link>
     );
   }
 

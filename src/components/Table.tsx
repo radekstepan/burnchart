@@ -5,6 +5,7 @@ import Link from "./Link";
 import useIssues from "../hooks/useIssues";
 import { sortBy, SortBy } from "../utils/sort";
 import "./table.less";
+import Icon from "./Icon";
 
 const sortFns = [SortBy.priority, SortBy.name, SortBy.progress];
 
@@ -37,32 +38,29 @@ const Table: React.FC<Props> = ({ heading, error, loading, data }) => {
     <div className="table">
       <Pane display="flex" flex={1}>
         <Heading size={600}>{heading}</Heading>
-        <Pane flexGrow={1} className="sort" onClick={onSort}>
-          <Text size={300}>Sorted by {sortOrder}</Text>
+        <Pane flexGrow={1} className="sort">
+          <Link onClick={onSort}>
+            <Icon name="sort" /> Sorted by {sortOrder}
+          </Link>
         </Pane>
       </Pane>
       <UITable width="100%">
         <UITable.Body>
           {sorted.map((d) => (
             <UITable.Row key={d.id}>
-              <UITable.TextCell>
+              <UITable.Cell>
                 <Link
+                  className="strong"
                   routeName="milestones"
                   state={{ owner: d.owner, repo: d.repo }}
                 >
-                  <Strong size={300}>
-                    {d.owner}/{d.repo}
-                  </Strong>
+                  {d.owner}/{d.repo}
                 </Link>
-              </UITable.TextCell>
-              <UITable.TextCell>
-                <Text size={300} color="gray600">
-                  {d.title}
-                </Text>
-              </UITable.TextCell>
-              <UITable.TextCell>
+              </UITable.Cell>
+              <UITable.Cell>{d.title}</UITable.Cell>
+              <UITable.Cell>
                 <ProgressBar milestone={d} />
-              </UITable.TextCell>
+              </UITable.Cell>
             </UITable.Row>
           ))}
         </UITable.Body>

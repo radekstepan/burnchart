@@ -15,9 +15,11 @@ function Header() {
           <Icon name="fire" />
         </Link>
         <Link routeName="addRepo">
-          <Text>Add a Repo</Text>
+          <Icon name="plus" /> Add a Repo
         </Link>
-        <Text>See Examples</Text>
+        <Link>
+          <Icon name="computer" /> See Examples
+        </Link>
       </Pane>
       <Pane>
         <Auth />

@@ -19,6 +19,7 @@ const Chart: React.FC<Props> = ({ milestone }) => {
     chart: {
       type: "line",
       height: 350,
+      fontFamily: "MuseoSans500Regular, sans-serif",
       zoom: {
         enabled: false,
       },
