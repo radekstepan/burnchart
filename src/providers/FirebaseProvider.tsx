@@ -85,6 +85,7 @@ const FirebaseProvider: React.FC<Props> = ({ children }) => {
         setUser(res.user.providerData[0]);
       },
       signOut: async () => {
+        deleteToken();
         setUser(null);
         await signOut(auth);
       },

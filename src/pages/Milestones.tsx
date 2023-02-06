@@ -20,7 +20,7 @@ function Milestones() {
   return (
     <Pane flex={1}>
       {!!data.length && <Chart milestone={data[0]} />}
-      <Table heading="Projects" {...res} />
+      <Table heading="Milestones" {...res} />
     </Pane>
   );
 }

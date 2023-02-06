@@ -37,7 +37,7 @@ const Table: React.FC<Props> = ({ heading, error, loading, data }) => {
   return (
     <div className="table">
       <Pane display="flex" flex={1}>
-        <Heading size={600}>{heading}</Heading>
+        <div className="heading">{heading}</div>
         <Pane flexGrow={1} className="sort">
           <Link onClick={onSort}>
             <Icon name="sort" /> Sorted by {sortOrder}
@@ -47,7 +47,7 @@ const Table: React.FC<Props> = ({ heading, error, loading, data }) => {
       <UITable width="100%">
         <UITable.Body>
           {sorted.map((d) => (
-            <UITable.Row key={d.id}>
+            <UITable.Row key={d.id} justifyContent="space-between">
               <UITable.Cell>
                 <Link
                   className="strong"

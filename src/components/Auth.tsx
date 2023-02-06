@@ -25,7 +25,7 @@ function Auth() {
 
   return (
     <Button appearance="primary" onClick={signIn}>
-      Sign In
+      <Icon name="github" /> &nbsp; Sign In
     </Button>
   );
 }
