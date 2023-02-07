@@ -1,7 +1,7 @@
 import * as d3 from "d3";
 import moment from "moment";
 import config from "../config";
-import { Issue, WithSize } from "../interfaces";
+import { ChartD, Issue, WithSize } from "../interfaces";
 
 // A graph of closed issues.
 // `issues`:     closed issues list
@@ -11,42 +11,23 @@ export const actual = (
   issues: WithSize<Issue>[],
   createdAt: string,
   total: number
-) => {
-  let min: number, max: number;
-  const head = [
+): ChartD[] =>
+  [
     {
-      date: moment(createdAt, moment.ISO_8601).toJSON(),
-      points: total,
+      x: createdAt,
+      y: total,
     },
-  ];
-
-  (min = +Infinity), (max = -Infinity);
-
-  // Generate the actual closes.
-  const rest = issues.map((issue) => {
-    const { size, closedAt } = issue;
-    // Determine the range.
-    if (size < min) min = size;
-    if (size > max) max = size;
-
-    return {
-      ...issue,
-      // Dropping points remaining.
-      date: moment(closedAt, moment.ISO_8601).toJSON(),
-      points: (total -= size),
-    };
-  });
-
-  // Now add a radius in a range (will be used for a circle).
-  const range = d3.scaleLinear().domain([min, max]).range([5, 8]);
-
-  return head.concat(
-    rest.map((issue) => ({
-      ...issue,
-      radius: range(issue.size),
+  ].concat(
+    issues.map((issue) => ({
+      x: issue.closedAt!,
+      y: (total -= issue.size),
+      meta: {
+        number: issue.number,
+        title: issue.title,
+        url: issue.url,
+      },
     }))
   );
-};
 
 // A graph of an ideal progression..
 // `a`:     milestone start date

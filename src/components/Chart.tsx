@@ -2,6 +2,7 @@ import React from "react";
 import ApexChart from "react-apexcharts";
 import { ApexOptions } from "apexcharts";
 import { Milestone, WithStats } from "../interfaces";
+import * as lines from "../utils/lines";
 import "./chart.less";
 
 interface Props {
@@ -14,6 +15,17 @@ const Chart: React.FC<Props> = ({ milestone }) => {
   if (isEmpty) {
     return null;
   }
+
+  const actual = {
+    name: "actual",
+    data: lines.actual(
+      milestone.issues.closed.nodes,
+      milestone.createdAt,
+      milestone.issues.closed.size
+    ),
+  };
+
+  const series = [actual];
 
   const options: ApexOptions = {
     chart: {
@@ -71,26 +83,22 @@ const Chart: React.FC<Props> = ({ milestone }) => {
       show: false,
     },
     tooltip: {
-      custom: ({ series, seriesIndex, dataPointIndex, w }) =>
-        `<a class="tooltip">
-          #${dataPointIndex}: Reticulate splines on Rails:ActiveIndex
-          </a>
-        `,
+      custom: ({ dataPointIndex }) => {
+        const { meta } = actual.data[dataPointIndex];
+        // TODO do not render the start of the chart
+        if (meta) {
+          // TODO truncate long text
+          return `<a class="tooltip" href="${meta.url}" target="${meta.number}">
+            #${meta.number}: ${meta.title}
+            </a>
+          `;
+        }
+      },
     },
     theme: {
       palette: "palette9",
     },
   };
-  const series = [
-    {
-      name: "actual",
-      data: [
-        [1324508400000, 34],
-        [1324594800000, 54],
-        [1326236400000, 43],
-      ],
-    },
-  ];
 
   return <ApexChart className="chart" options={options} series={series} />;
 };

@@ -31,6 +31,9 @@ export default graphql(`#graphql
           }
           nodes {
             id
+            number
+            title
+            url
             closedAt
             labels(first: 10) {
               nodes {

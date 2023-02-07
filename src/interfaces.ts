@@ -10,6 +10,9 @@ export interface Milestone {
 }
 
 export interface Issue {
+  number: number;
+  title: string;
+  url: string;
   closedAt: string | null;
   labels: string[];
 }
@@ -48,3 +51,9 @@ export type WithStats<T extends Milestone> = Omit<T, "issues"> & {
   };
   stats: Stats;
 };
+
+export interface ChartD {
+  x: string; // time
+  y: number; // points
+  meta?: Pick<Issue, "number" | "title" | "url">;
+}
