@@ -15,6 +15,9 @@ const API_URL = "https://api.github.com/graphql";
 type Nodes =
   | ({
       id: string;
+      number: number;
+      title: string;
+      url: string;
       closedAt?: string;
       labels?:
         | {
@@ -42,7 +45,7 @@ const formatIssues = (nodes: Nodes) =>
       : []
   );
 
-export type Job = [owner: string, repo: string, milestone?: number];
+export type Job = [owner: string, repo: string, milestone?: string];
 
 const getIssues = (
   token: string,
@@ -164,8 +167,9 @@ const getIssues = (
     cb(null, all);
   }
 
-  for (const [owner, repo, milestone] of jobs) {
-    if (milestone !== undefined) {
+  for (const [owner, repo, number] of jobs) {
+    const milestone = number && parseInt(number, 10);
+    if (milestone) {
       q.add(() =>
         client.request(GetMilestoneIssues, {
           owner,

@@ -1,4 +1,3 @@
-import * as d3 from "d3";
 import moment from "moment";
 import config from "../config";
 import { ChartD, Issue, WithSize } from "../interfaces";
@@ -24,7 +23,6 @@ export const actual = (
       meta: {
         number: issue.number,
         title: issue.title,
-        url: issue.url,
       },
     }))
   );
@@ -107,7 +105,7 @@ export const trend = (actual, createdAt: string, dueOn: string | null) => {
   values.push([now.diff(start), last.points]);
 
   // http://classroom.synonym.com/calculate-trendline-2709.html
-  const b1 = 0,
+  let b1 = 0,
     e = 0,
     c1 = 0,
     l = values.length;

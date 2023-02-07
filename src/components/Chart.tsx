@@ -21,7 +21,7 @@ const Chart: React.FC<Props> = ({ milestone }) => {
     data: lines.actual(
       milestone.issues.closed.nodes,
       milestone.createdAt,
-      milestone.issues.closed.size
+      milestone.issues.closed.size + milestone.issues.open.size
     ),
   };
 
@@ -55,13 +55,18 @@ const Chart: React.FC<Props> = ({ milestone }) => {
       hover: {
         size: 5,
       },
+      discrete: [
+        {
+          // Hide start of the sprint
+          seriesIndex: 0,
+          dataPointIndex: 0,
+          size: 0,
+        },
+      ],
     },
     yaxis: {
       axisBorder: {
         show: false,
-      },
-      labels: {
-        formatter: (val) => (val / 1000000).toFixed(0),
       },
     },
     xaxis: {
@@ -88,10 +93,7 @@ const Chart: React.FC<Props> = ({ milestone }) => {
         // TODO do not render the start of the chart
         if (meta) {
           // TODO truncate long text
-          return `<a class="tooltip" href="${meta.url}" target="${meta.number}">
-            #${meta.number}: ${meta.title}
-            </a>
-          `;
+          return `<div class="tooltip">#${meta.number}: ${meta.title}</div>`;
         }
       },
     },

@@ -17,9 +17,16 @@ function Milestones() {
   const res = useIssues(jobs);
   const { data } = res;
 
+  if (!data.length) {
+    return null;
+  }
+
   return (
-    <Pane flex={1}>
-      {!!data.length && <Chart milestone={data[0]} />}
+    <Pane flex={1} className="page">
+      <div className="title">
+        {data[0].owner}/{data[0].repo}
+      </div>
+      <Chart milestone={data[0]} />
       <Table heading="Milestones" {...res} />
     </Pane>
   );

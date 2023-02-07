@@ -13,7 +13,7 @@ function Auth() {
   if (user) {
     return (
       <Link onClick={signOut}>
-        <Icon name="signout" /> Sign Out {user.displayName}
+        <Icon name="signout" /> Sign Out
       </Link>
     );
   }

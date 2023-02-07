@@ -2,6 +2,7 @@ export interface Milestone {
   id: string;
   owner: string;
   repo: string;
+  number: number;
   title: string;
   description: string | null;
   createdAt: string;
@@ -12,7 +13,6 @@ export interface Milestone {
 export interface Issue {
   number: number;
   title: string;
-  url: string;
   closedAt: string | null;
   labels: string[];
 }

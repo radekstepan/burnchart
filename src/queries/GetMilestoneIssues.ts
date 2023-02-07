@@ -33,7 +33,6 @@ export default graphql(`#graphql
             id
             number
             title
-            url
             closedAt
             labels(first: 10) {
               nodes {

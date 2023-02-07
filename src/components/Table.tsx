@@ -36,7 +36,7 @@ const Table: React.FC<Props> = ({ heading, error, loading, data }) => {
 
   return (
     <div className="table">
-      <Pane display="flex" flex={1}>
+      <Pane display="flex" flex={1} className="header">
         <div className="heading">{heading}</div>
         <Pane flexGrow={1} className="sort">
           <Link onClick={onSort}>
@@ -57,7 +57,18 @@ const Table: React.FC<Props> = ({ heading, error, loading, data }) => {
                   {d.owner}/{d.repo}
                 </Link>
               </UITable.Cell>
-              <UITable.Cell>{d.title}</UITable.Cell>
+              <UITable.Cell>
+                <Link
+                  routeName="milestone"
+                  state={{
+                    owner: d.owner,
+                    repo: d.repo,
+                    number: "" + d.number,
+                  }}
+                >
+                  {d.title}
+                </Link>
+              </UITable.Cell>
               <UITable.Cell>
                 <ProgressBar milestone={d} />
               </UITable.Cell>

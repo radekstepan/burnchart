@@ -16,7 +16,7 @@ function Repos() {
   const res = useIssues(jobs);
 
   return (
-    <Pane flex={1}>
+    <Pane flex={1} className="page">
       <Table heading="Projects" {...res} />
     </Pane>
   );
