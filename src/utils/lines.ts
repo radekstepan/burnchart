@@ -86,57 +86,66 @@ export const ideal = (a: string, b: string, total: number) => {
 };
 
 // Graph representing a trendling of actual issues.
-export const trend = (actual, createdAt: string, dueOn: string | null) => {
-  if (!actual.length) return [];
+export const trend = (
+  actual: ChartD[],
+  createdAt: string,
+  dueOn: string | null
+): ChartD[] => {
+  if (!actual.length) {
+    return [];
+  }
 
-  const first = actual[0],
-    last = actual[actual.length - 1];
+  const [first] = actual;
+  const last = actual[actual.length - 1];
 
-  const start = moment(first.date, moment.ISO_8601);
+  const start = moment(first.x, moment.ISO_8601);
 
   // Values is a list of time from the start and points remaining.
-  const values = actual.map(({ date, points }) => [
-    moment(date, moment.ISO_8601).diff(start),
-    points,
+  const values = actual.map(({ x, y }) => [
+    moment(x, moment.ISO_8601).diff(start),
+    y,
   ]);
 
   // Now is an actual point too.
   const now = moment.utc();
-  values.push([now.diff(start), last.points]);
+  values.push([now.diff(start), last.y]);
 
   // http://classroom.synonym.com/calculate-trendline-2709.html
   let b1 = 0,
     e = 0,
     c1 = 0,
     l = values.length;
-  const a =
+  let a =
     l *
-    values.reduce((sum, [$a, $b]) => {
-      b1 += $a;
-      e += $b;
+    values.reduce((sum, [a, b]) => {
+      b1 += a;
+      e += b;
       c1 += Math.pow(a, 2);
-      return sum + $a * $b;
+      return sum + a * b;
     }, 0);
 
-  const slope = (a - b1 * e) / (l * c1 - Math.pow(b1, 2));
-  const intercept = (e - slope * b1) / l;
+  let slope = (a - b1 * e) / (l * c1 - Math.pow(b1, 2));
+  let intercept = (e - slope * b1) / l;
+
+  let fn = (x: number) => slope * x + intercept;
 
   // Milestone always has a creation date.
   const $createdAt = moment(createdAt, moment.ISO_8601);
 
-  // Due date specified.
   let $dueOn = now;
+  // Due date specified.
   if (dueOn) {
     $dueOn = moment(dueOn, moment.ISO_8601);
     // In the past?
     if (now > $dueOn) $dueOn = now;
+    // No due date
   }
 
-  const $$a = $createdAt.diff(start);
-  const b = $dueOn.diff(start);
+  a = $createdAt.diff(start);
+  let b = $dueOn.diff(start);
 
   return [
-    { date: $createdAt.toJSON(), points: slope * a + intercept },
-    { date: $dueOn.toJSON(), points: slope * b + intercept },
+    { x: $createdAt.toJSON(), y: fn(a) },
+    { x: $dueOn.toJSON(), y: fn(b) },
   ];
 };

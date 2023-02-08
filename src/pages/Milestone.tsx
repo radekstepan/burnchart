@@ -4,6 +4,7 @@ import { useOatmilk } from "oatmilk";
 import Chart from "../components/Chart";
 import useIssues from "../hooks/useIssues";
 import { Job } from "../utils/getIssues";
+import addStats from "../utils/addStats";
 
 function Milestone() {
   const oatmilk = useOatmilk();
@@ -16,14 +17,22 @@ function Milestone() {
   const res = useIssues(jobs);
   const { data } = res;
 
-  if (!data.length) {
+  const milestone = useMemo(() => {
+    if (!data.length) {
+      return null;
+    }
+    return addStats(data[0]);
+    // All the data arrive at the same time.
+  }, [data.length]);
+
+  if (!milestone) {
     return null;
   }
 
   return (
     <Pane flex={1} className="page">
-      <div className="title">Milestone {data[0].title}</div>
-      <Chart milestone={data[0]} />
+      <div className="title">Milestone {milestone.title}</div>
+      <Chart milestone={milestone} />
     </Pane>
   );
 }

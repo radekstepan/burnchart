@@ -25,7 +25,13 @@ const Chart: React.FC<Props> = ({ milestone }) => {
     ),
   };
 
-  const series = [actual];
+  const series = [
+    actual,
+    {
+      name: "trend",
+      data: lines.trend(actual.data, milestone.createdAt, milestone.dueOn),
+    },
+  ];
 
   const options: ApexOptions = {
     chart: {
@@ -41,11 +47,6 @@ const Chart: React.FC<Props> = ({ milestone }) => {
       animations: {
         enabled: false,
       },
-      events: {
-        markerClick(e, chart, options) {
-          console.log(e, chart, options);
-        },
-      },
     },
     dataLabels: {
       enabled: false,
@@ -55,27 +56,23 @@ const Chart: React.FC<Props> = ({ milestone }) => {
       hover: {
         size: 5,
       },
-      discrete: [
-        {
-          // Hide start of the sprint
-          seriesIndex: 0,
-          dataPointIndex: 0,
-          size: 0,
-        },
-      ],
     },
     yaxis: {
       axisBorder: {
         show: false,
       },
+      labels: {
+        // TODO use rounding?
+        formatter: (val, opts) => val.toFixed(0),
+      },
     },
     xaxis: {
       type: "datetime",
+      crosshairs: {
+        show: true,
+      },
       axisBorder: {
         show: false,
-      },
-      axisTicks: {
-        color: "",
       },
       tooltip: {
         enabled: false,

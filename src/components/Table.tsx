@@ -1,9 +1,10 @@
 import React, { useCallback, useMemo, useState } from "react";
-import { Pane, Heading, Text, Strong, Table as UITable } from "evergreen-ui";
+import { Pane, Table as UITable } from "evergreen-ui";
 import ProgressBar from "./ProgressBar";
 import Link from "./Link";
 import useIssues from "../hooks/useIssues";
 import { sortBy, SortBy } from "../utils/sort";
+import addStats from "../utils/addStats";
 import "./table.less";
 import Icon from "./Icon";
 
@@ -27,7 +28,11 @@ const Table: React.FC<Props> = ({ heading, error, loading, data }) => {
     }
   }, [sortOrder]);
 
-  const sorted = useMemo(() => sortBy(data, sortOrder), [data, sortOrder]);
+  const withStats = useMemo(() => data.map(addStats), [data]);
+  const sorted = useMemo(
+    () => sortBy(withStats, sortOrder),
+    [withStats, sortOrder]
+  );
 
   if (error || loading) {
     // TODO
