@@ -4,6 +4,7 @@
   "browserslist": "> 0.5%, last 2 versions, not dead",
   "scripts": {
     "start": "vite dev",
+    "test": "vitest --run",
     "prepare": "husky install",
     "gen:types": "yarn graphql-codegen"
   },
@@ -16,6 +17,7 @@
     "@graphql-codegen/introspection": "^2.2.3",
     "@rehooks/local-storage": "^2.4.4",
     "@types/d3": "^7.4.0",
+    "@types/jest": "^29.4.0",
     "@types/react": "^18.0.25",
     "@types/react-dom": "^18.0.9",
     "@types/semver": "^7.3.13",
@@ -26,6 +28,7 @@
     "graphql": "^16.6.0",
     "graphql-request": "^5.1.0",
     "graphql-tag": "^2.12.6",
+    "happy-dom": "^8.2.6",
     "husky": "^8.0.0",
     "less": "^4.1.3",
     "moment": "^2.29.4",
@@ -43,6 +46,7 @@
     "sort-on": "^5.2.0",
     "ts-node": "^10.9.1",
     "typescript": "^4.9.3",
-    "vite": "^3.2.4"
+    "vite": "^3.2.4",
+    "vitest": "^0.28.4"
   }
 }

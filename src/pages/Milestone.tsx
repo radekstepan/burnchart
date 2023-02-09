@@ -14,6 +14,7 @@ function Milestone() {
     return [[owner, repo, number]];
   }, [oatmilk.state]);
 
+  // TODO reuse cache here if it exists
   const res = useIssues(jobs);
   const { data } = res;
 

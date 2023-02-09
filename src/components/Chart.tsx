@@ -9,6 +9,12 @@ interface Props {
   milestone: WithStats<Milestone>;
 }
 
+enum SeriesIndex {
+  ACTUAL = 0,
+  TREND = 1,
+  IDEAL = 2,
+}
+
 const Chart: React.FC<Props> = ({ milestone }) => {
   const { isEmpty } = milestone.stats.meta;
 
@@ -85,13 +91,17 @@ const Chart: React.FC<Props> = ({ milestone }) => {
       show: false,
     },
     tooltip: {
-      custom: ({ dataPointIndex }) => {
+      custom: ({ dataPointIndex, seriesIndex }) => {
+        if (seriesIndex !== SeriesIndex.ACTUAL) {
+          return null;
+        }
         const { meta } = actual.data[dataPointIndex];
         // TODO do not render the start of the chart
-        if (meta) {
-          // TODO truncate long text
-          return `<div class="tooltip">#${meta.number}: ${meta.title}</div>`;
+        if (!meta) {
+          return null;
         }
+        // TODO truncate long text
+        return `<div class="tooltip">#${meta.number}: ${meta.title}</div>`;
       },
     },
     theme: {

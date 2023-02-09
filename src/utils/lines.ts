@@ -11,20 +11,24 @@ export const actual = (
   createdAt: string,
   total: number
 ): ChartD[] =>
-  [
-    {
-      x: createdAt,
-      y: total,
-    },
-  ].concat(
-    issues.map((issue) => ({
-      x: issue.closedAt!,
-      y: (total -= issue.size),
-      meta: {
-        number: issue.number,
-        title: issue.title,
+  issues.reduce(
+    (acc, issue) => [
+      ...acc,
+      {
+        x: issue.closedAt!,
+        y: acc[acc.length - 1].y - issue.size,
+        meta: {
+          number: issue.number,
+          title: issue.title,
+        },
       },
-    }))
+    ],
+    [
+      {
+        x: createdAt,
+        y: total,
+      },
+    ]
   );
 
 // A graph of an ideal progression..
