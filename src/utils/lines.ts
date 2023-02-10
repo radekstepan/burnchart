@@ -35,58 +35,36 @@ export const actual = (
 // `a`:     milestone start date
 // `b`:     milestone end date
 // `total`: total number of points (open & closed issues)
-export const ideal = (a: string, b: string, total: number) => {
+export const ideal = (a: string, b: string | null, total: number): ChartD[] => {
   // Swap if end is before the start...
-  if (b < a) [b, a] = [a, b];
+  // TODO reset to start and end of the day
+  if (b && b < a) [b, a] = [a, b];
 
   // Make sure off days are numbers.
-  const off_days = config.chart.off_days.map((n) => parseInt(n, 10));
+  const offDays = config.chart.off_days.map((n) => parseInt(n, 10));
 
   const $a = moment(a, moment.ISO_8601);
   // Do we have a due date?
-  const $b = b != null ? moment(b, moment.ISO_8601) : moment.utc();
+  const $b = b !== null ? moment(b, moment.ISO_8601) : moment.utc();
 
-  // Go through the beginning to the end skipping off days.
-  // TODO refactor.
-  let days = [],
-    length = 0,
-    once;
-  (once = (inc) => {
-    // A new day. TODO: deal with hours and minutes!
-    let day = $a.add(1, "days");
-
-    // Does this day count?
-    let day_of;
-    if (!(day_of = day.weekday())) day_of = 7;
-
-    if (off_days.indexOf(day_of) != -1) {
-      days.push({ date: day.toJSON(), off_day: true });
-    } else {
-      length += 1;
-      days.push({ date: day.toJSON() });
+  // Go through the begging to the end skipping off days.
+  const days: string[] = [];
+  let d = $a;
+  while (d <= $b) {
+    if (!offDays.includes(d.weekday() || 7)) {
+      days.push(d.toJSON());
     }
-
-    // Go again?
-    if (!(day > $b)) once(inc + 1);
-  })(0);
-
-  // Map points on the array of days now.
-  let velocity = total / (length - 1);
-
-  // TODO refactor
-  days = days.map((day, i) => {
-    day.points = total;
-    if (days[i] && !days[i].off_day) total -= velocity;
-    return day;
-  });
-
-  // Do we need to make a link to right now?
-  let now;
-  if ((now = moment.utc()) > $b) {
-    days.push({ date: now.toJSON(), points: 0 });
+    d.add(1, "days");
   }
 
-  return days;
+  // Map points on the array of days now.
+  const v = total / days.length;
+
+  let t = total;
+  return days.map((x) => ({
+    x,
+    y: (t -= v),
+  }));
 };
 
 // Graph representing a trendling of actual issues.

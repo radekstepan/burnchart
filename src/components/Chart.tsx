@@ -1,6 +1,10 @@
-import React from "react";
-import ApexChart from "react-apexcharts";
-import { ApexOptions } from "apexcharts";
+import React, { useCallback, useEffect, useState } from "react";
+import {
+  Chart as ChartJs,
+  type ChartData,
+  type ChartConfiguration,
+} from "chart.js/auto"; // TODO optimize
+import "chartjs-adapter-moment";
 import { Milestone, WithStats } from "../interfaces";
 import * as lines from "../utils/lines";
 import "./chart.less";
@@ -16,30 +20,87 @@ enum SeriesIndex {
 }
 
 const Chart: React.FC<Props> = ({ milestone }) => {
-  const { isEmpty } = milestone.stats.meta;
+  const [el, setEl] = useState();
 
-  if (isEmpty) {
-    return null;
-  }
+  // TODO useRef
+  const handleRef = useCallback((node) => {
+    setEl(node);
+  }, []);
 
-  const actual = {
-    name: "actual",
-    data: lines.actual(
-      milestone.issues.closed.nodes,
-      milestone.createdAt,
-      milestone.issues.closed.size + milestone.issues.open.size
-    ),
-  };
+  useEffect(() => {
+    if (!el || milestone.stats.meta.isEmpty) {
+      return;
+    }
 
-  const series = [
-    actual,
-    {
-      name: "trend",
-      data: lines.trend(actual.data, milestone.createdAt, milestone.dueOn),
-    },
-  ];
+    const total = milestone.issues.closed.size + milestone.issues.open.size;
 
-  const options: ApexOptions = {
+    const actual = {
+      borderWidth: 3,
+      borderColor: "#64584c",
+      pointBackgroundColor: "#64584c",
+      data: lines.actual(
+        milestone.issues.closed.nodes,
+        milestone.createdAt,
+        total
+      ),
+    };
+
+    const datasets = [
+      actual,
+      {
+        borderWidth: 1,
+        borderColor: "#64584c",
+        pointStyle: false,
+        borderDash: [5, 5],
+        data: lines.trend(actual.data, milestone.createdAt, milestone.dueOn),
+      },
+      {
+        borderWidth: 3,
+        borderColor: "#cacaca",
+        pointStyle: false,
+        data: lines.ideal(milestone.createdAt, milestone.dueOn, total),
+      },
+    ];
+
+    const data: ChartData<"line"> = {
+      datasets: datasets as any,
+    };
+
+    const config: ChartConfiguration = {
+      data,
+      type: "line",
+      options: {
+        scales: {
+          x: {
+            type: "timeseries",
+          },
+        },
+        animation: false,
+        plugins: {
+          legend: {
+            display: false,
+          },
+          tooltip: {
+            enabled: false,
+          },
+        },
+      },
+    };
+
+    const chart = new ChartJs(el, config);
+
+    return () => {
+      chart.destroy();
+    };
+  }, [el]);
+
+  return (
+    <div className="chart">
+      <canvas ref={handleRef} />
+    </div>
+  );
+
+  const options = {
     chart: {
       type: "line",
       height: 350,
@@ -58,10 +119,18 @@ const Chart: React.FC<Props> = ({ milestone }) => {
       enabled: false,
     },
     markers: {
-      size: 3,
+      size: 0,
       hover: {
-        size: 5,
+        size: 0,
       },
+      discrete: actual.data.map((d, i) => ({
+        seriesIndex: SeriesIndex.ACTUAL,
+        dataPointIndex: i + 1,
+        fillColor: "#e3e3e3",
+        strokeColor: "#fff",
+        size: 3,
+        shape: "circle",
+      })),
     },
     yaxis: {
       axisBorder: {
@@ -85,12 +154,16 @@ const Chart: React.FC<Props> = ({ milestone }) => {
       },
     },
     stroke: {
-      width: 2,
+      width: [1, 1, 1],
+      curve: "straight",
+      dashArray: [0, 5, 8],
     },
     legend: {
       show: false,
     },
     tooltip: {
+      shared: true,
+      enabledOnSeries: [SeriesIndex.ACTUAL],
       custom: ({ dataPointIndex, seriesIndex }) => {
         if (seriesIndex !== SeriesIndex.ACTUAL) {
           return null;
@@ -109,7 +182,7 @@ const Chart: React.FC<Props> = ({ milestone }) => {
     },
   };
 
-  return <ApexChart className="chart" options={options} series={series} />;
+  // return <ApexChart className="chart" options={options} series={series} />;
 };
 
 export default Chart;
