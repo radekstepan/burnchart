@@ -3,11 +3,14 @@ import {
   Chart as ChartJs,
   type ChartData,
   type ChartConfiguration,
+  type ChartItem,
 } from "chart.js/auto"; // TODO optimize
 import "chartjs-adapter-moment";
 import { Milestone, WithStats } from "../interfaces";
 import * as lines from "../utils/lines";
 import "./chart.less";
+import moment from "moment";
+import useStateRef from "../hooks/useStateRef";
 
 interface Props {
   milestone: WithStats<Milestone>;
@@ -19,13 +22,15 @@ enum SeriesIndex {
   IDEAL = 2,
 }
 
-const Chart: React.FC<Props> = ({ milestone }) => {
-  const [el, setEl] = useState();
+interface Tooltip {
+  i: number;
+  x: number;
+  y: number;
+}
 
-  // TODO useRef
-  const handleRef = useCallback((node) => {
-    setEl(node);
-  }, []);
+const Chart: React.FC<Props> = ({ milestone }) => {
+  const [el, setEl] = useStateRef<ChartItem>();
+  const [tooltip, setTooltip] = useState<Tooltip | null>(null);
 
   useEffect(() => {
     if (!el || milestone.stats.meta.isEmpty) {
@@ -62,6 +67,7 @@ const Chart: React.FC<Props> = ({ milestone }) => {
       },
     ];
 
+    // TODO fix types
     const data: ChartData<"line"> = {
       datasets: datasets as any,
     };
@@ -73,6 +79,21 @@ const Chart: React.FC<Props> = ({ milestone }) => {
         scales: {
           x: {
             type: "timeseries",
+            grid: {
+              color: "#f2f2f2",
+            },
+            ticks: {
+              maxTicksLimit: 12,
+              // TODO come up with a "nice" date formatter
+              callback: function (value, index, ticks) {
+                return moment(value).fromNow();
+              },
+            },
+          },
+          y: {
+            grid: {
+              color: "#f2f2f2",
+            },
           },
         },
         animation: false,
@@ -82,6 +103,23 @@ const Chart: React.FC<Props> = ({ milestone }) => {
           },
           tooltip: {
             enabled: false,
+            external: (context) => {
+              const tooltipModel = context.tooltip;
+              if (!tooltipModel.opacity) {
+                setTooltip(null);
+                return;
+              }
+
+              const [dataPoint] = tooltipModel.dataPoints;
+              if (dataPoint.datasetIndex !== SeriesIndex.ACTUAL) {
+                return;
+              }
+              setTooltip({
+                i: dataPoint.dataIndex,
+                x: tooltipModel.caretX,
+                y: tooltipModel.caretY,
+              });
+            },
           },
         },
       },
@@ -96,93 +134,15 @@ const Chart: React.FC<Props> = ({ milestone }) => {
 
   return (
     <div className="chart">
-      <canvas ref={handleRef} />
+      {tooltip?.i && (
+        <div className="tooltip" style={{ left: tooltip.x, top: tooltip.y }}>
+          #{milestone.issues.closed.nodes[tooltip.i - 1].number}:
+          {milestone.issues.closed.nodes[tooltip.i - 1].title}
+        </div>
+      )}
+      <canvas ref={setEl} />
     </div>
   );
-
-  const options = {
-    chart: {
-      type: "line",
-      height: 350,
-      fontFamily: "MuseoSans500Regular, sans-serif",
-      zoom: {
-        enabled: false,
-      },
-      toolbar: {
-        show: false,
-      },
-      animations: {
-        enabled: false,
-      },
-    },
-    dataLabels: {
-      enabled: false,
-    },
-    markers: {
-      size: 0,
-      hover: {
-        size: 0,
-      },
-      discrete: actual.data.map((d, i) => ({
-        seriesIndex: SeriesIndex.ACTUAL,
-        dataPointIndex: i + 1,
-        fillColor: "#e3e3e3",
-        strokeColor: "#fff",
-        size: 3,
-        shape: "circle",
-      })),
-    },
-    yaxis: {
-      axisBorder: {
-        show: false,
-      },
-      labels: {
-        // TODO use rounding?
-        formatter: (val, opts) => val.toFixed(0),
-      },
-    },
-    xaxis: {
-      type: "datetime",
-      crosshairs: {
-        show: true,
-      },
-      axisBorder: {
-        show: false,
-      },
-      tooltip: {
-        enabled: false,
-      },
-    },
-    stroke: {
-      width: [1, 1, 1],
-      curve: "straight",
-      dashArray: [0, 5, 8],
-    },
-    legend: {
-      show: false,
-    },
-    tooltip: {
-      shared: true,
-      enabledOnSeries: [SeriesIndex.ACTUAL],
-      custom: ({ dataPointIndex, seriesIndex }) => {
-        if (seriesIndex !== SeriesIndex.ACTUAL) {
-          return null;
-        }
-        const { meta } = actual.data[dataPointIndex];
-        // TODO do not render the start of the chart
-        if (!meta) {
-          return null;
-        }
-        // TODO truncate long text
-        return `<div class="tooltip">#${meta.number}: ${meta.title}</div>`;
-      },
-    },
-    theme: {
-      palette: "palette9",
-    },
-  };
-
-  // return <ApexChart className="chart" options={options} series={series} />;
 };
 
 export default Chart;
