@@ -1,4 +1,6 @@
 import moment from "moment";
+import regression from "regression";
+import { create, scaleTime } from "d3";
 import config from "../config";
 import { ChartD, Issue, WithSize } from "../interfaces";
 
@@ -43,16 +45,16 @@ export const ideal = (a: string, b: string | null, total: number): ChartD[] => {
   // Make sure off days are numbers.
   const offDays = config.chart.off_days.map((n) => parseInt(n, 10));
 
-  const $a = moment(a, moment.ISO_8601);
+  const $a = moment.utc(a);
   // Do we have a due date?
-  const $b = b !== null ? moment(b, moment.ISO_8601) : moment.utc();
+  const $b = b !== null ? moment.utc(b) : moment.utc();
 
   // Go through the begging to the end skipping off days.
   const days: string[] = [];
   let d = $a;
   while (d <= $b) {
     if (!offDays.includes(d.weekday() || 7)) {
-      days.push(d.toJSON());
+      days.push(d.format("YYYY-MM-DDTHH:mm:ss[Z]"));
     }
     d.add(1, "days");
   }
@@ -67,67 +69,38 @@ export const ideal = (a: string, b: string | null, total: number): ChartD[] => {
   }));
 };
 
-// Graph representing a trendling of actual issues.
-export const trend = (
-  actual: ChartD[],
-  createdAt: string,
-  dueOn: string | null
-): ChartD[] => {
-  if (!actual.length) {
-    return [];
+// Graph representing a trendline of closed issues.
+export const trend = (actual: ChartD[]): ChartD[] | null => {
+  if (actual.length < 2) {
+    return null;
   }
 
   const [first] = actual;
   const last = actual[actual.length - 1];
+  // The last point is either the due date when we are done, or today.
+  const b = {
+    x: last.y ? moment.utc() : moment.utc(last.x),
+    y: last.y,
+  };
 
-  const start = moment(first.x, moment.ISO_8601);
+  const scale = scaleTime()
+    // The first point is milestone creation date.
+    .domain([moment.utc(first.x), b.x])
+    .range([0, 100]);
 
-  // Values is a list of time from the start and points remaining.
-  const values = actual.map(({ x, y }) => [
-    moment(x, moment.ISO_8601).diff(start),
+  const reg = regression.linear(
+    new Array()
+      .concat(
+        actual,
+        // Make sure not to double-count the end if the sprint is done.
+        last.y ? b : null
+      )
+      .filter(Boolean)
+      .map((d: ChartD) => [scale(moment.utc(d.x)), d.y])
+  );
+
+  return reg.points.map(([x, y]) => ({
+    x: moment.utc(scale.invert(x)).format("YYYY-MM-DDTHH:mm:ss[Z]"),
     y,
-  ]);
-
-  // Now is an actual point too.
-  const now = moment.utc();
-  values.push([now.diff(start), last.y]);
-
-  // http://classroom.synonym.com/calculate-trendline-2709.html
-  let b1 = 0,
-    e = 0,
-    c1 = 0,
-    l = values.length;
-  let a =
-    l *
-    values.reduce((sum, [a, b]) => {
-      b1 += a;
-      e += b;
-      c1 += Math.pow(a, 2);
-      return sum + a * b;
-    }, 0);
-
-  let slope = (a - b1 * e) / (l * c1 - Math.pow(b1, 2));
-  let intercept = (e - slope * b1) / l;
-
-  let fn = (x: number) => slope * x + intercept;
-
-  // Milestone always has a creation date.
-  const $createdAt = moment(createdAt, moment.ISO_8601);
-
-  let $dueOn = now;
-  // Due date specified.
-  if (dueOn) {
-    $dueOn = moment(dueOn, moment.ISO_8601);
-    // In the past?
-    if (now > $dueOn) $dueOn = now;
-    // No due date
-  }
-
-  a = $createdAt.diff(start);
-  let b = $dueOn.diff(start);
-
-  return [
-    { x: $createdAt.toJSON(), y: fn(a) },
-    { x: $dueOn.toJSON(), y: fn(b) },
-  ];
+  }));
 };

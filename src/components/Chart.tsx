@@ -50,14 +50,16 @@ const Chart: React.FC<Props> = ({ milestone }) => {
       ),
     };
 
+    const trend = lines.trend(actual.data);
+
     const datasets = [
       actual,
-      {
+      trend && {
         borderWidth: 1,
         borderColor: "#64584c",
         pointStyle: false,
         borderDash: [5, 5],
-        data: lines.trend(actual.data, milestone.createdAt, milestone.dueOn),
+        data: trend,
       },
       {
         borderWidth: 3,
@@ -65,7 +67,7 @@ const Chart: React.FC<Props> = ({ milestone }) => {
         pointStyle: false,
         data: lines.ideal(milestone.createdAt, milestone.dueOn, total),
       },
-    ];
+    ].filter(Boolean);
 
     // TODO fix types
     const data: ChartData<"line"> = {
@@ -94,6 +96,10 @@ const Chart: React.FC<Props> = ({ milestone }) => {
             grid: {
               color: "#f2f2f2",
             },
+            ticks: {
+              // Show only whole numbers.
+              precision: 0,
+            },
           },
         },
         animation: false,
@@ -111,7 +117,12 @@ const Chart: React.FC<Props> = ({ milestone }) => {
               }
 
               const [dataPoint] = tooltipModel.dataPoints;
+              // Show only on actual.
               if (dataPoint.datasetIndex !== SeriesIndex.ACTUAL) {
+                return;
+              }
+              // Skip the start of the sprint.
+              if (!dataPoint.dataIndex) {
                 return;
               }
               setTooltip({

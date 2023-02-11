@@ -55,5 +55,5 @@ export type WithStats<T extends Milestone> = Omit<T, "issues"> & {
 export interface ChartD {
   x: string; // time
   y: number; // points
-  meta?: Pick<Issue, "number" | "title" | "url">;
+  meta?: Pick<Issue, "number" | "title">;
 }

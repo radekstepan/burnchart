@@ -1,8 +1,8 @@
 # TODO
 
 - chart
-  - show ideal progress
   - show trendline
+- priority sort not correct
 - an issue could have been closed before a milestone was created (carry over config?)
 - fetch data on each page rather than using the cache (unless we are on a milestone page)
 
