@@ -43,6 +43,7 @@ const Chart: React.FC<Props> = ({ milestone }) => {
       borderWidth: 3,
       borderColor: "#64584c",
       pointBackgroundColor: "#64584c",
+      lineTension: 0,
       data: lines.actual(
         milestone.issues.closed.nodes,
         milestone.createdAt,
@@ -59,12 +60,14 @@ const Chart: React.FC<Props> = ({ milestone }) => {
         borderColor: "#64584c",
         pointStyle: false,
         borderDash: [5, 5],
+        lineTension: 0,
         data: trend,
       },
       {
         borderWidth: 3,
         borderColor: "#cacaca",
         pointStyle: false,
+        lineTension: 0,
         data: lines.ideal(milestone.createdAt, milestone.dueOn, total),
       },
     ].filter(Boolean);
@@ -80,7 +83,7 @@ const Chart: React.FC<Props> = ({ milestone }) => {
       options: {
         scales: {
           x: {
-            type: "timeseries",
+            type: "time",
             grid: {
               color: "#f2f2f2",
             },

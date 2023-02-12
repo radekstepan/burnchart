@@ -1,8 +1,10 @@
 import moment from "moment";
 import regression from "regression";
-import { create, scaleTime } from "d3";
+import { scaleTime } from "d3";
 import config from "../config";
 import { ChartD, Issue, WithSize } from "../interfaces";
+
+export const FORMAT = "YYYY-MM-DDTHH:mm:ss[Z]";
 
 // A graph of closed issues.
 // `issues`:     closed issues list
@@ -39,7 +41,6 @@ export const actual = (
 // `total`: total number of points (open & closed issues)
 export const ideal = (a: string, b: string | null, total: number): ChartD[] => {
   // Swap if end is before the start...
-  // TODO reset to start and end of the day
   if (b && b < a) [b, a] = [a, b];
 
   // Make sure off days are numbers.
@@ -47,14 +48,23 @@ export const ideal = (a: string, b: string | null, total: number): ChartD[] => {
 
   const $a = moment.utc(a);
   // Do we have a due date?
-  const $b = b !== null ? moment.utc(b) : moment.utc();
+  const $b = b ? moment.utc(b) : moment.utc();
+
+  // Skip early if we have no off days.
+  if (!offDays.length) {
+    return [
+      { x: $a.format(FORMAT), y: total },
+      { x: $b.format(FORMAT), y: 0 },
+    ];
+  }
 
   // Go through the begging to the end skipping off days.
   const days: string[] = [];
   let d = $a;
   while (d <= $b) {
-    if (!offDays.includes(d.weekday() || 7)) {
-      days.push(d.format("YYYY-MM-DDTHH:mm:ss[Z]"));
+    if (!offDays.includes(d.day() || 7)) {
+      // 0 = Sunday
+      days.push(d.format(FORMAT));
     }
     d.add(1, "days");
   }
@@ -100,7 +110,7 @@ export const trend = (actual: ChartD[]): ChartD[] | null => {
   );
 
   return reg.points.map(([x, y]) => ({
-    x: moment.utc(scale.invert(x)).format("YYYY-MM-DDTHH:mm:ss[Z]"),
+    x: moment.utc(scale.invert(x)).format(FORMAT),
     y,
   }));
 };

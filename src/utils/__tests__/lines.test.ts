@@ -40,7 +40,7 @@ const nearest = (d: ChartD) => {
 
   return {
     ...d,
-    x: m.format("YYYY-MM-DDTHH:mm:ss[Z]"),
+    x: m.format(lines.FORMAT),
   };
 };
 
