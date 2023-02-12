@@ -13,8 +13,14 @@ export enum SortBy {
 type Comparator = (...args: WithStats<Milestone>[]) => number;
 
 // From highest progress points.
-const compareByProgress: Comparator = (a, b) =>
-  a.stats.progress.points - b.stats.progress.points;
+const compareByProgress: Comparator = (a, b) => {
+  const diff = b.stats.progress.points - a.stats.progress.points;
+  if (!diff) {
+    // Stable sort.
+    return a.id.localeCompare(b.id);
+  }
+  return diff;
+};
 
 // From most delayed in days.
 const compareByPriority: Comparator = (a, b) => {

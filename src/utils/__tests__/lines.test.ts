@@ -94,3 +94,5 @@ describe("lines", () => {
     ]);
   });
 });
+
+export default {};
