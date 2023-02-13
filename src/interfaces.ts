@@ -18,10 +18,11 @@ export interface Issue {
 }
 
 export interface Stats {
-  // How many days is 1% of the time until now?
+  // How many days is 1% of the time from createdAt to now.
   days: number;
   // The number of days from start to now.
   span: number;
+  // Progress in points and time; 0..100%
   progress: {
     points: number;
     time: number;

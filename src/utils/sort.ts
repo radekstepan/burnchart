@@ -7,9 +7,6 @@ export enum SortBy {
   name = "name",
 }
 
-// export const sortBy = <T>(array: T[], key: keyof T) =>
-//   array.sort((a, b) => (a[key] > b[key] ? 1 : b[key] > a[key] ? -1 : 0));
-
 type Comparator = (...args: WithStats<Milestone>[]) => number;
 
 // From highest progress points.
@@ -29,25 +26,35 @@ const compareByPriority: Comparator = (a, b) => {
   const [$a, $b] = [a, b].map(
     (d) => (d.stats.progress.points - d.stats.progress.time) * d.stats.days
   );
-
-  return $b - $a;
+  const diff = $a - $b;
+  if (!diff) {
+    // Stable sort.
+    return a.id.localeCompare(b.id);
+  }
+  return diff;
 };
 
-// Based on project then milestone name including semver.
-// TODO verify
+// Based on project then milestone title including semver.
 const compareByName: Comparator = (a, b) => {
-  if (b.owner.localeCompare(a.owner)) {
-    return 1;
+  if (a.owner.localeCompare(b.owner) === -1) {
+    return -1;
   }
-  if (b.repo.localeCompare(b.repo)) {
-    return 1;
+  if (a.repo.localeCompare(b.repo) === -1) {
+    return -1;
+  }
+
+  const diff = a.title.localeCompare(b.title);
+  if (!diff) {
+    // Stable sort.
+    return a.id.localeCompare(b.id);
   }
 
   // Try semver.
   if (semver.valid(b.title) && semver.valid(a.title)) {
-    return +semver.gt(b.title, a.title);
+    return semver.gt(b.title, a.title) ? -1 : 1;
   }
-  return b.title.localeCompare(a.title);
+
+  return diff;
 };
 
 export const sortBy = <T extends WithStats<Milestone>>(

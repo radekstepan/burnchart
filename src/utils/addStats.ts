@@ -4,7 +4,7 @@ import config from "../config";
 import { Issue, Milestone, WithSize, WithStats } from "../interfaces";
 
 // Progress in %.
-let progress = (a: number, b: number) => {
+const progress = (a: number, b: number) => {
   if (a + b === 0) {
     return 0;
   }
