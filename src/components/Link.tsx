@@ -1,18 +1,12 @@
-import React, {
-  memo,
-  ReactNode,
-  useCallback,
-  useEffect,
-  useState,
-} from "react";
-import { Link as UILink } from "evergreen-ui";
+import React, { ReactNode, useCallback } from "react";
 import { useOatmilk } from "oatmilk";
-import "./link.less";
 import { cls } from "../utils/css";
+import "./link.less";
 
 interface Props {
   routeName?: string;
   state?: { [key: string]: string };
+  styled?: boolean;
   onClick?: (evt: unknown) => void;
   children: ReactNode;
   [key: string]: unknown;
@@ -21,6 +15,7 @@ interface Props {
 const Link: React.FC<Props> = ({
   routeName,
   state,
+  styled,
   onClick,
   children,
   className,
@@ -44,7 +39,7 @@ const Link: React.FC<Props> = ({
 
   return (
     <a
-      className={cls("link", className)}
+      className={cls("link", styled && "link--styled", className)}
       href={routeName ? getHref(routeName, state) : undefined}
       onClick={$onClick}
       {...rest}

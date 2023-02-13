@@ -3,6 +3,7 @@ import { Pane } from "evergreen-ui";
 import { useOatmilk } from "oatmilk";
 import Table from "../components/Table";
 import Chart from "../components/Chart";
+import Loader from "../components/Loader";
 import useIssues from "../hooks/useIssues";
 import { Job } from "../utils/getIssues";
 import addStats from "../utils/addStats";
@@ -15,11 +16,10 @@ function Milestones() {
     return [[owner, repo]];
   }, [oatmilk.state]);
 
-  // TODO skip cache
   const res = useIssues(jobs);
   const { data } = res;
 
-  const milestone = useMemo(() => {
+  const milestones = useMemo(() => {
     if (!data.length) {
       return null;
     }
@@ -45,16 +45,26 @@ function Milestones() {
     // All the data arrive at the same time.
   }, [data.length]);
 
-  if (!milestone) {
+  if (res.error) {
+    // TODO
+    return null;
+  }
+
+  if (res.loading) {
+    return <Loader speed={2} />;
+  }
+
+  // TODO?
+  if (!milestones) {
     return null;
   }
 
   return (
     <Pane flex={1} className="page">
       <div className="title">
-        {milestone.owner}/{milestone.repo}
+        {milestones.owner}/{milestones.repo}
       </div>
-      <Chart milestone={milestone} />
+      <Chart milestone={milestones} />
       <Table heading="Milestones" {...res} />
     </Pane>
   );

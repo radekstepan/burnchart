@@ -1,8 +1,5 @@
 # TODO
 
-- an issue could have been closed before a milestone was created (carry over config?)
-- fetch data on each page rather than using the cache (unless we are on a milestone page)
-
 ## Nice to have
 
 - convert `x` to a Date so we don't convert multiple times over

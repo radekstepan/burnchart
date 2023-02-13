@@ -6,7 +6,9 @@ import Header from "./components/Header";
 import Content from "./components/Content";
 import Footer from "./components/Footer";
 import routes from "./routes";
-import "./fonts.less";
+import "./styles/app.less";
+import "./styles/fonts.less";
+import "./styles/pages.less";
 
 function App() {
   return (

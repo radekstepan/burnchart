@@ -39,11 +39,14 @@ const useIssues = (ask: Job[] | null) => {
         continue;
       }
 
-      const key = new RegExp(`^${owner}\/${repo}`);
-      const d = map.get(store, key);
-      if (!d.length) {
-        jobs.push(job);
-      }
+      jobs.push(job);
+
+      // TODO display the cache while the latest data loads.
+      // const key = new RegExp(`^${owner}\/${repo}`);
+      // const d = map.get(store, key);
+      // if (!d.length) {
+      //   jobs.push(job);
+      // }
     }
 
     setState({ error: null, loading: true, data: defaultState.data });

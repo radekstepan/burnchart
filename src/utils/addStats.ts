@@ -30,25 +30,30 @@ const calc = (issue: Issue) => {
   }
 };
 
+const addSize = <T extends Issue>(issues: T[]) => {
+  const [size, nodes] = issues.reduce(
+    (acc, issue) => {
+      const $size = calc(issue);
+      return [acc[0] + $size, acc[1].concat([{ ...issue, size: $size }])];
+    },
+    [0, new Array<WithSize<T>>()]
+  );
+
+  return { nodes, size };
+};
+
 // Calculate the stats for a milestone.
+// NOTE: modifies milestone.createAt
 const addStats = (milestone: Milestone): WithStats<Milestone> => {
   // Sort the issues and add their size.
   const sorted = sortOn(milestone.issues, "closedAt");
   const i = sorted.findIndex((d) => !d.closedAt);
-  const [closed, open] = [sorted.slice(0, i), sorted.slice(i)].map((issues) => {
-    const [size, nodes] = issues.reduce(
-      (acc, issue) => {
-        const $size = calc(issue);
-        return [acc[0] + $size, acc[1].concat([{ ...issue, size: $size }])];
-      },
-      [0, [] as WithSize<Issue>[]]
-    );
-
-    return { nodes, size };
-  });
+  const [closed, open] = [
+    addSize(sorted.slice(0, i)),
+    addSize(sorted.slice(i)),
+  ];
 
   // Progress in points.
-
   let points = 0;
 
   const meta = {
@@ -68,12 +73,14 @@ const addStats = (milestone: Milestone): WithStats<Milestone> => {
     }
 
     // Check that milestone hasn't been created after issue close; #100.
-    // TODO refactor using sorted
-    milestone.createdAt = milestone.issues.reduce(
-      (min, { closedAt }) =>
-        closedAt ? (min > closedAt ? closedAt : min) : min,
-      milestone.createdAt
-    );
+    const [first] = closed.nodes;
+    if (first.closedAt) {
+      // always...
+      milestone.createdAt =
+        first.closedAt < milestone.createdAt
+          ? first.closedAt
+          : milestone.createdAt;
+    }
   }
 
   // The dates in this milestone.

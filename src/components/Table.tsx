@@ -2,11 +2,11 @@ import React, { useCallback, useMemo, useState } from "react";
 import { Pane, Table as UITable } from "evergreen-ui";
 import ProgressBar from "./ProgressBar";
 import Link from "./Link";
+import Icon from "./Icon";
 import useIssues from "../hooks/useIssues";
 import { sortBy, SortBy } from "../utils/sort";
 import addStats from "../utils/addStats";
 import "./table.less";
-import Icon from "./Icon";
 
 const sortFns = [SortBy.priority, SortBy.name, SortBy.progress];
 
@@ -16,7 +16,7 @@ interface Props extends UseIssues {
   heading: string;
 }
 
-const Table: React.FC<Props> = ({ heading, error, loading, data }) => {
+const Table: React.FC<Props> = ({ heading, data }) => {
   const [sortOrder, setSortOrder] = useState<SortBy>(SortBy.priority);
 
   const onSort = useCallback(() => {
@@ -33,11 +33,6 @@ const Table: React.FC<Props> = ({ heading, error, loading, data }) => {
     () => sortBy(withStats, sortOrder),
     [withStats, sortOrder]
   );
-
-  if (error || loading) {
-    // TODO
-    return null;
-  }
 
   return (
     <div className="table">

@@ -3,4 +3,18 @@
   color: inherit;
   cursor: pointer;
   user-select: none;
+  transition: 120ms all ease-in-out;
+
+  // Evergreen
+  &--styled {
+    color: #3366ff;
+
+    &:hover {
+      color: #2952cc;
+    }
+
+    &:active {
+      color: #1f3d99;
+    }
+  }
 }

@@ -5,12 +5,7 @@ import Loading from "./Loading";
 
 function Content() {
   return (
-    <Pane
-      display="flex"
-      padding={16}
-      alignItems="center"
-      justifyContent="center"
-    >
+    <Pane display="flex" padding={16} className="page">
       <React.Suspense fallback={<Loading />}>
         <Oatmilk.RouterView />
       </React.Suspense>
