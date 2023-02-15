@@ -1,5 +1,4 @@
 import React, { useCallback, useMemo, useState } from "react";
-import { Pane, Table as UITable } from "evergreen-ui";
 import ProgressBar from "./ProgressBar";
 import Link from "./Link";
 import Icon from "./Icon";
@@ -35,20 +34,20 @@ const Table: React.FC<Props> = ({ heading, data }) => {
   );
 
   return (
-    <div className="table">
-      <Pane display="flex" flex={1} className="header">
+    <div className="tbl">
+      <div className="header">
         <div className="heading">{heading}</div>
-        <Pane flexGrow={1} className="sort">
+        <div className="sort">
           <Link onClick={onSort}>
             <Icon name="sort" /> Sorted by {sortOrder}
           </Link>
-        </Pane>
-      </Pane>
-      <UITable width="100%">
-        <UITable.Body>
+        </div>
+      </div>
+      <div className="table">
+        <div className="table__body">
           {sorted.map((d) => (
-            <UITable.Row key={d.id} justifyContent="space-between">
-              <UITable.Cell>
+            <div className="table__row" key={d.id}>
+              <div className="table__cell">
                 <Link
                   className="strong"
                   routeName="milestones"
@@ -56,8 +55,8 @@ const Table: React.FC<Props> = ({ heading, data }) => {
                 >
                   {d.owner}/{d.repo}
                 </Link>
-              </UITable.Cell>
-              <UITable.Cell>
+              </div>
+              <div className="table__cell">
                 <Link
                   routeName="milestone"
                   state={{
@@ -68,14 +67,14 @@ const Table: React.FC<Props> = ({ heading, data }) => {
                 >
                   {d.title}
                 </Link>
-              </UITable.Cell>
-              <UITable.Cell>
+              </div>
+              <div className="table__cell">
                 <ProgressBar milestone={d} />
-              </UITable.Cell>
-            </UITable.Row>
+              </div>
+            </div>
           ))}
-        </UITable.Body>
-      </UITable>
+        </div>
+      </div>
     </div>
   );
 };

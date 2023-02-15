@@ -4,16 +4,24 @@
 @yellow: #ea9712;
 
 .progressBar {
-  width: 200px;
+  width: 100%; // 200px;
 
-  .percent,
-  .due {
-    color: #9399ad;
-  }
+  .top {
+    display: flex;
 
-  .percent {
-    font-size: 13px;
-    margin-bottom: 2px;
+    .left {
+      flex-grow: 1;
+    }
+
+    .percent,
+    .due {
+      color: #9399ad;
+    }
+
+    .percent {
+      font-size: 13px;
+      margin-bottom: 2px;
+    }
   }
 
   .bar {

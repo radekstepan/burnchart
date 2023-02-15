@@ -1,11 +1,9 @@
-import React, { memo, useEffect, useState } from "react";
-import { Pane, Text } from "evergreen-ui";
+import React from "react";
+import "./footer.less";
 
 function Footer() {
   return (
-    <Pane display="flex" padding={16} justifyContent="center">
-      &copy; 2012-2023 Radek Stepan &amp; Contributors
-    </Pane>
+    <div id="footer">&copy; 2012-2023 Radek Stepan &amp; Contributors</div>
   );
 }
 

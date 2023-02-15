@@ -1,0 +1,31 @@
+.button {
+  border: 1px solid #3366ff;
+  background: #3366ff;
+  border-radius: 4px;
+  min-width: 32px;
+  line-height: 32px;
+  font-size: 14px;
+  height: 32px;
+  transition: box-shadow 80ms ease-in-out;
+  color: #fff;
+  padding: 1px 16px;
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+
+  &:active {
+    border-color: #1f3d99;
+    background: #1f3d99;
+  }
+
+  &:focus {
+    border-color: #3366ff;
+    background: #3366ff;
+    box-shadow: 0 0 0 2px #d6e0ff;
+  }
+
+  &:hover {
+    border-color: #2952cc;
+    background: #2952cc;
+  }
+}

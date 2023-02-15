@@ -10,13 +10,16 @@
 }
 
 .page {
-  display: flex;
   max-width: 800px;
+  justify-content: center;
+  display: flex;
   margin: 0 auto;
+  padding: 16px;
 
   .title {
     font-size: 24px;
     font-weight: 700;
+    margin: 10px 0;
   }
 }
 
@@ -26,4 +29,27 @@
   margin: 0 auto;
   text-align: center;
   box-shadow: 0 0 1px rgb(67 90 111 / 30%), 0 2px 4px -2px rgb(67 90 111 / 47%);
+}
+
+.hero {
+  position: relative;
+  display: flex;
+  flex: 1;
+  justify-content: center;
+
+  .note {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+}
+
+.content {
+  flex: 1;
+
+  &--milestones {
+    .chart {
+      margin-bottom: 40px;
+    }
+  }
 }

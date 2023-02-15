@@ -1,5 +1,4 @@
 import React, { useMemo } from "react";
-import { Pane } from "evergreen-ui";
 import Table from "../components/Table";
 import Link from "../components/Link";
 import Loader from "../components/Loader";
@@ -22,7 +21,7 @@ function Repos() {
 
   if (!token) {
     return (
-      <div id="repos">
+      <div className="hero">
         <Loader speed={0} />
         <div className="note">
           <Link styled onClick={signIn}>
@@ -45,9 +44,9 @@ function Repos() {
   }
 
   return (
-    <Pane flex={1}>
+    <div className="content">
       <Table heading="Repos" {...res} />
-    </Pane>
+    </div>
   );
 }
 

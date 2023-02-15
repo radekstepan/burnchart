@@ -1,4 +1,5 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
+import moment from "moment";
 import {
   Chart as ChartJs,
   type ChartData,
@@ -6,11 +7,10 @@ import {
   type ChartItem,
 } from "chart.js/auto"; // TODO optimize
 import "chartjs-adapter-moment";
-import { Milestone, WithStats } from "../interfaces";
 import * as lines from "../utils/lines";
-import "./chart.less";
-import moment from "moment";
 import useStateRef from "../hooks/useStateRef";
+import { Milestone, WithStats } from "../interfaces";
+import "./chart.less";
 
 interface Props {
   milestone: WithStats<Milestone>;
@@ -28,7 +28,7 @@ interface Tooltip {
   y: number;
 }
 
-const Chart: React.FC<Props> = ({ milestone }) => {
+const Chart: React.FC<Props> = ({ milestone, ...rest }) => {
   const [el, setEl] = useStateRef<ChartItem>();
   const [tooltip, setTooltip] = useState<Tooltip | null>(null);
 
@@ -147,7 +147,7 @@ const Chart: React.FC<Props> = ({ milestone }) => {
   }, [el]);
 
   return (
-    <div className="chart">
+    <div className="chart" {...rest}>
       {tooltip?.i && (
         <div className="tooltip" style={{ left: tooltip.x, top: tooltip.y }}>
           #{milestone.issues.closed.nodes[tooltip.i - 1].number}:

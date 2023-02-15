@@ -1,8 +1,7 @@
-import React, { memo, useContext, useEffect, useState } from "react";
-import { Button, Pane, Spinner, Text } from "evergreen-ui";
-import { FirebaseContext } from "../providers/FirebaseProvider";
+import React from "react";
 import Icon from "./Icon";
 import Link from "./Link";
+import Button from "./Button";
 import useFirebase from "../hooks/useFirebase";
 import { useTokenStore } from "../hooks/useStore";
 
@@ -24,7 +23,7 @@ function Auth() {
   }
 
   return (
-    <Button appearance="primary" onClick={signIn}>
+    <Button onClick={signIn}>
       <Icon name="github" /> &nbsp; Sign In
     </Button>
   );

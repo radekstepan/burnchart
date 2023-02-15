@@ -1,8 +1,7 @@
-import React, { memo, useEffect, useState } from "react";
-import { Pane, Spinner, Text } from "evergreen-ui";
+import React from "react";
 import { cls } from "../utils/css";
 import { due } from "../utils/format";
-import { Milestone, Stats, WithStats } from "../interfaces";
+import { Milestone, WithStats } from "../interfaces";
 import "./progressBar.less";
 
 interface Props {
@@ -11,18 +10,18 @@ interface Props {
 
 const ProgressBar: React.FC<Props> = ({ milestone }) => (
   <div className="progressBar">
-    <Pane display="flex">
-      <Pane flexGrow="1">
+    <div className="top">
+      <div className="left">
         {milestone.dueOn && (
           <div className={cls("due", milestone.stats.meta.isOverdue && "red")}>
             {due(milestone.dueOn)}
           </div>
         )}
-      </Pane>
+      </div>
       <div className="percent">
         {Math.floor(milestone.stats.progress.points)}%
       </div>
-    </Pane>
+    </div>
     <div className="outer bar">
       <div
         className={cls(

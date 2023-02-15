@@ -1,5 +1,4 @@
 import React, { useMemo } from "react";
-import { Pane } from "evergreen-ui";
 import { useOatmilk } from "oatmilk";
 import Table from "../components/Table";
 import Chart from "../components/Chart";
@@ -60,13 +59,13 @@ function Milestones() {
   }
 
   return (
-    <Pane flex={1} className="page">
+    <div className="content content--milestones">
       <div className="title">
         {milestones.owner}/{milestones.repo}
       </div>
       <Chart milestone={milestones} />
       <Table heading="Milestones" {...res} />
-    </Pane>
+    </div>
   );
 }
 
