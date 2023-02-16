@@ -2,6 +2,8 @@ import React, { useMemo } from "react";
 import Table from "../components/Table";
 import Link from "../components/Link";
 import Loader from "../components/Loader";
+import Status from "../components/Status";
+import Box, { BoxType } from "../components/Box";
 import { useReposStore, useTokenStore } from "../hooks/useStore";
 import useIssues from "../hooks/useIssues";
 import useFirebase from "../hooks/useFirebase";
@@ -21,22 +23,20 @@ function Repos() {
 
   if (!token) {
     return (
-      <div className="hero">
-        <Loader speed={0} />
-        <div className="note">
+      <Status>
+        <>
           <Link styled onClick={signIn}>
             Sign In
           </Link>
           &nbsp;
           {!jobs || !jobs.length ? "and add a repo" : "to see your repos"}
-        </div>
-      </div>
+        </>
+      </Status>
     );
   }
 
   if (res.error) {
-    // TODO
-    return null;
+    return <Box type={BoxType.error}>{res.error}</Box>;
   }
 
   if (res.loading) {

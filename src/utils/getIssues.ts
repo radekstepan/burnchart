@@ -1,5 +1,6 @@
 import { GraphQLClient } from "graphql-request";
 import PQueue from "p-queue";
+import { serializeError } from "serialize-error";
 import { Milestone, Issue } from "../interfaces";
 import GetRepoIssues from "../queries/GetRepoIssues";
 import GetMilestoneIssues from "../queries/GetMilestoneIssues";
@@ -17,7 +18,6 @@ type Nodes =
       id: string;
       number: number;
       title: string;
-      url: string;
       closedAt?: string;
       labels?:
         | {
@@ -50,7 +50,7 @@ export type Job = [owner: string, repo: string, milestone?: string];
 const getIssues = (
   token: string,
   jobs: Job[],
-  cb: (err: Error | null, res: Map<string, Milestone>) => void
+  cb: (err: string | null, res: Map<string, Milestone>) => void
 ) => {
   let exited = false;
   const q = new PQueue({ concurrency: CONCURRENCY });
@@ -112,7 +112,7 @@ const getIssues = (
     if ("milestone" in res.repository) {
       const milestone = res.repository.milestone;
       if (!milestone) {
-        return;
+        throw new Error("Could not resolve to a Milestone");
       }
       if (!milestone.issues.nodes) {
         return;
@@ -149,8 +149,26 @@ const getIssues = (
 
   q.on("error", (err: Error) => {
     if (!exited) {
+      let error = "Something went wrong";
+      const { message, response } = serializeError(err);
+      if (
+        response &&
+        typeof response === "object" &&
+        "errors" in response &&
+        response.errors instanceof Array &&
+        response.errors[0] &&
+        typeof response.errors[0] === "object" &&
+        "message" in response.errors[0] &&
+        response.errors[0].message &&
+        typeof response.errors[0].message === "string"
+      ) {
+        error = response.errors[0].message;
+      } else if (message) {
+        error = message;
+      }
+
       onExit();
-      cb(err, all);
+      cb(error, all);
     }
   });
 

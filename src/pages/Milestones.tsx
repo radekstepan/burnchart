@@ -3,6 +3,7 @@ import { useOatmilk } from "oatmilk";
 import Table from "../components/Table";
 import Chart from "../components/Chart";
 import Loader from "../components/Loader";
+import Box, { BoxType } from "../components/Box";
 import useIssues from "../hooks/useIssues";
 import { Job } from "../utils/getIssues";
 import addStats from "../utils/addStats";
@@ -45,8 +46,7 @@ function Milestones() {
   }, [data.length]);
 
   if (res.error) {
-    // TODO
-    return null;
+    return <Box type={BoxType.error}>{res.error}</Box>;
   }
 
   if (res.loading) {

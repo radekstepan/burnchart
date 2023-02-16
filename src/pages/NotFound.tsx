@@ -1,7 +1,8 @@
-import React, { memo, useEffect, useState } from "react";
+import React from "react";
+import Box, { BoxType } from "../components/Box";
 
 function NotFound() {
-  return <div id="notFound">Not Found</div>;
+  return <Box type={BoxType.error}>Page not found</Box>;
 }
 
 export default NotFound;

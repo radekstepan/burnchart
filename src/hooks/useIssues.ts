@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { useDeepCompareEffect } from "react-use";
-import { Milestone } from "../interfaces";
-import getIssues, { Job } from "../utils/getIssues";
-import k from "../utils/keys";
 import { useTokenStore } from "./useStore";
 import * as map from "../utils/map";
+import k from "../utils/keys";
+import getIssues, { Job } from "../utils/getIssues";
+import { Milestone } from "../interfaces";
 
 const store = new Map<string, Milestone>();
 
@@ -17,7 +17,7 @@ const defaultState = {
 const useIssues = (ask: Job[] | null) => {
   const [token] = useTokenStore();
   const [state, setState] = useState<{
-    error: Error | null;
+    error: string | null;
     loading: boolean;
     data: Milestone[];
   }>(defaultState);
