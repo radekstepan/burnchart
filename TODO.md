@@ -1,7 +1,6 @@
 # TODO
 
 - delete owner/repo
-- handle invalid owner/repo on the homepage
 - detect old install and show a popup pointing to the changelog
 - add a changelog
 - search through TODOs
@@ -9,6 +8,9 @@
 
 ## Nice to have
 
+- "This milestone is overdue" and similar topbar messages
+- due date on the milestone page
+- link to milestone(s) from the title
 - convert `x` to a Date so we don't convert multiple times over
 - render milestone end date as a tick if overdue; https://apexcharts.com/docs/annotations/
 - show progess chart on milestone page

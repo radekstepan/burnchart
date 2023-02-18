@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useOatmilk } from "oatmilk";
+import Content from "../components/Content/Content";
 import Button from "../components/Button/Button";
 import TextInput from "../components/TextInput/TextInput";
 import { Paragraph, Title } from "../components/Text/Text";
@@ -25,8 +26,7 @@ function AddRepo() {
   };
 
   return (
-    <div className="content">
-      <Title>Add a Repo</Title>
+    <Content slim title="Add a Repo">
       <Paragraph>
         Please provide the name of a GitHub repository that contains milestones
         that have issues linked to them.
@@ -42,7 +42,7 @@ function AddRepo() {
           button={<Button onClick={onClick}>Add</Button>}
         />
       </div>
-    </div>
+    </Content>
   );
 }
 

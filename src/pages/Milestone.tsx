@@ -1,14 +1,15 @@
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 import { useOatmilk } from "oatmilk";
+import Content from "../components/Content/Content";
 import Chart from "../components/Chart/Chart";
 import Loader from "../components/Loader/Loader";
-import Box, { BoxType } from "../components/Box/Box";
 import Status, { WhySignIn } from "../components/Status/Status";
+import Error from "../components/Error/Error";
 import Link from "../components/Link/Link";
 import { Title } from "../components/Text/Text";
 import useIssues from "../hooks/useIssues";
 import useFirebase from "../hooks/useFirebase";
-import { useTokenStore } from "../hooks/useStore";
+import { useReposStore, useTokenStore } from "../hooks/useStore";
 import { Job } from "../utils/getIssues";
 import addStats from "../utils/addStats";
 
@@ -16,11 +17,25 @@ function Milestone() {
   const { signIn } = useFirebase();
   const [token] = useTokenStore();
   const oatmilk = useOatmilk();
+  const [repos, setRepos] = useReposStore();
+
+  const { owner, repo, number } = oatmilk.state;
+
+  // Save the repo?
+  useEffect(() => {
+    if (!repos) {
+      setRepos([{ owner, repo }]);
+      return;
+    }
+    if (repos.find((r) => r.owner === owner && r.repo === repo)) {
+      return;
+    }
+    setRepos(repos.concat([{ owner, repo }]));
+  }, [owner, repo]);
 
   const jobs = useMemo<Job[] | null>(() => {
-    const { owner, repo, number } = oatmilk.state;
     return [[owner, repo, number]];
-  }, [oatmilk.state]);
+  }, [owner, repo, number]);
 
   const res = useIssues(jobs);
   const { data } = res;
@@ -35,24 +50,34 @@ function Milestone() {
 
   if (!token) {
     return (
-      <Status>
-        <>
-          <Link styled onClick={signIn}>
-            Sign In
-          </Link>{" "}
-          to view your milestone
-          <WhySignIn />
-        </>
-      </Status>
+      <Content title={`${owner}/${repo}/${number}`}>
+        <Status>
+          <>
+            <Link styled onClick={signIn}>
+              Sign In
+            </Link>{" "}
+            to view your milestone
+            <WhySignIn />
+          </>
+        </Status>
+      </Content>
     );
   }
 
   if (res.error) {
-    return <Box type={BoxType.error}>{res.error.message}</Box>;
+    return (
+      <Content title={`${owner}/${repo}/${number}`}>
+        <Error error={res.error} />
+      </Content>
+    );
   }
 
   if (res.loading) {
-    return <Loader speed={2} />;
+    return (
+      <Content title={`${owner}/${repo}/${number}`}>
+        <Loader speed={2} />
+      </Content>
+    );
   }
 
   // TODO?
@@ -61,10 +86,12 @@ function Milestone() {
   }
 
   return (
-    <div className="content">
-      <Title>Milestone {milestone.title}</Title>
+    <Content>
+      <Title>
+        {owner}/{repo} {milestone.title}
+      </Title>
       <Chart milestone={milestone} />
-    </div>
+    </Content>
   );
 }
 

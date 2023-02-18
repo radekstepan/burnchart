@@ -1,10 +1,11 @@
 import React, { useEffect, useMemo } from "react";
 import { useOatmilk } from "oatmilk";
+import Content from "../components/Content/Content";
 import Table from "../components/Table/Table";
 import Chart from "../components/Chart/Chart";
 import Loader from "../components/Loader/Loader";
-import Box, { BoxType } from "../components/Box/Box";
 import Link from "../components/Link/Link";
+import Error from "../components/Error/Error";
 import { Title } from "../components/Text/Text";
 import Status, { WhySignIn } from "../components/Status/Status";
 import useIssues from "../hooks/useIssues";
@@ -19,9 +20,10 @@ function Milestones() {
   const [token] = useTokenStore();
   const [repos, setRepos] = useReposStore();
 
+  const { owner, repo } = oatmilk.state;
+
   // Save the repo?
   useEffect(() => {
-    const { owner, repo } = oatmilk.state;
     if (!repos) {
       setRepos([{ owner, repo }]);
       return;
@@ -30,12 +32,11 @@ function Milestones() {
       return;
     }
     setRepos(repos.concat([{ owner, repo }]));
-  }, []);
+  }, [owner, repo]);
 
   const jobs = useMemo<Job[] | null>(() => {
-    const { owner, repo } = oatmilk.state;
     return [[owner, repo]];
-  }, [oatmilk.state]);
+  }, [owner, repo]);
 
   const res = useIssues(jobs);
   const { data } = res;
@@ -68,24 +69,34 @@ function Milestones() {
 
   if (!token) {
     return (
-      <Status>
-        <>
-          <Link styled onClick={signIn}>
-            Sign In
-          </Link>{" "}
-          to view your milestones
-          <WhySignIn />
-        </>
-      </Status>
+      <Content title={`${owner}/${repo}`}>
+        <Status>
+          <>
+            <Link styled onClick={signIn}>
+              Sign In
+            </Link>{" "}
+            to view your milestones
+            <WhySignIn />
+          </>
+        </Status>
+      </Content>
     );
   }
 
   if (res.error) {
-    return <Box type={BoxType.error}>{res.error.message}</Box>;
+    return (
+      <Content title={`${owner}/${repo}`}>
+        <Error error={res.error} />
+      </Content>
+    );
   }
 
   if (res.loading) {
-    return <Loader speed={2} />;
+    return (
+      <Content title={`${owner}/${repo}`}>
+        <Loader speed={2} />
+      </Content>
+    );
   }
 
   // TODO?
@@ -94,13 +105,14 @@ function Milestones() {
   }
 
   return (
-    <div className="content content--milestones">
+    <Content>
       <Title>
-        {milestones.owner}/{milestones.repo}
+        {owner}/{repo}
       </Title>
       <Chart milestone={milestones} />
-      <Table heading="Milestones" {...res} />
-    </div>
+      <div style={{ height: 20 }} />
+      <Table {...res} />
+    </Content>
   );
 }
 

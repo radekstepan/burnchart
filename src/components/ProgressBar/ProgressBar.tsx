@@ -8,26 +8,36 @@ interface Props {
   milestone: WithStats<Milestone>;
 }
 
+const className = "progressBar";
+
 const ProgressBar: React.FC<Props> = ({ milestone }) => (
-  <div className="progressBar">
-    <div className="top">
-      <div className="left">
+  <div className={className}>
+    <div className={`${className}__top`}>
+      <div className={`${className}__top__left`}>
         {milestone.dueOn && (
-          <div className={cls("due", milestone.stats.meta.isOverdue && "red")}>
+          <div
+            className={cls(
+              `${className}__top__left__due`,
+              milestone.stats.meta.isOverdue &&
+                `${className}__top__left__due--red`
+            )}
+          >
             {due(milestone.dueOn)}
           </div>
         )}
       </div>
-      <div className="percent">
+      <div className={`${className}__top__percent`}>
         {Math.floor(milestone.stats.progress.points)}%
       </div>
     </div>
-    <div className="outer bar">
+    <div className={cls(`${className}__bar`, `${className}__bar__outer`)}>
       <div
         className={cls(
-          "inner",
-          "bar",
-          milestone.stats.meta.isOnTime ? "green" : "red"
+          `${className}__bar`,
+          `${className}__bar__inner`,
+          `${className}__bar__inner--${
+            milestone.stats.meta.isOnTime ? "green" : "red"
+          }`
         )}
         style={{ width: `${milestone.stats.progress.points}%` }}
       />

@@ -2,6 +2,7 @@ import React, { useCallback, useMemo, useState } from "react";
 import ProgressBar from "../ProgressBar/ProgressBar";
 import Link from "../Link/Link";
 import Icon from "../Icon/Icon";
+import { Title } from "../Text/Text";
 import useIssues from "../../hooks/useIssues";
 import { sortBy, SortBy } from "../../utils/sort";
 import addStats from "../../utils/addStats";
@@ -12,7 +13,7 @@ const sortFns = [SortBy.priority, SortBy.name, SortBy.progress];
 type UseIssues = ReturnType<typeof useIssues>;
 
 interface Props extends UseIssues {
-  heading: string;
+  heading?: string;
 }
 
 const Table: React.FC<Props> = ({ heading, data }) => {
@@ -35,9 +36,9 @@ const Table: React.FC<Props> = ({ heading, data }) => {
 
   return (
     <div className="tbl">
-      <div className="header">
-        <div className="heading">{heading}</div>
-        <div className="sort">
+      <div className="tbl__header">
+        {heading && <Title className="tbl__header__heading">{heading}</Title>}
+        <div className="tbl__header__sort">
           <Link onClick={onSort}>
             <Icon name="sort" /> Sorted by {sortOrder}
           </Link>
@@ -49,7 +50,7 @@ const Table: React.FC<Props> = ({ heading, data }) => {
             <div className="table__row" key={d.id}>
               <div className="table__cell">
                 <Link
-                  className="strong"
+                  className="table__text--strong"
                   routeName="milestones"
                   state={{ owner: d.owner, repo: d.repo }}
                 >

@@ -1,4 +1,5 @@
 import React, { useMemo } from "react";
+import Content from "../components/Content/Content";
 import Table from "../components/Table/Table";
 import Link from "../components/Link/Link";
 import Loader from "../components/Loader/Loader";
@@ -8,6 +9,8 @@ import { useReposStore, useTokenStore } from "../hooks/useStore";
 import useIssues from "../hooks/useIssues";
 import useFirebase from "../hooks/useFirebase";
 import { Job } from "../utils/getIssues";
+
+const TITLE = "Repos";
 
 function Repos() {
   const { signIn } = useFirebase();
@@ -23,45 +26,57 @@ function Repos() {
 
   if (!token) {
     return (
-      <Status>
-        <>
-          <Link styled onClick={signIn}>
-            Sign In
-          </Link>{" "}
-          {!jobs || !jobs.length
-            ? "and then proceed to add a repo"
-            : "to view your repos"}
-          <WhySignIn />
-        </>
-      </Status>
+      <Content title={TITLE}>
+        <Status>
+          <>
+            <Link styled onClick={signIn}>
+              Sign In
+            </Link>{" "}
+            {!jobs || !jobs.length
+              ? "and then proceed to add a repo"
+              : "to view your repos"}
+            <WhySignIn />
+          </>
+        </Status>
+      </Content>
     );
   }
 
   if (!jobs || !jobs.length) {
     return (
-      <Status>
-        <>
-          <Link styled routeName="addRepo">
-            Add a Repo
-          </Link>{" "}
-          to view your milestones
-        </>
-      </Status>
+      <Content title={TITLE}>
+        <Status>
+          <>
+            <Link styled routeName="addRepo">
+              Add a Repo
+            </Link>{" "}
+            to view your milestones
+          </>
+        </Status>
+      </Content>
     );
   }
 
   if (res.error) {
-    return <Error error={res.error} />;
+    return (
+      <Content title={TITLE}>
+        <Error error={res.error} />
+      </Content>
+    );
   }
 
   if (res.loading) {
-    return <Loader speed={2} />;
+    return (
+      <Content title={TITLE}>
+        <Loader speed={2} />
+      </Content>
+    );
   }
 
   return (
-    <div className="content">
-      <Table heading="Repos" {...res} />
-    </div>
+    <Content wide>
+      <Table heading={TITLE} {...res} />
+    </Content>
   );
 }
 

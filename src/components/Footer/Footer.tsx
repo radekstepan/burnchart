@@ -1,9 +1,22 @@
 import React from "react";
+import Link from "../Link/Link";
 import "./footer.less";
 
 function Footer() {
   return (
-    <div id="footer">&copy; 2012-2023 Radek Stepan &amp; Contributors</div>
+    <div id="footer">
+      2012-{new Date().getFullYear()}{" "}
+      <Link styled href="https://radekstepan.com">
+        Radek Stepan
+      </Link>{" "}
+      and{" "}
+      <Link
+        styled
+        href="https://github.com/radekstepan/burnchart/graphs/contributors"
+      >
+        Contributors
+      </Link>
+    </div>
   );
 }
 
