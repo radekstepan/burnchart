@@ -2,8 +2,8 @@ import React, { useMemo } from "react";
 import Table from "../components/Table/Table";
 import Link from "../components/Link/Link";
 import Loader from "../components/Loader/Loader";
-import Status from "../components/Status/Status";
-import Box, { BoxType } from "../components/Box/Box";
+import Status, { WhySignIn } from "../components/Status/Status";
+import Error from "../components/Error/Error";
 import { useReposStore, useTokenStore } from "../hooks/useStore";
 import useIssues from "../hooks/useIssues";
 import useFirebase from "../hooks/useFirebase";
@@ -27,16 +27,31 @@ function Repos() {
         <>
           <Link styled onClick={signIn}>
             Sign In
-          </Link>
-          &nbsp;
-          {!jobs || !jobs.length ? "and add a repo" : "to see your repos"}
+          </Link>{" "}
+          {!jobs || !jobs.length
+            ? "and then proceed to add a repo"
+            : "to view your repos"}
+          <WhySignIn />
+        </>
+      </Status>
+    );
+  }
+
+  if (!jobs || !jobs.length) {
+    return (
+      <Status>
+        <>
+          <Link styled routeName="addRepo">
+            Add a Repo
+          </Link>{" "}
+          to view your milestones
         </>
       </Status>
     );
   }
 
   if (res.error) {
-    return <Box type={BoxType.error}>{res.error}</Box>;
+    return <Error error={res.error} />;
   }
 
   if (res.loading) {

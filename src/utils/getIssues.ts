@@ -47,10 +47,15 @@ const formatIssues = (nodes: Nodes) =>
 
 export type Job = [owner: string, repo: string, milestone?: string];
 
+export interface RequestError {
+  message: string;
+  variables?: { [key: string]: unknown };
+}
+
 const getIssues = (
   token: string,
   jobs: Job[],
-  cb: (err: string | null, res: Map<string, Milestone>) => void
+  cb: (err: RequestError | null, res: Map<string, Milestone>) => void
 ) => {
   let exited = false;
   const q = new PQueue({ concurrency: CONCURRENCY });
@@ -149,8 +154,12 @@ const getIssues = (
 
   q.on("error", (err: Error) => {
     if (!exited) {
-      let error = "Something went wrong";
-      const { message, response } = serializeError(err);
+      const { message, request, response } = serializeError(err);
+
+      const error: RequestError = {
+        message: "Something went wrong",
+      };
+
       if (
         response &&
         typeof response === "object" &&
@@ -162,9 +171,20 @@ const getIssues = (
         response.errors[0].message &&
         typeof response.errors[0].message === "string"
       ) {
-        error = response.errors[0].message;
+        error.message = response.errors[0].message;
       } else if (message) {
-        error = message;
+        error.message = message;
+      }
+
+      if (
+        request &&
+        typeof request === "object" &&
+        "variables" in request &&
+        request.variables &&
+        typeof request.variables === "object" &&
+        !(request.variables instanceof Array)
+      ) {
+        error.variables = request.variables;
       }
 
       onExit();

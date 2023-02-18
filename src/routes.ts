@@ -6,7 +6,7 @@ import Milestone from "./pages/Milestone";
 
 const routes: Oatmilk.IRoute[] = [
   {
-    name: "home",
+    name: "repos",
     path: "/",
     // view: React.lazy(() => import("./pages/Repos")),
     view: Repos,

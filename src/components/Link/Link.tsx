@@ -5,6 +5,7 @@ import "./link.less";
 
 interface Props {
   routeName?: string;
+  href?: string;
   state?: { [key: string]: string };
   styled?: boolean;
   onClick?: (evt: unknown) => void;
@@ -14,6 +15,7 @@ interface Props {
 
 const Link: React.FC<Props> = ({
   routeName,
+  href,
   state,
   styled,
   onClick,
@@ -26,7 +28,11 @@ const Link: React.FC<Props> = ({
   const $onClick = useCallback(
     // TODO type
     (evt: any) => {
+      if (!routeName && !onClick) {
+        return;
+      }
       evt.preventDefault();
+
       if (routeName) {
         goTo(routeName, state);
       }
@@ -40,8 +46,9 @@ const Link: React.FC<Props> = ({
   return (
     <a
       className={cls("link", styled && "link--styled", className)}
-      href={routeName ? getHref(routeName, state) : undefined}
+      href={routeName ? getHref(routeName, state) : href}
       onClick={$onClick}
+      target={href ? "_blank" : undefined}
       {...rest}
     >
       {children}

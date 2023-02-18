@@ -5,7 +5,8 @@ import Chart from "../components/Chart/Chart";
 import Loader from "../components/Loader/Loader";
 import Box, { BoxType } from "../components/Box/Box";
 import Link from "../components/Link/Link";
-import Status from "../components/Status/Status";
+import { Title } from "../components/Text/Text";
+import Status, { WhySignIn } from "../components/Status/Status";
 import useIssues from "../hooks/useIssues";
 import { useReposStore, useTokenStore } from "../hooks/useStore";
 import { Job } from "../utils/getIssues";
@@ -71,15 +72,16 @@ function Milestones() {
         <>
           <Link styled onClick={signIn}>
             Sign In
-          </Link>
-          &nbsp;to see your repo
+          </Link>{" "}
+          to view your milestones
+          <WhySignIn />
         </>
       </Status>
     );
   }
 
   if (res.error) {
-    return <Box type={BoxType.error}>{res.error}</Box>;
+    return <Box type={BoxType.error}>{res.error.message}</Box>;
   }
 
   if (res.loading) {
@@ -93,9 +95,9 @@ function Milestones() {
 
   return (
     <div className="content content--milestones">
-      <div className="title">
+      <Title>
         {milestones.owner}/{milestones.repo}
-      </div>
+      </Title>
       <Chart milestone={milestones} />
       <Table heading="Milestones" {...res} />
     </div>

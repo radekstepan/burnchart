@@ -1,14 +1,14 @@
 import React from "react";
 import Link from "../Link/Link";
 import Icon from "../Icon/Icon";
-import Auth from "../Auth";
+import Auth from "../Auth/Auth";
 import "./header.less";
 
 function Header() {
   return (
     <div id="header">
       <div className="links">
-        <Link routeName="home" className="logo">
+        <Link routeName="repos" className="logo">
           <Icon name="fire" />
         </Link>
         <Link routeName="addRepo" className="item">

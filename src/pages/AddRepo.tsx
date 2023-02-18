@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useOatmilk } from "oatmilk";
 import Button from "../components/Button/Button";
 import TextInput from "../components/TextInput/TextInput";
+import { Paragraph, Title } from "../components/Text/Text";
 
 const re = /^[\w-]+\/[\w-]+$/;
 
@@ -25,15 +26,18 @@ function AddRepo() {
 
   return (
     <div className="content">
-      <div className="title">Add a Repo</div>
-      <div className="paragraph">
-        Type the name of a GitHub repo that has milestones with issues
-        associated.
-      </div>
+      <Title>Add a Repo</Title>
+      <Paragraph>
+        Please provide the name of a GitHub repository that contains milestones
+        that have issues linked to them.
+      </Paragraph>
       <div>
         <TextInput
           placeholder="owner/repo"
-          invalidMessage={isInvalid && "Input does not match 'owner/repo'"}
+          invalidMessage={
+            isInvalid &&
+            "The format of the input is invalid. It should be in the form of 'owner/repo'."
+          }
           onChange={setInput}
           button={<Button onClick={onClick}>Add</Button>}
         />

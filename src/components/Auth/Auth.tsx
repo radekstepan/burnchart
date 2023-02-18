@@ -1,9 +1,9 @@
 import React from "react";
-import Icon from "./Icon/Icon";
-import Link from "./Link/Link";
-import Button from "./Button/Button";
-import useFirebase from "../hooks/useFirebase";
-import { useTokenStore } from "../hooks/useStore";
+import Icon from "../Icon/Icon";
+import Link from "../Link/Link";
+import Button from "../Button/Button";
+import useFirebase from "../../hooks/useFirebase";
+import { useTokenStore } from "../../hooks/useStore";
 
 function Auth() {
   const { user, signIn, signOut } = useFirebase();

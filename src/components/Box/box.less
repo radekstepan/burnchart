@@ -2,23 +2,24 @@
   position: relative;
   background: #fff;
   max-width: 400px;
-  max-height: 100px;
   overflow: hidden;
   text-overflow: ellipsis;
-  padding: 20px 80px;
+  padding: 18px 80px 20px 80px;
   margin: 0 auto;
   text-align: center;
+  line-height: 20px;
   box-shadow: 0 0 1px rgb(67 90 111 / 30%), 0 2px 4px -2px rgb(67 90 111 / 47%);
+  border-top: 4px solid #3366ff;
 
   &--absolute {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
+    margin-top: 4px;
   }
 
   &--error {
-    padding-top: 18px;
-    border-top: 4px solid #d14343;
+    border-color: #d14343;
   }
 
   &:after {
