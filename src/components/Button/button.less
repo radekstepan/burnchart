@@ -3,14 +3,15 @@
   background: #3366ff;
   border-radius: 4px;
   min-width: 32px;
-  line-height: 32px;
   font-size: 14px;
   height: 32px;
+  line-height: 32px;
   transition: box-shadow 80ms ease-in-out;
   color: #fff;
   padding: 1px 16px;
   display: inline-flex;
   align-items: center;
+  box-sizing: border-box;
   cursor: pointer;
 
   &:active {
@@ -27,5 +28,10 @@
   &:hover {
     border-color: #2952cc;
     background: #2952cc;
+  }
+
+  &--with-input {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
   }
 }

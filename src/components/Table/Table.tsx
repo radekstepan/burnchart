@@ -1,10 +1,10 @@
 import React, { useCallback, useMemo, useState } from "react";
-import ProgressBar from "./ProgressBar";
-import Link from "./Link";
-import Icon from "./Icon";
-import useIssues from "../hooks/useIssues";
-import { sortBy, SortBy } from "../utils/sort";
-import addStats from "../utils/addStats";
+import ProgressBar from "../ProgressBar/ProgressBar";
+import Link from "../Link/Link";
+import Icon from "../Icon/Icon";
+import useIssues from "../../hooks/useIssues";
+import { sortBy, SortBy } from "../../utils/sort";
+import addStats from "../../utils/addStats";
 import "./table.less";
 
 const sortFns = [SortBy.priority, SortBy.name, SortBy.progress];

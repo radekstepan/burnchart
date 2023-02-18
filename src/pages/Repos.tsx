@@ -1,9 +1,9 @@
 import React, { useMemo } from "react";
-import Table from "../components/Table";
-import Link from "../components/Link";
-import Loader from "../components/Loader";
-import Status from "../components/Status";
-import Box, { BoxType } from "../components/Box";
+import Table from "../components/Table/Table";
+import Link from "../components/Link/Link";
+import Loader from "../components/Loader/Loader";
+import Status from "../components/Status/Status";
+import Box, { BoxType } from "../components/Box/Box";
 import { useReposStore, useTokenStore } from "../hooks/useStore";
 import useIssues from "../hooks/useIssues";
 import useFirebase from "../hooks/useFirebase";

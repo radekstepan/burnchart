@@ -1,6 +1,6 @@
 import React, { ReactNode, useCallback } from "react";
 import { useOatmilk } from "oatmilk";
-import { cls } from "../utils/css";
+import { cls } from "../../utils/css";
 import "./link.less";
 
 interface Props {

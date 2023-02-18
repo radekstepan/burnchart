@@ -1,5 +1,5 @@
 import React, { ReactNode } from "react";
-import { cls } from "../utils/css";
+import { cls } from "../../utils/css";
 import "./box.less";
 
 export enum BoxType {

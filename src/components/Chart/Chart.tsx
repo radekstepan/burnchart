@@ -7,9 +7,9 @@ import {
   type ChartItem,
 } from "chart.js/auto"; // TODO optimize
 import "chartjs-adapter-moment";
-import * as lines from "../utils/lines";
-import useStateRef from "../hooks/useStateRef";
-import { Milestone, WithStats } from "../interfaces";
+import * as lines from "../../utils/lines";
+import useStateRef from "../../hooks/useStateRef";
+import { Milestone, WithStats } from "../../interfaces";
 import "./chart.less";
 
 interface Props {

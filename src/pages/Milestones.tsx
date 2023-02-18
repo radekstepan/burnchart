@@ -1,15 +1,35 @@
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 import { useOatmilk } from "oatmilk";
-import Table from "../components/Table";
-import Chart from "../components/Chart";
-import Loader from "../components/Loader";
-import Box, { BoxType } from "../components/Box";
+import Table from "../components/Table/Table";
+import Chart from "../components/Chart/Chart";
+import Loader from "../components/Loader/Loader";
+import Box, { BoxType } from "../components/Box/Box";
+import Link from "../components/Link/Link";
+import Status from "../components/Status/Status";
 import useIssues from "../hooks/useIssues";
+import { useReposStore, useTokenStore } from "../hooks/useStore";
 import { Job } from "../utils/getIssues";
 import addStats from "../utils/addStats";
+import useFirebase from "../hooks/useFirebase";
 
 function Milestones() {
   const oatmilk = useOatmilk();
+  const { signIn } = useFirebase();
+  const [token] = useTokenStore();
+  const [repos, setRepos] = useReposStore();
+
+  // Save the repo?
+  useEffect(() => {
+    const { owner, repo } = oatmilk.state;
+    if (!repos) {
+      setRepos([{ owner, repo }]);
+      return;
+    }
+    if (repos.find((r) => r.owner === owner && r.repo === repo)) {
+      return;
+    }
+    setRepos(repos.concat([{ owner, repo }]));
+  }, []);
 
   const jobs = useMemo<Job[] | null>(() => {
     const { owner, repo } = oatmilk.state;
@@ -44,6 +64,19 @@ function Milestones() {
     );
     // All the data arrive at the same time.
   }, [data.length]);
+
+  if (!token) {
+    return (
+      <Status>
+        <>
+          <Link styled onClick={signIn}>
+            Sign In
+          </Link>
+          &nbsp;to see your repo
+        </>
+      </Status>
+    );
+  }
 
   if (res.error) {
     return <Box type={BoxType.error}>{res.error}</Box>;

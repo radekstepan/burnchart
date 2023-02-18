@@ -13,6 +13,7 @@ const Loader: React.FC<Props> = ({ speed }) => (
     width={600}
     height={140}
     foregroundColor="#edeff5"
+    title={speed ? "Loading" : "Placeholder"}
   >
     <rect x="0" y="0" rx="5" ry="5" width="600" height="20" />
     <rect x="0" y="40" rx="5" ry="5" width="600" height="20" />

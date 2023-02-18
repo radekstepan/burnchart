@@ -1,8 +1,8 @@
 import React, { useMemo } from "react";
 import { useOatmilk } from "oatmilk";
-import Chart from "../components/Chart";
-import Loader from "../components/Loader";
-import Box, { BoxType } from "../components/Box";
+import Chart from "../components/Chart/Chart";
+import Loader from "../components/Loader/Loader";
+import Box, { BoxType } from "../components/Box/Box";
 import useIssues from "../hooks/useIssues";
 import { Job } from "../utils/getIssues";
 import addStats from "../utils/addStats";

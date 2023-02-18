@@ -1,9 +1,11 @@
 # TODO
 
-- add repo
+- delete owner/repo
+- handle invalid owner/repo on the homepage
 - detect old install and show a popup pointing to the changelog
 - add a changelog
 - search through TODOs
+- titles
 
 ## Nice to have
 

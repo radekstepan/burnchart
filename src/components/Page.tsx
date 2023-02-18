@@ -1,6 +1,6 @@
 import React from "react";
 import Oatmilk from "oatmilk";
-import Loader from "./Loader";
+import Loader from "./Loader/Loader";
 
 function Page() {
   return (

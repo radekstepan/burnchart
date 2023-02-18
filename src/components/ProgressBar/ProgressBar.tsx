@@ -1,7 +1,7 @@
 import React from "react";
-import { cls } from "../utils/css";
-import { due } from "../utils/format";
-import { Milestone, WithStats } from "../interfaces";
+import { cls } from "../../utils/css";
+import { due } from "../../utils/format";
+import { Milestone, WithStats } from "../../interfaces";
 import "./progressBar.less";
 
 interface Props {

@@ -1,7 +1,7 @@
 import React from "react";
-import Link from "./Link";
-import Icon from "./Icon";
-import Auth from "./Auth";
+import Link from "../Link/Link";
+import Icon from "../Icon/Icon";
+import Auth from "../Auth";
 import "./header.less";
 
 function Header() {

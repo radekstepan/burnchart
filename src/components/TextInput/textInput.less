@@ -1,0 +1,45 @@
+@prefix: text-input;
+@red: #d14343;
+
+.@{prefix} {
+  .@{prefix}__group {
+    display: flex;
+    align-items: center;
+
+    .@{prefix}__input {
+      height: 32px;
+      padding: 1px 12px;
+      line-height: 16px;
+      border: 1px solid #d8dae5;
+      outline: none;
+      width: 280px;
+      border-radius: 4px;
+      background: #fff;
+      color: #474d66;
+      box-sizing: border-box;
+      transition: box-shadow 80ms ease-in-out;
+
+      &:focus {
+        border-color: #adc2ff;
+        box-shadow: 0 0 0 2px #d6e0ff;
+      }
+
+      &--with-button {
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+      }
+
+      &[aria-invalid="true"] {
+        &:not(:focus) {
+          border-color: @red;
+        }
+      }
+    }
+  }
+
+  .@{prefix}__message {
+    font-size: 13px;
+    margin-top: 6px;
+    color: @red;
+  }
+}

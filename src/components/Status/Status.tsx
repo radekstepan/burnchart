@@ -1,9 +1,9 @@
 import React from "react";
-import Box, { BoxProps } from "./Box";
-import Loader from "./Loader";
+import Box, { BoxProps } from "../Box/Box";
+import Loader from "../Loader/Loader";
 import "./status.less";
 
-export { BoxType } from "./Box";
+export { BoxType } from "../Box/Box";
 
 interface Props extends BoxProps {}
 
