@@ -33,8 +33,8 @@ function Repos() {
               Sign In
             </Link>{" "}
             {!jobs || !jobs.length
-              ? "and then proceed to add a repo"
-              : "to view your repos"}
+              ? "and then proceed to add a repo."
+              : "to view your repos."}
             <WhySignIn />
           </>
         </Status>
@@ -50,7 +50,7 @@ function Repos() {
             <Link styled routeName="addRepo">
               Add a Repo
             </Link>{" "}
-            to view your milestones
+            to view your milestones.
           </>
         </Status>
       </Content>
@@ -74,7 +74,7 @@ function Repos() {
   }
 
   return (
-    <Content wide>
+    <Content>
       <Table heading={TITLE} {...res} />
     </Content>
   );

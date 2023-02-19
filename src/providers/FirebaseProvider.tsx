@@ -63,7 +63,6 @@ const FirebaseProvider: React.FC<Props> = ({ children }) => {
         const res = await signInWithCredential(auth, credential);
         setUser(res.user.providerData[0]);
       } catch (err) {
-        // err.code = auth/invalid-credential
         deleteToken();
       }
     };
@@ -71,7 +70,6 @@ const FirebaseProvider: React.FC<Props> = ({ children }) => {
     signIn();
   }, [user, token]);
 
-  // TODO fix popup closed by user error
   const value = useMemo(
     () => ({
       user,
@@ -95,7 +93,7 @@ const FirebaseProvider: React.FC<Props> = ({ children }) => {
           const { message } = serializeError(err);
           setError(
             message ||
-              "Something went wrong during the OAuth authentication flow"
+              "Something went wrong during the OAuth authentication flow."
           );
         }
       },

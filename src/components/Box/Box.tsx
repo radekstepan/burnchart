@@ -18,12 +18,9 @@ const Box: React.FC<BoxProps> = ({ absolute, type, onClose, children }) => (
     className={cls("box", absolute && "box--absolute", type && `box--${type}`)}
   >
     {onClose && (
-      <input
-        type="button"
-        className="box__close"
-        value="&#10005;"
-        onClick={onClose}
-      />
+      <button className="box__close" onClick={onClose}>
+        &#10005;
+      </button>
     )}
     {children}
   </div>

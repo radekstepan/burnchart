@@ -152,7 +152,7 @@ const getIssues = (
       const { message, request, response } = serializeError(err);
 
       const error: ErrorWithVars = {
-        message: "Something went wrong",
+        message: "Something went wrong.",
       };
 
       if (

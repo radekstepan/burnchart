@@ -2,6 +2,7 @@ import React from "react";
 import { useOatmilk } from "oatmilk";
 import Box, { BoxType } from "../Box/Box";
 import Link from "../Link/Link";
+import Icon from "../Icon/Icon";
 import { useReposStore } from "../../hooks/useStore";
 import { ErrorWithVars } from "../../interfaces";
 
@@ -35,7 +36,7 @@ const Error: React.FC<Props> = ({ error, onClose }) => {
         <div style={{ marginTop: 10 }}>
           This could be a temporary problem. You can try again later or you can{" "}
           <Link styled onClick={onRemove}>
-            Remove the Repo
+            Remove this Repo
           </Link>
           .
         </div>

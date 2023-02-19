@@ -6,7 +6,7 @@ import Chart from "../components/Chart/Chart";
 import Loader from "../components/Loader/Loader";
 import Link from "../components/Link/Link";
 import Error from "../components/Error/Error";
-import { Paragraph, Title } from "../components/Text/Text";
+import { Title } from "../components/Text/Text";
 import Status, { WhySignIn } from "../components/Status/Status";
 import useIssues from "../hooks/useIssues";
 import { useReposStore, useTokenStore } from "../hooks/useStore";
@@ -111,8 +111,7 @@ function Milestones() {
       </Title>
       <Chart milestone={milestones} />
       <div style={{ height: 20 }} />
-      <Table {...res} />
-      <Paragraph>Remove this repo</Paragraph>
+      <Table {...res} showRemove />
     </Content>
   );
 }
