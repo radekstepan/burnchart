@@ -1,5 +1,6 @@
 import React, { ReactNode, useCallback } from "react";
 import { useOatmilk } from "oatmilk";
+import useRemount from "../../hooks/useRemount";
 import { cls } from "../../utils/css";
 import "./link.less";
 
@@ -23,7 +24,8 @@ const Link: React.FC<Props> = ({
   className,
   ...rest
 }) => {
-  const { getHref, goTo } = useOatmilk();
+  const { getHref, goTo, ...milk } = useOatmilk();
+  const remount = useRemount();
 
   const $onClick = useCallback(
     // TODO type
@@ -34,7 +36,13 @@ const Link: React.FC<Props> = ({
       evt.preventDefault();
 
       if (routeName) {
-        goTo(routeName, state);
+        // Force reload of this page.
+        const pathName = getHref(routeName, state);
+        if (window.location.pathname === pathName) {
+          remount();
+        } else {
+          goTo(routeName, state);
+        }
       }
       if (onClick) {
         onClick(evt);

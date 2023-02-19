@@ -1,5 +1,6 @@
 import React from "react";
 import Oatmilk from "oatmilk";
+import RemountProvider from "./providers/RemountProvider";
 import FirebaseProvider from "./providers/FirebaseProvider";
 import Page from "./components/Page/Page";
 import Header from "./components/Header/Header";
@@ -11,11 +12,13 @@ import "./styles/fonts.less";
 function App() {
   return (
     <FirebaseProvider>
-      <Oatmilk.Provider routes={routes}>
-        <Header />
-        <Page />
-        <Footer />
-      </Oatmilk.Provider>
+      <RemountProvider>
+        <Oatmilk.Provider routes={routes}>
+          <Header />
+          <Page />
+          <Footer />
+        </Oatmilk.Provider>
+      </RemountProvider>
     </FirebaseProvider>
   );
 }

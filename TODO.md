@@ -7,7 +7,6 @@
 
 ## Nice to have
 
-- force reload the homepage even if we are already on it
 - "This milestone is overdue" and similar topbar messages
 - due date on the milestone page
 - link to milestone(s) from the title

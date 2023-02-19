@@ -35,7 +35,7 @@ const defaultValue = {
 export const FirebaseContext = React.createContext<ContextValue>(defaultValue);
 
 interface Props {
-  children?: React.ReactNode;
+  children: React.ReactNode;
 }
 
 const FirebaseProvider: React.FC<Props> = ({ children }) => {
