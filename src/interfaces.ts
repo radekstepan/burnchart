@@ -58,3 +58,8 @@ export interface ChartD {
   y: number; // points
   meta?: Pick<Issue, "number" | "title">;
 }
+
+export interface ErrorWithVars {
+  message: string;
+  variables?: { [key: string]: unknown };
+}

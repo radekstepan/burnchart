@@ -38,4 +38,27 @@
       rgba(255, 255, 255, 0) 100%
     );
   }
+
+  &__close {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    font-size: 12px;
+    line-height: 12px;
+    padding: 4px 6px;
+    color: #696f8c;
+    border-radius: 4px;
+    user-select: none;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+
+    &:hover {
+      background: #f4f5f9;
+    }
+
+    &:focus {
+      box-shadow: 0 0 0 2px #d6e0ff;
+    }
+  }
 }

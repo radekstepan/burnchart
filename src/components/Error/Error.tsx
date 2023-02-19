@@ -2,14 +2,15 @@ import React from "react";
 import { useOatmilk } from "oatmilk";
 import Box, { BoxType } from "../Box/Box";
 import Link from "../Link/Link";
-import { RequestError } from "../../utils/getIssues";
 import { useReposStore } from "../../hooks/useStore";
+import { ErrorWithVars } from "../../interfaces";
 
 interface Props {
-  error: RequestError;
+  error: ErrorWithVars;
+  onClose?: () => void;
 }
 
-const Error: React.FC<Props> = ({ error }) => {
+const Error: React.FC<Props> = ({ error, onClose }) => {
   const { goTo } = useOatmilk();
   const [repos, setRepos] = useReposStore();
 
@@ -28,7 +29,7 @@ const Error: React.FC<Props> = ({ error }) => {
   };
 
   return (
-    <Box type={BoxType.error}>
+    <Box type={BoxType.error} onClose={onClose}>
       {error.message}
       {error.variables && (
         <div style={{ marginTop: 10 }}>

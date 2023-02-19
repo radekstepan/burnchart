@@ -4,7 +4,7 @@ import { serializeError } from "serialize-error";
 import k from "./keys";
 import GetRepoIssues from "../queries/GetRepoIssues";
 import GetMilestoneIssues from "../queries/GetMilestoneIssues";
-import { Milestone, Issue } from "../interfaces";
+import { Milestone, Issue, ErrorWithVars } from "../interfaces";
 import {
   type GetRepoIssuesQuery,
   type GetMilestoneIssuesQuery,
@@ -47,15 +47,10 @@ const formatIssues = (nodes: Nodes) =>
 
 export type Job = [owner: string, repo: string, milestone?: string];
 
-export interface RequestError {
-  message: string;
-  variables?: { [key: string]: unknown };
-}
-
 const getIssues = (
   token: string,
   jobs: Job[],
-  cb: (err: RequestError | null, res: Map<string, Milestone>) => void
+  cb: (err: ErrorWithVars | null, res: Map<string, Milestone>) => void
 ) => {
   let exited = false;
   const q = new PQueue({ concurrency: CONCURRENCY });
@@ -156,7 +151,7 @@ const getIssues = (
     if (!exited) {
       const { message, request, response } = serializeError(err);
 
-      const error: RequestError = {
+      const error: ErrorWithVars = {
         message: "Something went wrong",
       };
 

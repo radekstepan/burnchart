@@ -9,6 +9,7 @@ import {
 } from "@firebase/auth";
 import config from "../config";
 import { useTokenStore } from "../hooks/useStore";
+import { serializeError } from "serialize-error";
 
 interface User {
   displayName: string | null;
@@ -18,13 +19,17 @@ interface User {
 interface ContextValue {
   signIn: () => void;
   signOut: () => void;
+  clearError: () => void;
   user: User | null;
+  error: string | null;
 }
 
 const defaultValue = {
   signIn: () => {},
   signOut: () => {},
+  clearError: () => {},
   user: null,
+  error: null,
 };
 
 export const FirebaseContext = React.createContext<ContextValue>(defaultValue);
@@ -34,7 +39,8 @@ interface Props {
 }
 
 const FirebaseProvider: React.FC<Props> = ({ children }) => {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<ContextValue["user"]>(null);
+  const [error, setError] = useState<ContextValue["error"]>(null);
 
   const app = initializeApp(config.firebase);
   const auth = getAuth(app);
@@ -57,7 +63,7 @@ const FirebaseProvider: React.FC<Props> = ({ children }) => {
         const res = await signInWithCredential(auth, credential);
         setUser(res.user.providerData[0]);
       } catch (err) {
-        // err.code = auth/invalid-credentia
+        // err.code = auth/invalid-credential
         deleteToken();
       }
     };
@@ -69,28 +75,40 @@ const FirebaseProvider: React.FC<Props> = ({ children }) => {
   const value = useMemo(
     () => ({
       user,
+      error,
       signIn: async () => {
         if (user) {
           return;
         }
 
-        const res = await signInWithPopup(auth, provider);
-        const credential = GithubAuthProvider.credentialFromResult(res);
+        try {
+          const res = await signInWithPopup(auth, provider);
+          const credential = GithubAuthProvider.credentialFromResult(res);
 
-        if (!credential?.accessToken) {
-          return;
+          if (!credential?.accessToken) {
+            return;
+          }
+
+          setToken(credential.accessToken);
+          setUser(res.user.providerData[0]);
+        } catch (err) {
+          const { message } = serializeError(err);
+          setError(
+            message ||
+              "Something went wrong during the OAuth authentication flow"
+          );
         }
-
-        setToken(credential.accessToken);
-        setUser(res.user.providerData[0]);
       },
       signOut: async () => {
         deleteToken();
         setUser(null);
         await signOut(auth);
       },
+      clearError: () => {
+        setError(null);
+      },
     }),
-    [user]
+    [user, error]
   );
 
   return (
