@@ -1,4 +1,5 @@
 import React, { useState, ReactNode } from "react";
+import useClickOutside from "../../hooks/useClickOutside";
 import { cls } from "../../utils/css";
 import "./menu.less";
 
@@ -8,11 +9,12 @@ interface MenuProps {
 
 export const Menu: React.FC<MenuProps> = ({ children }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const ref = useClickOutside(() => setIsOpen(false));
 
   const className = "menu";
 
   return (
-    <div className={className}>
+    <div className={className} ref={ref}>
       <button
         className={`${className}__button`}
         onClick={() => setIsOpen((prev) => !prev)}
