@@ -2,17 +2,31 @@ import React, { useEffect, useState } from "react";
 import moment from "moment";
 import {
   Chart as ChartJs,
+  TimeScale,
+  LinearScale,
+  LineController,
+  PointElement,
+  LineElement,
+} from "chart.js";
+import {
   type ChartData,
   type ChartConfiguration,
-  type ChartItem,
-  TooltipModel,
-} from "chart.js/auto"; // TODO optimize
+  type TooltipModel,
+} from "chart.js/dist/types";
 import "chartjs-adapter-moment";
 import * as lines from "../../utils/lines";
 import useStateRef from "../../hooks/useStateRef";
 import { ChartD, Milestone, WithStats } from "../../interfaces";
-import "./chart.less";
 import { pick } from "../../utils/object";
+import "./chart.less";
+
+ChartJs.register([
+  TimeScale,
+  LinearScale,
+  LineController,
+  PointElement,
+  LineElement,
+]);
 
 interface Props {
   milestone: WithStats<Milestone>;
