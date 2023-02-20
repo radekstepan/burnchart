@@ -7,6 +7,7 @@ import Status, { WhySignIn } from "../components/Status/Status";
 import Error from "../components/Error/Error";
 import Link from "../components/Link/Link";
 import { Title } from "../components/Text/Text";
+import Table from "../components/Table/Table";
 import useIssues from "../hooks/useIssues";
 import useFirebase from "../hooks/useFirebase";
 import { useReposStore, useTokenStore } from "../hooks/useStore";
@@ -50,6 +51,12 @@ function Milestone() {
     // All the data arrive at the same time.
   }, [data.length]);
 
+  useEffect(() => {
+    if (milestone?.title) {
+      document.title = milestone.title;
+    }
+  }, [milestone]);
+
   if (!token) {
     return (
       <Content title={`${owner}/${repo}/${number}`}>
@@ -89,10 +96,9 @@ function Milestone() {
 
   return (
     <Content>
-      <Title>
-        {owner}/{repo} {milestone.title}
-      </Title>
+      <Title>{milestone.title}</Title>
       <Chart milestone={milestone} />
+      <Table {...res} showRemove />
     </Content>
   );
 }

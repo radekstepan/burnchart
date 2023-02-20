@@ -28,8 +28,7 @@ const Link: React.FC<Props> = ({
   const remount = useRemount();
 
   const $onClick = useCallback(
-    // TODO type
-    (evt: any) => {
+    (evt: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
       if (!routeName && !onClick) {
         return;
       }

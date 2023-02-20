@@ -7,12 +7,9 @@ import {
   LineController,
   PointElement,
   LineElement,
-} from "chart.js";
-import {
-  type ChartData,
   type ChartConfiguration,
   type TooltipModel,
-} from "chart.js/dist/types";
+} from "chart.js";
 import "chartjs-adapter-moment";
 import * as lines from "../../utils/lines";
 import useStateRef from "../../hooks/useStateRef";
@@ -49,12 +46,12 @@ interface Tooltip
 const isMeta = (obj: unknown): obj is ChartD["meta"] =>
   !!obj && typeof obj === "object" && "number" in obj && "title" in obj;
 
-const Chart: React.FC<Props> = ({ milestone, ...rest }) => {
+const Chart: React.FC<Props> = ({ milestone }) => {
   const [el, setEl] = useStateRef<HTMLCanvasElement>();
   const [tooltip, setTooltip] = useState<Tooltip | null>(null);
 
   useEffect(() => {
-    if (!el || milestone.stats.meta.isEmpty) {
+    if (!el) {
       return;
     }
 
@@ -93,13 +90,11 @@ const Chart: React.FC<Props> = ({ milestone, ...rest }) => {
       },
     ].filter(Boolean);
 
-    // TODO fix types
-    const data: ChartData<"line"> = {
-      datasets: datasets as any,
-    };
-
     const config: ChartConfiguration = {
-      data,
+      data: {
+        // @ts-expect-error TODO
+        datasets,
+      },
       type: "line",
       options: {
         scales: {
@@ -194,8 +189,12 @@ const Chart: React.FC<Props> = ({ milestone, ...rest }) => {
     };
   }, [el]);
 
+  if (milestone.stats.meta.isEmpty) {
+    return null;
+  }
+
   return (
-    <div className="chart" {...rest}>
+    <div className="chart">
       {tooltip && (
         <div
           className="tooltip"

@@ -112,7 +112,6 @@ function Milestones() {
         {owner}/{repo}
       </Title>
       <Chart milestone={milestones} />
-      <div style={{ height: 20 }} />
       <Table {...res} showRemove />
     </Content>
   );

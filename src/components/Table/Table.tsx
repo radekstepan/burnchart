@@ -54,11 +54,13 @@ const Table: React.FC<Props> = ({ heading, data, showRemove }) => {
     <div className="tbl">
       <div className="tbl__header">
         {heading && <Title className="tbl__header__heading">{heading}</Title>}
-        <div className="tbl__header__sort">
-          <Link onClick={onSort}>
-            <Icon name="sort" /> Sorted by {sortOrder}
-          </Link>
-        </div>
+        {sorted.length > 1 && (
+          <div className="tbl__header__sort">
+            <Link onClick={onSort}>
+              <Icon name="sort" /> Sorted by {sortOrder}
+            </Link>
+          </div>
+        )}
         {showRemove && (
           <Menu>
             <MenuItem red onClick={onRemove}>

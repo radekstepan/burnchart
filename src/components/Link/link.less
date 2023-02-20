@@ -1,9 +1,17 @@
 .link {
-  text-decoration: none;
   color: inherit;
-  cursor: pointer;
+  text-decoration: none;
   user-select: none;
   transition: 120ms all ease-in-out;
+  cursor: pointer;
+
+  &:hover {
+    color: #212532;
+  }
+
+  &:active {
+    color: #111;
+  }
 
   &--styled {
     color: #3366ff;
