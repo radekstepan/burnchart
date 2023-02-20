@@ -3,10 +3,10 @@
 - detect old install and show a popup pointing to the changelog
 - add a changelog
 - search through TODOs
-- titles
 
 ## Nice to have
 
+- empty milestone/repo state
 - "This milestone is overdue" and similar topbar messages
 - due date on the milestone page
 - link to milestone(s) from the title

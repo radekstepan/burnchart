@@ -24,6 +24,8 @@ function Milestones() {
 
   // Save the repo?
   useEffect(() => {
+    document.title = `${owner}/${repo}`;
+
     if (!repos) {
       setRepos([{ owner, repo }]);
       return;

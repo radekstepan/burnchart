@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 import Content from "../components/Content/Content";
 import Table from "../components/Table/Table";
 import Link from "../components/Link/Link";
@@ -16,6 +16,10 @@ function Repos() {
   const { signIn } = useFirebase();
   const [token] = useTokenStore();
   const [repos] = useReposStore();
+
+  useEffect(() => {
+    document.title = "Burnchart";
+  }, []);
 
   const jobs = useMemo<Job[] | null>(
     () => repos?.map((d) => [d.owner, d.repo]) || null,

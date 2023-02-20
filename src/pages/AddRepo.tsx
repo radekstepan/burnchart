@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useOatmilk } from "oatmilk";
 import Content from "../components/Content/Content";
 import Button from "../components/Button/Button";
@@ -11,6 +11,10 @@ function AddRepo() {
   const { goTo } = useOatmilk();
   const [isInvalid, setIsInvalid] = useState(false);
   const [input, setInput] = useState("");
+
+  useEffect(() => {
+    document.title = "Add a Repo";
+  }, []);
 
   const onClick = () => {
     if (!re.test(input)) {
