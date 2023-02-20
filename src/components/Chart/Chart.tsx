@@ -5,12 +5,14 @@ import {
   type ChartData,
   type ChartConfiguration,
   type ChartItem,
+  TooltipModel,
 } from "chart.js/auto"; // TODO optimize
 import "chartjs-adapter-moment";
 import * as lines from "../../utils/lines";
 import useStateRef from "../../hooks/useStateRef";
-import { Milestone, WithStats } from "../../interfaces";
+import { ChartD, Milestone, WithStats } from "../../interfaces";
 import "./chart.less";
+import { pick } from "../../utils/object";
 
 interface Props {
   milestone: WithStats<Milestone>;
@@ -22,14 +24,19 @@ enum SeriesIndex {
   IDEAL = 2,
 }
 
-interface Tooltip {
-  i: number;
-  x: number;
-  y: number;
+interface Tooltip
+  extends Pick<
+    TooltipModel,
+    "x" | "y" | "caretX" | "caretY" | "width" | "xAlign" | "yAlign"
+  > {
+  meta: NonNullable<ChartD["meta"]>;
 }
 
+const isMeta = (obj: unknown): obj is ChartD["meta"] =>
+  !!obj && typeof obj === "object" && "number" in obj && "title" in obj;
+
 const Chart: React.FC<Props> = ({ milestone, ...rest }) => {
-  const [el, setEl] = useStateRef<ChartItem>();
+  const [el, setEl] = useStateRef<HTMLCanvasElement>();
   const [tooltip, setTooltip] = useState<Tooltip | null>(null);
 
   useEffect(() => {
@@ -112,6 +119,17 @@ const Chart: React.FC<Props> = ({ milestone, ...rest }) => {
           },
           tooltip: {
             enabled: false,
+            callbacks: {
+              // For accurate positioning.
+              label: (context) => {
+                const node =
+                  milestone.issues.closed.nodes[context.dataIndex - 1];
+                if (node) {
+                  return `#${node.number}: ${node.title}`;
+                }
+                return "";
+              },
+            },
             external: (context) => {
               const tooltipModel = context.tooltip;
               if (!tooltipModel.opacity) {
@@ -128,11 +146,27 @@ const Chart: React.FC<Props> = ({ milestone, ...rest }) => {
               if (!dataPoint.dataIndex) {
                 return;
               }
-              setTooltip({
-                i: dataPoint.dataIndex,
-                x: tooltipModel.caretX,
-                y: tooltipModel.caretY,
-              });
+              const [point] = tooltipModel.dataPoints;
+              if (
+                point.raw &&
+                typeof point.raw === "object" &&
+                "meta" in point.raw
+              ) {
+                if (point.raw.meta && isMeta(point.raw.meta)) {
+                  setTooltip({
+                    meta: point.raw.meta,
+                    ...pick(tooltipModel, [
+                      "x",
+                      "y",
+                      "caretX",
+                      "caretY",
+                      "width",
+                      "xAlign",
+                      "yAlign",
+                    ]),
+                  });
+                }
+              }
             },
           },
         },
@@ -148,10 +182,12 @@ const Chart: React.FC<Props> = ({ milestone, ...rest }) => {
 
   return (
     <div className="chart" {...rest}>
-      {tooltip?.i && (
-        <div className="tooltip" style={{ left: tooltip.x, top: tooltip.y }}>
-          #{milestone.issues.closed.nodes[tooltip.i - 1].number}:
-          {milestone.issues.closed.nodes[tooltip.i - 1].title}
+      {tooltip && (
+        <div
+          className="tooltip"
+          style={{ left: tooltip.x, top: tooltip.y, maxWidth: tooltip.width }}
+        >
+          #{tooltip.meta.number}:{tooltip.meta.title}
         </div>
       )}
       <canvas ref={setEl} />
