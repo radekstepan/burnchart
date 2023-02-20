@@ -2,8 +2,7 @@ import React from "react";
 import { useOatmilk } from "oatmilk";
 import Box, { BoxType } from "../Box/Box";
 import Link from "../Link/Link";
-import Icon from "../Icon/Icon";
-import { useReposStore } from "../../hooks/useStore";
+import useReposStore from "../../hooks/useReposStore";
 import { ErrorWithVars } from "../../interfaces";
 
 interface Props {
@@ -13,11 +12,11 @@ interface Props {
 
 const Error: React.FC<Props> = ({ error, onClose }) => {
   const { goTo } = useOatmilk();
-  const [repos, setRepos] = useReposStore();
+  const { repos, removeRepo } = useReposStore();
 
   const onRemove = () => {
     if (
-      !repos ||
+      !repos.length ||
       !error.variables ||
       !("owner" in error.variables) ||
       !("repo" in error.variables)
@@ -25,7 +24,7 @@ const Error: React.FC<Props> = ({ error, onClose }) => {
       return;
     }
     const { owner, repo } = error.variables;
-    setRepos(repos.filter((r) => r.owner !== owner || r.repo !== repo));
+    removeRepo(owner as string, repo as string);
     goTo("repos");
   };
 

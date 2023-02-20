@@ -6,7 +6,7 @@ import Icon from "../Icon/Icon";
 import { Title } from "../Text/Text";
 import { Menu, MenuItem } from "../Menu/Menu";
 import useIssues from "../../hooks/useIssues";
-import { useReposStore } from "../../hooks/useStore";
+import useReposStore from "../../hooks/useReposStore";
 import { sortBy, SortBy } from "../../utils/sort";
 import addStats from "../../utils/addStats";
 import "./table.less";
@@ -22,7 +22,7 @@ interface Props extends UseIssues {
 
 const Table: React.FC<Props> = ({ heading, data, showRemove }) => {
   const { goTo } = useOatmilk();
-  const [repos, setRepos] = useReposStore();
+  const { repos, removeRepo } = useReposStore();
   const [sortOrder, setSortOrder] = useState<SortBy>(SortBy.priority);
 
   const onSort = useCallback(() => {
@@ -43,10 +43,10 @@ const Table: React.FC<Props> = ({ heading, data, showRemove }) => {
   // Remove repo.
   const onRemove = () => {
     const [{ owner, repo }] = data;
-    if (!repos) {
+    if (!repos.length) {
       return;
     }
-    setRepos(repos.filter((r) => r.owner !== owner || r.repo !== repo));
+    removeRepo(owner, repo);
     goTo("repos");
   };
 

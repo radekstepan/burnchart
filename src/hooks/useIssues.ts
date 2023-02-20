@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useDeepCompareEffect } from "react-use";
-import { useTokenStore } from "./useStore";
+import useTokenStore from "./useTokenStore";
 import * as map from "../utils/map";
 import k from "../utils/keys";
 import getIssues, { Job } from "../utils/getIssues";
@@ -14,7 +14,7 @@ const defaultState = {
   data: [],
 };
 
-const useIssues = (ask: Job[] | null) => {
+const useIssues = (ask: Job[]) => {
   const [token] = useTokenStore();
   const [state, setState] = useState<{
     error: ErrorWithVars | null;
@@ -23,7 +23,7 @@ const useIssues = (ask: Job[] | null) => {
   }>(defaultState);
 
   useDeepCompareEffect(() => {
-    if (!ask || !token) {
+    if (!ask.length || !token) {
       return;
     }
 

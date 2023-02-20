@@ -5,7 +5,8 @@ import Link from "../components/Link/Link";
 import Loader from "../components/Loader/Loader";
 import Status, { WhySignIn } from "../components/Status/Status";
 import Error from "../components/Error/Error";
-import { useReposStore, useTokenStore } from "../hooks/useStore";
+import useReposStore from "../hooks/useReposStore";
+import useTokenStore from "../hooks/useTokenStore";
 import useIssues from "../hooks/useIssues";
 import useFirebase from "../hooks/useFirebase";
 import { Job } from "../utils/getIssues";
@@ -15,14 +16,14 @@ const TITLE = "Repos";
 function Repos() {
   const { signIn } = useFirebase();
   const [token] = useTokenStore();
-  const [repos] = useReposStore();
+  const { repos } = useReposStore();
 
   useEffect(() => {
     document.title = "Burnchart";
   }, []);
 
-  const jobs = useMemo<Job[] | null>(
-    () => repos?.map((d) => [d.owner, d.repo]) || null,
+  const jobs = useMemo<Job[]>(
+    () => repos.map((d) => [d.owner, d.repo]),
     [repos]
   );
 
@@ -36,7 +37,7 @@ function Repos() {
             <Link styled onClick={signIn}>
               Sign In
             </Link>{" "}
-            {!jobs || !jobs.length
+            {!jobs.length
               ? "and then proceed to add a repo."
               : "to view your repos."}
             <WhySignIn />
@@ -46,7 +47,7 @@ function Repos() {
     );
   }
 
-  if (!jobs || !jobs.length) {
+  if (!jobs.length) {
     return (
       <Content title={TITLE}>
         <Status>

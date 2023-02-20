@@ -8,7 +8,7 @@ import {
   signOut,
 } from "@firebase/auth";
 import config from "../config";
-import { useTokenStore } from "../hooks/useStore";
+import useTokenStore from "../hooks/useTokenStore";
 import { serializeError } from "serialize-error";
 
 interface User {

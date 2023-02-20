@@ -9,7 +9,8 @@ import Error from "../components/Error/Error";
 import { Title } from "../components/Text/Text";
 import Status, { WhySignIn } from "../components/Status/Status";
 import useIssues from "../hooks/useIssues";
-import { useReposStore, useTokenStore } from "../hooks/useStore";
+import useReposStore from "../hooks/useReposStore";
+import useTokenStore from "../hooks/useTokenStore";
 import { Job } from "../utils/getIssues";
 import addStats from "../utils/addStats";
 import useFirebase from "../hooks/useFirebase";
@@ -18,22 +19,14 @@ function Milestones() {
   const oatmilk = useOatmilk();
   const { signIn } = useFirebase();
   const [token] = useTokenStore();
-  const [repos, setRepos] = useReposStore();
+  const { addRepo } = useReposStore();
 
   const { owner, repo } = oatmilk.state;
 
   // Save the repo?
   useEffect(() => {
     document.title = `${owner}/${repo}`;
-
-    if (!repos) {
-      setRepos([{ owner, repo }]);
-      return;
-    }
-    if (repos.find((r) => r.owner === owner && r.repo === repo)) {
-      return;
-    }
-    setRepos(repos.concat([{ owner, repo }]));
+    addRepo(owner, repo);
   }, [owner, repo]);
 
   const jobs = useMemo<Job[] | null>(() => {

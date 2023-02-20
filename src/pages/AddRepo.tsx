@@ -3,9 +3,9 @@ import { useOatmilk } from "oatmilk";
 import Content from "../components/Content/Content";
 import Button from "../components/Button/Button";
 import TextInput from "../components/TextInput/TextInput";
-import { Paragraph, Title } from "../components/Text/Text";
+import { Paragraph } from "../components/Text/Text";
 
-const re = /^[\w-]+\/[\w-]+$/;
+const re = /^[\w\.-]+\/[\w\.-]+$/;
 
 function AddRepo() {
   const { goTo } = useOatmilk();

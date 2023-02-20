@@ -10,7 +10,8 @@ import { Title } from "../components/Text/Text";
 import Table from "../components/Table/Table";
 import useIssues from "../hooks/useIssues";
 import useFirebase from "../hooks/useFirebase";
-import { useReposStore, useTokenStore } from "../hooks/useStore";
+import useReposStore from "../hooks/useReposStore";
+import useTokenStore from "../hooks/useTokenStore";
 import { Job } from "../utils/getIssues";
 import addStats from "../utils/addStats";
 
@@ -18,22 +19,14 @@ function Milestone() {
   const { signIn } = useFirebase();
   const [token] = useTokenStore();
   const oatmilk = useOatmilk();
-  const [repos, setRepos] = useReposStore();
+  const { addRepo } = useReposStore();
 
   const { owner, repo, number } = oatmilk.state;
 
   // Save the repo?
   useEffect(() => {
     document.title = `${owner}/${repo}/${number}`;
-
-    if (!repos) {
-      setRepos([{ owner, repo }]);
-      return;
-    }
-    if (repos.find((r) => r.owner === owner && r.repo === repo)) {
-      return;
-    }
-    setRepos(repos.concat([{ owner, repo }]));
+    addRepo(owner, repo);
   }, [owner, repo]);
 
   const jobs = useMemo<Job[] | null>(() => {
