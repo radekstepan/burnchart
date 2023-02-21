@@ -1,15 +1,11 @@
 import React from "react";
 import Oatmilk from "oatmilk";
-import Repos from "./pages/Repos";
-import Milestones from "./pages/Milestones";
-import Milestone from "./pages/Milestone";
 
 const routes: Oatmilk.IRoute[] = [
   {
     name: "repos",
     path: "/",
-    // view: React.lazy(() => import("./pages/Repos")),
-    view: Repos,
+    view: React.lazy(() => import("./pages/Repos")),
   },
   {
     name: "addRepo",
@@ -19,14 +15,12 @@ const routes: Oatmilk.IRoute[] = [
   {
     name: "milestones",
     path: "/:owner/:repo",
-    // view: React.lazy(() => import("./pages/Milestones")),
-    view: Milestones,
+    view: React.lazy(() => import("./pages/Milestones")),
   },
   {
     name: "milestone",
     path: "/:owner/:repo/:number",
-    // view: React.lazy(() => import("./pages/Milestone")),
-    view: Milestone,
+    view: React.lazy(() => import("./pages/Milestone")),
   },
   {
     name: "notFound",

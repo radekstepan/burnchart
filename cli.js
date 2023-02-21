@@ -1,18 +1,18 @@
 #!/usr/bin/env node
+import { createServer } from "http";
 import { fileURLToPath } from "url";
 import meow from "meow";
-import { createServer } from "vite";
+import { Server } from "node-static";
 
-const __dirname = fileURLToPath(new URL(".", import.meta.url));
+const dir = fileURLToPath(new URL("./dist", import.meta.url));
 
 const cli = meow(
   `
 	Usage
-	  $ foo <input>
+	  $ burnchart <options>
 
 	Options
 	  --port, -p  Specify port (number)
-	  --host, -h  Specify hostname (string)
 `,
   {
     importMeta: import.meta,
@@ -30,16 +30,16 @@ const cli = meow(
   }
 );
 
-(async () => {
-  const server = await createServer({
-    // any valid user config options, plus `mode` and `configFile`
-    root: __dirname,
-    server: {
-      host: cli.flags.host,
-      port: cli.flags.port,
-    },
-  });
-  await server.listen();
+const fileServer = new Server(dir);
 
-  server.printUrls();
-})();
+createServer((req, res) =>
+  req
+    .addListener("end", () =>
+      fileServer.serve(req, res, (e) => {
+        if (e && e.status === 404) {
+          fileServer.serveFile("/index.html", 200, {}, req, res);
+        }
+      })
+    )
+    .resume()
+).listen(cli.flags.port);
