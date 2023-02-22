@@ -1,5 +1,4 @@
 import React, { useEffect, useMemo } from "react";
-import { useOatmilk } from "oatmilk";
 import Content from "../components/Content/Content";
 import Table from "../components/Table/Table";
 import Chart from "../components/Chart/Chart";
@@ -11,17 +10,16 @@ import Status, { WhySignIn } from "../components/Status/Status";
 import useIssues from "../hooks/useIssues";
 import useReposStore from "../hooks/useReposStore";
 import useTokenStore from "../hooks/useTokenStore";
+import useFirebase from "../hooks/useFirebase";
+import { useRoute } from "../hooks/useRouter";
 import { Job } from "../utils/getIssues";
 import addStats from "../utils/addStats";
-import useFirebase from "../hooks/useFirebase";
 
 function Milestones() {
-  const oatmilk = useOatmilk();
   const { signIn } = useFirebase();
   const [token] = useTokenStore();
   const { addRepo } = useReposStore();
-
-  const { owner, repo } = oatmilk.state;
+  const { owner, repo } = useRoute("milestones");
 
   // Save the repo?
   useEffect(() => {
@@ -29,7 +27,7 @@ function Milestones() {
     addRepo(owner, repo);
   }, [owner, repo]);
 
-  const jobs = useMemo<Job[] | null>(() => {
+  const jobs = useMemo<Job[]>(() => {
     return [[owner, repo]];
   }, [owner, repo]);
 

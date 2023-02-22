@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { useOatmilk } from "oatmilk";
 import Content from "../components/Content/Content";
 import Button from "../components/Button/Button";
 import TextInput from "../components/TextInput/TextInput";
 import { Paragraph } from "../components/Text/Text";
+import useRouter from "../hooks/useRouter";
 
 const re = /^[\w\.-]+\/[\w\.-]+$/;
 
 function AddRepo() {
-  const { goTo } = useOatmilk();
+  const { goTo } = useRouter();
   const [isInvalid, setIsInvalid] = useState(false);
   const [input, setInput] = useState("");
 

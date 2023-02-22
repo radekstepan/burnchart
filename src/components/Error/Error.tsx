@@ -1,8 +1,8 @@
 import React from "react";
-import { useOatmilk } from "oatmilk";
 import Box, { BoxType } from "../Box/Box";
 import Link from "../Link/Link";
 import useReposStore from "../../hooks/useReposStore";
+import useRouter from "../../hooks/useRouter";
 import { ErrorWithVars } from "../../interfaces";
 
 interface Props {
@@ -11,7 +11,7 @@ interface Props {
 }
 
 const Error: React.FC<Props> = ({ error, onClose }) => {
-  const { goTo } = useOatmilk();
+  const { goTo } = useRouter();
   const { repos, removeRepo } = useReposStore();
 
   const onRemove = () => {

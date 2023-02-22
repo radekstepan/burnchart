@@ -1,6 +1,6 @@
 import React, { ReactNode, useCallback } from "react";
-import { useOatmilk } from "oatmilk";
 import useRemount from "../../hooks/useRemount";
+import useRouter from "../../hooks/useRouter";
 import { cls } from "../../utils/css";
 import "./link.less";
 
@@ -24,7 +24,7 @@ const Link: React.FC<Props> = ({
   className,
   ...rest
 }) => {
-  const { getHref, goTo, ...milk } = useOatmilk();
+  const { goTo, getHref } = useRouter();
   const remount = useRemount();
 
   const $onClick = useCallback(

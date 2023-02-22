@@ -1,7 +1,6 @@
 import React from "react";
-import Oatmilk from "oatmilk";
 
-const routes: Oatmilk.IRoute[] = [
+const routes = [
   {
     name: "repos",
     path: "/",
