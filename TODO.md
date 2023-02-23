@@ -16,4 +16,3 @@
 - d3/d3 has no milestones
 - use Vercel and Next.js Github auth instead of Firebase
 - conventional-commit
-- Router params types (enum)

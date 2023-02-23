@@ -11,14 +11,15 @@ import useIssues from "../hooks/useIssues";
 import useReposStore from "../hooks/useReposStore";
 import useTokenStore from "../hooks/useTokenStore";
 import useFirebase from "../hooks/useFirebase";
-import { useRoute } from "../hooks/useRouter";
+import useRouteParams from "../hooks/useRouteParams";
 import addStats from "../utils/addStats";
+import { Route } from "../routes";
 
 function Milestones() {
   const { signIn } = useFirebase();
   const [token] = useTokenStore();
   const { addRepo } = useReposStore();
-  const { owner, repo } = useRoute("milestones");
+  const { owner, repo } = useRouteParams(Route.milestones);
 
   // Save the repo?
   useEffect(() => {
