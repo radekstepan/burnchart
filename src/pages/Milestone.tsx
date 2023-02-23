@@ -12,7 +12,6 @@ import useFirebase from "../hooks/useFirebase";
 import useReposStore from "../hooks/useReposStore";
 import useTokenStore from "../hooks/useTokenStore";
 import { useRoute } from "../hooks/useRouter";
-import { Job } from "../utils/getIssues";
 import addStats from "../utils/addStats";
 
 function Milestone() {
@@ -25,13 +24,9 @@ function Milestone() {
   useEffect(() => {
     document.title = `${owner}/${repo}/${number}`;
     addRepo(owner, repo);
-  }, [owner, repo]);
-
-  const jobs = useMemo<Job[]>(() => {
-    return [[owner, repo, number]];
   }, [owner, repo, number]);
 
-  const res = useIssues(jobs);
+  const res = useIssues([[owner, repo, number]]);
   const { data } = res;
 
   const milestone = useMemo(() => {

@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect } from "react";
 import Content from "../components/Content/Content";
 import Table from "../components/Table/Table";
 import Link from "../components/Link/Link";
@@ -22,10 +22,7 @@ function Repos() {
     document.title = "Burnchart";
   }, []);
 
-  const jobs = useMemo<Job[]>(
-    () => repos.map((d) => [d.owner, d.repo]),
-    [repos]
-  );
+  const jobs = repos.map<Job>((d) => [d.owner, d.repo]);
 
   const res = useIssues(jobs);
 

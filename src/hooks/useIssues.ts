@@ -14,6 +14,12 @@ const defaultState = {
   data: [],
 };
 
+/**
+ * Returns milestone(s) issues.
+ *
+ * @param ask - Job[] (behind useDeepCompareEffect)
+ * @returns Milestone[] issues
+ */
 const useIssues = (ask: Job[]) => {
   const [token] = useTokenStore();
   const [state, setState] = useState<{

@@ -2,6 +2,7 @@
 
 - fix: https://github.com/nhn/tui.calendar/milestone/6 shows as completed, mine is 90% done
 - add a changelog
+- build post install so cli works
 
 ## Nice to have
 
@@ -15,3 +16,5 @@
 - back button to navigate away from milestone page
 - d3/d3 has no milestones
 - use Vercel and Next.js Github auth instead of Firebase
+- conventional-commit
+- Router params types (enum)
