@@ -2,7 +2,6 @@
 
 - fix: https://github.com/nhn/tui.calendar/milestone/6 shows as completed, mine is 90% done
 - add a changelog
-- build post install so cli works
 
 ## Nice to have
 
