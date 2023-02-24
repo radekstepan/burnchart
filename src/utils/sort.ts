@@ -9,7 +9,12 @@ export enum SortBy {
 
 type Comparator = (...args: WithStats<Milestone>[]) => number;
 
-// From highest progress points.
+/**
+ * A comparator function for comparing milestones by progress, from highest in points.
+ * @param a The first milestone to compare.
+ * @param b The second milestone to compare.
+ * @returns -1 if a should be sorted before b, +1 if a should be sorted after b, or 0 if they are equal.
+ */
 const compareByProgress: Comparator = (a, b) => {
   const diff = b.stats.progress.points - a.stats.progress.points;
   if (!diff) {
@@ -19,7 +24,12 @@ const compareByProgress: Comparator = (a, b) => {
   return diff;
 };
 
-// From most delayed in days.
+/**
+ * A comparator function for comparing milestones by priority, from most delayed in days.
+ * @param a The first milestone to compare.
+ * @param b The second milestone to compare.
+ * @returns -1 if a should be sorted before b, +1 if a should be sorted after b, or 0 if they are equal.
+ */
 const compareByPriority: Comparator = (a, b) => {
   // Milestones with no deadline are always at the "beginning".
   // % difference in progress times the number of days ahead or behind.
@@ -34,7 +44,12 @@ const compareByPriority: Comparator = (a, b) => {
   return diff;
 };
 
-// Based on project then milestone title including semver.
+/**
+ * A comparator function for comparing milestones by name, based on the project and milestone title, including SemVer.
+ * @param a The first milestone to compare.
+ * @param b The second milestone to compare.
+ * @returns -1 if a should be sorted before b, +1 if a should be sorted after b, or 0 if they are equal.
+ */
 const compareByName: Comparator = (a, b) => {
   if (a.owner.localeCompare(b.owner) === -1) {
     return -1;

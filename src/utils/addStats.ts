@@ -3,7 +3,12 @@ import sortOn from "sort-on";
 import config from "../config";
 import { Issue, Milestone, WithSize, WithStats } from "../interfaces";
 
-// Progress in %.
+/**
+ * Calculates the progress as a percentage.
+ * @param a The numerator.
+ * @param b The denominator.
+ * @returns The progress as a percentage.
+ */
 const progress = (a: number, b: number) => {
   if (a + b === 0) {
     return 0;
@@ -11,7 +16,11 @@ const progress = (a: number, b: number) => {
   return 100 * (a / (b + a));
 };
 
-// Get an issue size.
+/**
+ * Calculates the size of an issue.
+ * @param issue The issue to calculate the size for.
+ * @returns The size of the issue.
+ */
 const calc = (issue: Issue) => {
   switch (config.chart.points) {
     // Sum of the labels (numbers).
@@ -30,6 +39,12 @@ const calc = (issue: Issue) => {
   }
 };
 
+/**
+ * Adds the size to an array of issues.
+ * @template T The type of the issues in the array.
+ * @param issues The array of issues to add the size to.
+ * @returns An object containing the nodes with their sizes and the total size.
+ */
 const addSize = <T extends Issue>(issues: T[]) => {
   const [size, nodes] = issues.reduce(
     (acc, issue) => {
@@ -42,8 +57,11 @@ const addSize = <T extends Issue>(issues: T[]) => {
   return { nodes, size };
 };
 
-// Calculate the stats for a milestone.
-// NOTE: modifies milestone.createAt
+/**
+ * Calculates the stats for a milestone.
+ * @param milestone The milestone to calculate the stats for.
+ * @returns An object containing the milestone with the added stats (modifies createdAt)
+ */
 const addStats = (milestone: Milestone): WithStats<Milestone> => {
   // Sort the issues and add their size.
   const sorted = sortOn(milestone.issues, "closedAt");

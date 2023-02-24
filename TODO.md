@@ -1,5 +1,9 @@
 # TODO
 
+- fix: add/repo page blowy
+- fix: npx command not worky
+- update README
+
 ## Nice to have
 
 - reduce gql bundle size

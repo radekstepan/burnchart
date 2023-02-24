@@ -11,7 +11,13 @@ interface LegacyRepo {
   name: string;
 }
 
-const useReposStore = () => {
+type UseReposStore = () => {
+  repos: Repo[];
+  addRepo: (owner: string, repo: string) => void;
+  removeRepo: (owner: string, repo: string) => void;
+};
+
+const useReposStore: UseReposStore = () => {
   const [repos, setRepos] = useLocalStorage<Repo[]>("repos");
   const [legacy, , deleteLegacy] =
     useLocalStorage<LegacyRepo[]>("lscache-projects");

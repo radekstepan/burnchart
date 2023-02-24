@@ -8,6 +8,10 @@ type UseRoute<Return, T = Route> = (
   state?: T extends Route ? RouteParams[T] : undefined
 ) => Return;
 
+/**
+ * A hook for creating hrefs and navigation.
+ * @returns a `getHref` function for creating href URLs and a `goTo` function for navigating to a route.
+ */
 const useRouter = () => {
   const [, setLocation] = useLocation();
 

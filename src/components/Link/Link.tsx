@@ -6,12 +6,19 @@ import { cls } from "../../utils/css";
 import "./link.less";
 
 interface Props<T = Route> {
+  /** The name of the route to navigate to. If provided, the component will render an anchor that links to the specified route. */
   routeName?: Route;
+  /** An object containing the parameters to use when navigating to the route. */
   state?: T extends Route ? RouteParams[T] : undefined;
+  /** The URL to navigate to. If provided, the component will render an anchor that links to the specified URL. */
   href?: string;
+  /** A flag that determines whether or not to apply a styling to the link. */
   styled?: boolean;
+  /** A callback function that will be called when the link is clicked. */
   onClick?: (evt: unknown) => void;
+  /** The content of the link. */
   children: ReactNode;
+  /** Any additional props will be spread to the underlying anchor element. */
   [key: string]: unknown;
 }
 

@@ -6,10 +6,13 @@ import { ChartD, Issue, WithSize } from "../interfaces";
 
 export const FORMAT = "YYYY-MM-DDTHH:mm:ss[Z]";
 
-// A graph of closed issues.
-// `issues`:     closed issues list
-// `created_at`: milestone start date
-// `total`:      total number of points (open & closed issues)
+/**
+ * Creates a line of closed issues.
+ * @param issues The list of closed issues.
+ * @param createdAt The milestone start date.
+ * @param total The total number of points (open and closed issues).
+ * @returns The chart dataset.
+ */
 export const actual = (
   issues: WithSize<Issue>[],
   createdAt: string,
@@ -35,10 +38,13 @@ export const actual = (
     ]
   );
 
-// A graph of an ideal progression..
-// `a`:     milestone start date
-// `b`:     milestone end date
-// `total`: total number of points (open & closed issues)
+/**
+ * Creates an ideal milestone progression.
+ * @param a The milestone start date.
+ * @param b The milestone end date or null if there is no end date.
+ * @param total The total number of points (open and closed issues).
+ * @returns The chart dataset.
+ */
 export const ideal = (a: string, b: string | null, total: number): ChartD[] => {
   // Swap if end is before the start...
   if (b && b < a) [b, a] = [a, b];
@@ -79,7 +85,11 @@ export const ideal = (a: string, b: string | null, total: number): ChartD[] => {
   }));
 };
 
-// Graph representing a trendline of closed issues.
+/**
+ * Creates a trendline of closed issues.
+ * @param actual The line of closed issues.
+ * @returns The chart dataset, orn ull if the input dataset has less than two points.
+ */
 export const trend = (actual: ChartD[]): ChartD[] | null => {
   if (actual.length < 2) {
     return null;

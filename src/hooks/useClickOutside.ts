@@ -2,6 +2,11 @@ import { useEffect, useRef } from "react";
 
 type Handler = (event: MouseEvent | TouchEvent) => void;
 
+/**
+ * A custom hook that allows us to detect clicks outside of a specified element.
+ * @param handler A function to call when a click outside the element is detected.
+ * @returns A ref object that should be attached to the element we want to detect clicks outside of.
+ */
 function useClickOutside<T extends HTMLElement = HTMLDivElement>(
   handler: Handler
 ) {

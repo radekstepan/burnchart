@@ -16,9 +16,8 @@ const defaultState = {
 
 /**
  * Returns milestone(s) issues.
- *
- * @param ask - Job[] (behind useDeepCompareEffect)
- * @returns Milestone[] issues
+ * @param ask - Job[] representing the issues to fetch (behind useDeepCompareEffect)
+ * @returns Milestone[] issues with `data`, `error` and `loading` properties.
  */
 const useIssues = (ask: Job[]) => {
   const [token] = useTokenStore();
