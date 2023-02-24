@@ -4,6 +4,7 @@ import Link from "../Link/Link";
 import Icon from "../Icon/Icon";
 import { Title } from "../Text/Text";
 import { Menu, MenuItem } from "../Menu/Menu";
+import { Route } from "../../routes";
 import useIssues from "../../hooks/useIssues";
 import useReposStore from "../../hooks/useReposStore";
 import useRouter from "../../hooks/useRouter";
@@ -47,7 +48,7 @@ const Table: React.FC<Props> = ({ heading, data, showRemove }) => {
       return;
     }
     removeRepo(owner, repo);
-    goTo("repos");
+    goTo(Route.repos);
   };
 
   return (
@@ -76,7 +77,7 @@ const Table: React.FC<Props> = ({ heading, data, showRemove }) => {
               <div className="table__cell">
                 <Link
                   className="table__text--strong"
-                  routeName="milestones"
+                  routeName={Route.milestones}
                   state={{ owner: d.owner, repo: d.repo }}
                 >
                   {d.owner}/{d.repo}
@@ -84,7 +85,7 @@ const Table: React.FC<Props> = ({ heading, data, showRemove }) => {
               </div>
               <div className="table__cell">
                 <Link
-                  routeName="milestone"
+                  routeName={Route.milestone}
                   state={{
                     owner: d.owner,
                     repo: d.repo,

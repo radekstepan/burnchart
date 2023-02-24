@@ -1,13 +1,14 @@
 import React, { ReactNode, useCallback } from "react";
 import useRemount from "../../hooks/useRemount";
 import useRouter from "../../hooks/useRouter";
+import { Route, RouteParams } from "../../routes";
 import { cls } from "../../utils/css";
 import "./link.less";
 
-interface Props {
-  routeName?: string;
+interface Props<T = Route> {
+  routeName?: Route;
+  state?: T extends Route ? RouteParams[T] : undefined;
   href?: string;
-  state?: { [key: string]: string };
   styled?: boolean;
   onClick?: (evt: unknown) => void;
   children: ReactNode;
@@ -53,7 +54,7 @@ const Link: React.FC<Props> = ({
   return (
     <a
       className={cls("link", styled && "link--styled", className)}
-      href={routeName ? getHref(routeName, state) : href}
+      href={routeName !== undefined ? getHref(routeName, state) : href}
       onClick={$onClick}
       target={href ? "_blank" : undefined}
       {...rest}

@@ -2,9 +2,7 @@ import { useRoute } from "wouter";
 import routes, { Route, type RouteParams } from "../routes";
 import useRouter from "./useRouter";
 
-type Return<T> = T extends Route ? RouteParams[T] : {};
-
-const useRouteParams = <T extends Route>(name: T): Return<T> => {
+const useRouteParams = <T extends Route>(name: T): RouteParams[T] => {
   const { getHref } = useRouter();
 
   const route = routes.find((r) => r.name === name);
@@ -13,10 +11,10 @@ const useRouteParams = <T extends Route>(name: T): Return<T> => {
   );
 
   if (!route || !match) {
-    return {} as Return<T>;
+    return undefined as RouteParams[T];
   }
 
-  return params as Return<T>;
+  return params as RouteParams[T];
 };
 
 export default useRouteParams;

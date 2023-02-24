@@ -4,6 +4,7 @@ import Link from "../Link/Link";
 import useReposStore from "../../hooks/useReposStore";
 import useRouter from "../../hooks/useRouter";
 import { ErrorWithVars } from "../../interfaces";
+import { Route } from "../../routes";
 
 interface Props {
   error: ErrorWithVars;
@@ -25,7 +26,7 @@ const Error: React.FC<Props> = ({ error, onClose }) => {
     }
     const { owner, repo } = error.variables;
     removeRepo(owner as string, repo as string);
-    goTo("repos");
+    goTo(Route.repos);
   };
 
   return (

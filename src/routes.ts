@@ -9,8 +9,8 @@ export enum Route {
 }
 
 export type RouteParams = {
-  [Route.repos]: {};
-  [Route.addRepo]: {};
+  [Route.repos]: undefined;
+  [Route.addRepo]: undefined;
   [Route.milestones]: {
     owner: string;
     repo: string;
@@ -20,7 +20,7 @@ export type RouteParams = {
     repo: string;
     number: string;
   };
-  [Route.notFound]: {};
+  [Route.notFound]: undefined;
 };
 
 export type RouteParam = RouteParams[keyof RouteParams];

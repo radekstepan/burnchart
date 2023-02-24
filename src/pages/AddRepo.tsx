@@ -4,6 +4,7 @@ import Button from "../components/Button/Button";
 import TextInput from "../components/TextInput/TextInput";
 import { Paragraph } from "../components/Text/Text";
 import useRouter from "../hooks/useRouter";
+import { Route } from "../routes";
 
 const re = /^[\w\.-]+\/[\w\.-]+$/;
 
@@ -23,7 +24,7 @@ function AddRepo() {
 
     const [owner, repo] = input.split("/");
 
-    goTo("milestones", {
+    goTo(Route.milestones, {
       owner,
       repo,
     });

@@ -1,12 +1,17 @@
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import { useLocation } from "wouter";
 import UrlPattern from "url-pattern";
-import routes, { Route, RouteParam } from "../routes";
+import routes, { Route, RouteParam, RouteParams } from "../routes";
+
+type UseRoute<Return, T = Route> = (
+  name: T,
+  state?: T extends Route ? RouteParams[T] : undefined
+) => Return;
 
 const useRouter = () => {
-  const [location, setLocation] = useLocation();
+  const [, setLocation] = useLocation();
 
-  const getHref = (name: Route, state?: RouteParam): string => {
+  const getHref: UseRoute<string> = (name, state) => {
     const route = routes.find((r) => r.name === name);
     if (!route) {
       return getHref(Route.notFound);
@@ -20,15 +25,20 @@ const useRouter = () => {
     return pattern.stringify(state);
   };
 
+  const goTo: UseRoute<void> = useCallback(
+    (name: Route, state?: RouteParam) => {
+      const path = getHref(name, state);
+      setLocation(path);
+    },
+    [setLocation]
+  );
+
   return useMemo(
     () => ({
       getHref,
-      goTo: (name: Route, state?: RouteParam) => {
-        const path = getHref(name, state);
-        setLocation(path);
-      },
+      goTo,
     }),
-    [location, setLocation]
+    [goTo]
   );
 };
 

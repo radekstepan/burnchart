@@ -5,6 +5,7 @@ import Link from "../components/Link/Link";
 import Loader from "../components/Loader/Loader";
 import Status, { WhySignIn } from "../components/Status/Status";
 import Error from "../components/Error/Error";
+import { Route } from "../routes";
 import useReposStore from "../hooks/useReposStore";
 import useTokenStore from "../hooks/useTokenStore";
 import useIssues from "../hooks/useIssues";
@@ -49,7 +50,7 @@ function Repos() {
       <Content title={TITLE}>
         <Status>
           <>
-            <Link styled routeName="addRepo">
+            <Link styled routeName={Route.addRepo}>
               Add a Repo
             </Link>{" "}
             to view your milestones.
