@@ -1,0 +1,94 @@
+.menu {
+  position: relative;
+  user-select: none;
+
+  &__button {
+    font-size: 18px;
+    line-height: 12px;
+    padding: 6px 4px;
+    color: #aaafbf;
+    border-radius: 4px;
+    user-select: none;
+    border: 1px solid #edeff5;
+    background: transparent;
+    cursor: pointer;
+
+    &:hover {
+      background: #fafbff;
+      border-color: #c1c4d6;
+    }
+
+    &:focus {
+      box-shadow: 0 0 0 2px #d6e0ff;
+    }
+  }
+
+  &__items {
+    visibility: hidden;
+    opacity: 0;
+    position: absolute;
+    right: 0;
+    top: 30px;
+    background: #fff;
+    transition-property: opacity;
+    transition-duration: 0.1s;
+    transition-timing-function: ease-out;
+    min-width: 200px;
+    box-shadow: rgb(67 90 111 / 30%) 0px 0px 1px,
+      rgb(67 90 111 / 47%) 0px 8px 10px -4px;
+    padding: 8px 0;
+    font-family: "MuseoSlab500Regular", serif;
+    color: #474d66;
+    font-size: 14px;
+
+    &--open {
+      visibility: visible;
+      opacity: 1;
+    }
+
+    &__item {
+      padding: 6px 14px;
+      position: relative;
+      cursor: pointer;
+
+      &:before {
+        transition-property: opacity;
+        transition-duration: 0.1s;
+        transition-timing-function: ease-out;
+        opacity: 0;
+        background: #3366ff;
+        width: 2px;
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: 100%;
+        content: "";
+      }
+
+      &:hover,
+      &:focus {
+        background: #f9fafc;
+      }
+
+      &:active {
+        background: #f3f6ff;
+
+        &:before {
+          opacity: 1;
+        }
+      }
+
+      &--red {
+        color: #d14343;
+
+        &:before {
+          background: #d14343;
+        }
+
+        &:active {
+          background: #fdf8f8;
+        }
+      }
+    }
+  }
+}
