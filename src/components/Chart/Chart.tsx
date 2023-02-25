@@ -64,7 +64,7 @@ const Chart: React.FC<Props> = ({ milestone }) => {
       lineTension: 0,
       data: lines.actual(
         milestone.issues.closed.nodes,
-        milestone.createdAt,
+        milestone.stats.startDate,
         total
       ),
     };
@@ -86,7 +86,11 @@ const Chart: React.FC<Props> = ({ milestone }) => {
         borderColor: "#cacaca",
         pointStyle: false,
         lineTension: 0,
-        data: lines.ideal(milestone.createdAt, milestone.dueOn, total),
+        data: lines.ideal(
+          milestone.stats.startDate,
+          milestone.stats.endDate,
+          total
+        ),
       },
     ].filter(Boolean);
 

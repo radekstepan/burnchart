@@ -60,7 +60,7 @@ const addSize = <T extends Issue>(issues: T[]) => {
 /**
  * Calculates the stats for a milestone.
  * @param milestone The milestone to calculate the stats for.
- * @returns An object containing the milestone with the added stats (modifies createdAt)
+ * @returns An object containing the milestone with the added stats
  */
 const addStats = (milestone: Milestone): WithStats<Milestone> => {
   // Sort the issues and add their size.
@@ -81,6 +81,7 @@ const addStats = (milestone: Milestone): WithStats<Milestone> => {
     isEmpty: true,
   };
 
+  let startDate = milestone.createdAt;
   if (closed.size) {
     meta.isEmpty = false;
     if (closed.size + open.size > 0) {
@@ -92,12 +93,8 @@ const addStats = (milestone: Milestone): WithStats<Milestone> => {
 
     // Check that milestone hasn't been created after issue close; #100.
     const [first] = closed.nodes;
-    if (first.closedAt) {
-      // always...
-      milestone.createdAt =
-        first.closedAt < milestone.createdAt
-          ? first.closedAt
-          : milestone.createdAt;
+    if (first.closedAt && first.closedAt < milestone.createdAt) {
+      startDate = first.closedAt;
     }
   }
 
@@ -105,20 +102,21 @@ const addStats = (milestone: Milestone): WithStats<Milestone> => {
   const a = moment(milestone.createdAt, moment.ISO_8601);
   const b = moment.utc();
 
-  let { dueOn } = milestone;
+  let endDate = null;
   // Milestones with no due date are always on track.
-  if (!dueOn) {
+  if (!milestone.dueOn) {
     // All issues closed? Fix the dueOn to the last closed issue.
     if (meta.isDone) {
-      dueOn = closed.nodes[closed.nodes.length - 1].closedAt;
+      endDate = closed.nodes[closed.nodes.length - 1].closedAt;
     }
 
     return {
       ...milestone,
-      dueOn,
       issues: { open, closed },
       stats: {
         meta,
+        startDate,
+        endDate,
         days: 1e3,
         // The number of days from start to now.
         span: b.diff(a, "days"),
@@ -152,6 +150,8 @@ const addStats = (milestone: Milestone): WithStats<Milestone> => {
     issues: { open, closed },
     stats: {
       meta,
+      startDate,
+      endDate,
       days,
       span,
       progress: { points, time },

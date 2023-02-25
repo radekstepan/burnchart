@@ -27,6 +27,8 @@ const toMilestone: ToMilestone = (obj) => ({
     days: 1,
     span: 1,
     ...obj.stats,
+    startDate: "",
+    endDate: null,
     progress: {
       points: 1,
       time: 1,

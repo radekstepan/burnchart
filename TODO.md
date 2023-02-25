@@ -2,10 +2,12 @@
 
 - fix: tooltips stopped working
 - the addStats function is called in Milestone and Table both
+- milestones: update createdAt when merging all milestones together by looking at first issue closedAt (addStats)
+- reduce gql bundle size
+- semantic-release
 
 ## Nice to have
 
-- reduce gql bundle size
 - empty milestone/repo state
 - "This milestone is overdue" and similar topbar messages
 - due date on the milestone page
@@ -17,4 +19,3 @@
 - back button to navigate away from milestone page
 - d3/d3 has no milestones
 - use Vercel and Next.js Github auth instead of Firebase
-- semantic-release

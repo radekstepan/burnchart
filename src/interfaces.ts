@@ -18,6 +18,10 @@ export interface Issue {
 }
 
 export interface Stats {
+  // milestone.createdAt OR closedAt of the first issue if it's earlier.
+  startDate: string;
+  // milestone.dueOn OR closedAt of the last issue if milestone is complete.
+  endDate: string | null;
   // How many days is 1% of the time from createdAt to now.
   days: number;
   // The number of days from start to now.

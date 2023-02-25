@@ -1,7 +1,7 @@
 import mockDate from "mockdate";
 import moment, { Moment } from "moment";
-import * as lines from "../lines";
-import { ChartD, Issue, WithSize } from "../../interfaces";
+import * as lines from "../index";
+import { ChartD, Issue, WithSize } from "../../../interfaces";
 
 type ToIssue = (obj: Partial<WithSize<Issue>>) => WithSize<Issue>;
 
@@ -44,35 +44,9 @@ const nearest = (d: ChartD) => {
   };
 };
 
-describe("lines", () => {
+describe("trendLine", () => {
   beforeEach(() => {
     mockDate.reset();
-  });
-
-  test("actual", () => {
-    const issues = [
-      { size: 3, closedAt: "2" },
-      { size: 2, closedAt: "3" },
-      { size: 1, closedAt: "4" },
-    ].map(toIssue);
-
-    const line = lines.actual(issues, "", 6);
-
-    expect(line.map((d) => d.y)).toEqual([6, 3, 1, 0]);
-  });
-
-  test("ideal", () => {
-    const a = t("01");
-    const b = t("04");
-
-    const line = lines.ideal(a, b, 4);
-
-    expect(line).toEqual([
-      { x: t("01"), y: 3 },
-      { x: t("02"), y: 2 },
-      { x: t("03"), y: 1 },
-      { x: t("04"), y: 0 },
-    ]);
   });
 
   test("trend", () => {

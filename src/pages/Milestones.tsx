@@ -40,6 +40,7 @@ function Milestones() {
       tail.reduce(
         (acc, m) => ({
           ...acc,
+          // TODO this should check when the first issue was closed
           createdAt: m.createdAt < acc.createdAt ? m.createdAt : acc.createdAt,
           dueOn: acc.dueOn
             ? m.dueOn
