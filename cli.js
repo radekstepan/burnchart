@@ -1,10 +1,15 @@
 #!/usr/bin/env node
+import fs from "fs";
 import { createServer } from "http";
 import { fileURLToPath } from "url";
 import meow from "meow";
 import { Server } from "node-static";
 
-const dir = fileURLToPath(new URL("./dist", import.meta.url));
+const urlToPath = (url) => new URL(url, import.meta.url);
+const loadJson = (url) => JSON.parse(fs.readFileSync(urlToPath(url))); // assert { type: "json" }
+
+const dir = fileURLToPath(urlToPath("./dist"));
+const pkg = loadJson("./package.json");
 
 const cli = meow(
   `
@@ -32,7 +37,9 @@ const cli = meow(
 
 const fileServer = new Server(dir);
 
-createServer((req, res) =>
+const { port } = cli.flags;
+
+const server = createServer((req, res) =>
   req
     .addListener("end", () =>
       fileServer.serve(req, res, (e) => {
@@ -42,4 +49,10 @@ createServer((req, res) =>
       })
     )
     .resume()
-).listen(cli.flags.port);
+).listen(port);
+
+server.on("listening", () => {
+  console.log(
+    `burnchart/${pkg.version} started on port ${server.address().port}`
+  );
+});
