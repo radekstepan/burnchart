@@ -33,7 +33,7 @@ const routes = [
   },
   {
     name: Route.addRepo,
-    path: "/add/repo",
+    path: "/add-repo",
     view: React.lazy(() => import("./pages/AddRepo")),
   },
   {

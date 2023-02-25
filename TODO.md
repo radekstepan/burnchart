@@ -1,6 +1,5 @@
 # TODO
 
-- fix: add/repo page blowy
 - fix: npx command not worky
 - update README
 
