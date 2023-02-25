@@ -1,8 +1,8 @@
 import moment from "moment";
 import regression from "regression";
-import { scaleTime } from "d3";
 import { FORMAT } from "./index";
 import { ChartD } from "../../interfaces";
+import { timeScale } from "../scales";
 
 /**
  * Creates a trendline of closed issues.
@@ -22,10 +22,7 @@ const trendLine = (actual: ChartD[]): ChartD[] | null => {
     y: last.y,
   };
 
-  const scale = scaleTime()
-    // The first point is milestone creation date.
-    .domain([moment.utc(first.x), b.x])
-    .range([0, 100]);
+  const { scale, invert } = timeScale(moment.utc(first.x), b.x);
 
   const reg = regression.linear(
     new Array()
@@ -39,7 +36,7 @@ const trendLine = (actual: ChartD[]): ChartD[] | null => {
   );
 
   return reg.points.map(([x, y]) => ({
-    x: moment.utc(scale.invert(x)).format(FORMAT),
+    x: moment.utc(invert(x)).format(FORMAT),
     y,
   }));
 };
