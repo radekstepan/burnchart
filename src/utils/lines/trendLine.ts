@@ -1,8 +1,8 @@
 import moment from "moment";
 import regression from "regression";
 import { scaleTime } from "d3";
-import { ChartD } from "../../interfaces";
 import { FORMAT } from "./index";
+import { ChartD } from "../../interfaces";
 
 /**
  * Creates a trendline of closed issues.

@@ -67,6 +67,12 @@ describe("trendLine", () => {
       { x: t("04"), y: 0.75 },
     ]);
   });
+
+  test("should return null if input array has less than two points", () => {
+    const actual = [{ x: "2022-01-01", y: 1 }];
+
+    expect(lines.trend(actual)).toBeNull();
+  });
 });
 
 export default {};

@@ -1,8 +1,7 @@
 import moment from "moment";
 import config from "../../config";
+import { FORMAT } from "./index";
 import { ChartD } from "../../interfaces";
-
-export const FORMAT = "YYYY-MM-DDTHH:mm:ss[Z]";
 
 /**
  * Creates an ideal milestone progression.
