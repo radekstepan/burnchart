@@ -14,7 +14,7 @@ GitHub Burndown Chart as a Service. Answers the question "are my projects on tra
 ## Quickstart
 
 ```sh
-$ npx git@github.com:radekstepan/burnchart.git#v4 --port 1234
+$ npx radekstepan/burnchart#v4 --port 1234
 ```
 
 ## Configuration
