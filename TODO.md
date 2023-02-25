@@ -2,7 +2,6 @@
 
 - the addStats function is called in Milestone and Table both
 - milestones: update createdAt when merging all milestones together by looking at first issue closedAt (addStats)
-- reduce gql bundle size
 - semantic-release
 
 ## Nice to have

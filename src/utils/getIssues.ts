@@ -2,13 +2,13 @@ import { GraphQLClient } from "graphql-request";
 import PQueue from "p-queue";
 import { serializeError } from "serialize-error";
 import k from "./keys";
-import GetRepoIssues from "../queries/GetRepoIssues";
-import GetMilestoneIssues from "../queries/GetMilestoneIssues";
-import { Milestone, Issue, ErrorWithVars } from "../interfaces";
-import {
+import GetRepoIssues, {
   type GetRepoIssuesQuery,
+} from "../queries/GetRepoIssues";
+import GetMilestoneIssues, {
   type GetMilestoneIssuesQuery,
-} from "../__generated/graphql";
+} from "../queries/GetMilestoneIssues";
+import { Milestone, Issue, ErrorWithVars } from "../interfaces";
 
 const CONCURRENCY = 2;
 const API_URL = "https://api.github.com/graphql";
