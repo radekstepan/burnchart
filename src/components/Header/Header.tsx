@@ -1,7 +1,7 @@
 import React from "react";
 import Link from "../Link/Link";
 import Icon from "../Icon/Icon";
-import Auth from "../Auth/Auth";
+import Auth from "./Auth";
 import { Route } from "../../routes";
 import "./header.less";
 

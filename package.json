@@ -21,7 +21,6 @@
     "@graphql-codegen/cli": "^2.16.4",
     "@graphql-codegen/client-preset": "^1.2.6",
     "@graphql-codegen/introspection": "^2.2.3",
-    "@rehooks/local-storage": "^2.4.4",
     "@testing-library/react": "^14.0.0",
     "@testing-library/react-hooks": "^8.0.1",
     "@types/d3": "^7.4.0",
