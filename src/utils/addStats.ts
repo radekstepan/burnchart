@@ -67,8 +67,8 @@ const addStats = (milestone: Milestone): WithStats<Milestone> => {
   const sorted = sortOn(milestone.issues, "closedAt");
   const i = sorted.findIndex((d) => !d.closedAt);
   const [closed, open] = [
-    addSize(sorted.slice(0, i)),
-    addSize(sorted.slice(i)),
+    i >= 0 ? addSize(sorted.slice(0, i)) : addSize(sorted),
+    i >= 0 ? addSize(sorted.slice(i)) : addSize([]),
   ];
 
   // Progress in points.
@@ -105,11 +105,17 @@ const addStats = (milestone: Milestone): WithStats<Milestone> => {
   const a = moment(milestone.createdAt, moment.ISO_8601);
   const b = moment.utc();
 
+  let { dueOn } = milestone;
   // Milestones with no due date are always on track.
-  if (!milestone.dueOn) {
-    const span = b.diff(a, "days");
+  if (!dueOn) {
+    // All issues closed? Fix the dueOn to the last closed issue.
+    if (meta.isDone) {
+      dueOn = closed.nodes[closed.nodes.length - 1].closedAt;
+    }
+
     return {
       ...milestone,
+      dueOn,
       issues: { open, closed },
       stats: {
         meta,

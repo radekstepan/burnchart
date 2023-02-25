@@ -14,7 +14,7 @@ const ProgressBar: React.FC<Props> = ({ milestone }) => (
   <div className={className}>
     <div className={`${className}__top`}>
       <div className={`${className}__top__left`}>
-        {milestone.dueOn && (
+        {milestone.dueOn && !milestone.stats.meta.isDone && (
           <div
             className={cls(
               `${className}__top__left__due`,

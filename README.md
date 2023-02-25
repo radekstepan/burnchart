@@ -6,7 +6,6 @@ GitHub Burndown Chart as a Service. Answers the question "are my projects on tra
 
 1. Running from the **browser**, apart from GitHub account sign in which uses Firebase backend.
 1. **Private repos**; sign in with your GitHub account.
-1. **Store** projects in browser's `localStorage`.
 1. **Off days**; specify which days of the week to leave out from ideal burndown progression line.
 1. **Trend line**; to see if you can make it to the deadline at this pace.
 1. Different **point counting** strategies; select from 1 issues = 1 point or read size from issue label.
@@ -14,8 +13,23 @@ GitHub Burndown Chart as a Service. Answers the question "are my projects on tra
 ## Quickstart
 
 ```sh
-$ npx radekstepan/burnchart#v4 --port 1234
+$ yarn install
+$ ./cli.js --port 1234
+# burnchart/4.0.0 started on port 1234
 ```
+
+## FAQ
+
+### Browser 404 Errors
+
+If you are running a dev mode on localhost (`yarn start`) and start the app by navigating to a URL that contains a `.` character - `Vite` serves a 404. To fix this either navigate to the page through homepage or start the app through the cli - `yarn start:preview`.
+
+### GitHub Bugs
+
+Some milestones show "incorrect" issues associated. Consider the two following views of a milestones:
+
+- https://github.com/nhn/tui.calendar/milestone/6 - 21 closed issues
+- https://github.com/nhn/tui.calendar/issues?q=is%3Aissue+milestone%3Av1.12.13+is%3Aclosed - 11 closed issues (what we show)
 
 ## Configuration
 

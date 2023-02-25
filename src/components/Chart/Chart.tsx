@@ -106,7 +106,11 @@ const Chart: React.FC<Props> = ({ milestone }) => {
             ticks: {
               maxTicksLimit: 12,
               // TODO come up with a "nice" date formatter
-              callback: function (value, index, ticks) {
+              callback: function (value) {
+                if (milestone.stats.meta.isDone) {
+                  return moment(value).format("DD MMM");
+                }
+
                 return moment(value).fromNow();
               },
             },
