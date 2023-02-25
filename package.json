@@ -4,14 +4,13 @@
   "license": "AGPL-3.0",
   "browserslist": "> 0.5%, last 2 versions, not dead",
   "type": "module",
-  "bin": {
-    "burnchart": "cli.js"
-  },
+  "bin": "./cli.js",
   "scripts": {
     "start": "vite dev",
     "start:preview": "./cli.js --port 1234",
     "test": "vitest --run",
     "test:dev": "vitest dev",
+    "postinstall": "npm run build",
     "build": "vite build",
     "prepare": "husky install",
     "gen:types": "yarn graphql-codegen"
