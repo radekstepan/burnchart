@@ -7,10 +7,11 @@ import {
   LineController,
   PointElement,
   LineElement,
+  Tooltip as ChartJsTooltip,
   type ChartConfiguration,
-  type TooltipModel,
 } from "chart.js";
 import "chartjs-adapter-moment";
+import Tooltip, { type TooltipType } from "./Tooltip";
 import * as lines from "../../utils/lines";
 import useStateRef from "../../hooks/useStateRef";
 import { ChartD, Milestone, WithStats } from "../../interfaces";
@@ -23,6 +24,7 @@ ChartJs.register([
   LineController,
   PointElement,
   LineElement,
+  ChartJsTooltip,
 ]);
 
 interface Props {
@@ -35,20 +37,12 @@ enum SeriesIndex {
   IDEAL = 2,
 }
 
-interface Tooltip
-  extends Pick<
-    TooltipModel,
-    "x" | "y" | "caretX" | "caretY" | "width" | "xAlign" | "yAlign"
-  > {
-  meta: NonNullable<ChartD["meta"]>;
-}
-
 const isMeta = (obj: unknown): obj is ChartD["meta"] =>
   !!obj && typeof obj === "object" && "number" in obj && "title" in obj;
 
 const Chart: React.FC<Props> = ({ milestone }) => {
   const [el, setEl] = useStateRef<HTMLCanvasElement>();
-  const [tooltip, setTooltip] = useState<Tooltip | null>(null);
+  const [tooltip, setTooltip] = useState<TooltipType | null>(null);
 
   useEffect(() => {
     if (!el) {
@@ -203,14 +197,7 @@ const Chart: React.FC<Props> = ({ milestone }) => {
 
   return (
     <div className="chart">
-      {tooltip && (
-        <div
-          className="tooltip"
-          style={{ left: tooltip.x, top: tooltip.y, maxWidth: tooltip.width }}
-        >
-          #{tooltip.meta.number}:{tooltip.meta.title}
-        </div>
-      )}
+      <Tooltip tooltip={tooltip} />
       <canvas ref={setEl} />
     </div>
   );
