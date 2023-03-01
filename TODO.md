@@ -1,8 +1,6 @@
 # TODO
 
-- the addStats function is called in Milestone and Table both
-- milestones: update createdAt when merging all milestones together by looking at first issue closedAt (addStats)
-- semantic-release
+...
 
 ## Nice to have
 
@@ -17,3 +15,4 @@
 - back button to navigate away from milestone page
 - d3/d3 has no milestones
 - use Vercel and Next.js Github auth instead of Firebase
+- semantic-release, GitHub actions, push to npm

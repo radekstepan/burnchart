@@ -30,6 +30,7 @@ function Milestones() {
   const res = useIssues([[owner, repo]]);
   const { data } = res;
 
+  // A milestone that is a merge of all of them.
   const milestones = useMemo(() => {
     if (!data.length) {
       return null;
@@ -40,7 +41,7 @@ function Milestones() {
       tail.reduce(
         (acc, m) => ({
           ...acc,
-          // TODO this should check when the first issue was closed
+          // NOTE: createdAt gets fixed in addStats
           createdAt: m.createdAt < acc.createdAt ? m.createdAt : acc.createdAt,
           dueOn: acc.dueOn
             ? m.dueOn
