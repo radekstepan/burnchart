@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo } from "react";
-import { useLocalStorage } from "react-use";
+import useLocalStorage from "./useLocalStorage";
 
 interface Repo {
   owner: string;

@@ -1,4 +1,4 @@
-import { useLocalStorage } from "react-use";
+import useLocalStorage from "./useLocalStorage";
 
 /**
  * A hook to manage and persist the GitHub personal access token used for API requests.
