@@ -2,6 +2,8 @@
 
 GitHub Burndown Chart as a Service. Answers the question "are my projects on track"?
 
+![image](https://raw.githubusercontent.com/radekstepan/burnchart/v4/screenshot.png)
+
 ## Features
 
 1. Running from the **browser**, apart from GitHub account sign in which uses Firebase backend.
