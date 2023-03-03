@@ -1,4 +1,6 @@
-import semver from "semver";
+import semverCoerce from "semver/functions/coerce";
+import semverValid from "semver/functions/valid";
+import semverGt from "semver/functions/gt";
 import { Milestone, WithStats } from "../interfaces";
 
 export enum SortBy {
@@ -64,9 +66,13 @@ const compareByName: Comparator = (a, b) => {
     return a.id.localeCompare(b.id);
   }
 
+  const [aVer, bVer] = [a, b].map(({ title }) =>
+    semverValid(semverCoerce(title))
+  );
+
   // Try semver.
-  if (semver.valid(b.title) && semver.valid(a.title)) {
-    return semver.gt(b.title, a.title) ? -1 : 1;
+  if (aVer !== null && bVer !== null) {
+    return semverGt(aVer, bVer) ? 1 : -1;
   }
 
   return diff;
