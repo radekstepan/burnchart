@@ -63,6 +63,15 @@ const FirebaseProvider: React.FC<Props> = ({ children }) => {
         const res = await signInWithCredential(auth, credential);
         setUser(res.user.providerData[0]);
       } catch (err) {
+        // Avoid losing the token when network goes offline.
+        if (
+          err &&
+          typeof err === "object" &&
+          "code" in err &&
+          err.code === "auth/network-request-failed"
+        ) {
+          return;
+        }
         deleteToken();
       }
     };
