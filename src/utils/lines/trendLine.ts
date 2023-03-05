@@ -24,7 +24,7 @@ const trendLine = (actual: ChartD[]): ChartD[] | null => {
 
   const { scale, invert } = timeScale(moment.utc(first.x), b.x);
 
-  const reg = regression.linear(
+  const points = linear(
     new Array()
       .concat(
         actual,
@@ -35,10 +35,24 @@ const trendLine = (actual: ChartD[]): ChartD[] | null => {
       .map((d: ChartD) => [scale(moment.utc(d.x)), d.y])
   );
 
-  return reg.points.map(([x, y]) => ({
+  return points.map(([x, y]) => ({
     x: moment.utc(invert(x)).format(FORMAT),
     y,
   }));
+};
+
+const linear = (data: regression.DataPoint[]) => {
+  const reg = regression.linear(data);
+
+  const [start] = reg.points;
+  const [, endY] = reg.points[reg.points.length - 1];
+
+  if (endY < 0) {
+    const [a, b] = reg.equation;
+    return [start, [-b / a, 0]];
+  }
+
+  return [start, [100, endY]];
 };
 
 export default trendLine;

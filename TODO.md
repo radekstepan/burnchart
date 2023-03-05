@@ -1,6 +1,5 @@
 # TODO
 
-fix: /rails/rails/75 shows -5
 fix: ractivejs/ractive/23 value is not in recognized format
 
 ## Nice to have
