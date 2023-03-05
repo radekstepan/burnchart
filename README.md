@@ -2,7 +2,9 @@
 
 GitHub Burndown Chart as a Service. Answers the question "are my projects on track"?
 
-![image](https://raw.githubusercontent.com/radekstepan/burnchart/v4/screenshot.png)
+[![Netlify Status](https://api.netlify.com/api/v1/badges/f2a6aa0c-b92b-4e8a-a339-3bdac4fb19ee/deploy-status)](https://app.netlify.com/sites/burnchart/deploys)
+
+![image](https://raw.githubusercontent.com/radekstepan/burnchart/master/screenshot.png)
 
 ## Features
 

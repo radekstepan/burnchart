@@ -12,10 +12,11 @@ import {
 } from "chart.js";
 import "chartjs-adapter-moment";
 import Tooltip, { type TooltipType } from "./Tooltip";
-import * as lines from "../../utils/lines";
 import useStateRef from "../../hooks/useStateRef";
-import { ChartD, Milestone, WithStats } from "../../interfaces";
 import { pick } from "../../utils/object";
+import * as lines from "../../utils/lines";
+import { formatTimeRange } from "../../utils/format";
+import { ChartD, Milestone, WithStats } from "../../interfaces";
 import "./chart.less";
 
 ChartJs.register([
@@ -43,6 +44,11 @@ const isMeta = (obj: unknown): obj is ChartD["meta"] =>
 const Chart: React.FC<Props> = ({ milestone }) => {
   const [el, setEl] = useStateRef<HTMLCanvasElement>();
   const [tooltip, setTooltip] = useState<TooltipType | null>(null);
+
+  const formatTime = formatTimeRange(
+    milestone.stats.startDate,
+    milestone.stats.endDate
+  );
 
   useEffect(() => {
     if (!el) {
@@ -103,14 +109,7 @@ const Chart: React.FC<Props> = ({ milestone }) => {
             },
             ticks: {
               maxTicksLimit: 12,
-              // TODO come up with a "nice" date formatter
-              callback: function (value) {
-                if (milestone.stats.meta.isDone) {
-                  return moment(value).format("DD MMM");
-                }
-
-                return moment(value).fromNow();
-              },
+              callback: formatTime,
             },
           },
           y: {

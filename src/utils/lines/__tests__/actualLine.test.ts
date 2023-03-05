@@ -1,4 +1,3 @@
-import mockDate from "mockdate";
 import * as lines from "../index";
 import { Issue, WithSize } from "../../../interfaces";
 
@@ -14,10 +13,6 @@ const toIssue: ToIssue = (obj) => ({
 });
 
 describe("actualLine", () => {
-  beforeEach(() => {
-    mockDate.reset();
-  });
-
   test("actual", () => {
     const issues = [
       { size: 3, closedAt: "2" },

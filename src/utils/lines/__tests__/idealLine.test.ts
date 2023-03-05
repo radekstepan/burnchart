@@ -1,13 +1,8 @@
-import mockDate from "mockdate";
 import * as lines from "../index";
 
 const t = (d: string) => `2000-01-${d}T00:00:00Z`;
 
 describe("idealLine", () => {
-  beforeEach(() => {
-    mockDate.reset();
-  });
-
   test("no offDays", () => {
     const a = t("01");
     const b = t("04");

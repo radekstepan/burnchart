@@ -1,14 +1,10 @@
 # TODO
 
-...
+fix: /rails/rails/75 shows -5
+fix: ractivejs/ractive/23 value is not in recognized format
 
 ## Nice to have
 
-- empty milestone/repo state
-- "This milestone is overdue" and similar topbar messages
-- due date on the milestone page
-- link to milestone(s) from the title
-- nicer date formatting on the chart, it doesn't have to be relative if in the past
 - do not refetch milestones when navigating from repos
 - convert `x` to a Date so we don't convert multiple times over
 - render milestone end date as a tick if overdue; https://apexcharts.com/docs/annotations/

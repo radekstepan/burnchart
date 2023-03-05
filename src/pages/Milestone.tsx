@@ -83,7 +83,11 @@ function Milestone() {
 
   return (
     <Content>
-      <Title>{milestone.title}</Title>
+      <Title>
+        <Link href={`https://github.com/${owner}/${repo}/milestone/${number}`}>
+          {milestone.title}
+        </Link>
+      </Title>
       <Chart milestone={milestone} />
       <Table {...res} showRemove />
     </Content>
