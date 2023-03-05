@@ -45,7 +45,7 @@ const Chart: React.FC<Props> = ({ milestone }) => {
   const [el, setEl] = useStateRef<HTMLCanvasElement>();
   const [tooltip, setTooltip] = useState<TooltipType | null>(null);
 
-  const formatTime = formatTimeRange(
+  const tickTimeFormat = formatTimeRange(
     milestone.stats.startDate,
     milestone.stats.endDate
   );
@@ -109,7 +109,7 @@ const Chart: React.FC<Props> = ({ milestone }) => {
             },
             ticks: {
               maxTicksLimit: 12,
-              callback: formatTime,
+              callback: tickTimeFormat,
             },
           },
           y: {

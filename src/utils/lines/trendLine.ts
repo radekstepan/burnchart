@@ -22,6 +22,11 @@ const trendLine = (actual: ChartD[]): ChartD[] | null => {
     y: last.y,
   };
 
+  // A milestone with one issue closed at the same time as the milestone was created.
+  if (moment.utc(first.x).isSame(b.x)) {
+    return null;
+  }
+
   const { scale, invert } = timeScale(moment.utc(first.x), b.x);
 
   const points = linear(

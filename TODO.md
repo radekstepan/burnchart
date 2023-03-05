@@ -1,6 +1,6 @@
 # TODO
 
-fix: ractivejs/ractive/23 value is not in recognized format
+...
 
 ## Nice to have
 
