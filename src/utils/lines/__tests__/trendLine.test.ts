@@ -49,7 +49,7 @@ describe("trendLine", () => {
     mockDate.reset();
   });
 
-  test("trend", () => {
+  test("should return a trendline that ends after the end date", () => {
     mockDate.set(t("04"));
 
     const issues = [
@@ -62,9 +62,25 @@ describe("trendLine", () => {
 
     expect(line!.map(nearest)).toEqual([
       { x: t("01"), y: 2.75 },
-      { x: t("02"), y: 2.08 },
-      { x: t("03"), y: 1.42 },
       { x: t("04"), y: 0.75 },
+    ]);
+  });
+
+  // ractivejs/ractive/24
+  test("should return a trendline that ends before the end date", () => {
+    mockDate.set("2023-03-14T21:20:00Z");
+
+    const issues = [
+      { closedAt: "2018-03-02T08:20:24Z", size: 1 },
+      { closedAt: "2018-05-03T18:03:45Z", size: 1 },
+    ].map(toIssue);
+
+    const actual = lines.actual(issues, "2018-02-27T22:16:37Z", 2);
+    const line = lines.trend(actual);
+
+    expect(line!.map(nearest)).toEqual([
+      { x: "2018-02-28T00:00:00Z", y: 1.69 },
+      { x: "2018-04-24T00:00:00Z", y: 0 },
     ]);
   });
 

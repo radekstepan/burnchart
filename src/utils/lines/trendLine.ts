@@ -7,7 +7,7 @@ import { timeScale } from "../scales";
 /**
  * Creates a trendline of closed issues.
  * @param actual The line of closed issues.
- * @returns The chart dataset, orn ull if the input dataset has less than two points.
+ * @returns The chart dataset, or null if the input dataset has less than two points.
  */
 const trendLine = (actual: ChartD[]): ChartD[] | null => {
   if (actual.length < 2) {
