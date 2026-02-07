@@ -1,5 +1,6 @@
-import React, { createContext, useContext, useCallback, useState, ReactNode } from "react";
+import React, { createContext, useContext, useCallback, ReactNode } from "react";
 import useAuth, { AuthState } from "../hooks/useAuth";
+import { clearAllCaches } from "../hooks/useIssues";
 
 interface AuthContextValue extends AuthState {
   signIn: (token: string) => Promise<boolean>;
@@ -33,13 +34,19 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
     [auth.validateAndSetToken]
   );
 
+  const signOut = useCallback(() => {
+    // Clear the issues cache when signing out
+    clearAllCaches();
+    auth.signOut();
+  }, [auth.signOut]);
+
   const value: AuthContextValue = {
     token: auth.token,
     isAuthenticated: auth.isAuthenticated,
     isValidating: auth.isValidating,
     error: auth.error,
     signIn,
-    signOut: auth.signOut,
+    signOut,
     clearError: auth.clearError,
   };
 
