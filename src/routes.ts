@@ -51,6 +51,12 @@ const routes = [
     path: "/404",
     view: React.lazy(() => import("./pages/NotFound")),
   },
+  // Catch-all route must be last
+  {
+    name: Route.notFound,
+    path: "*",
+    view: React.lazy(() => import("./pages/NotFound")),
+  },
 ];
 
 export default routes;
