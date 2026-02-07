@@ -184,6 +184,54 @@ describe("getIssues REST API", () => {
     ]);
   });
 
+  test("handles repository not found (404)", async () => {
+    mockFetch.mockImplementation(() =>
+      Promise.resolve({
+        ok: false,
+        status: 404,
+        headers: new Map(),
+      } as unknown as Response)
+    );
+
+    const jobs: Job[] = [["owner", "missing-repo"]];
+    const callback = vi.fn();
+
+    getIssues("test_token", jobs, callback);
+
+    await new Promise((resolve) => setTimeout(resolve, 100));
+
+    expect(callback).toHaveBeenCalled();
+    const [error] = callback.mock.calls[0];
+    expect(error.message).toContain('Repository "owner/missing-repo" not found');
+    expect(error.variables).toEqual({ owner: "owner", repo: "missing-repo" });
+  });
+
+  test("handles milestone not found (404)", async () => {
+    mockFetch.mockImplementation(() =>
+      Promise.resolve({
+        ok: false,
+        status: 404,
+        headers: new Map(),
+      } as unknown as Response)
+    );
+
+    const jobs: Job[] = [["owner", "repo", "999"]];
+    const callback = vi.fn();
+
+    getIssues("test_token", jobs, callback);
+
+    await new Promise((resolve) => setTimeout(resolve, 100));
+
+    expect(callback).toHaveBeenCalled();
+    const [error] = callback.mock.calls[0];
+    expect(error.message).toContain("Milestone #999 not found");
+    expect(error.variables).toEqual({
+      owner: "owner",
+      repo: "repo",
+      milestoneNumber: "999",
+    });
+  });
+
   test("reads rate limit headers and retries on 429", async () => {
     let callCount = 0;
     // Set reset time to now so wait time is minimal

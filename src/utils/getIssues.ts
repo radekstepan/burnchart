@@ -96,7 +96,7 @@ const fetchWithRateLimit = async (
   token: string,
   signal: AbortSignal | undefined,
   retries = 2
-): Promise<{ ok: boolean; data: unknown; rateLimit: RateLimitInfo }> => {
+): Promise<{ ok: boolean; status: number; data: unknown; rateLimit: RateLimitInfo }> => {
   let lastError: Error | null = null;
 
   for (let attempt = 0; attempt <= retries; attempt++) {
@@ -130,13 +130,14 @@ const fetchWithRateLimit = async (
         // Return structured error info instead of null
         return { 
           ok: false, 
+          status: response.status,
           data: null, 
           rateLimit 
         };
       }
 
       const data = await response.json();
-      return { ok: true, data, rateLimit };
+      return { ok: true, status: response.status, data, rateLimit };
     } catch (err) {
       if (err instanceof Error && err.name === "AbortError") {
         throw err; // Re-throw abort errors
@@ -170,7 +171,14 @@ const getMilestone = async (
     signal
   );
 
-  if (!milestoneRes.ok || !milestoneRes.data) {
+  if (!milestoneRes.ok) {
+    if (milestoneRes.status === 404) {
+      throw new Error(`Milestone #${milestoneNumber} not found in "${owner}/${repo}".`);
+    }
+    throw new Error(`GitHub API error (${milestoneRes.status}) while fetching milestone.`);
+  }
+
+  if (!milestoneRes.data) {
     return null;
   }
 
@@ -226,11 +234,21 @@ const getRepoMilestones = async (
     signal
   );
 
-  if (!milestonesRes.ok || !milestonesRes.data) {
-    // Return empty array for rate limit, but log the error
-    if (milestonesRes.rateLimit.limited) {
-      console.warn(`Rate limited fetching milestones for ${owner}/${repo}`);
+  if (!milestonesRes.ok) {
+    if (milestonesRes.status === 404) {
+      throw new Error(`Repository "${owner}/${repo}" not found. Please check the name and your permissions.`);
     }
+    if (milestonesRes.status === 401 || milestonesRes.status === 403) {
+      if (milestonesRes.rateLimit.limited) {
+        // Fall through to error handling for rate limit
+      } else {
+        throw new Error(`Access denied for "${owner}/${repo}". Check your token permissions.`);
+      }
+    }
+    throw new Error(`GitHub API error (${milestonesRes.status}) while fetching milestones.`);
+  }
+
+  if (!milestonesRes.data) {
     return [];
   }
 
@@ -298,7 +316,7 @@ const getIssues = (
 
   const all = new Map<string, Milestone>();
 
-  const onError = (err: Error & { resetAt?: number | null }) => {
+  const onError = (err: Error & { resetAt?: number | null }, variables?: ErrorWithVars["variables"]) => {
     if (exited) return;
 
     const { message } = serializeError(err);
@@ -319,7 +337,7 @@ const getIssues = (
       return;
     }
 
-    const error: ErrorWithVars = { message: errorMessage };
+    const error: ErrorWithVars = { message: errorMessage, variables };
 
     onExit();
     cb(error, all);
@@ -356,7 +374,7 @@ const getIssues = (
             all.set(key, milestone);
           }
         } catch (err) {
-          onError(err as Error);
+          onError(err as Error, { owner, repo, milestoneNumber });
         }
       });
     } else {
@@ -370,7 +388,7 @@ const getIssues = (
             all.set(key, milestone);
           }
         } catch (err) {
-          onError(err as Error);
+          onError(err as Error, { owner, repo });
         }
       });
     }

@@ -255,4 +255,35 @@ describe("useIssues", () => {
       expect(mockFetch.mock.calls.length).toBeGreaterThanOrEqual(1);
     });
   });
+
+  describe("error handling", () => {
+    test("propagates error variables to state", async () => {
+      mockFetch.mockImplementation((url: string) => {
+        if (url.includes("/milestones") || url.includes("/issues")) {
+          return Promise.resolve({
+            ok: false,
+            status: 404,
+            headers: new Map(),
+          } as unknown as Response);
+        }
+        return Promise.resolve({
+          ok: true,
+          json: () => Promise.resolve({ login: "test" }),
+        } as unknown as Response);
+      });
+
+      const { result } = renderHook(() => useIssues([["owner", "missing-repo"]]), {
+        wrapper: ({ children }) => <AuthProvider>{children}</AuthProvider>,
+      });
+
+      // Increase timeout because of PQueue/async nature
+      await waitFor(() => expect(result.current.loading).toBe(false), { timeout: 2000 });
+
+      expect(result.current.error).not.toBeNull();
+      expect(result.current.error?.variables).toEqual({
+        owner: "owner",
+        repo: "missing-repo",
+      });
+    });
+  });
 });

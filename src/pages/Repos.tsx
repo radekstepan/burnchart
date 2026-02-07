@@ -15,7 +15,7 @@ const TITLE = "Repos";
 
 function Repos() {
   const { isAuthenticated } = useAuthContext();
-  const { repos } = useReposStore();
+  const { repos, removeRepo } = useReposStore();
 
   useEffect(() => {
     document.title = "Burnchart";
@@ -28,6 +28,16 @@ function Repos() {
   const handleAddToken = useCallback(() => {
     window.dispatchEvent(new CustomEvent("show-token-modal"));
   }, []);
+
+  // Handle 404 errors by removing non-existent repos
+  useEffect(() => {
+    if (res.error && res.error.message?.includes("not found")) {
+      const { owner, repo } = res.error.variables || {};
+      if (owner && repo) {
+        removeRepo(owner as string, repo as string);
+      }
+    }
+  }, [res.error, removeRepo]);
 
   if (!isAuthenticated) {
     return (

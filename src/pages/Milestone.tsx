@@ -78,9 +78,12 @@ function Milestone() {
     );
   }
 
-  // TODO?
   if (!milestone) {
-    return null;
+    return (
+      <Content title={`${owner}/${repo}/${number}`}>
+        <Status>Milestone not found or empty.</Status>
+      </Content>
+    );
   }
 
   return (
