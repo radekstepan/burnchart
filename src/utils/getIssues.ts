@@ -2,9 +2,10 @@ import PQueue from "p-queue";
 import { serializeError } from "serialize-error";
 import k from "./keys";
 import { Milestone, Issue, ErrorWithVars } from "../interfaces";
+import config from "../config";
 
 const CONCURRENCY = 2;
-const API_URL = "https://api.github.com";
+const API_URL = config.apiUrl;
 
 export type Job = [owner: string, repo: string, milestone?: string];
 
@@ -175,41 +176,55 @@ const fetchWithRateLimit = async (
 };
 
 /**
- * Get a single milestone with its issues using REST API
+ * Get a single milestone's issues using REST API
+ * @param token GitHub API token
+ * @param owner Repository owner
+ * @param repo Repository name
+ * @param milestoneNumber The milestone number
+ * @param signal Abort signal for cancellation
+ * @param milestoneData Optional milestone data from list response to avoid redundant fetch
  */
-const getMilestone = async (
+const getMilestoneIssues = async (
   token: string,
   owner: string,
   repo: string,
   milestoneNumber: number,
-  signal: AbortSignal | undefined
-): Promise<Milestone | null> => {
-  // Fetch milestone
-  const milestoneRes = await fetchWithRateLimit(
-    `${API_URL}/repos/${owner}/${repo}/milestones/${milestoneNumber}`,
-    token,
-    signal
-  );
-
-  if (!milestoneRes.ok) {
-    if (milestoneRes.status === 404) {
-      throw new Error(`Milestone #${milestoneNumber} not found in "${owner}/${repo}".`);
-    }
-    throw new Error(`GitHub API error (${milestoneRes.status}) while fetching milestone.`);
-  }
-
-  if (!milestoneRes.data) {
-    return null;
-  }
-
-  const milestone = milestoneRes.data as {
+  signal: AbortSignal | undefined,
+  milestoneData?: {
     id: number;
     number: number;
     title: string;
     description: string | null;
     created_at: string;
     due_on: string | null;
-  };
+  }
+): Promise<Milestone | null> => {
+  // Use provided milestone data or fetch it
+  let milestone: typeof milestoneData = milestoneData;
+  if (!milestone) {
+    const milestoneRes = await fetchWithRateLimit(
+      `${API_URL}/repos/${owner}/${repo}/milestones/${milestoneNumber}`,
+      token,
+      signal
+    );
+
+    if (!milestoneRes.ok) {
+      if (milestoneRes.status === 404) {
+        throw new Error(`Milestone #${milestoneNumber} not found in "${owner}/${repo}".`);
+      }
+      throw new Error(`GitHub API error (${milestoneRes.status}) while fetching milestone.`);
+    }
+
+    if (!milestoneRes.data) {
+      return null;
+    }
+
+    milestone = milestoneRes.data as typeof milestoneData;
+  }
+
+  // milestone is now guaranteed to be defined (either passed in or just fetched)
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  const ms = milestone!;
 
   // Fetch issues for this milestone (paginate with Link header)
   const issuesRaw: unknown[] = [];
@@ -230,14 +245,14 @@ const getMilestone = async (
     .map(formatIssue);
 
   return {
-    id: String(milestone.id),
+    id: String(ms.id),
     owner,
     repo,
-    number: milestone.number,
-    title: milestone.title,
-    description: milestone.description || null,
-    createdAt: milestone.created_at,
-    dueOn: milestone.due_on || null,
+    number: ms.number,
+    title: ms.title,
+    description: ms.description || null,
+    createdAt: ms.created_at,
+    dueOn: ms.due_on || null,
     issues,
   };
 };
@@ -299,7 +314,15 @@ const getRepoMilestones = async (
   for (const milestone of recentMilestones) {
     queue.add(async () => {
       try {
-        const milestoneWithIssues = await getMilestone(token, owner, repo, milestone.number, signal);
+        // Pass milestone data to avoid redundant fetch
+        const milestoneWithIssues = await getMilestoneIssues(
+          token,
+          owner,
+          repo,
+          milestone.number,
+          signal,
+          milestone
+        );
         if (milestoneWithIssues) {
           // Store by milestone number (not key) for sorting
           resultsByNumber.set(milestone.number, milestoneWithIssues);
@@ -390,7 +413,7 @@ const onError = (err: HttpError | RateLimitErr, variables?: ErrorWithVars["varia
       // Fetch a single milestone
       q.add(async () => {
         try {
-          const milestone = await getMilestone(
+          const milestone = await getMilestoneIssues(
             token,
             owner,
             repo,

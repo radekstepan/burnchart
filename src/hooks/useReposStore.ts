@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useRef } from "react";
 import useLocalStorage from "./useLocalStorage";
 
 interface Repo {
@@ -58,9 +58,15 @@ const useReposStore: UseReposStore = () => {
 
   // Migrate legacy
   useEffect(() => {
-    if (!legacy) {
+    // Use a ref to ensure migration only runs once
+    const hasMigrated = useRef(false);
+
+    if (!legacy || hasMigrated.current) {
       return;
     }
+
+    hasMigrated.current = true;
+
     const newRepos = legacy.reduce(
       (acc, item) => {
         const { owner, name } = item;
@@ -74,7 +80,7 @@ const useReposStore: UseReposStore = () => {
 
     setRepos(newRepos);
     deleteLegacy();
-  }, []);
+  }, [legacy, repos, setRepos, deleteLegacy]);
 
   return useMemo(
     () => ({

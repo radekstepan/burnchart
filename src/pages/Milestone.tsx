@@ -34,7 +34,7 @@ function Milestone() {
     }
     return addStats(data[0]);
     // All the data arrive at the same time.
-  }, [data.length]);
+  }, [data]);
 
   useEffect(() => {
     if (milestone?.title) {
