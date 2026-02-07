@@ -89,22 +89,29 @@ const formatIssue = (issue: {
 });
 
 /**
- * Fetch with rate limit handling and retry
+ * Fetch with rate limit handling, retry, and abort signal support
  */
 const fetchWithRateLimit = async (
   url: string,
   token: string,
+  signal: AbortSignal | undefined,
   retries = 2
 ): Promise<{ ok: boolean; data: unknown; rateLimit: RateLimitInfo }> => {
   let lastError: Error | null = null;
 
   for (let attempt = 0; attempt <= retries; attempt++) {
+    // Check if aborted before making request
+    if (signal?.aborted) {
+      throw new Error("Request aborted");
+    }
+
     try {
       const response = await fetch(url, {
         headers: {
           Authorization: `Bearer ${token}`,
           Accept: "application/vnd.github.v3+json",
         },
+        signal,
       });
 
       const rateLimit = getRateLimitInfo(response);
@@ -131,6 +138,9 @@ const fetchWithRateLimit = async (
       const data = await response.json();
       return { ok: true, data, rateLimit };
     } catch (err) {
+      if (err instanceof Error && err.name === "AbortError") {
+        throw err; // Re-throw abort errors
+      }
       lastError = err as Error;
       if (attempt < retries) {
         // Exponential backoff on network errors
@@ -150,12 +160,14 @@ const getMilestone = async (
   token: string,
   owner: string,
   repo: string,
-  milestoneNumber: number
+  milestoneNumber: number,
+  signal: AbortSignal | undefined
 ): Promise<Milestone | null> => {
   // Fetch milestone
   const milestoneRes = await fetchWithRateLimit(
     `${API_URL}/repos/${owner}/${repo}/milestones/${milestoneNumber}`,
-    token
+    token,
+    signal
   );
 
   if (!milestoneRes.ok || !milestoneRes.data) {
@@ -174,7 +186,8 @@ const getMilestone = async (
   // Fetch issues for this milestone (first page only, max 100)
   const issuesRes = await fetchWithRateLimit(
     `${API_URL}/repos/${owner}/${repo}/issues?milestone=${milestoneNumber}&state=all&per_page=100&page=1`,
-    token
+    token,
+    signal
   );
 
   const issuesRaw = issuesRes.ok ? (issuesRes.data as unknown[]) : [];
@@ -203,12 +216,14 @@ const getMilestone = async (
 const getRepoMilestones = async (
   token: string,
   owner: string,
-  repo: string
+  repo: string,
+  signal: AbortSignal | undefined
 ): Promise<Milestone[]> => {
   // Fetch first page of milestones (max 100, we only need last 10)
   const milestonesRes = await fetchWithRateLimit(
     `${API_URL}/repos/${owner}/${repo}/milestones?state=all&per_page=100&page=1`,
-    token
+    token,
+    signal
   );
 
   if (!milestonesRes.ok || !milestonesRes.data) {
@@ -241,13 +256,15 @@ const getRepoMilestones = async (
   for (const milestone of recentMilestones) {
     queue.add(async () => {
       try {
-        const milestoneWithIssues = await getMilestone(token, owner, repo, milestone.number);
+        const milestoneWithIssues = await getMilestone(token, owner, repo, milestone.number, signal);
         if (milestoneWithIssues) {
           results.push(milestoneWithIssues);
         }
       } catch (err) {
-        // Log error but continue with other milestones
-        console.warn(`Failed to fetch milestone ${milestone.number}:`, err);
+        // Ignore abort errors - they're expected on cancel
+        if (err instanceof Error && err.name !== "AbortError") {
+          console.warn(`Failed to fetch milestone ${milestone.number}:`, err);
+        }
       }
     });
   }
@@ -262,11 +279,13 @@ const getIssues = (
   cb: (err: ErrorWithVars | null, res: Map<string, Milestone>) => void
 ) => {
   let exited = false;
+  const controller = new AbortController();
   const q = new PQueue({ concurrency: CONCURRENCY });
 
   const onExit = () => {
     exited = true;
     q.clear();
+    controller.abort(); // Abort all in-flight requests
   };
 
   const all = new Map<string, Milestone>();
@@ -287,6 +306,9 @@ const getIssues = (
       }
     } else if (err.status === 403 || err.status === 429) {
       errorMessage = "GitHub API rate limit exceeded. Please wait a moment and try again.";
+    } else if (err.name === "AbortError") {
+      // Don't report abort errors as user-facing errors
+      return;
     }
 
     const error: ErrorWithVars = { message: errorMessage };
@@ -318,7 +340,8 @@ const getIssues = (
             token,
             owner,
             repo,
-            parseInt(milestoneNumber, 10)
+            parseInt(milestoneNumber, 10),
+            controller.signal
           );
           if (milestone && !exited) {
             const key = k(owner, repo, milestone.number);
@@ -332,7 +355,7 @@ const getIssues = (
       // Fetch all milestones for a repo
       q.add(async () => {
         try {
-          const milestones = await getRepoMilestones(token, owner, repo);
+          const milestones = await getRepoMilestones(token, owner, repo, controller.signal);
           for (const milestone of milestones) {
             if (exited) break;
             const key = k(owner, repo, milestone.number);

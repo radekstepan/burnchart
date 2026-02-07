@@ -234,4 +234,40 @@ describe("getIssues REST API", () => {
     // Verify completion
     expect(callback).toHaveBeenCalled();
   });
+
+  test("aborts in-flight requests on cancel", async () => {
+    let fetchCalled = 0;
+    
+    mockFetch.mockImplementation((url: string): Promise<Response> => {
+      fetchCalled++;
+      // Simulate a slow fetch that can be aborted
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          resolve(createMockResponse({ 
+            id: "1", 
+            number: 1, 
+            title: "Test", 
+            description: null, 
+            created_at: "2024-01-01T00:00:00Z", 
+            due_on: null 
+          }));
+        }, 5000); // 5 second delay - will be aborted before completion
+      });
+    });
+
+    const jobs: Job[] = [["owner", "repo"]];
+    const callback = vi.fn();
+
+    // Start fetching
+    const cancel = getIssues("test_token", jobs, callback);
+    
+    // Immediately cancel
+    cancel();
+    
+    // Wait a bit but not long enough for the fetch to complete
+    await new Promise(resolve => setTimeout(resolve, 100));
+    
+    // Should not complete because it was cancelled
+    expect(callback).not.toHaveBeenCalled();
+  });
 });
