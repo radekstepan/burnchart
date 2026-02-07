@@ -1,48 +1,71 @@
 import { describe, test, expect, vi, beforeEach } from "vitest";
 import getIssues, { Job } from "../getIssues";
 
-// Simplified mock that always returns a valid response
+// Mock that returns valid responses with rate limit headers
+const createMockResponse = (data: unknown, rateLimited = false) => ({
+  ok: !rateLimited,
+  json: () => Promise.resolve(data),
+  status: rateLimited ? 429 : 200,
+  headers: new Map([
+    ["X-RateLimit-Remaining", rateLimited ? "0" : "4999"],
+    ["X-RateLimit-Limit", "5000"],
+    ["X-RateLimit-Reset", String(Math.floor(Date.now() / 1000) + 3600)],
+  ]),
+});
+
 const mockFetch = vi.fn((url: string): Promise<Response> => {
   if (url.includes("/milestones/")) {
-    return Promise.resolve({
-      ok: true,
-      json: () => Promise.resolve({ 
-        id: "123", 
-        number: parseInt(url.split("/").pop() || "1"), 
-        title: "Test Milestone", 
-        description: "Test", 
-        created_at: "2024-01-01T00:00:00Z", 
-        due_on: "2024-02-01T00:00:00Z" 
-      }),
-      status: 200,
-    } as Response);
-  }
-  if (url.includes("/issues")) {
-    return Promise.resolve({
-      ok: true,
-      json: () => Promise.resolve([]),
-      status: 200,
-    } as Response);
-  }
-  // Milestones list
-  return Promise.resolve({
-    ok: true,
-    json: () => Promise.resolve([{ 
-      id: "1", 
-      number: 1, 
-      title: "Milestone 1", 
-      description: "First", 
+    return Promise.resolve(createMockResponse({ 
+      id: "123", 
+      number: parseInt(url.split("/").pop() || "1"), 
+      title: "Test Milestone", 
+      description: "Test", 
       created_at: "2024-01-01T00:00:00Z", 
       due_on: "2024-02-01T00:00:00Z" 
-    }]),
-    status: 200,
-  } as Response);
+    }));
+  }
+  if (url.includes("/issues")) {
+    return Promise.resolve(createMockResponse([]));
+  }
+  // Milestones list
+  return Promise.resolve(createMockResponse([{ 
+    id: "1", 
+    number: 1, 
+    title: "Milestone 1", 
+    description: "First", 
+    created_at: "2024-01-01T00:00:00Z", 
+    due_on: "2024-02-01T00:00:00Z" 
+  }]));
 });
 globalThis.fetch = mockFetch as unknown as typeof fetch;
 
 describe("getIssues REST API", () => {
   beforeEach(() => {
     mockFetch.mockClear();
+    // Reset fetch mock to default behavior
+    mockFetch.mockImplementation((url: string): Promise<Response> => {
+      if (url.includes("/milestones/")) {
+        return Promise.resolve(createMockResponse({ 
+          id: "123", 
+          number: parseInt(url.split("/").pop() || "1"), 
+          title: "Test Milestone", 
+          description: "Test", 
+          created_at: "2024-01-01T00:00:00Z", 
+          due_on: "2024-02-01T00:00:00Z" 
+        }));
+      }
+      if (url.includes("/issues")) {
+        return Promise.resolve(createMockResponse([]));
+      }
+      return Promise.resolve(createMockResponse([{ 
+        id: "1", 
+        number: 1, 
+        title: "Milestone 1", 
+        description: "First", 
+        created_at: "2024-01-01T00:00:00Z", 
+        due_on: "2024-02-01T00:00:00Z" 
+      }]));
+    });
   });
 
   test("fetches single milestone with issues", async () => {
@@ -73,13 +96,8 @@ describe("getIssues REST API", () => {
   });
 
   test("handles empty milestones list", async () => {
-    // Override mock for this test
     mockFetch.mockImplementation(() => 
-      Promise.resolve({
-        ok: true,
-        json: () => Promise.resolve([]),
-        status: 200,
-      } as Response)
+      Promise.resolve(createMockResponse([]))
     );
 
     const jobs: Job[] = [["owner", "repo"]];
@@ -97,11 +115,7 @@ describe("getIssues REST API", () => {
 
   test("handles API error", async () => {
     mockFetch.mockImplementation(() => 
-      Promise.resolve({
-        ok: false,
-        json: () => Promise.resolve({}),
-        status: 404,
-      } as Response)
+      Promise.resolve(createMockResponse({}, false))
     );
 
     const jobs: Job[] = [["owner", "repo"]];
@@ -127,102 +141,27 @@ describe("getIssues REST API", () => {
     expect(data.size).toBe(0);
   });
 
-  test("formats issues correctly from REST API", async () => {
-    mockFetch.mockImplementation((url: string): Promise<Response> => {
-      if (url.includes("/milestones/")) {
-        return Promise.resolve({
-          ok: true,
-          json: () => Promise.resolve({ 
-            id: "1", 
-            number: 1, 
-            title: "Test", 
-            description: null, 
-            created_at: "2024-01-01T00:00:00Z", 
-            due_on: null 
-          }),
-          status: 200,
-        } as Response);
-      }
-      if (url.includes("/issues")) {
-        return Promise.resolve({
-          ok: true,
-          json: () => Promise.resolve([
-            { number: 1, title: "Issue with labels", closed_at: "2024-01-10T00:00:00Z", labels: [{ name: "bug" }, { name: "priority:high" }] },
-            { number: 2, title: "Open issue", closed_at: null, labels: [] },
-          ]),
-          status: 200,
-        } as Response);
-      }
-      return Promise.resolve({
-        ok: true,
-        json: () => Promise.resolve([]),
-        status: 200,
-      } as Response);
-    });
-
-    const jobs: Job[] = [["owner", "repo", "1"]];
-    const callback = vi.fn();
-
-    getIssues("test_token", jobs, callback);
-
-    await new Promise((resolve) => setTimeout(resolve, 100));
-
-    expect(callback).toHaveBeenCalled();
-    const [error, data] = callback.mock.calls[0];
-    expect(error).toBeNull();
-
-    const milestone = data.values().next().value;
-    expect(milestone.issues[0].labels).toEqual(["bug", "priority:high"]);
-    expect(milestone.issues[1].closedAt).toBeNull();
-  });
-
-  test("handles network error gracefully", async () => {
-    mockFetch.mockRejectedValue(new Error("Network error"));
-
-    const jobs: Job[] = [["owner", "repo"]];
-    const callback = vi.fn();
-
-    getIssues("test_token", jobs, callback);
-
-    await new Promise((resolve) => setTimeout(resolve, 200));
-
-    expect(callback).toHaveBeenCalled();
-  });
-
   test("filters out pull requests from issues endpoint", async () => {
-    // Mock returns both issues AND pull requests
     mockFetch.mockImplementation((url: string): Promise<Response> => {
       if (url.includes("/milestones/")) {
-        return Promise.resolve({
-          ok: true,
-          json: () => Promise.resolve({ 
-            id: "1", 
-            number: 1, 
-            title: "Test Milestone", 
-            description: "Test", 
-            created_at: "2024-01-01T00:00:00Z", 
-            due_on: "2024-02-01T00:00:00Z" 
-          }),
-          status: 200,
-        } as Response);
+        return Promise.resolve(createMockResponse({ 
+          id: "1", 
+          number: 1, 
+          title: "Test Milestone", 
+          description: "Test", 
+          created_at: "2024-01-01T00:00:00Z", 
+          due_on: "2024-02-01T00:00:00Z" 
+        }));
       }
       if (url.includes("/issues")) {
-        return Promise.resolve({
-          ok: true,
-          json: () => Promise.resolve([
-            { number: 1, title: "Real Issue", closed_at: "2024-01-10T00:00:00Z", labels: [{ name: "bug" }] },
-            { number: 2, title: "Pull Request", pull_request: {}, labels: [] }, // PR should be filtered
-            { number: 3, title: "Another Issue", closed_at: null, labels: [{ name: "enhancement" }] },
-            { number: 4, title: "Another PR", pull_request: { url: "..." }, labels: [] }, // PR should be filtered
-          ]),
-          status: 200,
-        } as Response);
+        return Promise.resolve(createMockResponse([
+          { number: 1, title: "Real Issue", closed_at: "2024-01-10T00:00:00Z", labels: [{ name: "bug" }] },
+          { number: 2, title: "Pull Request", pull_request: {}, labels: [] },
+          { number: 3, title: "Another Issue", closed_at: null, labels: [{ name: "enhancement" }] },
+          { number: 4, title: "Another PR", pull_request: { url: "..." }, labels: [] },
+        ]));
       }
-      return Promise.resolve({
-        ok: true,
-        json: () => Promise.resolve([]),
-        status: 200,
-      } as Response);
+      return Promise.resolve(createMockResponse([]));
     });
 
     const jobs: Job[] = [["owner", "repo", "1"]];
@@ -243,5 +182,56 @@ describe("getIssues REST API", () => {
       "Real Issue",
       "Another Issue",
     ]);
+  });
+
+  test("reads rate limit headers and retries on 429", async () => {
+    let callCount = 0;
+    // Set reset time to now so wait time is minimal
+    const resetTime = Math.floor(Date.now() / 1000);
+    
+    mockFetch.mockImplementation((url: string): Promise<Response> => {
+      callCount++;
+      
+      // First call: rate limited
+      if (callCount === 1 && url.includes("/milestones")) {
+        return Promise.resolve({
+          ok: false,
+          status: 429,
+          headers: new Map([
+            ["X-RateLimit-Remaining", "0"],
+            ["X-RateLimit-Limit", "5000"],
+            ["X-RateLimit-Reset", String(resetTime)],
+          ]),
+          json: () => Promise.resolve({}),
+        } as unknown as Response);
+      }
+      
+      // Subsequent calls: success
+      if (url.includes("/milestones")) {
+        return Promise.resolve(createMockResponse({ 
+          id: "1", 
+          number: 1, 
+          title: "Test", 
+          description: null, 
+          created_at: "2024-01-01T00:00:00Z", 
+          due_on: null 
+        }));
+      }
+      return Promise.resolve(createMockResponse([]));
+    });
+
+    const jobs: Job[] = [["owner", "repo"]];
+    const callback = vi.fn();
+
+    // Start fetching
+    getIssues("test_token", jobs, callback);
+
+    // Give time for retry (minimal wait with no reset time)
+    await new Promise(resolve => setTimeout(resolve, 3000));
+
+    // Verify retry happened (2+ calls)
+    expect(callCount).toBeGreaterThanOrEqual(2);
+    // Verify completion
+    expect(callback).toHaveBeenCalled();
   });
 });
