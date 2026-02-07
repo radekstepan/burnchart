@@ -1,7 +1,11 @@
-import moment from "moment";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
 import config from "../../config";
 import { FORMAT } from "./index";
 import { ChartD } from "../../interfaces";
+
+// Extend dayjs with UTC plugin
+dayjs.extend(utc);
 
 /**
  * Creates an ideal milestone progression.
@@ -23,9 +27,9 @@ const idealLine = (
   // Make sure off days are numbers.
   const offDays = off_days.map((n) => parseInt(n, 10));
 
-  const $a = moment.utc(a);
+  const $a = dayjs.utc(a);
   // Do we have a due date?
-  const $b = b ? moment.utc(b) : moment.utc();
+  const $b = b ? dayjs.utc(b) : dayjs.utc();
 
   // Skip early if we have no off days.
   if (!offDays.length) {
@@ -43,7 +47,7 @@ const idealLine = (
       // 0 = Sunday
       days.push(d.format(FORMAT));
     }
-    d.add(1, "days");
+    d = d.add(1, "day");
   }
 
   // Map points on the array of days now.

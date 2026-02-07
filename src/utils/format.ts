@@ -1,23 +1,26 @@
-import moment from "moment";
+import dayjs, { type Dayjs } from "dayjs";
+import utc from "dayjs/plugin/utc";
+import relativeTime from "dayjs/plugin/relativeTime";
 
-/**
- * Force UTC mode for all moment operations
- */
-moment.suppressDeprecationWarnings = true;
+// Extend dayjs with UTC plugin
+dayjs.extend(utc);
+
+// Extend dayjs with relativeTime plugin for fromNow()
+dayjs.extend(relativeTime);
 
 /**
  * Parse a date string as UTC, ensuring consistent handling
  */
-const parseUtc = (date: string | number | Date | moment.Moment): moment.Moment => {
-  if (!date) return moment.utc();
-  // If already a moment object, return it
-  if (moment.isMoment(date)) return date.utc();
+const parseUtc = (date: string | number | Date | Dayjs): Dayjs => {
+  if (!date) return dayjs.utc();
+  // If already a dayjs object, return it
+  if (dayjs.isDayjs(date)) return dayjs.utc(date);
   // If number (timestamp), create from milliseconds
-  if (typeof date === "number") return moment.utc(date);
+  if (typeof date === "number") return dayjs.utc(date);
   // If Date object, convert to UTC
-  if (date instanceof Date) return moment.utc(date);
+  if (date instanceof Date) return dayjs.utc(date);
   // Parse as ISO string for consistent results
-  return moment.utc(date);
+  return dayjs.utc(date);
 };
 
 /**
@@ -47,21 +50,21 @@ const YEAR = DAY * 365;
 
 export const formatTimeRange = (a: string, b: string | null) => {
   const start = parseUtc(a);
-  const end = b ? parseUtc(b) : moment.utc();
+  const end = b ? parseUtc(b) : dayjs.utc();
   const diff = end.diff(start);
 
   switch (true) {
     case diff < DAY: // 05:50
-      return (d: moment.Moment | Date | number | string) => parseUtc(d).format("HH:mm");
+      return (d: Dayjs | Date | number | string) => parseUtc(d).format("HH:mm");
     case diff < WEEK: // Sat 04
-      return (d: moment.Moment | Date | number | string) => parseUtc(d).format("ddd DD");
+      return (d: Dayjs | Date | number | string) => parseUtc(d).format("ddd DD");
     case diff < MONTH * 2: // Mar 04
-      return (d: moment.Moment | Date | number | string) => parseUtc(d).format("MMM DD");
+      return (d: Dayjs | Date | number | string) => parseUtc(d).format("MMM DD");
     case diff < YEAR: // Mar
-      return (d: moment.Moment | Date | number | string) => parseUtc(d).format("MMM");
-    case diff < YEAR * 2: // Mar 2023
-      return (d: moment.Moment | Date | number | string) => parseUtc(d).format("MMM YYYY");
-    default: // 03 2023
-      return (d: moment.Moment | Date | number | string) => parseUtc(d).format("MM YYYY");
+      return (d: Dayjs | Date | number | string) => parseUtc(d).format("MMM");
+    case diff < YEAR * 2: // Oct 2025
+      return (d: Dayjs | Date | number | string) => parseUtc(d).format("MMM YYYY");
+    default: // Oct 2023
+      return (d: Dayjs | Date | number | string) => parseUtc(d).format("MMM YYYY");
   }
 };

@@ -2,8 +2,12 @@
  * Test that simulates what Chart.js TimeScale does
  */
 import { describe, test, expect } from "vitest";
-import moment from "moment";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
 import { formatTimeRange } from "../../../utils/format";
+
+// Extend dayjs with UTC plugin
+dayjs.extend(utc);
 
 describe("Chart.js TimeScale simulation", () => {
   test("formats dates using formatTimeRange", () => {
@@ -23,8 +27,8 @@ describe("Chart.js TimeScale simulation", () => {
   });
 
   test("simulates TimeScale tick generation", () => {
-    const start = moment.utc("2022-01-01").valueOf();
-    const end = moment.utc("2022-12-31").valueOf();
+    const start = dayjs.utc("2022-01-01").valueOf();
+    const end = dayjs.utc("2022-12-31").valueOf();
     const diff = end - start;
 
     const tickCount = 12;
@@ -38,18 +42,18 @@ describe("Chart.js TimeScale simulation", () => {
     }
   });
 
-  test("moment.utc() handles timestamps correctly", () => {
+  test("dayjs.utc() handles timestamps correctly", () => {
     const ts = 1640995200000;
-    const m = moment.utc(ts);
-    expect(m.isValid()).toBe(true);
-    expect(m.format()).toBe("2022-01-01T00:00:00Z");
+    const d = dayjs.utc(ts);
+    expect(d.isValid()).toBe(true);
+    expect(d.format()).toBe("2022-01-01T00:00:00Z");
   });
 
   test("handles invalid inputs gracefully", () => {
-    const nullResult = moment(null as unknown as moment.MomentInput);
+    const nullResult = dayjs(null);
     expect(nullResult.isValid()).toBe(false);
 
-    const emptyResult = moment("" as unknown as moment.MomentInput);
+    const emptyResult = dayjs("");
     expect(emptyResult.isValid()).toBe(false);
   });
 });

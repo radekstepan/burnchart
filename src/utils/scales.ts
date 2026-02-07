@@ -1,17 +1,15 @@
-import moment, { type Moment } from "moment";
+import dayjs, { type Dayjs } from "dayjs";
+import utc from "dayjs/plugin/utc";
 
-// export const timeScale = (a: Moment, b: Moment): ScaleTime<number, number> => {
-//   return scaleTime()
-//     .domain([a, b])
-//     .range([0, 100]);
-// };
+// Extend dayjs with UTC plugin
+dayjs.extend(utc);
 
 export type TimeScale = (
-  start: Moment,
-  end: Moment
+  start: Dayjs,
+  end: Dayjs
 ) => {
-  scale: (date: Moment) => number;
-  invert: (percentage: number) => Moment;
+  scale: (date: Dayjs) => number;
+  invert: (percentage: number) => Dayjs;
 };
 
 /**
@@ -33,7 +31,7 @@ export const timeScale: TimeScale = (start, end) => {
    * @param date - The date to map to a percentage value.
    * @returns A percentage value between 0 and 100.
    */
-  const scale = (date: Moment) => {
+  const scale = (date: Dayjs) => {
     const dateTime = date.toDate().getTime();
     const percentage = (dateTime - startTime) / timeRange;
     return percentage * 100;
@@ -43,11 +41,11 @@ export const timeScale: TimeScale = (start, end) => {
    * Maps a percentage value between 0 and 100 to a date, representing the position of the percentage value within the time range.
    *
    * @param percentage - The percentage value to map to a date.
-   * @returns A `moment` object representing the date that corresponds to the given percentage value within the time range.
+   * @returns A `Dayjs` object representing the date that corresponds to the given percentage value within the time range.
    */
   const invert = (percentage: number) => {
     const dateTime = startTime + (percentage / 100) * timeRange;
-    return moment(dateTime);
+    return dayjs.utc(dateTime);
   };
 
   return { scale, invert };

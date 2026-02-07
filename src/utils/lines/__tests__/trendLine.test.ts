@@ -1,7 +1,11 @@
 import mockDate from "mockdate";
-import moment, { Moment } from "moment";
+import dayjs, { type Dayjs } from "dayjs";
+import utc from "dayjs/plugin/utc";
 import * as lines from "../index";
 import { ChartD, Issue, WithSize } from "../../../interfaces";
+
+// Extend dayjs with UTC plugin
+dayjs.extend(utc);
 
 type ToIssue = (obj: Partial<WithSize<Issue>>) => WithSize<Issue>;
 
@@ -18,21 +22,21 @@ const t = (d: string) => `2000-01-${d}T00:00:00Z`;
 
 // Round dates to the nearest date.
 const nearest = (d: ChartD) => {
-  const x = moment.utc(d.x);
-  const [, m] = [
-    moment(x).startOf("day").subtract(1, "day"),
-    moment(x).startOf("day"),
-    moment(x).startOf("day").add(1, "day"),
-  ].reduce<[number, Moment | null]>(
-    (acc, d) => {
-      const diff = Math.abs(d.diff(x, "seconds"));
-      if (diff < acc[0]) {
-        return [diff, d];
-      }
-      return acc;
-    },
-    [+Infinity, null]
-  );
+  const x = dayjs.utc(d.x);
+  const candidates = [
+    dayjs.utc(x).startOf("day").subtract(1, "day"),
+    dayjs.utc(x).startOf("day"),
+    dayjs.utc(x).startOf("day").add(1, "day"),
+  ];
+
+  const m = candidates.reduce<Dayjs | null>((acc, current) => {
+    const accDiff = acc ? Math.abs(dayjs.utc(acc).diff(x, "second")) : +Infinity;
+    const currentDiff = Math.abs(dayjs.utc(current).diff(x, "second"));
+    if (currentDiff < accDiff) {
+      return current;
+    }
+    return acc;
+  }, null);
 
   if (!m) {
     throw new Error("Could not find the nearest date");

@@ -1,8 +1,12 @@
-import moment from "moment";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
 import regression from "regression";
 import { FORMAT } from "./index";
 import { ChartD } from "../../interfaces";
 import { timeScale } from "../scales";
+
+// Extend dayjs with UTC plugin
+dayjs.extend(utc);
 
 /**
  * Creates a trendline of closed issues.
@@ -18,16 +22,16 @@ const trendLine = (actual: ChartD[]): ChartD[] | null => {
   const last = actual[actual.length - 1];
   // The last point is either the due date when we are done, or today.
   const b = {
-    x: last.y ? moment.utc() : moment.utc(last.x),
+    x: last.y ? dayjs.utc() : dayjs.utc(last.x),
     y: last.y,
   };
 
   // A milestone with one issue closed at the same time as the milestone was created.
-  if (moment.utc(first.x).isSame(b.x)) {
+  if (dayjs.utc(first.x).isSame(b.x)) {
     return null;
   }
 
-  const { scale, invert } = timeScale(moment.utc(first.x), b.x);
+  const { scale, invert } = timeScale(dayjs.utc(first.x), b.x);
 
   const points = linear(
     new Array()
@@ -37,11 +41,11 @@ const trendLine = (actual: ChartD[]): ChartD[] | null => {
         last.y ? b : null
       )
       .filter(Boolean)
-      .map((d: ChartD) => [scale(moment.utc(d.x)), d.y])
+      .map((d: ChartD) => [scale(dayjs.utc(d.x)), d.y])
   );
 
   return points.map(([x, y]) => ({
-    x: moment.utc(invert(x)).format(FORMAT),
+    x: dayjs.utc(invert(x)).format(FORMAT),
     y,
   }));
 };

@@ -1,7 +1,11 @@
-import moment from "moment";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
 import sortOn from "sort-on";
 import config from "../config";
 import { Issue, Milestone, WithSize, WithStats } from "../interfaces";
+
+// Extend dayjs with UTC plugin
+dayjs.extend(utc);
 
 /**
  * Calculates the progress as a percentage.
@@ -99,8 +103,8 @@ const addStats = (milestone: Milestone): WithStats<Milestone> => {
   }
 
   // The dates in this milestone.
-  const a = moment(milestone.createdAt, moment.ISO_8601);
-  const b = moment.utc();
+  const a = dayjs.utc(milestone.createdAt);
+  const b = dayjs.utc();
 
   let endDate = null;
   // Milestones with no due date are always on track.
@@ -119,13 +123,13 @@ const addStats = (milestone: Milestone): WithStats<Milestone> => {
         endDate,
         days: 1e3,
         // The number of days from start to now.
-        span: b.diff(a, "days"),
+        span: b.diff(a, "day"),
         progress: { points, time: 0 },
       },
     };
   }
 
-  const c = moment(milestone.dueOn, moment.ISO_8601);
+  const c = dayjs.utc(milestone.dueOn);
 
   // Overdue? Regardless of the date, if we have closed all
   //  issues, we are no longer overdue.
@@ -134,13 +138,13 @@ const addStats = (milestone: Milestone): WithStats<Milestone> => {
   }
 
   // Progress in time.
-  const time = progress(b.diff(a), c.diff(b));
+  const time = progress(b.diff(a), c.diff(a));
 
   // Number of days between start and due date or today if overdue.
-  const span = (meta.isOverdue ? b : c).diff(a, "days");
+  const span = (meta.isOverdue ? c : b).diff(a, "day");
 
   // How many days is 1% of the time until now?
-  const days = b.diff(a, "days") / 100;
+  const days = b.diff(a, "day") / 100;
 
   // If we have closed all issues, we are "on time".
   meta.isOnTime = meta.isDone || points > time;

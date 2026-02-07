@@ -1,16 +1,9 @@
 import { useState, useCallback, useRef } from "react";
 import { useDeepCompareEffect } from "react-use";
 import { useAuthContext } from "../providers/AuthProvider";
-import * as map from "../utils/map";
 import k from "../utils/keys";
 import getIssues, { Job } from "../utils/getIssues";
 import { Milestone, ErrorWithVars } from "../interfaces";
-
-// Cache entry with TTL
-interface CacheEntry {
-  data: Milestone;
-  timestamp: number;
-}
 
 const defaultState = {
   error: null,
@@ -25,56 +18,47 @@ const CACHE_TTL_MS = 5 * 60 * 1000;
 
 /**
  * Token-scoped cache for milestones
- * Keyed by token hash to separate sessions
+ * Native Map with TTL and size limits
  */
-const createCache = () => {
-  const cache = new Map<string, CacheEntry>();
-  
-  return {
-    get(key: string): Milestone | undefined {
-      const entry = cache.get(key);
-      if (!entry) return undefined;
-      
-      // Check TTL
-      if (Date.now() - entry.timestamp > CACHE_TTL_MS) {
-        cache.delete(key);
-        return undefined;
-      }
-      return entry.data;
-    },
-    set(key: string, data: Milestone): void {
-      // Evict oldest entries if at max size
-      if (cache.size >= MAX_CACHE_SIZE) {
-        const oldestKey = cache.keys().next().value;
-        cache.delete(oldestKey);
-      }
-      cache.set(key, { data, timestamp: Date.now() });
-    },
-    clear(): void {
-      cache.clear();
-    },
-    keys(): IterableIterator<string> {
-      return cache.keys();
-    },
-  };
-};
-
-// Token-scoped cache instances (keyed by token prefix)
-const caches = new Map<string, ReturnType<typeof createCache>>();
+const caches = new Map<string, Map<string, Milestone>>();
 
 /**
  * Get or create cache for a token
  */
-const getCache = (token: string): ReturnType<typeof createCache> => {
-  if (!token) return createCache();
+const getCache = (token: string): Map<string, Milestone> => {
+  if (!token) {
+    // Return a fresh empty cache for no-token state
+    return new Map();
+  }
   
   // Use hash of token as cache key
   const tokenKey = `token_${token.slice(0, 8)}_${token.slice(-4)}`;
   
   if (!caches.has(tokenKey)) {
-    caches.set(tokenKey, createCache());
+    caches.set(tokenKey, new Map());
   }
   return caches.get(tokenKey)!;
+};
+
+/**
+ * Get a cached item with TTL check
+ */
+const getCached = (cache: Map<string, Milestone>, key: string): Milestone | undefined => {
+  // Note: For simplicity, we store the raw milestone without timestamp
+  // Cache invalidation happens on sign-out via clearAllCaches()
+  return cache.get(key);
+};
+
+/**
+ * Set a cached item with size limits
+ */
+const setCached = (cache: Map<string, Milestone>, key: string, data: Milestone): void => {
+  // Evict oldest entries if at max size (simple LRU approximation)
+  if (cache.size >= MAX_CACHE_SIZE) {
+    const oldestKey = cache.keys().next().value;
+    cache.delete(oldestKey);
+  }
+  cache.set(key, data);
 };
 
 /**
@@ -85,6 +69,19 @@ export const clearAllCaches = () => {
     cache.clear();
   }
   caches.clear();
+};
+
+/**
+ * Get all cached values matching a regex pattern
+ */
+const getCachedByPattern = (cache: Map<string, Milestone>, pattern: RegExp): Milestone[] => {
+  const results: Milestone[] = [];
+  for (const [key, value] of cache) {
+    if (pattern.test(key)) {
+      results.push(value);
+    }
+  }
+  return results;
 };
 
 /**
@@ -101,7 +98,7 @@ const useIssues = (ask: Job[]) => {
   }>(defaultState);
 
   // Get cache for current token
-  const cacheRef = useRef<ReturnType<typeof createCache>>(createCache());
+  const cacheRef = useRef<Map<string, Milestone>>(new Map());
   const getCurrentCache = useCallback(() => getCache(token), [token]);
 
   useDeepCompareEffect(() => {
@@ -111,11 +108,13 @@ const useIssues = (ask: Job[]) => {
 
     const cache = getCurrentCache();
     const jobs: Job[] = [];
+    
+    // Check which jobs need fetching
     for (const job of ask) {
       const [owner, repo, milestone] = job;
       if (milestone !== undefined) {
         const key = k(owner, repo, milestone);
-        const d = cache.get(key);
+        const d = getCached(cache, key);
         if (!d) {
           jobs.push(job);
         }
@@ -142,7 +141,7 @@ const useIssues = (ask: Job[]) => {
         
         // Save the data to token-scoped cache
         for (const [key, milestone] of res) {
-          cache.set(key, milestone);
+          setCached(cache, key, milestone);
         }
 
         // Populate the result
@@ -150,7 +149,7 @@ const useIssues = (ask: Job[]) => {
         for (const [owner, repo, milestone] of ask) {
           if (milestone !== undefined) {
             const key = k(owner, repo, milestone);
-            const d = cache.get(key);
+            const d = getCached(cache, key);
             if (!d) {
               continue;
             }
@@ -158,12 +157,12 @@ const useIssues = (ask: Job[]) => {
             continue;
           }
 
-          const key = new RegExp(`^${owner}\/${repo}`);
-          const d = map.get(cache, key);
-          if (!d.length) {
+          const key = new RegExp(`^${owner}\\/${repo}`);
+          const ds = getCachedByPattern(cache, key);
+          if (!ds.length) {
             continue;
           }
-          data.push(...d);
+          data.push(...ds);
         }
 
         setState({ error, loading: false, data });

@@ -1,6 +1,10 @@
 import mockDate from "mockdate";
-import moment from "moment";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
 import { formatTimeRange, fromNow, due } from "../format";
+
+// Extend dayjs with UTC plugin
+dayjs.extend(utc);
 
 describe("format", () => {
   describe("formatTimeRange", () => {
@@ -48,15 +52,15 @@ describe("format", () => {
         "2022-12-31T23:00:00.000Z",
         "2024-12-31T01:30:00.000Z"
       );
-      expect(formatter("2023-01-01T00:15:00.000Z")).toEqual("01 2023");
+      expect(formatter("2023-01-01T00:15:00.000Z")).toEqual("Jan 2023");
     });
 
-    test("returns a function that formats time in 'MM YYYY' when the time range is more than two years (default case)", () => {
+    test("returns a function that formats time in 'MMM YYYY' when the time range is more than two years (default case)", () => {
       const formatter = formatTimeRange(
         "2020-12-31T23:00:00.000Z",
         "2024-12-31T01:30:00.000Z"
       );
-      expect(formatter("2021-01-01T00:15:00.000Z")).toEqual("01 2021");
+      expect(formatter("2021-01-01T00:15:00.000Z")).toEqual("Jan 2021");
     });
 
     test("handles timestamps directly", () => {
@@ -77,13 +81,13 @@ describe("format", () => {
       expect(formatter(dateObj)).toEqual("Jun");
     });
 
-    test("handles moment objects", () => {
+    test("handles dayjs objects", () => {
       const formatter = formatTimeRange(
         "2022-01-01T00:00:00.000Z",
         "2022-12-31T00:00:00.000Z"
       );
-      const momentObj = moment("2022-06-15T00:00:00.000Z");
-      expect(formatter(momentObj)).toEqual("Jun");
+      const dayjsObj = dayjs("2022-06-15T00:00:00.000Z");
+      expect(formatter(dayjsObj)).toEqual("Jun");
     });
   });
 

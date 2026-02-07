@@ -1,5 +1,5 @@
 import React from "react";
-import { Router, Route } from "wouter";
+import { Router, Route, Switch } from "wouter";
 import routes from "../../routes";
 import Loader from "../Loader/Loader";
 import "./page.less";
@@ -9,9 +9,11 @@ const Page: React.FC = () => (
   <div className="page">
     <React.Suspense fallback={<Loader speed={2} />}>
       <Router>
-        {routes.map((route) => (
-          <Route key={route.name} path={route.path} component={route.view} />
-        ))}
+        <Switch>
+          {routes.map((route) => (
+            <Route key={route.name} path={route.path} component={route.view} />
+          ))}
+        </Switch>
       </Router>
     </React.Suspense>
   </div>

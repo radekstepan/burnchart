@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import moment from "moment";
 import {
   Chart as ChartJs,
   TimeScale,
@@ -10,7 +9,7 @@ import {
   Tooltip as ChartJsTooltip,
   type ChartConfiguration,
 } from "chart.js";
-import "./chartjs-adapter-moment-utc";
+import "./chartjs-adapter-dayjs-utc";
 import Tooltip, { type TooltipType } from "./Tooltip";
 import useStateRef from "../../hooks/useStateRef";
 import { pick } from "../../utils/object";
@@ -110,6 +109,7 @@ const Chart: React.FC<Props> = ({ milestone }) => {
             ticks: {
               maxTicksLimit: 12,
               callback: tickTimeFormat,
+              font: { size: 11 },
             },
           },
           y: {
@@ -119,6 +119,7 @@ const Chart: React.FC<Props> = ({ milestone }) => {
             ticks: {
               // Show only whole numbers.
               precision: 0,
+              font: { size: 11 },
             },
           },
         },

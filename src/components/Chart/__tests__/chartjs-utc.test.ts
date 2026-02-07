@@ -1,11 +1,15 @@
 /**
- * Test for chart.js UTC date parsing
+ * Test for chart.js UTC date parsing with dayjs
  * Investigates the "Invalid date" issue
  */
 import { describe, test, expect } from "vitest";
-import moment from "moment";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
 
-// This is what chartjs-adapter-moment does
+// Extend dayjs with UTC plugin
+dayjs.extend(utc);
+
+// This is what chartjs-adapter-dayjs does
 const FORMATS = {
   datetime: "MMM D, YYYY, h:mm:ss a",
   millisecond: "h:mm:ss.SSS a",
@@ -19,21 +23,21 @@ const FORMATS = {
   year: "YYYY"
 };
 
-// The parse function from chartjs-adapter-moment
+// The parse function from chartjs-adapter-dayjs
 function adapterParse(value: unknown, format: unknown): number | null {
-  let m: moment.Moment;
+  let d: dayjs.Dayjs;
   if (typeof value === "string" && typeof format === "string") {
-    m = moment.utc(value, format);
+    d = dayjs.utc(value, format);
   } else if (typeof value === "string") {
-    m = moment.utc(value);
+    d = dayjs.utc(value);
   } else if (value instanceof Date) {
-    m = moment.utc(value);
+    d = dayjs.utc(value);
   } else if (typeof value === "number") {
-    m = moment.utc(value);
+    d = dayjs.utc(value);
   } else {
-    m = moment.utc();
+    d = dayjs.utc();
   }
-  return m.isValid() ? m.valueOf() : null;
+  return d.isValid() ? d.valueOf() : null;
 }
 
 describe("Chart.js UTC date parsing", () => {
@@ -66,17 +70,17 @@ describe("Chart.js UTC date parsing", () => {
     });
   });
 
-  test("moment() handles date strings correctly", () => {
+  test("dayjs() handles date strings correctly", () => {
     const dateStr = "2022-01-01";
-    const m = moment(dateStr);
-    expect(m.isValid()).toBe(true);
-    expect(m.valueOf()).toBe(1640995200000);
+    const d = dayjs(dateStr);
+    expect(d.isValid()).toBe(true);
+    expect(d.valueOf()).toBe(1640995200000);
   });
 
-  test("moment.utc() returns valid UTC moment", () => {
+  test("dayjs.utc() returns valid UTC dayjs", () => {
     const timestamp = 1640995200000;
-    const m = moment.utc(timestamp);
-    expect(m.isValid()).toBe(true);
-    expect(m.format()).toBe("2022-01-01T00:00:00Z");
+    const d = dayjs.utc(timestamp);
+    expect(d.isValid()).toBe(true);
+    expect(d.format()).toBe("2022-01-01T00:00:00Z");
   });
 });
