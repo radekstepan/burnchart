@@ -19,13 +19,13 @@ const idealLine = (
   a: string,
   b: string | null,
   total: number,
-  off_days: string[] = config.chart.off_days
+  off_days: number[] = config.chart.off_days
 ): ChartD[] => {
   // Swap if end is before the start...
   if (b && b < a) [b, a] = [a, b];
 
-  // Make sure off days are numbers.
-  const offDays = off_days.map((n) => parseInt(n, 10));
+  // Use off_days directly (already numbers from config)
+  const offDays = off_days;
 
   const $a = dayjs.utc(a);
   // Do we have a due date?
