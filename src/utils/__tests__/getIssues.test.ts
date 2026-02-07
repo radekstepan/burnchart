@@ -2,14 +2,19 @@ import { describe, test, expect, vi, beforeEach } from "vitest";
 import getIssues, { Job } from "../getIssues";
 
 // Mock that returns valid responses with rate limit headers
-const createMockResponse = (data: unknown, rateLimited = false) => ({
+const createMockResponse = (
+  data: unknown,
+  rateLimited = false,
+  extraHeaders: Record<string, string> = {}
+) => ({
   ok: !rateLimited,
   json: () => Promise.resolve(data),
   status: rateLimited ? 429 : 200,
-  headers: new Map([
+  headers: new Headers([
     ["X-RateLimit-Remaining", rateLimited ? "0" : "4999"],
     ["X-RateLimit-Limit", "5000"],
     ["X-RateLimit-Reset", String(Math.floor(Date.now() / 1000) + 3600)],
+    ...Object.entries(extraHeaders),
   ]),
 } as unknown as Response);
 
@@ -80,6 +85,76 @@ describe("getIssues REST API", () => {
     const [error, data] = callback.mock.calls[0];
     expect(error).toBeNull();
     expect(data.size).toBe(1);
+  });
+
+  test("paginates milestone issues via Link header", async () => {
+    mockFetch.mockImplementation((url: string): Promise<Response> => {
+      if (url.includes("/milestones/")) {
+        return Promise.resolve(
+          createMockResponse({
+            id: "123",
+            number: 1,
+            title: "Test Milestone",
+            description: "Test",
+            created_at: "2024-01-01T00:00:00Z",
+            due_on: "2024-02-01T00:00:00Z",
+          })
+        );
+      }
+
+      if (url.includes("/issues") && url.includes("page=1")) {
+        return Promise.resolve(
+          createMockResponse(
+            [
+              {
+                number: 1,
+                title: "Issue 1",
+                closed_at: null,
+                labels: [],
+              },
+            ],
+            false,
+            {
+              Link:
+                "<https://api.github.com/repos/owner/repo/issues?milestone=1&state=all&per_page=100&page=2>; rel=\"next\"",
+            }
+          )
+        );
+      }
+
+      if (url.includes("/issues") && url.includes("page=2")) {
+        return Promise.resolve(
+          createMockResponse([
+            {
+              number: 2,
+              title: "Issue 2",
+              closed_at: null,
+              labels: [],
+            },
+          ])
+        );
+      }
+
+      return Promise.resolve(createMockResponse([]));
+    });
+
+    const jobs: Job[] = [["owner", "repo", "1"]];
+    const callback = vi.fn();
+
+    getIssues("test_token", jobs, callback);
+
+    await new Promise((resolve) => setTimeout(resolve, 100));
+
+    expect(callback).toHaveBeenCalled();
+    const [error, data] = callback.mock.calls[0];
+    expect(error).toBeNull();
+
+    const milestone = data.values().next().value;
+    expect(milestone.issues).toHaveLength(2);
+    expect(milestone.issues.map((i: { title: string }) => i.title)).toEqual([
+      "Issue 1",
+      "Issue 2",
+    ]);
   });
 
   test("fetches all milestones for a repo", async () => {

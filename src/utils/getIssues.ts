@@ -19,6 +19,25 @@ interface RateLimitInfo {
 }
 
 /**
+ * Extract next page URL from GitHub Link header
+ */
+const getNextLink = (linkHeader: string | null): string | null => {
+  if (!linkHeader) {
+    return null;
+  }
+
+  const links = linkHeader.split(",");
+  for (const link of links) {
+    const [urlPart, relPart] = link.split(";").map((part) => part.trim());
+    if (relPart === 'rel="next"') {
+      return urlPart.replace(/^</, "").replace(/>$/, "");
+    }
+  }
+
+  return null;
+};
+
+/**
  * Parse rate limit headers from GitHub response
  */
 const getRateLimitInfo = (response: Response | undefined): RateLimitInfo => {
@@ -96,7 +115,7 @@ const fetchWithRateLimit = async (
   token: string,
   signal: AbortSignal | undefined,
   retries = 2
-): Promise<{ ok: boolean; status: number; data: unknown; rateLimit: RateLimitInfo }> => {
+): Promise<{ ok: boolean; status: number; data: unknown; rateLimit: RateLimitInfo; headers: Headers | null }> => {
   let lastError: Error | null = null;
 
   for (let attempt = 0; attempt <= retries; attempt++) {
@@ -132,12 +151,13 @@ const fetchWithRateLimit = async (
           ok: false, 
           status: response.status,
           data: null, 
-          rateLimit 
+          rateLimit,
+          headers: response.headers
         };
       }
 
       const data = await response.json();
-      return { ok: true, status: response.status, data, rateLimit };
+      return { ok: true, status: response.status, data, rateLimit, headers: response.headers };
     } catch (err) {
       if (err instanceof Error && err.name === "AbortError") {
         throw err; // Re-throw abort errors
@@ -191,14 +211,17 @@ const getMilestone = async (
     due_on: string | null;
   };
 
-  // Fetch issues for this milestone (first page only, max 100)
-  const issuesRes = await fetchWithRateLimit(
-    `${API_URL}/repos/${owner}/${repo}/issues?milestone=${milestoneNumber}&state=all&per_page=100&page=1`,
-    token,
-    signal
-  );
-
-  const issuesRaw = issuesRes.ok ? (issuesRes.data as unknown[]) : [];
+  // Fetch issues for this milestone (paginate with Link header)
+  const issuesRaw: unknown[] = [];
+  let nextUrl: string | null = `${API_URL}/repos/${owner}/${repo}/issues?milestone=${milestoneNumber}&state=all&per_page=100&page=1`;
+  while (nextUrl) {
+    const issuesRes = await fetchWithRateLimit(nextUrl, token, signal);
+    if (!issuesRes.ok || !Array.isArray(issuesRes.data)) {
+      break;
+    }
+    issuesRaw.push(...issuesRes.data);
+    nextUrl = getNextLink(issuesRes.headers?.get("Link") ?? null);
+  }
 
   // Filter out pull requests (GitHub's issues endpoint includes PRs)
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
