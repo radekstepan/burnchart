@@ -188,4 +188,60 @@ describe("getIssues REST API", () => {
 
     expect(callback).toHaveBeenCalled();
   });
+
+  test("filters out pull requests from issues endpoint", async () => {
+    // Mock returns both issues AND pull requests
+    mockFetch.mockImplementation((url: string): Promise<Response> => {
+      if (url.includes("/milestones/")) {
+        return Promise.resolve({
+          ok: true,
+          json: () => Promise.resolve({ 
+            id: "1", 
+            number: 1, 
+            title: "Test Milestone", 
+            description: "Test", 
+            created_at: "2024-01-01T00:00:00Z", 
+            due_on: "2024-02-01T00:00:00Z" 
+          }),
+          status: 200,
+        } as Response);
+      }
+      if (url.includes("/issues")) {
+        return Promise.resolve({
+          ok: true,
+          json: () => Promise.resolve([
+            { number: 1, title: "Real Issue", closed_at: "2024-01-10T00:00:00Z", labels: [{ name: "bug" }] },
+            { number: 2, title: "Pull Request", pull_request: {}, labels: [] }, // PR should be filtered
+            { number: 3, title: "Another Issue", closed_at: null, labels: [{ name: "enhancement" }] },
+            { number: 4, title: "Another PR", pull_request: { url: "..." }, labels: [] }, // PR should be filtered
+          ]),
+          status: 200,
+        } as Response);
+      }
+      return Promise.resolve({
+        ok: true,
+        json: () => Promise.resolve([]),
+        status: 200,
+      } as Response);
+    });
+
+    const jobs: Job[] = [["owner", "repo", "1"]];
+    const callback = vi.fn();
+
+    getIssues("test_token", jobs, callback);
+
+    await new Promise((resolve) => setTimeout(resolve, 100));
+
+    expect(callback).toHaveBeenCalled();
+    const [error, data] = callback.mock.calls[0];
+    expect(error).toBeNull();
+
+    const milestone = data.values().next().value;
+    // Should only have 2 issues (PRs filtered out)
+    expect(milestone.issues).toHaveLength(2);
+    expect(milestone.issues.map((i: { title: string }) => i.title)).toEqual([
+      "Real Issue",
+      "Another Issue",
+    ]);
+  });
 });

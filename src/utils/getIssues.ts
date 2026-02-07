@@ -79,7 +79,12 @@ const getMilestone = async (
     return null;
   }
 
-  const issues = await issuesRes.json();
+  const issuesRaw = await issuesRes.json();
+
+  // Filter out pull requests (GitHub's issues endpoint includes PRs)
+  const issues = issuesRaw
+    .filter((item: { pull_request?: unknown }) => !item.pull_request)
+    .map(formatIssue);
 
   return {
     id: String(milestone.id),
@@ -90,7 +95,7 @@ const getMilestone = async (
     description: milestone.description || null,
     createdAt: milestone.created_at,
     dueOn: milestone.due_on || null,
-    issues: issues.map(formatIssue),
+    issues: issues,
   };
 };
 
