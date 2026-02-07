@@ -65,8 +65,7 @@ const TokenInput: React.FC<Props> = ({ onSuccess }) => {
       {error && <div className="token-input__error">{error}</div>}
 
       <button
-        type="button"
-        onClick={handleSubmit}
+        type="submit"
         disabled={isValidating || !token.trim()}
         className="token-input__submit"
       >
