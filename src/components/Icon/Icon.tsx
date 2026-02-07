@@ -30,12 +30,13 @@ interface Props {
 
 const Icon: React.FC<Props> = ({ name }) => {
   if (name && name in IconNames) {
-    const code = parseInt(IconNames[name], 16);
+    const codePoint = parseInt(IconNames[name], 16);
     return (
       <span
         className={`icon--family-fontello icon__${name}`}
-        dangerouslySetInnerHTML={{ __html: `&#${code};` }}
-      />
+      >
+        {String.fromCodePoint(codePoint)}
+      </span>
     );
   }
 
