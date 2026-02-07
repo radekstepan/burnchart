@@ -250,7 +250,8 @@ const getRepoMilestones = async (
   const recentMilestones = sortedMilestones.slice(0, 10);
 
   // Fetch issues for each milestone (parallelized)
-  const results: Milestone[] = [];
+  // Use Map to collect results by milestone number for deterministic ordering
+  const resultsByNumber = new Map<number, Milestone>();
   const queue = new PQueue({ concurrency: CONCURRENCY });
 
   for (const milestone of recentMilestones) {
@@ -258,7 +259,8 @@ const getRepoMilestones = async (
       try {
         const milestoneWithIssues = await getMilestone(token, owner, repo, milestone.number, signal);
         if (milestoneWithIssues) {
-          results.push(milestoneWithIssues);
+          // Store by milestone number (not key) for sorting
+          resultsByNumber.set(milestone.number, milestoneWithIssues);
         }
       } catch (err) {
         // Ignore abort errors - they're expected on cancel
@@ -270,7 +272,13 @@ const getRepoMilestones = async (
   }
 
   await queue.onIdle();
-  return results;
+
+  // Sort by milestone number (ascending) for deterministic order
+  const sortedResults = [...resultsByNumber.values()].sort(
+    (a, b) => a.number - b.number
+  );
+
+  return sortedResults;
 };
 
 const getIssues = (

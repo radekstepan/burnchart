@@ -270,4 +270,58 @@ describe("getIssues REST API", () => {
     // Should not complete because it was cancelled
     expect(callback).not.toHaveBeenCalled();
   });
+
+  test("returns milestones in deterministic order (sorted by number)", async () => {
+    // Return milestones in reverse order to test sorting
+    mockFetch.mockImplementation((url: string): Promise<Response> => {
+      if (url.includes("/milestones?state=all")) {
+        // Return milestones in random-ish order (5, 1, 3, 2, 4)
+        return Promise.resolve(createMockResponse([
+          { id: "5", number: 5, title: "Milestone 5", description: "Fifth", created_at: "2024-01-05T00:00:00Z", due_on: null },
+          { id: "1", number: 1, title: "Milestone 1", description: "First", created_at: "2024-01-01T00:00:00Z", due_on: null },
+          { id: "3", number: 3, title: "Milestone 3", description: "Third", created_at: "2024-01-03T00:00:00Z", due_on: null },
+          { id: "2", number: 2, title: "Milestone 2", description: "Second", created_at: "2024-01-02T00:00:00Z", due_on: null },
+          { id: "4", number: 4, title: "Milestone 4", description: "Fourth", created_at: "2024-01-04T00:00:00Z", due_on: null },
+        ]));
+      }
+      if (url.includes("/milestones/")) {
+        const num = parseInt(url.split("/").pop() || "1");
+        return Promise.resolve(createMockResponse({ 
+          id: String(num), 
+          number: num, 
+          title: `Milestone ${num}`, 
+          description: `${num}th`, 
+          created_at: `2024-01-0${num % 10 || 1}T00:00:00Z`, 
+          due_on: null 
+        }));
+      }
+      return Promise.resolve(createMockResponse([]));
+    });
+
+    // Run multiple times to catch non-deterministic ordering
+    const orderings: string[][] = [];
+    
+    for (let i = 0; i < 5; i++) {
+      const jobs: Job[] = [["owner", "repo"]];
+      const callback = vi.fn();
+      
+      getIssues("test_token", jobs, callback);
+      await new Promise((resolve) => setTimeout(resolve, 100));
+      
+      expect(callback).toHaveBeenCalled();
+      const [error, data] = callback.mock.calls[callback.mock.calls.length - 1];
+      expect(error).toBeNull();
+      
+      // Collect milestone numbers in order
+      const numbers = Array.from(data.values()).map((m: { number: number }) => m.number);
+      orderings.push(numbers);
+    }
+
+    // All orderings should be the same (sorted ascending: 1, 2, 3, 4, 5)
+    const expectedOrder = [1, 2, 3, 4, 5];
+    
+    for (const order of orderings) {
+      expect(order).toEqual(expectedOrder);
+    }
+  });
 });
