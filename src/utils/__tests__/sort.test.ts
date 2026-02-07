@@ -258,6 +258,51 @@ describe("sort", () => {
       ]);
     });
   });
+
+  describe("stable sort", () => {
+    test("stable sort when progress is equal", () => {
+      const ordered = sortBy(
+        [
+          { id: "B", stats: { progress: { points: 5 } } },
+          { id: "A", stats: { progress: { points: 5 } } },
+        ].map((d) => toMilestone(d)),
+        SortBy.progress
+      );
+      expect(ordered[0].id).toBe("A");
+      expect(ordered[1].id).toBe("B");
+    });
+
+    test("stable sort when priority is equal", () => {
+      const ordered = sortBy(
+        [
+          { id: "B", stats: { progress: { points: 5, time: 5 }, days: 1 } },
+          { id: "A", stats: { progress: { points: 5, time: 5 }, days: 1 } },
+        ].map((d) => toMilestone(d)),
+        SortBy.priority
+      );
+      expect(ordered[0].id).toBe("A");
+      expect(ordered[1].id).toBe("B");
+    });
+
+    test("stable sort when name is equal", () => {
+      const ordered = sortBy(
+        [
+          { id: "B", owner: "o", repo: "r", title: "T" },
+          { id: "A", owner: "o", repo: "r", title: "T" },
+        ].map((d) => toMilestone(d)),
+        SortBy.name
+      );
+      expect(ordered[0].id).toBe("A");
+      expect(ordered[1].id).toBe("B");
+    });
+  });
+
+  test("sortBy default case (fallback to original array)", () => {
+    const input = [{ id: "1", stats: { progress: { points: 1 } } }].map((d) => toMilestone(d));
+    // @ts-expect-error testing invalid sortBy
+    const ordered = sortBy(input, "invalid");
+    expect(ordered).toEqual(input);
+  });
 });
 
 export default {};

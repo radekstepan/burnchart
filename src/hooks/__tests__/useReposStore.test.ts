@@ -56,4 +56,25 @@ describe("useReposStore", () => {
     ]);
     expect(window.localStorage.getItem("lscache-projects")).toBe(null);
   });
+
+  it("should do nothing when removing a non-existent repo", () => {
+    const { result } = renderHook(() => useReposStore());
+
+    act(() => result.current.addRepo("facebook", "react"));
+    act(() => result.current.removeRepo("google", "chrome"));
+
+    expect(result.current.repos).toEqual([
+      { owner: "facebook", repo: "react" },
+    ]);
+  });
+
+  it("should handle migration when repos already exist", () => {
+    window.localStorage.setItem("repos", JSON.stringify([{ owner: "google", repo: "chrome" }]));
+    window.localStorage.setItem("lscache-projects", JSON.stringify([{ owner: "facebook", name: "react" }]));
+
+    const { result } = renderHook(() => useReposStore());
+
+    expect(result.current.repos).toContainEqual({ owner: "google", repo: "chrome" });
+    expect(result.current.repos).toContainEqual({ owner: "facebook", repo: "react" });
+  });
 });

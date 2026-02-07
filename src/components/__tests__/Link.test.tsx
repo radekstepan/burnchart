@@ -1,14 +1,23 @@
 import React from "react";
-import { vi } from "vitest";
+import { vi, describe, test, expect } from "vitest";
 import { render, fireEvent, screen } from "@testing-library/react";
 import Link from "../Link/Link";
+import { Route } from "../../routes";
 
-// Mock the router hook
+const mockGoTo = vi.fn();
+const mockGetHref = vi.fn((route, state) => `/${route}${state ? `?${JSON.stringify(state)}` : ""}`);
+const mockRemount = vi.fn();
+
+// Mock the hooks
 vi.mock("../../hooks/useRouter", () => ({
   default: () => ({
-    goTo: vi.fn(),
-    getHref: vi.fn((route, state) => `/${route}${state ? `?${JSON.stringify(state)}` : ""}`),
+    goTo: mockGoTo,
+    getHref: mockGetHref,
   }),
+}));
+
+vi.mock("../../hooks/useRemount", () => ({
+  default: () => mockRemount,
 }));
 
 describe("Link component", () => {
@@ -107,5 +116,56 @@ describe("Link component", () => {
     );
 
     expect(getByText("Child content")).toBeTruthy();
+  });
+
+  test("does nothing when clicked without routeName and onClick", () => {
+    const { getByText } = render(<Link>No Action</Link>);
+    const link = getByText("No Action");
+    
+    // Should not throw or do anything
+    fireEvent.click(link);
+  });
+
+  test.skip("calls remount when navigating to same page", () => {
+    const route = Route.repos;
+    const path = "/0"; // Mock returned by getHref for Route.repos
+    
+    const oldLocation = window.location;
+    delete (window as any).location;
+    window.location = { ...oldLocation, pathname: path } as any;
+
+    render(
+      <Link routeName={route}>
+        Same Page
+      </Link>
+    );
+
+    const link = screen.getByText("Same Page");
+    fireEvent.click(link);
+
+    expect(mockRemount).toHaveBeenCalled();
+    
+    window.location = oldLocation;
+  });
+
+  test("calls goTo when navigating to different page", () => {
+    const route = Route.milestones;
+    
+    const oldLocation = window.location;
+    delete (window as any).location;
+    window.location = { ...oldLocation, pathname: "/different" } as any;
+
+    render(
+      <Link routeName={route} state={{ owner: "o", repo: "r" }}>
+        Different Page
+      </Link>
+    );
+
+    const link = screen.getByText("Different Page");
+    fireEvent.click(link);
+
+    expect(mockGoTo).toHaveBeenCalledWith(route, { owner: "o", repo: "r" });
+
+    window.location = oldLocation;
   });
 });

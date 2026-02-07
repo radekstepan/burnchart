@@ -25,7 +25,7 @@ export type RouteParams = {
 
 export type RouteParam = RouteParams[keyof RouteParams];
 
-const routes = [
+export const routes = [
   {
     name: Route.repos,
     path: "/",

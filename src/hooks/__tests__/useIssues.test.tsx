@@ -1,6 +1,6 @@
 import React from "react";
 import { describe, test, expect, vi, beforeEach } from "vitest";
-import { renderHook } from "@testing-library/react";
+import { renderHook, waitFor } from "@testing-library/react";
 import { AuthProvider } from "../../providers/AuthProvider";
 import useIssues from "../useIssues";
 
