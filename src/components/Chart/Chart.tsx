@@ -56,17 +56,16 @@ const Chart: React.FC<Props> = ({ milestone }) => {
     }
 
     const total = milestone.issues.closed.size + milestone.issues.open.size;
+    const closedNodes = milestone.issues.closed.nodes;
+    const startDate = milestone.stats.startDate;
+    const endDate = milestone.stats.endDate;
 
     const actual = {
       borderWidth: 3,
       borderColor: "#64584c",
       pointBackgroundColor: "#64584c",
       tension: 0,
-      data: lines.actual(
-        milestone.issues.closed.nodes,
-        milestone.stats.startDate,
-        total
-      ),
+      data: lines.actual(closedNodes, startDate, total),
     };
 
     const trend = lines.trend(actual.data);
@@ -90,11 +89,7 @@ const Chart: React.FC<Props> = ({ milestone }) => {
         borderColor: "#cacaca",
         pointStyle: false as const,
         tension: 0,
-        data: lines.ideal(
-          milestone.stats.startDate,
-          milestone.stats.endDate,
-          total
-        ),
+        data: lines.ideal(startDate, endDate, total),
       },
     ];
 
@@ -137,8 +132,7 @@ const Chart: React.FC<Props> = ({ milestone }) => {
             callbacks: {
               // For accurate positioning.
               label: (context) => {
-                const node =
-                  milestone.issues.closed.nodes[context.dataIndex - 1];
+                const node = closedNodes[context.dataIndex - 1];
                 if (node) {
                   return `#${node.number}: ${node.title}`;
                 }
@@ -193,7 +187,7 @@ const Chart: React.FC<Props> = ({ milestone }) => {
     return () => {
       chart.destroy();
     };
-  }, [el]);
+  }, [el, milestone, tickTimeFormat]);
 
   if (milestone.stats.meta.isEmpty) {
     return null;
