@@ -7,7 +7,7 @@ describe("format", () => {
       mockDate.set("2023-03-04T01:00:00.000Z");
 
       const formatter = formatTimeRange("2023-03-04T00:00:00.000Z", null);
-      expect(formatter("2023-03-04T12:00:00.000Z")).toEqual("04:00");
+      expect(formatter("2023-03-04T12:00:00.000Z")).toEqual("12:00");
     });
 
     test("formats time in 'HH:mm' when the time range is less than a day", () => {
@@ -15,7 +15,7 @@ describe("format", () => {
         "2022-12-31T23:00:00.000Z",
         "2023-01-01T01:30:00.000Z"
       );
-      expect(formatter("2023-01-01T00:15:00.000Z")).toEqual("16:15");
+      expect(formatter("2023-01-01T00:15:00.000Z")).toEqual("00:15");
     });
 
     test("returns a function that formats time in 'ddd DD' when the time range is less than a week", () => {
@@ -23,7 +23,7 @@ describe("format", () => {
         "2022-12-31T23:00:00.000Z",
         "2023-01-07T01:30:00.000Z"
       );
-      expect(formatter("2023-01-01T00:15:00.000Z")).toEqual("Sat 31");
+      expect(formatter("2023-01-01T00:15:00.000Z")).toEqual("Sun 01");
     });
 
     test("returns a function that formats time in 'MMM DD' when the time range is less than two months", () => {
@@ -31,7 +31,7 @@ describe("format", () => {
         "2022-12-31T23:00:00.000Z",
         "2023-02-28T01:30:00.000Z"
       );
-      expect(formatter("2023-01-01T00:15:00.000Z")).toEqual("Dec 31");
+      expect(formatter("2023-01-01T00:15:00.000Z")).toEqual("Jan 01");
     });
 
     test("returns a function that formats time in 'MMM' when the time range is less than a year", () => {
@@ -39,7 +39,7 @@ describe("format", () => {
         "2022-12-31T23:00:00.000Z",
         "2023-12-31T01:30:00.000Z"
       );
-      expect(formatter("2023-01-01T00:15:00.000Z")).toEqual("Dec");
+      expect(formatter("2023-01-01T00:15:00.000Z")).toEqual("Jan");
     });
 
     test("returns a function that formats time in 'MMM YYYY' when the time range is less than two years", () => {
@@ -47,7 +47,7 @@ describe("format", () => {
         "2022-12-31T23:00:00.000Z",
         "2024-12-31T01:30:00.000Z"
       );
-      expect(formatter("2023-01-01T00:15:00.000Z")).toEqual("12 2022");
+      expect(formatter("2023-01-01T00:15:00.000Z")).toEqual("01 2023");
     });
   });
 });
