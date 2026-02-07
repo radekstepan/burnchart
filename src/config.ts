@@ -1,11 +1,6 @@
 const config = {
-  // Firebase.
-  firebase: {
-    apiKey: "AIzaSyD_kfzkAPA87PoRFIZa8JEzZkT66CqUDpU",
-    authDomain: "burnchart.firebaseapp.com",
-  },
-  // Data source provider.
-  provider: "github",
+  // GitHub API base URL
+  apiUrl: "https://api.github.com",
   // Chart configuration.
   chart: {
     // Days we are not working. Mon = 1

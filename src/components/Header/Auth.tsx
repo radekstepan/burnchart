@@ -1,31 +1,43 @@
-import React from "react";
+import React, { useCallback } from "react";
 import Icon from "../Icon/Icon";
-import Link from "../Link/Link";
-import Button from "../Button/Button";
-import useFirebase from "../../hooks/useFirebase";
-import useTokenStore from "../../hooks/useTokenStore";
+import { useAuthContext } from "../../providers/AuthProvider";
+import TokenInput from "../TokenInput/TokenInput";
+import Modal from "../Modal/Modal";
+import "./header.less";
 
 function Auth() {
-  const { user, signIn, signOut } = useFirebase();
-  const [token] = useTokenStore();
+  const { isAuthenticated, signOut, showTokenModal, closeTokenModal, showTokenInput } = useAuthContext();
 
-  if (user) {
+  const handleSignOut = useCallback(() => {
+    signOut();
+  }, [signOut]);
+
+  if (isAuthenticated) {
     return (
-      <Link onClick={signOut}>
-        <Icon name="signout" /> Sign Out
-      </Link>
+      <div className="auth auth--authenticated">
+        <button onClick={handleSignOut} className="auth__signout">
+          <Icon name="signout" /> Sign Out
+        </button>
+      </div>
     );
   }
 
-  // Wait to check the token.
-  if (token) {
-    return null;
-  }
-
   return (
-    <Button onClick={signIn}>
-      <Icon name="github" /> &nbsp; Sign In
-    </Button>
+    <>
+      <button onClick={showTokenModal} className="auth__button">
+        <Icon name="github" /> Add Token
+      </button>
+
+      <Modal
+        isOpen={showTokenInput}
+        onClose={closeTokenModal}
+        title="Add GitHub Token"
+      >
+        <TokenInput
+          onSuccess={closeTokenModal}
+        />
+      </Modal>
+    </>
   );
 }
 

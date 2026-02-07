@@ -7,17 +7,15 @@ import Link from "../components/Link/Link";
 import Error from "../components/Error/Error";
 import { Title } from "../components/Text/Text";
 import Status, { WhySignIn } from "../components/Status/Status";
+import { useAuthContext } from "../providers/AuthProvider";
 import useIssues from "../hooks/useIssues";
 import useReposStore from "../hooks/useReposStore";
-import useTokenStore from "../hooks/useTokenStore";
-import useFirebase from "../hooks/useFirebase";
 import useRouteParams from "../hooks/useRouteParams";
 import addStats from "../utils/addStats";
 import { Route } from "../routes";
 
 function Milestones() {
-  const { signIn } = useFirebase();
-  const [token] = useTokenStore();
+  const { showTokenModal, isAuthenticated } = useAuthContext();
   const { addRepo } = useReposStore();
   const { owner, repo } = useRouteParams(Route.milestones);
 
@@ -58,13 +56,13 @@ function Milestones() {
     // All the data arrive at the same time.
   }, [data.length]);
 
-  if (!token) {
+  if (!isAuthenticated) {
     return (
       <Content title={`${owner}/${repo}`}>
         <Status>
           <>
-            <Link styled onClick={signIn}>
-              Sign In
+            <Link styled onClick={showTokenModal}>
+              Add Token
             </Link>{" "}
             to view your milestones
             <WhySignIn />

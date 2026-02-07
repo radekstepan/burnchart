@@ -10,7 +10,7 @@ import {
   Tooltip as ChartJsTooltip,
   type ChartConfiguration,
 } from "chart.js";
-import "chartjs-adapter-moment";
+import "./chartjs-adapter-moment-utc";
 import Tooltip, { type TooltipType } from "./Tooltip";
 import useStateRef from "../../hooks/useStateRef";
 import { pick } from "../../utils/object";

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useDeepCompareEffect } from "react-use";
-import useTokenStore from "./useTokenStore";
+import { useAuthContext } from "../providers/AuthProvider";
 import * as map from "../utils/map";
 import k from "../utils/keys";
 import getIssues, { Job } from "../utils/getIssues";
@@ -20,7 +20,7 @@ const defaultState = {
  * @returns Milestone[] issues with `data`, `error` and `loading` properties.
  */
 const useIssues = (ask: Job[]) => {
-  const [token] = useTokenStore();
+  const { token, isAuthenticated } = useAuthContext();
   const [state, setState] = useState<{
     error: ErrorWithVars | null;
     loading: boolean;
@@ -28,7 +28,7 @@ const useIssues = (ask: Job[]) => {
   }>(defaultState);
 
   useDeepCompareEffect(() => {
-    if (!ask.length || !token) {
+    if (!ask.length || !isAuthenticated) {
       return;
     }
 

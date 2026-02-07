@@ -1,7 +1,7 @@
 import React, { ReactNode, useEffect } from "react";
 import { Title } from "../Text/Text";
 import Error from "../Error/Error";
-import useFirebase from "../../hooks/useFirebase";
+import { useAuthContext } from "../../providers/AuthProvider";
 import { cls } from "../../utils/css";
 import "./content.less";
 
@@ -13,7 +13,7 @@ interface Props {
 
 const Content: React.FC<Props> = ({ title, slim, children }) => {
   // Capture auth errors on a global basis.
-  const { error, clearError } = useFirebase();
+  const { error, clearError } = useAuthContext();
 
   useEffect(() => {
     return () => clearError();

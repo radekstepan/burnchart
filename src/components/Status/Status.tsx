@@ -21,7 +21,7 @@ export const WhySignIn: React.FC = () => {
   const external = (
     <Link
       styled
-      href="https://docs.github.com/en/graphql/guides/forming-calls-with-graphql"
+      href="https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens"
     >
       API requests to GitHub need to be authenticated
     </Link>

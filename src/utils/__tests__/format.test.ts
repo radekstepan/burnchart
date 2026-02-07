@@ -1,5 +1,6 @@
 import mockDate from "mockdate";
-import { formatTimeRange } from "../format";
+import moment from "moment";
+import { formatTimeRange, fromNow, due } from "../format";
 
 describe("format", () => {
   describe("formatTimeRange", () => {
@@ -48,6 +49,63 @@ describe("format", () => {
         "2024-12-31T01:30:00.000Z"
       );
       expect(formatter("2023-01-01T00:15:00.000Z")).toEqual("01 2023");
+    });
+
+    test("returns a function that formats time in 'MM YYYY' when the time range is more than two years (default case)", () => {
+      const formatter = formatTimeRange(
+        "2020-12-31T23:00:00.000Z",
+        "2024-12-31T01:30:00.000Z"
+      );
+      expect(formatter("2021-01-01T00:15:00.000Z")).toEqual("01 2021");
+    });
+
+    test("handles timestamps directly", () => {
+      const formatter = formatTimeRange(
+        "2022-01-01T00:00:00.000Z",
+        "2022-12-31T00:00:00.000Z"
+      );
+      // Timestamp for Feb 15, 2022
+      expect(formatter(1644892800000)).toEqual("Feb");
+    });
+
+    test("handles Date objects", () => {
+      const formatter = formatTimeRange(
+        "2022-01-01T00:00:00.000Z",
+        "2022-12-31T00:00:00.000Z"
+      );
+      const dateObj = new Date("2022-06-15T00:00:00.000Z");
+      expect(formatter(dateObj)).toEqual("Jun");
+    });
+
+    test("handles moment objects", () => {
+      const formatter = formatTimeRange(
+        "2022-01-01T00:00:00.000Z",
+        "2022-12-31T00:00:00.000Z"
+      );
+      const momentObj = moment("2022-06-15T00:00:00.000Z");
+      expect(formatter(momentObj)).toEqual("Jun");
+    });
+  });
+
+  describe("fromNow", () => {
+    test("returns relative time from now", () => {
+      mockDate.set("2023-03-04T01:00:00.000Z");
+
+      // 1 day ago
+      expect(fromNow("2023-03-03T01:00:00.000Z")).toEqual("a day ago");
+      // 2 days ago
+      expect(fromNow("2023-03-02T01:00:00.000Z")).toEqual("2 days ago");
+    });
+  });
+
+  describe("due", () => {
+    test("returns non-breaking space when date is undefined", () => {
+      expect(due(undefined)).toEqual("\u00a0");
+    });
+
+    test("returns 'due X' when date is provided", () => {
+      mockDate.set("2023-03-04T01:00:00.000Z");
+      expect(due("2023-03-03T01:00:00.000Z")).toContain("due");
     });
   });
 });

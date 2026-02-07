@@ -1,51 +1,151 @@
-import { GraphQLClient } from "graphql-request";
 import PQueue from "p-queue";
 import { serializeError } from "serialize-error";
 import k from "./keys";
-import GetRepoIssues, {
-  type GetRepoIssuesQuery,
-} from "../queries/GetRepoIssues";
-import GetMilestoneIssues, {
-  type GetMilestoneIssuesQuery,
-} from "../queries/GetMilestoneIssues";
 import { Milestone, Issue, ErrorWithVars } from "../interfaces";
 
 const CONCURRENCY = 2;
-const API_URL = "https://api.github.com/graphql";
-
-type Nodes =
-  | ({
-      id: string;
-      number: number;
-      title: string;
-      closedAt?: string;
-      labels?:
-        | {
-            nodes?:
-              | ({
-                  name: string;
-                } | null)[]
-              | null
-              | undefined;
-          }
-        | null
-        | undefined;
-    } | null)[]
-  | null
-  | undefined;
-
-const formatIssues = (nodes: Nodes) =>
-  (nodes || []).flatMap((d) =>
-    d
-      ? {
-          ...d,
-          closedAt: d.closedAt || null,
-          labels: (d.labels?.nodes || []).flatMap((l) => (l ? l.name : [])),
-        }
-      : []
-  );
+const API_URL = "https://api.github.com";
 
 export type Job = [owner: string, repo: string, milestone?: string];
+
+/**
+ * Format a REST API issue to our Issue type
+ */
+const formatIssue = (issue: {
+  number: number;
+  title: string;
+  closed_at?: string | null;
+  labels?: Array<{ name: string }>;
+}): Issue => ({
+  number: issue.number,
+  title: issue.title,
+  closedAt: issue.closed_at || null,
+  labels: (issue.labels || []).map(l => l.name),
+});
+
+/**
+ * GitHub API rate limit handling
+ */
+const isRateLimited = (response: Response | undefined): boolean => {
+  if (!response) return false;
+  return response.status === 403 || response.status === 429;
+};
+
+/**
+ * Get a single milestone with its issues using REST API
+ */
+const getMilestone = async (
+  token: string,
+  owner: string,
+  repo: string,
+  milestoneNumber: number
+): Promise<Milestone | null> => {
+  // Fetch milestone
+  let milestoneRes = await fetch(
+    `${API_URL}/repos/${owner}/${repo}/milestones/${milestoneNumber}`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: "application/vnd.github.v3+json",
+      },
+    }
+  );
+
+  // Retry on rate limit
+  if (isRateLimited(milestoneRes) && retryCount > 0) {
+    await new Promise(r => setTimeout(r, 2000)); // Wait 2 seconds
+    return getMilestone(token, owner, repo, milestoneNumber, retryCount - 1);
+  }
+
+  if (!milestoneRes.ok) {
+    return null;
+  }
+
+  const milestone = await milestoneRes.json();
+
+  // Fetch issues for this milestone (first page only, max 100)
+  const issuesRes = await fetch(
+    `${API_URL}/repos/${owner}/${repo}/issues?milestone=${milestoneNumber}&state=all&per_page=100&page=1`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: "application/vnd.github.v3+json",
+      },
+    }
+  );
+
+  if (!issuesRes.ok) {
+    return null;
+  }
+
+  const issues = await issuesRes.json();
+
+  return {
+    id: String(milestone.id),
+    owner,
+    repo,
+    number: milestone.number,
+    title: milestone.title,
+    description: milestone.description || null,
+    createdAt: milestone.created_at,
+    dueOn: milestone.due_on || null,
+    issues: issues.map(formatIssue),
+  };
+};
+
+/**
+ * Get all milestones and their issues for a repo using REST API
+ */
+const getRepoMilestones = async (
+  token: string,
+  owner: string,
+  repo: string,
+  retryCount = 2
+): Promise<Milestone[]> => {
+  // Fetch first page of milestones (max 100, we only need last 10)
+  const milestonesRes = await fetch(
+    `${API_URL}/repos/${owner}/${repo}/milestones?state=all&per_page=100&page=1`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: "application/vnd.github.v3+json",
+      },
+    }
+  );
+
+  if (isRateLimited(milestonesRes) && retryCount > 0) {
+    await new Promise(r => setTimeout(r, 2000));
+    return getRepoMilestones(token, owner, repo, retryCount - 1);
+  }
+
+  if (!milestonesRes.ok) {
+    return [];
+  }
+
+  const milestones = await milestonesRes.json();
+
+  // Sort by creation date (newest first) and take last 10
+  const sortedMilestones = [...milestones].sort(
+    (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+  );
+  const recentMilestones = sortedMilestones.slice(0, 10);
+
+  // Fetch issues for each milestone (parallelized)
+  const results: Milestone[] = [];
+  const queue = new PQueue({ concurrency: CONCURRENCY });
+
+  for (const milestone of recentMilestones) {
+    queue.add(async () => {
+      const milestoneWithIssues = await getMilestone(token, owner, repo, milestone.number);
+      if (milestoneWithIssues) {
+        results.push(milestoneWithIssues);
+      }
+    });
+  }
+
+  await queue.onIdle();
+  return results;
+};
 
 const getIssues = (
   token: string,
@@ -54,171 +154,82 @@ const getIssues = (
 ) => {
   let exited = false;
   const q = new PQueue({ concurrency: CONCURRENCY });
-  const abortController = new AbortController();
-  const client = new GraphQLClient(API_URL, {
-    signal: abortController.signal,
-    headers: {
-      authorization: `token ${token}`,
-    },
-  });
-
-  const all = new Map<string, Milestone>();
 
   const onExit = () => {
     exited = true;
-    abortController.abort();
     q.clear();
   };
 
-  q.on("completed", (res: GetRepoIssuesQuery | GetMilestoneIssuesQuery) => {
-    if (!res || !res.repository) {
-      return;
+  const all = new Map<string, Milestone>();
+
+  const onError = (err: Error & { status?: number }) => {
+    if (exited) return;
+
+    let message = err.message || "Something went wrong fetching issues.";
+    
+    // Handle rate limiting
+    if (err.status === 403 || err.status === 429) {
+      message = "GitHub API rate limit exceeded. Please wait a moment and try again.";
     }
 
-    if ("milestones" in res.repository) {
-      const milestones = res.repository.milestones?.nodes;
-      if (!milestones) {
-        return;
-      }
-      for (const milestone of milestones) {
-        if (milestone) {
-          // TODO return variables so we can get the owner/repo.
-          const [owner, repo] = res.repository.nameWithOwner.split("/");
-          const id = k(owner, repo, milestone.number);
-          all.set(id, {
-            ...milestone,
-            id,
-            owner,
-            repo,
-            description: milestone.description || null,
-            dueOn: milestone.dueOn || null,
-            issues: formatIssues(milestone.issues.nodes),
-          });
-          const { hasNextPage, endCursor } = milestone.issues.pageInfo || {};
-          if (hasNextPage && endCursor) {
-            q.add(() =>
-              client.request(GetMilestoneIssues, {
-                owner,
-                repo,
-                milestone: milestone.number,
-                cursor: endCursor,
-              })
-            );
-          }
-        }
-      }
-      return;
-    }
-    if ("milestone" in res.repository) {
-      const milestone = res.repository.milestone;
-      if (!milestone) {
-        throw new Error("Could not resolve to a Milestone");
-      }
-      if (!milestone.issues.nodes) {
-        return;
-      }
-      const [owner, repo] = res.repository.nameWithOwner.split("/");
-      const id = k(owner, repo, milestone.number);
-      const d = all.get(id) || {
-        ...milestone,
-        id,
-        owner,
-        repo,
-        description: milestone.description || null,
-        dueOn: milestone.dueOn || null,
-        issues: [] as Issue[],
-      };
-      all.set(id, {
-        ...d,
-        issues: d.issues.concat(formatIssues(milestone.issues.nodes)),
-      });
+    const error: ErrorWithVars = { message };
 
-      const { hasNextPage, endCursor } = milestone.issues.pageInfo || {};
-      if (hasNextPage && endCursor) {
-        q.add(() =>
-          client.request(GetMilestoneIssues, {
-            owner,
-            repo,
-            milestone: milestone.number,
-            cursor: endCursor,
-          })
-        );
-      }
-    }
-  });
+    onExit();
+    cb(error, all);
+  };
 
-  q.on("error", (err: Error) => {
-    if (!exited) {
-      const { message, request, response } = serializeError(err);
-
-      const error: ErrorWithVars = {
-        message: "Something went wrong.",
-      };
-
-      if (
-        response &&
-        typeof response === "object" &&
-        "errors" in response &&
-        response.errors instanceof Array &&
-        response.errors[0] &&
-        typeof response.errors[0] === "object" &&
-        "message" in response.errors[0] &&
-        response.errors[0].message &&
-        typeof response.errors[0].message === "string"
-      ) {
-        error.message = response.errors[0].message;
-      } else if (message) {
-        error.message = message;
-      }
-
-      if (
-        request &&
-        typeof request === "object" &&
-        "variables" in request &&
-        request.variables &&
-        typeof request.variables === "object" &&
-        !(request.variables instanceof Array)
-      ) {
-        error.variables = request.variables;
-      }
-
-      onExit();
-      cb(error, all);
-    }
-  });
-
-  q.on("idle", () => {
+  const onComplete = () => {
     if (!exited) {
       onExit();
       cb(null, all);
     }
-  });
+  };
 
   // Nothing to do, early return.
   if (!jobs.length) {
     onExit();
     cb(null, all);
+    return onExit;
   }
 
-  for (const [owner, repo, number] of jobs) {
-    const milestone = number && parseInt(number, 10);
-    if (milestone) {
-      q.add(() =>
-        client.request(GetMilestoneIssues, {
-          owner,
-          repo,
-          milestone,
-        })
-      );
+  for (const [owner, repo, milestoneNumber] of jobs) {
+    if (milestoneNumber) {
+      // Fetch a single milestone
+      q.add(async () => {
+        try {
+          const milestone = await getMilestone(
+            token,
+            owner,
+            repo,
+            parseInt(milestoneNumber, 10)
+          );
+          if (milestone && !exited) {
+            const key = k(owner, repo, milestone.number);
+            all.set(key, milestone);
+          }
+        } catch (err) {
+          onError(err as Error);
+        }
+      });
     } else {
-      q.add(() =>
-        client.request(GetRepoIssues, {
-          owner,
-          repo,
-        })
-      );
+      // Fetch all milestones for a repo
+      q.add(async () => {
+        try {
+          const milestones = await getRepoMilestones(token, owner, repo);
+          for (const milestone of milestones) {
+            if (exited) break;
+            const key = k(owner, repo, milestone.number);
+            all.set(key, milestone);
+          }
+        } catch (err) {
+          onError(err as Error);
+        }
+      });
     }
   }
+
+  q.on("idle", onComplete);
+  q.on("error", onError);
 
   return onExit;
 };

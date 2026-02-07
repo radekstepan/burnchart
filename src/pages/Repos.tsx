@@ -7,16 +7,14 @@ import Status, { WhySignIn } from "../components/Status/Status";
 import Error from "../components/Error/Error";
 import { Route } from "../routes";
 import useReposStore from "../hooks/useReposStore";
-import useTokenStore from "../hooks/useTokenStore";
+import { useAuthContext } from "../providers/AuthProvider";
 import useIssues from "../hooks/useIssues";
-import useFirebase from "../hooks/useFirebase";
 import { Job } from "../utils/getIssues";
 
 const TITLE = "Repos";
 
 function Repos() {
-  const { signIn } = useFirebase();
-  const [token] = useTokenStore();
+  const { showTokenModal, isAuthenticated } = useAuthContext();
   const { repos } = useReposStore();
 
   useEffect(() => {
@@ -27,13 +25,13 @@ function Repos() {
 
   const res = useIssues(jobs);
 
-  if (!token) {
+  if (!isAuthenticated) {
     return (
       <Content title={TITLE}>
         <Status>
           <>
-            <Link styled onClick={signIn}>
-              Sign In
+            <Link styled onClick={showTokenModal}>
+              Add Token
             </Link>{" "}
             {!jobs.length
               ? "and then proceed to add a repo."
