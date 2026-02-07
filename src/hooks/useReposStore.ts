@@ -21,6 +21,7 @@ const useReposStore: UseReposStore = () => {
   const [repos, setRepos] = useLocalStorage<Repo[]>("repos");
   const [legacy, , deleteLegacy] =
     useLocalStorage<LegacyRepo[]>("lscache-projects");
+  const hasMigrated = useRef(false);
 
   const addRepo = useCallback(
     (owner: string, repo: string) => {
@@ -56,11 +57,7 @@ const useReposStore: UseReposStore = () => {
     [repos, setRepos]
   );
 
-  // Migrate legacy
   useEffect(() => {
-    // Use a ref to ensure migration only runs once
-    const hasMigrated = useRef(false);
-
     if (!legacy || hasMigrated.current) {
       return;
     }

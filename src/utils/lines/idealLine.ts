@@ -26,16 +26,13 @@ const idealLine = (
     return [];
   }
 
-  const $a = dayjs.utc(a);
+  let $a = dayjs.utc(a);
   // Do we have a due date?
-  const $b = b ? dayjs.utc(b) : dayjs.utc();
+  let $b = b ? dayjs.utc(b) : dayjs.utc();
 
   // Swap if end is before the start using proper date comparison
   if ($b.isBefore($a)) {
-    return [
-      { x: $a.format(FORMAT), y: total },
-      { x: $b.format(FORMAT), y: 0 },
-    ];
+    [$a, $b] = [$b, $a];
   }
 
   // Use off_days directly (already numbers from config: 1=Mon..7=Sun)

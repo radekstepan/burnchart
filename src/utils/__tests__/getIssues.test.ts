@@ -102,7 +102,7 @@ describe("getIssues REST API", () => {
         );
       }
 
-      if (url.includes("/issues") && url.includes("page=1")) {
+      if (url.includes("/issues") && /[?&]page=1\b/.test(url)) {
         return Promise.resolve(
           createMockResponse(
             [
@@ -122,7 +122,7 @@ describe("getIssues REST API", () => {
         );
       }
 
-      if (url.includes("/issues") && url.includes("page=2")) {
+      if (url.includes("/issues") && /[?&]page=2\b/.test(url)) {
         return Promise.resolve(
           createMockResponse([
             {
