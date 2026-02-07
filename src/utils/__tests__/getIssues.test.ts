@@ -2,7 +2,7 @@ import { describe, test, expect, vi, beforeEach } from "vitest";
 import getIssues, { Job } from "../getIssues";
 
 // Simplified mock that always returns a valid response
-const mockFetch = vi.fn((url: string) => {
+const mockFetch = vi.fn((url: string): Promise<Response> => {
   if (url.includes("/milestones/")) {
     return Promise.resolve({
       ok: true,
@@ -15,14 +15,14 @@ const mockFetch = vi.fn((url: string) => {
         due_on: "2024-02-01T00:00:00Z" 
       }),
       status: 200,
-    });
+    } as Response);
   }
   if (url.includes("/issues")) {
     return Promise.resolve({
       ok: true,
       json: () => Promise.resolve([]),
       status: 200,
-    });
+    } as Response);
   }
   // Milestones list
   return Promise.resolve({
@@ -36,7 +36,7 @@ const mockFetch = vi.fn((url: string) => {
       due_on: "2024-02-01T00:00:00Z" 
     }]),
     status: 200,
-  });
+  } as Response);
 });
 globalThis.fetch = mockFetch as unknown as typeof fetch;
 
@@ -75,7 +75,11 @@ describe("getIssues REST API", () => {
   test("handles empty milestones list", async () => {
     // Override mock for this test
     mockFetch.mockImplementation(() => 
-      Promise.resolve({ ok: true, json: () => Promise.resolve([]), status: 200 })
+      Promise.resolve({
+        ok: true,
+        json: () => Promise.resolve([]),
+        status: 200,
+      } as Response)
     );
 
     const jobs: Job[] = [["owner", "repo"]];
@@ -93,7 +97,11 @@ describe("getIssues REST API", () => {
 
   test("handles API error", async () => {
     mockFetch.mockImplementation(() => 
-      Promise.resolve({ ok: false, json: () => Promise.resolve({}), status: 404 })
+      Promise.resolve({
+        ok: false,
+        json: () => Promise.resolve({}),
+        status: 404,
+      } as Response)
     );
 
     const jobs: Job[] = [["owner", "repo"]];
@@ -120,7 +128,7 @@ describe("getIssues REST API", () => {
   });
 
   test("formats issues correctly from REST API", async () => {
-    mockFetch.mockImplementation((url: string) => {
+    mockFetch.mockImplementation((url: string): Promise<Response> => {
       if (url.includes("/milestones/")) {
         return Promise.resolve({
           ok: true,
@@ -133,7 +141,7 @@ describe("getIssues REST API", () => {
             due_on: null 
           }),
           status: 200,
-        });
+        } as Response);
       }
       if (url.includes("/issues")) {
         return Promise.resolve({
@@ -143,9 +151,13 @@ describe("getIssues REST API", () => {
             { number: 2, title: "Open issue", closed_at: null, labels: [] },
           ]),
           status: 200,
-        });
+        } as Response);
       }
-      return Promise.resolve({ ok: true, json: () => Promise.resolve([]), status: 200 });
+      return Promise.resolve({
+        ok: true,
+        json: () => Promise.resolve([]),
+        status: 200,
+      } as Response);
     });
 
     const jobs: Job[] = [["owner", "repo", "1"]];

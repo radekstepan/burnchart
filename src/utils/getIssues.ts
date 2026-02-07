@@ -38,7 +38,8 @@ const getMilestone = async (
   token: string,
   owner: string,
   repo: string,
-  milestoneNumber: number
+  milestoneNumber: number,
+  retryCount = 2
 ): Promise<Milestone | null> => {
   // Fetch milestone
   let milestoneRes = await fetch(

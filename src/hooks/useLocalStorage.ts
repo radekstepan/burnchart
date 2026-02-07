@@ -1,17 +1,24 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 
 type SetValue<T> = (value: T) => void;
 type ClearValue = () => void;
 
 const event = new Event("storage");
 
-function useLocalStorage<T>(key: string): [T, SetValue<T>, ClearValue] {
+/**
+ * A hook to manage local storage.
+ */
+function useLocalStorage<T>(key: string): [T | undefined, SetValue<T>, ClearValue] {
   const get = () => {
-    const item = window.localStorage.getItem(key);
-    return (item && JSON.parse(item)) || undefined;
+    try {
+      const item = window.localStorage.getItem(key);
+      return (item && JSON.parse(item)) || undefined;
+    } catch {
+      return undefined;
+    }
   };
 
-  const [storedValue, setStoredValue] = useState<T>(get);
+  const [storedValue, setStoredValue] = useState<T | undefined>(get);
 
   useEffect(() => {
     const listener = () => {
@@ -22,21 +29,18 @@ function useLocalStorage<T>(key: string): [T, SetValue<T>, ClearValue] {
     return () => window.removeEventListener("storage", listener);
   }, []);
 
-  return useMemo(
-    () => [
-      storedValue,
-      (value) => {
-        setStoredValue(value);
-        window.localStorage.setItem(key, JSON.stringify(value));
-        window.dispatchEvent(event);
-      },
-      () => {
-        window.localStorage.removeItem(key);
-        window.dispatchEvent(event);
-      },
-    ],
-    [storedValue]
-  );
+  return [
+    storedValue,
+    (value) => {
+      setStoredValue(value);
+      window.localStorage.setItem(key, JSON.stringify(value));
+      window.dispatchEvent(event);
+    },
+    () => {
+      window.localStorage.removeItem(key);
+      window.dispatchEvent(event);
+    },
+  ];
 }
 
 export default useLocalStorage;

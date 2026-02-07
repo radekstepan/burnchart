@@ -3,10 +3,10 @@ import fs from "fs";
 import { createServer } from "http";
 import { fileURLToPath } from "url";
 import meow from "meow";
-import { Server } from "node-static";
+import sirv from "sirv";
 
 const urlToPath = (url) => new URL(url, import.meta.url);
-const loadJson = (url) => JSON.parse(fs.readFileSync(urlToPath(url))); // assert { type: "json" }
+const loadJson = (url) => JSON.parse(fs.readFileSync(urlToPath(url)));
 
 const dir = fileURLToPath(urlToPath("./dist"));
 const pkg = loadJson("./package.json");
@@ -23,33 +23,22 @@ const cli = meow(
     importMeta: import.meta,
     flags: {
       port: {
-        alias: "p",
+        shortFlag: "p",
         type: "number",
         default: 8080,
       },
       host: {
-        alias: "h",
+        shortFlag: "h",
         type: "string",
       },
     },
   }
 );
 
-const fileServer = new Server(dir);
-
 const { port } = cli.flags;
 
-const server = createServer((req, res) =>
-  req
-    .addListener("end", () =>
-      fileServer.serve(req, res, (e) => {
-        if (e && e.status === 404) {
-          fileServer.serveFile("/index.html", 200, {}, req, res);
-        }
-      })
-    )
-    .resume()
-).listen(port);
+const handler = sirv(dir, { single: true });
+const server = createServer(handler).listen(port);
 
 server.on("listening", () => {
   console.log(

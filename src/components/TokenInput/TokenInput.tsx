@@ -31,7 +31,7 @@ const TokenInput: React.FC<Props> = ({ onSuccess }) => {
         </label>
         <input
           id="github-token"
-          type="text"
+          type="password"
           value={token}
           onChange={(e) => setToken(e.target.value)}
           placeholder="ghp_xxxxxxxxxxxxxxxxxxxx"
@@ -55,6 +55,10 @@ const TokenInput: React.FC<Props> = ({ onSuccess }) => {
           <ul>
             <li><code>repo</code> – Full control of private repositories (to read milestones & issues)</li>
           </ul>
+        </div>
+        <div className="token-input__warning">
+          <strong>Security Note:</strong> This token is stored in your browser's session storage 
+          and provides full access to your private repositories. Only use this app on trusted devices.
         </div>
       </div>
 

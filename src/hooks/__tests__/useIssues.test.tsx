@@ -4,36 +4,37 @@ import { renderHook } from "@testing-library/react";
 import { AuthProvider } from "../../providers/AuthProvider";
 import useIssues from "../useIssues";
 
-// Mock localStorage
-const localStorageMock = {
+// Mock sessionStorage
+const sessionStorageMock = {
   getItem: vi.fn(),
   setItem: vi.fn(),
   removeItem: vi.fn(),
 };
 
-Object.defineProperty(global, "localStorage", {
-  value: localStorageMock,
+Object.defineProperty(global, "sessionStorage", {
+  value: sessionStorageMock,
   writable: true,
 });
 
 // Mock fetch
-const mockFetchPromise = { ok: true, json: () => Promise.resolve({ login: "test" }) };
-const mockFetch = vi.fn(() => Promise.resolve(mockFetchPromise));
+const mockFetch = vi.fn();
 globalThis.fetch = mockFetch as unknown as typeof fetch;
 
 describe("useIssues", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    localStorageMock.getItem.mockReturnValue('"test_token"');
-    localStorageMock.setItem.mockReturnValue(undefined);
-    localStorageMock.removeItem.mockReturnValue(undefined);
-    mockFetch.mockClear();
-    mockFetchPromise.ok = true;
+    sessionStorageMock.getItem.mockReturnValue('"test_token"');
+    sessionStorageMock.setItem.mockReturnValue(undefined);
+    sessionStorageMock.removeItem.mockReturnValue(undefined);
+    mockFetch.mockResolvedValue({
+      ok: true,
+      json: () => Promise.resolve({ login: "test" }),
+    } as Response);
   });
 
   describe("initial state", () => {
     test("returns default state when unauthenticated", () => {
-      localStorageMock.getItem.mockReturnValue(null);
+      sessionStorageMock.getItem.mockReturnValue(null);
 
       const { result } = renderHook(() => useIssues([["owner", "repo", "1"]]), {
         wrapper: ({ children }) => <AuthProvider>{children}</AuthProvider>,
@@ -71,8 +72,9 @@ describe("useIssues", () => {
         wrapper: ({ children }) => <AuthProvider>{children}</AuthProvider>,
       });
 
-      const urls = mockFetch.mock.calls.map(c => c[0]);
-      expect(urls.some(url => url.includes("/milestones/42"))).toBe(true);
+      const calls = mockFetch.mock.calls;
+      const urls = calls.map((c) => String(c[0]));
+      expect(urls.some((url) => url.includes("/milestones/42"))).toBe(true);
     });
 
     test("uses Bearer token authentication", () => {
@@ -80,8 +82,10 @@ describe("useIssues", () => {
         wrapper: ({ children }) => <AuthProvider>{children}</AuthProvider>,
       });
 
-      const authHeaders = mockFetch.mock.calls
-        .map(([url, options]) => options?.headers?.Authorization)
+      const calls = mockFetch.mock.calls;
+      const authHeaders = calls
+        .map((c) => c[1] as { headers?: { Authorization?: string } })
+        .map((options) => options.headers?.Authorization)
         .filter(Boolean);
 
       expect(authHeaders.length).toBeGreaterThan(0);
@@ -93,8 +97,10 @@ describe("useIssues", () => {
         wrapper: ({ children }) => <AuthProvider>{children}</AuthProvider>,
       });
 
-      const acceptHeaders = mockFetch.mock.calls
-        .map(([url, options]) => options?.headers?.Accept)
+      const calls = mockFetch.mock.calls;
+      const acceptHeaders = calls
+        .map((c) => c[1] as { headers?: { Accept?: string } })
+        .map((options) => options.headers?.Accept)
         .filter(Boolean);
 
       expect(acceptHeaders.length).toBeGreaterThan(0);
@@ -106,8 +112,9 @@ describe("useIssues", () => {
         wrapper: ({ children }) => <AuthProvider>{children}</AuthProvider>,
       });
 
-      const urls = mockFetch.mock.calls.map(c => c[0]);
-      expect(urls.some(url => 
+      const calls = mockFetch.mock.calls;
+      const urls = calls.map((c) => String(c[0]));
+      expect(urls.some((url) => 
         url.includes("my-org") || url.includes("my_repo-name")
       )).toBe(true);
     });
@@ -117,8 +124,9 @@ describe("useIssues", () => {
         wrapper: ({ children }) => <AuthProvider>{children}</AuthProvider>,
       });
 
-      const urls = mockFetch.mock.calls.map(c => c[0]);
-      expect(urls.some(url => url.includes("/milestones?"))).toBe(true);
+      const calls = mockFetch.mock.calls;
+      const urls = calls.map((c) => String(c[0]));
+      expect(urls.some((url) => url.includes("/milestones?"))).toBe(true);
     });
 
     test("triggers fetch when authenticated", () => {
@@ -132,13 +140,15 @@ describe("useIssues", () => {
 
   describe("error handling", () => {
     test("handles API error response", () => {
-      mockFetch.mockResolvedValue({ ok: false });
+      mockFetch.mockResolvedValue({
+        ok: false,
+        json: () => Promise.resolve({}),
+      } as unknown as Response);
 
       const { result } = renderHook(() => useIssues([["owner", "repo", "1"]]), {
         wrapper: ({ children }) => <AuthProvider>{children}</AuthProvider>,
       });
 
-      // Result should have expected structure regardless of error
       expect(result.current).toHaveProperty("loading");
       expect(result.current).toHaveProperty("data");
       expect(result.current).toHaveProperty("error");
@@ -172,8 +182,14 @@ describe("useIssues", () => {
       };
 
       mockFetch
-        .mockResolvedValueOnce({ ok: true, json: () => Promise.resolve(milestoneWithIssues) })
-        .mockResolvedValueOnce({ ok: true, json: () => Promise.resolve(milestoneWithIssues.issues) });
+        .mockResolvedValueOnce({
+          ok: true,
+          json: () => Promise.resolve(milestoneWithIssues),
+        } as unknown as Response)
+        .mockResolvedValueOnce({
+          ok: true,
+          json: () => Promise.resolve(milestoneWithIssues.issues),
+        } as unknown as Response);
 
       const { result } = renderHook(() => useIssues([["owner", "repo", "1"]]), {
         wrapper: ({ children }) => <AuthProvider>{children}</AuthProvider>,
@@ -184,8 +200,14 @@ describe("useIssues", () => {
 
     test("handles empty issues list", () => {
       mockFetch
-        .mockResolvedValueOnce({ ok: true, json: () => Promise.resolve({ id: "1", number: 1, title: "M", description: null, created_at: "", due_on: null }) })
-        .mockResolvedValueOnce({ ok: true, json: () => Promise.resolve([]) });
+        .mockResolvedValueOnce({
+          ok: true,
+          json: () => Promise.resolve({ id: "1", number: 1, title: "M", description: null, created_at: "", due_on: null }),
+        } as unknown as Response)
+        .mockResolvedValueOnce({
+          ok: true,
+          json: () => Promise.resolve([]),
+        } as unknown as Response);
 
       const { result } = renderHook(() => useIssues([["owner", "repo", "1"]]), {
         wrapper: ({ children }) => <AuthProvider>{children}</AuthProvider>,
@@ -196,8 +218,14 @@ describe("useIssues", () => {
 
     test("handles null due_on date", () => {
       mockFetch
-        .mockResolvedValueOnce({ ok: true, json: () => Promise.resolve({ id: "1", number: 1, title: "M", description: null, created_at: "", due_on: null }) })
-        .mockResolvedValueOnce({ ok: true, json: () => Promise.resolve([]) });
+        .mockResolvedValueOnce({
+          ok: true,
+          json: () => Promise.resolve({ id: "1", number: 1, title: "M", description: null, created_at: "", due_on: null }),
+        } as unknown as Response)
+        .mockResolvedValueOnce({
+          ok: true,
+          json: () => Promise.resolve([]),
+        } as unknown as Response);
 
       const { result } = renderHook(() => useIssues([["owner", "repo", "1"]]), {
         wrapper: ({ children }) => <AuthProvider>{children}</AuthProvider>,
@@ -209,7 +237,10 @@ describe("useIssues", () => {
 
   describe("multiple jobs", () => {
     test("handles multiple milestone requests", () => {
-      mockFetch.mockResolvedValue({ ok: true, json: () => Promise.resolve({}) });
+      mockFetch.mockResolvedValue({
+        ok: true,
+        json: () => Promise.resolve({}),
+      } as unknown as Response);
 
       renderHook(
         () => useIssues([

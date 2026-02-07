@@ -3,29 +3,29 @@ import { describe, test, expect, vi, beforeEach } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { AuthProvider, useAuthContext, AuthContext } from "../AuthProvider";
 
-// Mock localStorage
-const localStorageMock = {
+// Mock sessionStorage
+const sessionStorageMock = {
   getItem: vi.fn(),
   setItem: vi.fn(),
   removeItem: vi.fn(),
 };
 
-Object.defineProperty(global, "localStorage", {
-  value: localStorageMock,
+Object.defineProperty(global, "sessionStorage", {
+  value: sessionStorageMock,
   writable: true,
 });
 
 describe("AuthProvider edge cases", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    localStorageMock.getItem.mockReturnValue(null);
-    localStorageMock.setItem.mockReturnValue(undefined);
-    localStorageMock.removeItem.mockReturnValue(undefined);
+    sessionStorageMock.getItem.mockReturnValue(null);
+    sessionStorageMock.setItem.mockReturnValue(undefined);
+    sessionStorageMock.removeItem.mockReturnValue(undefined);
   });
 
   describe("context value structure", () => {
     test("provides token from useAuth when present", () => {
-      localStorageMock.getItem.mockReturnValue('"my_token"');
+      sessionStorageMock.getItem.mockReturnValue('"my_token"');
 
       const TestComponent = () => {
         const { token } = useAuthContext();
@@ -259,9 +259,9 @@ describe("AuthProvider edge cases", () => {
     });
   });
 
-  describe("localStorage interaction", () => {
-    test("signOut removes token from localStorage", () => {
-      localStorageMock.getItem.mockReturnValue('"existing_token"');
+  describe("sessionStorage interaction", () => {
+    test("signOut removes token from sessionStorage", () => {
+      sessionStorageMock.getItem.mockReturnValue('"existing_token"');
 
       const TestComponent = () => {
         const { signOut } = useAuthContext();
@@ -278,7 +278,7 @@ describe("AuthProvider edge cases", () => {
 
       container.querySelector("button")?.click();
 
-      expect(localStorageMock.removeItem).toHaveBeenCalledWith("token");
+      expect(sessionStorageMock.removeItem).toHaveBeenCalledWith("token");
     });
   });
 });
@@ -286,7 +286,7 @@ describe("AuthProvider edge cases", () => {
 describe("useAuthContext hook", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    localStorageMock.getItem.mockReturnValue(null);
+    sessionStorageMock.getItem.mockReturnValue(null);
   });
 
   test("returns context value", () => {

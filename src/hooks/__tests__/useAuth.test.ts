@@ -2,15 +2,15 @@ import { describe, test, expect, vi, beforeEach } from "vitest";
 import { renderHook, act } from "@testing-library/react";
 import useAuth from "../useAuth";
 
-// Mock localStorage
-const localStorageMock = {
+// Mock sessionStorage
+const sessionStorageMock = {
   getItem: vi.fn(),
   setItem: vi.fn(),
   removeItem: vi.fn(),
 };
 
-Object.defineProperty(global, "localStorage", {
-  value: localStorageMock,
+Object.defineProperty(global, "sessionStorage", {
+  value: sessionStorageMock,
   writable: true,
 });
 
@@ -33,9 +33,9 @@ Object.defineProperty(globalThis, "fetch", {
 describe("useAuth", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    localStorageMock.getItem.mockReturnValue(null);
-    localStorageMock.setItem.mockReturnValue(undefined);
-    localStorageMock.removeItem.mockReturnValue(undefined);
+    sessionStorageMock.getItem.mockReturnValue(null);
+    sessionStorageMock.setItem.mockReturnValue(undefined);
+    sessionStorageMock.removeItem.mockReturnValue(undefined);
     mockOkValue = false;
     mockRejectError = null;
     mockFetch.mockClear();
@@ -52,7 +52,7 @@ describe("useAuth", () => {
     });
 
     test("returns authenticated state when token exists", () => {
-      localStorageMock.getItem.mockReturnValue('"test_token_123"');
+      sessionStorageMock.getItem.mockReturnValue('"test_token_123"');
 
       const { result } = renderHook(() => useAuth());
 
@@ -92,7 +92,7 @@ describe("useAuth", () => {
 
   describe("signOut", () => {
     test("signOut removes token from localStorage", () => {
-      localStorageMock.getItem.mockReturnValue('"existing_token"');
+      sessionStorageMock.getItem.mockReturnValue('"existing_token"');
 
       const { result } = renderHook(() => useAuth());
 
@@ -100,7 +100,7 @@ describe("useAuth", () => {
         result.current.signOut();
       });
 
-      expect(localStorageMock.removeItem).toHaveBeenCalledWith("token");
+      expect(sessionStorageMock.removeItem).toHaveBeenCalledWith("token");
     });
   });
 
@@ -126,7 +126,7 @@ describe("useAuth", () => {
       });
 
       expect(success).toBe(true);
-      expect(localStorageMock.setItem).toHaveBeenCalledWith("token", JSON.stringify("valid_token"));
+      expect(sessionStorageMock.setItem).toHaveBeenCalledWith("token", JSON.stringify("valid_token"));
     });
 
     test("invalid token returns false", async () => {
@@ -180,7 +180,7 @@ describe("useAuth", () => {
 
   describe("token storage", () => {
     test("signOut removes token", async () => {
-      localStorageMock.getItem.mockReturnValue('"existing_token"');
+      sessionStorageMock.getItem.mockReturnValue('"existing_token"');
 
       const { result } = renderHook(() => useAuth());
 
@@ -188,7 +188,7 @@ describe("useAuth", () => {
         result.current.signOut();
       });
 
-      expect(localStorageMock.removeItem).toHaveBeenCalledWith("token");
+      expect(sessionStorageMock.removeItem).toHaveBeenCalledWith("token");
     });
   });
 });

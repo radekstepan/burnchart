@@ -56,7 +56,7 @@
     "wouter": "^3.9.0"
   },
   "dependencies": {
-    "node-static": "^0.7.11",
+    "sirv": "^3.0.0",
     "vite": "^7.3.1"
   }
 }

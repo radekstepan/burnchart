@@ -18,9 +18,7 @@ const FORMATS = {
   year: "YYYY"
 };
 
-_adapters._date.override({
-  _id: "moment-utc",
-
+(_adapters._date as { override: (config: unknown) => void }).override({
   formats: function () {
     return FORMATS;
   },
@@ -55,12 +53,12 @@ _adapters._date.override({
   },
 
   startOf: function (time: number, unit: moment.unitOfTime.StartOf, weekday?: number): number {
-    time = moment.utc(time);
+    const m = moment.utc(time);
     if (unit === "isoWeek") {
       weekday = Math.trunc(Math.min(Math.max(0, weekday ?? 0), 6));
-      return time.isoWeekday(weekday).startOf("day").valueOf();
+      return m.isoWeekday(weekday).startOf("day").valueOf();
     }
-    return time.startOf(unit).valueOf();
+    return m.startOf(unit).valueOf();
   },
 
   endOf: function (time: number, unit: moment.unitOfTime.StartOf): number {

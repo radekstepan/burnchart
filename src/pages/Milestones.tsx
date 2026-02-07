@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useMemo, useCallback } from "react";
 import Content from "../components/Content/Content";
 import Table from "../components/Table/Table";
 import Chart from "../components/Chart/Chart";
@@ -15,7 +15,7 @@ import addStats from "../utils/addStats";
 import { Route } from "../routes";
 
 function Milestones() {
-  const { showTokenModal, isAuthenticated } = useAuthContext();
+  const { isAuthenticated } = useAuthContext();
   const { addRepo } = useReposStore();
   const { owner, repo } = useRouteParams(Route.milestones);
 
@@ -27,6 +27,10 @@ function Milestones() {
 
   const res = useIssues([[owner, repo]]);
   const { data } = res;
+
+  const handleAddToken = useCallback(() => {
+    window.dispatchEvent(new CustomEvent("show-token-modal"));
+  }, []);
 
   // A milestone that is a merge of all of them.
   const milestones = useMemo(() => {
@@ -61,7 +65,7 @@ function Milestones() {
       <Content title={`${owner}/${repo}`}>
         <Status>
           <>
-            <Link styled onClick={showTokenModal}>
+            <Link styled onClick={handleAddToken}>
               Add Token
             </Link>{" "}
             to view your milestones

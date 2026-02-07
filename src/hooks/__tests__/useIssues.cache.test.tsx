@@ -6,36 +6,36 @@ import useIssues from "../useIssues";
 import * as mapUtils from "../../utils/map";
 import * as keysUtils from "../../utils/keys";
 
-// Mock localStorage
-const localStorageMock = {
+// Mock sessionStorage
+const sessionStorageMock = {
   getItem: vi.fn(),
   setItem: vi.fn(),
   removeItem: vi.fn(),
 };
 
-Object.defineProperty(global, "localStorage", {
-  value: localStorageMock,
+Object.defineProperty(global, "sessionStorage", {
+  value: sessionStorageMock,
   writable: true,
 });
 
 // Mock fetch
-const mockFetchPromise = { ok: true, json: () => Promise.resolve({ login: "test" }) };
-const mockFetch = vi.fn(() => Promise.resolve(mockFetchPromise));
+const mockFetchPromise = { ok: true, json: () => Promise.resolve({ login: "test" }) as Promise<{ login: string }> };
+const mockFetch = vi.fn((): Promise<Response> => Promise.resolve(mockFetchPromise as unknown as Response));
 globalThis.fetch = mockFetch as unknown as typeof fetch;
 
 describe("useIssues caching behavior", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    localStorageMock.getItem.mockReturnValue('"test_token"');
-    localStorageMock.setItem.mockReturnValue(undefined);
-    localStorageMock.removeItem.mockReturnValue(undefined);
+    sessionStorageMock.getItem.mockReturnValue('"test_token"');
+    sessionStorageMock.setItem.mockReturnValue(undefined);
+    sessionStorageMock.removeItem.mockReturnValue(undefined);
     mockFetch.mockClear();
     mockFetchPromise.ok = true;
   });
 
   describe("initial state", () => {
     test("returns default state when unauthenticated", () => {
-      localStorageMock.getItem.mockReturnValue(null);
+      sessionStorageMock.getItem.mockReturnValue(null);
 
       const { result } = renderHook(() => useIssues([["owner", "repo", "1"]]), {
         wrapper: ({ children }) => <AuthProvider>{children}</AuthProvider>,
@@ -174,13 +174,13 @@ describe("useIssues caching behavior", () => {
 describe("useIssues error handling", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    localStorageMock.getItem.mockReturnValue('"test_token"');
+    sessionStorageMock.getItem.mockReturnValue('"test_token"');
     mockFetch.mockClear();
     mockFetchPromise.ok = true;
   });
 
   test("returns error when API fails", () => {
-    mockFetch.mockResolvedValue({ ok: false });
+    mockFetch.mockResolvedValue({ ok: false, json: () => Promise.resolve({}) } as unknown as Response);
 
     const { result } = renderHook(() => useIssues([["owner", "repo", "1"]]), {
       wrapper: ({ children }) => <AuthProvider>{children}</AuthProvider>,
@@ -217,7 +217,7 @@ describe("useIssues error handling", () => {
 describe("useIssues multiple jobs", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    localStorageMock.getItem.mockReturnValue('"test_token"');
+    sessionStorageMock.getItem.mockReturnValue('"test_token"');
     mockFetch.mockClear();
     mockFetchPromise.ok = true;
   });

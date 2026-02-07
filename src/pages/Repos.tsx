@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useCallback } from "react";
 import Content from "../components/Content/Content";
 import Table from "../components/Table/Table";
 import Link from "../components/Link/Link";
@@ -14,7 +14,7 @@ import { Job } from "../utils/getIssues";
 const TITLE = "Repos";
 
 function Repos() {
-  const { showTokenModal, isAuthenticated } = useAuthContext();
+  const { isAuthenticated } = useAuthContext();
   const { repos } = useReposStore();
 
   useEffect(() => {
@@ -25,12 +25,16 @@ function Repos() {
 
   const res = useIssues(jobs);
 
+  const handleAddToken = useCallback(() => {
+    window.dispatchEvent(new CustomEvent("show-token-modal"));
+  }, []);
+
   if (!isAuthenticated) {
     return (
       <Content title={TITLE}>
         <Status>
           <>
-            <Link styled onClick={showTokenModal}>
+            <Link styled onClick={handleAddToken}>
               Add Token
             </Link>{" "}
             {!jobs.length

@@ -1,7 +1,7 @@
 import { useState, useCallback } from "react";
 import useTokenStore from "./useTokenStore";
 
-interface AuthState {
+export interface AuthState {
   token: string;
   isAuthenticated: boolean;
   error: string | null;
@@ -31,7 +31,7 @@ const validateToken = async (token: string): Promise<boolean> => {
  * Hook to manage GitHub authentication via Personal Access Token
  */
 const useAuth = () => {
-  const [storedToken, setStoredToken, deleteStoredToken] = useTokenStore<string>();
+  const [storedToken, setStoredToken, deleteStoredToken] = useTokenStore();
   const [isValidating, setIsValidating] = useState(false);
   const [error, setError] = useState<string | null>(null);
 

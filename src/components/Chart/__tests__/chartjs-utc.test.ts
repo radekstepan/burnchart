@@ -21,12 +21,19 @@ const FORMATS = {
 
 // The parse function from chartjs-adapter-moment
 function adapterParse(value: unknown, format: unknown): number | null {
+  let m: moment.Moment;
   if (typeof value === "string" && typeof format === "string") {
-    value = moment(value, format);
-  } else if (!(value as moment.Moment).isValid) {
-    value = moment(value);
+    m = moment.utc(value, format);
+  } else if (typeof value === "string") {
+    m = moment.utc(value);
+  } else if (value instanceof Date) {
+    m = moment.utc(value);
+  } else if (typeof value === "number") {
+    m = moment.utc(value);
+  } else {
+    m = moment.utc();
   }
-  return (value as moment.Moment).isValid() ? (value as moment.Moment).valueOf() : null;
+  return m.isValid() ? m.valueOf() : null;
 }
 
 describe("Chart.js UTC date parsing", () => {

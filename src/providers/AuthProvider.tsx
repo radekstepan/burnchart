@@ -5,9 +5,6 @@ interface AuthContextValue extends AuthState {
   signIn: (token: string) => Promise<boolean>;
   signOut: () => void;
   clearError: () => void;
-  showTokenModal: () => void;
-  closeTokenModal: () => void;
-  showTokenInput: boolean;
 }
 
 const defaultValue: AuthContextValue = {
@@ -18,9 +15,6 @@ const defaultValue: AuthContextValue = {
   signIn: async () => false,
   signOut: () => {},
   clearError: () => {},
-  showTokenModal: () => {},
-  closeTokenModal: () => {},
-  showTokenInput: false,
 };
 
 export const AuthContext = createContext<AuthContextValue>(defaultValue);
@@ -31,26 +25,13 @@ interface Props {
 
 export const AuthProvider: React.FC<Props> = ({ children }) => {
   const auth = useAuth();
-  const [showTokenInput, setShowTokenInput] = useState(false);
 
   const signIn = useCallback(
     async (token: string) => {
-      const result = await auth.validateAndSetToken(token);
-      if (result) {
-        setShowTokenInput(false);
-      }
-      return result;
+      return auth.validateAndSetToken(token);
     },
     [auth.validateAndSetToken]
   );
-
-  const showTokenModal = useCallback(() => {
-    setShowTokenInput(true);
-  }, []);
-
-  const closeTokenModal = useCallback(() => {
-    setShowTokenInput(false);
-  }, []);
 
   const value: AuthContextValue = {
     token: auth.token,
@@ -60,9 +41,6 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
     signIn,
     signOut: auth.signOut,
     clearError: auth.clearError,
-    showTokenModal,
-    closeTokenModal,
-    showTokenInput,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

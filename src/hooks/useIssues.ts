@@ -100,7 +100,7 @@ const useIssues = (ask: Job[]) => {
     });
 
     return () => {
-      exited = false;
+      exited = true;
       cancel();
     };
   }, [token, ask]);

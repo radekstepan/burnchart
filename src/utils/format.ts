@@ -8,7 +8,7 @@ moment.suppressDeprecationWarnings = true;
 /**
  * Parse a date string as UTC, ensuring consistent handling
  */
-const parseUtc = (date: string | number | Date): moment.Moment => {
+const parseUtc = (date: string | number | Date | moment.Moment): moment.Moment => {
   if (!date) return moment.utc();
   // If already a moment object, return it
   if (moment.isMoment(date)) return date.utc();
@@ -52,16 +52,16 @@ export const formatTimeRange = (a: string, b: string | null) => {
 
   switch (true) {
     case diff < DAY: // 05:50
-      return (d: number | string) => parseUtc(d).format("HH:mm");
+      return (d: moment.Moment | Date | number | string) => parseUtc(d).format("HH:mm");
     case diff < WEEK: // Sat 04
-      return (d: number | string) => parseUtc(d).format("ddd DD");
+      return (d: moment.Moment | Date | number | string) => parseUtc(d).format("ddd DD");
     case diff < MONTH * 2: // Mar 04
-      return (d: number | string) => parseUtc(d).format("MMM DD");
+      return (d: moment.Moment | Date | number | string) => parseUtc(d).format("MMM DD");
     case diff < YEAR: // Mar
-      return (d: number | string) => parseUtc(d).format("MMM");
+      return (d: moment.Moment | Date | number | string) => parseUtc(d).format("MMM");
     case diff < YEAR * 2: // Mar 2023
-      return (d: number | string) => parseUtc(d).format("MMM YYYY");
+      return (d: moment.Moment | Date | number | string) => parseUtc(d).format("MMM YYYY");
     default: // 03 2023
-      return (d: number | string) => parseUtc(d).format("MM YYYY");
+      return (d: moment.Moment | Date | number | string) => parseUtc(d).format("MM YYYY");
   }
 };

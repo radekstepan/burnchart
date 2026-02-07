@@ -4,15 +4,15 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import { AuthProvider } from "../../../providers/AuthProvider";
 import TokenInput from "../TokenInput";
 
-// Mock localStorage
-const localStorageMock = {
+// Mock sessionStorage
+const sessionStorageMock = {
   getItem: vi.fn(),
   setItem: vi.fn(),
   removeItem: vi.fn(),
 };
 
-Object.defineProperty(global, "localStorage", {
-  value: localStorageMock,
+Object.defineProperty(global, "sessionStorage", {
+  value: sessionStorageMock,
   writable: true,
 });
 
@@ -20,9 +20,9 @@ describe("TokenInput", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     // Return valid JSON string for no token
-    localStorageMock.getItem.mockReturnValue(null);
-    localStorageMock.setItem.mockReturnValue(undefined);
-    localStorageMock.removeItem.mockReturnValue(undefined);
+    sessionStorageMock.getItem.mockReturnValue(null);
+    sessionStorageMock.setItem.mockReturnValue(undefined);
+    sessionStorageMock.removeItem.mockReturnValue(undefined);
   });
 
   test("renders token input form", () => {
@@ -67,7 +67,7 @@ describe("TokenInput", () => {
     );
 
     const input = screen.getByLabelText("GitHub Personal Access Token");
-    expect(input.getAttribute("type")).toBe("text");
+    expect(input.getAttribute("type")).toBe("password");
   });
 
   test("form has correct structure", () => {

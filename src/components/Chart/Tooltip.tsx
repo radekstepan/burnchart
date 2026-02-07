@@ -4,7 +4,7 @@ import { ChartD } from "../../interfaces";
 
 export interface TooltipType
   extends Pick<
-    TooltipModel,
+    TooltipModel<"scatter">,
     "x" | "y" | "caretX" | "caretY" | "width" | "xAlign" | "yAlign"
   > {
   meta: NonNullable<ChartD["meta"]>;

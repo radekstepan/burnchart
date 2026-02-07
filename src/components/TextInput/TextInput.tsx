@@ -33,7 +33,7 @@ const TextInput: React.FC<Props> = ({
           })}
         />
         {button
-          ? cloneElement(button, {
+          ? cloneElement(button as ReactElement<{ withInput?: boolean }>, {
               withInput: true,
             })
           : null}
