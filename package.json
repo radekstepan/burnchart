@@ -15,7 +15,7 @@
     "test": "vitest --run",
     "test:dev": "vitest dev",
     "ci:test": "vitest --run --coverage",
-    "prepare": "npm run build",
+    "prepublishOnly": "npm run build",
     "build": "vite build"
   },
   "dependencies": {
