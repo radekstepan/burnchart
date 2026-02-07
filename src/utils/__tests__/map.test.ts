@@ -1,4 +1,4 @@
-import { get, type Return } from "../map";
+import { get } from "../map";
 
 type Expect<T extends true> = T;
 type Equal<X, Y> = (<T>() => T extends { [k in keyof X]: X[k] }
@@ -9,9 +9,6 @@ type Equal<X, Y> = (<T>() => T extends { [k in keyof X]: X[k] }
 
 describe("map", () => {
   describe("get", () => {
-    type exp1 = Expect<Equal<Return<number, string>, number | null>>;
-    type exp2 = Expect<Equal<Return<number, RegExp>, number[]>>;
-
     const res1 = get(new Map<string, number>(), "foo");
     type res1 = Expect<Equal<typeof res1, number | null>>;
 

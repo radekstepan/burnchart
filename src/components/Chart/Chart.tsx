@@ -8,6 +8,7 @@ import {
   LineElement,
   Tooltip as ChartJsTooltip,
   type ChartConfiguration,
+  type ChartDataset,
 } from "chart.js";
 import "./chartjs-adapter-dayjs-utc";
 import Tooltip, { type TooltipType } from "./Tooltip";
@@ -60,7 +61,7 @@ const Chart: React.FC<Props> = ({ milestone }) => {
       borderWidth: 3,
       borderColor: "#64584c",
       pointBackgroundColor: "#64584c",
-      lineTension: 0,
+      tension: 0,
       data: lines.actual(
         milestone.issues.closed.nodes,
         milestone.stats.startDate,
@@ -70,32 +71,35 @@ const Chart: React.FC<Props> = ({ milestone }) => {
 
     const trend = lines.trend(actual.data);
 
-    const datasets = [
-      actual,
-      trend && {
-        borderWidth: 1,
-        borderColor: "#64584c",
-        pointStyle: false,
-        borderDash: [5, 5],
-        lineTension: 0,
-        data: trend,
-      },
+    const datasets: ChartDataset<"line", ChartD[]>[] = [
+      actual as ChartDataset<"line", ChartD[]>,
+      ...(trend
+        ? [
+            {
+              borderWidth: 1,
+              borderColor: "#64584c",
+              pointStyle: false as const,
+              borderDash: [5, 5],
+              tension: 0,
+              data: trend,
+            },
+          ]
+        : []),
       {
         borderWidth: 3,
         borderColor: "#cacaca",
-        pointStyle: false,
-        lineTension: 0,
+        pointStyle: false as const,
+        tension: 0,
         data: lines.ideal(
           milestone.stats.startDate,
           milestone.stats.endDate,
           total
         ),
       },
-    ].filter(Boolean);
+    ];
 
-    const config: ChartConfiguration = {
+    const config: ChartConfiguration<"line", ChartD[]> = {
       data: {
-        // @ts-expect-error TODO
         datasets,
       },
       type: "line",

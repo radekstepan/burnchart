@@ -19,7 +19,7 @@ describe("idealLine", () => {
     const a = t("01");
     const b = t("04");
 
-    const line = lines.ideal(a, b, 4, ["0"]);
+    const line = lines.ideal(a, b, 4, [0]);
 
     expect(line).toEqual([
       { x: t("01"), y: 3 },
@@ -82,7 +82,7 @@ describe("idealLine", () => {
     const b = t("07"); // Friday
 
     // Skip Sunday (0)
-    const line = lines.ideal(a, b, 6, ["0"]);
+    const line = lines.ideal(a, b, 6, [0]);
 
     // Should include Sat, Mon, Tue, Wed, Thu, Fri = 6 days
     expect(line.length).toEqual(7); // 6 days + end point at 0
@@ -105,7 +105,7 @@ describe("idealLine", () => {
     const b = t("03");
 
     // All days off - function handles this gracefully
-    const line = lines.ideal(a, b, 1, ["0", "1", "2", "3", "4", "5", "6"]);
+    const line = lines.ideal(a, b, 1, [0, 1, 2, 3, 4, 5, 6]);
 
     // Should have some output
     expect(line.length).toBeGreaterThan(0);

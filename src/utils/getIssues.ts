@@ -201,8 +201,9 @@ const getMilestone = async (
   const issuesRaw = issuesRes.ok ? (issuesRes.data as unknown[]) : [];
 
   // Filter out pull requests (GitHub's issues endpoint includes PRs)
-  const issues = (issuesRaw as { pull_request?: unknown }[])
-    .filter(item => !item.pull_request)
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const issues = (issuesRaw as any[])
+    .filter((item: { pull_request?: unknown }) => !item.pull_request)
     .map(formatIssue);
 
   return {
@@ -316,21 +317,25 @@ const getIssues = (
 
   const all = new Map<string, Milestone>();
 
-  const onError = (err: Error & { resetAt?: number | null }, variables?: ErrorWithVars["variables"]) => {
+  interface HttpError extends Error {
+  status?: number;
+}
+
+interface RateLimitErr extends Error {
+  resetAt?: number | null;
+}
+
+const onError = (err: HttpError | RateLimitErr, variables?: ErrorWithVars["variables"]) => {
     if (exited) return;
 
     const { message } = serializeError(err);
     let errorMessage = message || "Something went wrong fetching issues.";
-    
+
     // Handle rate limiting with useful info
-    if (err instanceof RateLimitError || err.name === "RateLimitError") {
-      if (err.resetAt) {
-        const waitSeconds = Math.max(0, err.resetAt - Math.floor(Date.now() / 1000));
-        errorMessage = `GitHub API rate limited. Retry in ~${Math.ceil(waitSeconds)} seconds.`;
-      } else {
-        errorMessage = "GitHub API rate limited. Please wait a moment and try again.";
-      }
-    } else if (err.status === 403 || err.status === 429) {
+    if ("resetAt" in err && err.resetAt) {
+      const waitSeconds = Math.max(0, err.resetAt - Math.floor(Date.now() / 1000));
+      errorMessage = `GitHub API rate limited. Retry in ~${Math.ceil(waitSeconds)} seconds.`;
+    } else if ("status" in err && (err.status === 403 || err.status === 429)) {
       errorMessage = "GitHub API rate limit exceeded. Please wait a moment and try again.";
     } else if (err.name === "AbortError") {
       // Don't report abort errors as user-facing errors

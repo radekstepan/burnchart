@@ -145,7 +145,7 @@ describe("Link component", () => {
 
     expect(mockRemount).toHaveBeenCalled();
     
-    window.location = oldLocation;
+    window.location = oldLocation as any;
   });
 
   test("calls goTo when navigating to different page", () => {
@@ -166,6 +166,6 @@ describe("Link component", () => {
 
     expect(mockGoTo).toHaveBeenCalledWith(route, { owner: "o", repo: "r" });
 
-    window.location = oldLocation;
+    window.location = oldLocation as any;
   });
 });

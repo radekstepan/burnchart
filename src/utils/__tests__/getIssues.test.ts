@@ -11,7 +11,7 @@ const createMockResponse = (data: unknown, rateLimited = false) => ({
     ["X-RateLimit-Limit", "5000"],
     ["X-RateLimit-Reset", String(Math.floor(Date.now() / 1000) + 3600)],
   ]),
-});
+} as unknown as Response);
 
 const mockFetch = vi.fn((url: string): Promise<Response> => {
   if (url.includes("/milestones/")) {
@@ -347,7 +347,7 @@ describe("getIssues REST API", () => {
     });
 
     // Run multiple times to catch non-deterministic ordering
-    const orderings: string[][] = [];
+    const orderings: number[][] = [];
     
     for (let i = 0; i < 5; i++) {
       const jobs: Job[] = [["owner", "repo"]];
@@ -361,7 +361,7 @@ describe("getIssues REST API", () => {
       expect(error).toBeNull();
       
       // Collect milestone numbers in order
-      const numbers = Array.from(data.values()).map((m: { number: number }) => m.number);
+      const numbers = Array.from((data as Map<string, { number: number }>).values()).map((m) => m.number);
       orderings.push(numbers);
     }
 

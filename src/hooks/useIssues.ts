@@ -55,8 +55,11 @@ const getCached = (cache: Map<string, Milestone>, key: string): Milestone | unde
 const setCached = (cache: Map<string, Milestone>, key: string, data: Milestone): void => {
   // Evict oldest entries if at max size (simple LRU approximation)
   if (cache.size >= MAX_CACHE_SIZE) {
-    const oldestKey = cache.keys().next().value;
-    cache.delete(oldestKey);
+    const iterator = cache.keys();
+    const first = iterator.next();
+    if (first.value !== undefined) {
+      cache.delete(first.value);
+    }
   }
   cache.set(key, data);
 };

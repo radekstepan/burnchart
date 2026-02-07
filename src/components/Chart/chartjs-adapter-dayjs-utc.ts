@@ -4,10 +4,19 @@
  */
 import dayjs, { type Dayjs } from "dayjs";
 import utc from "dayjs/plugin/utc";
+import isoWeek from "dayjs/plugin/isoWeek";
+import customParseFormat from "dayjs/plugin/customParseFormat";
 import { _adapters } from "chart.js";
 
-// Extend dayjs with UTC plugin
+// Extend dayjs with required plugins
 dayjs.extend(utc);
+dayjs.extend(isoWeek);
+dayjs.extend(customParseFormat);
+
+// Type exports from dayjs
+type ManipulateType = "date" | "week" | "month" | "quarter" | "year" | "hour" | "minute" | "second" | "millisecond";
+type StartType = "year" | "month" | "week" | "day" | "hour" | "minute" | "second";
+type DiffUnitType = "millisecond" | "second" | "minute" | "hour" | "day" | "week" | "month" | "quarter" | "year";
 
 const FORMATS = {
   datetime: "MMM D, YYYY, h:mm:ss a",
@@ -48,12 +57,22 @@ const FORMATS = {
     return dayjs.utc(time).format(format);
   },
 
-  add: function (time: number, amount: number, unit: string): number {
-    return dayjs.utc(time).add(amount, unit as dayjs.UnitType).valueOf();
+  add: function (time: number, amount: number, unit: string | undefined): number {
+    if (unit === undefined) {
+      return time;
+    }
+    // Handle 'date' which is not in ManipulateType but Chart.js may pass it
+    const normalizedUnit = unit === "date" ? "day" : unit;
+    return dayjs.utc(time).add(amount, normalizedUnit as any).valueOf();
   },
 
-  diff: function (max: number, min: number, unit: string): number {
-    return dayjs.utc(max).diff(dayjs.utc(min), unit as dayjs.UnitType);
+  diff: function (max: number, min: number, unit: string | undefined): number {
+    if (unit === undefined) {
+      return 0;
+    }
+    // Normalize unit to a valid DiffUnitType
+    const normalizedUnit = unit === "date" ? "day" : unit;
+    return dayjs.utc(max).diff(dayjs.utc(min), normalizedUnit as DiffUnitType) as number;
   },
 
   startOf: function (time: number, unit: string, weekday?: number): number {
@@ -62,10 +81,10 @@ const FORMATS = {
       weekday = Math.trunc(Math.min(Math.max(0, weekday ?? 0), 6));
       return d.isoWeekday(weekday).startOf("day").valueOf();
     }
-    return d.startOf(unit as dayjs.StartType).valueOf();
+    return d.startOf(unit as StartType).valueOf();
   },
 
   endOf: function (time: number, unit: string): number {
-    return dayjs.utc(time).endOf(unit as dayjs.StartType).valueOf();
+    return dayjs.utc(time).endOf(unit as StartType).valueOf();
   }
 });

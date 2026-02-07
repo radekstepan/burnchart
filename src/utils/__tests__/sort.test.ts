@@ -1,7 +1,13 @@
 import { Milestone, WithStats } from "../../interfaces";
 import { sortBy, SortBy } from "../sort";
 
-type ToMilestone = (obj: Partial<WithStats<Milestone>>) => WithStats<Milestone>;
+type DeepPartial<T> = T extends object
+  ? {
+      [P in keyof T]?: DeepPartial<T[P]>;
+    }
+  : T;
+
+type ToMilestone = (obj: DeepPartial<WithStats<Milestone>>) => WithStats<Milestone>;
 
 const toMilestone: ToMilestone = (obj) => ({
   id: "",
@@ -64,7 +70,6 @@ describe("sort", () => {
             },
           },
         },
-        // @ts-expect-error TODO fix
       ].map((d) => toMilestone(d)),
       SortBy.progress
     );
@@ -106,7 +111,6 @@ describe("sort", () => {
               },
             },
           },
-          // @ts-expect-error TODO fix
         ].map((d) => toMilestone(d)),
         SortBy.priority
       );
@@ -141,7 +145,6 @@ describe("sort", () => {
               },
             },
           },
-          // @ts-expect-error TODO fix
         ].map((d) => toMilestone(d)),
         SortBy.priority
       );

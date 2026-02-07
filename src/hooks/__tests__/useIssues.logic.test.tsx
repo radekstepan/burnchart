@@ -3,7 +3,7 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { renderHook, act } from "@testing-library/react";
 import { AuthProvider } from "../../providers/AuthProvider";
 import useIssues from "../useIssues";
-import getIssues from "../../utils/getIssues";
+import getIssues, { type Job } from "../../utils/getIssues";
 import { Milestone } from "../../interfaces";
 
 vi.mock("../../utils/getIssues", () => ({
@@ -34,7 +34,7 @@ describe("useIssues logic", () => {
 
   it("handles error from getIssues", async () => {
     const mockError = { message: "Test Error" };
-    (getIssues as any).mockImplementation((token, jobs, cb) => {
+    (getIssues as any).mockImplementation((_token: string, _jobs: any[], cb: (err: any, res: any) => void) => {
       cb(mockError, null);
       return () => {};
     });
@@ -47,27 +47,27 @@ describe("useIssues logic", () => {
 
   it("handles successful data and caching", () => {
     const milestone: Milestone = {
+      id: "1",
+      owner: "o",
+      repo: "r",
       number: 1,
       title: "M1",
-      openIssues: 1,
-      closedIssues: 0,
-      state: "open",
-      created_at: "2023-01-01T00:00:00Z",
-      updated_at: "2023-01-01T00:00:00Z",
-      due_on: null,
+      description: null,
+      createdAt: "2023-01-01T00:00:00Z",
+      dueOn: null,
       issues: []
     };
     
     const mockRes = new Map([["o/r/1", milestone]]);
     
-    (getIssues as any).mockImplementation((token, jobs, cb) => {
+    (getIssues as any).mockImplementation((_token: string, _jobs: any[], cb: (err: any, res: any) => void) => {
       // First call loading, but cb is called after
       cb(null, mockRes);
       return () => {};
     });
 
     const { result, rerender } = renderHook(({ jobs }) => useIssues(jobs), {
-      initialProps: { jobs: [["o", "r", "1"]] as any }
+      initialProps: { jobs: [["o", "r", "1"]] as Job[] }
     });
 
     expect(result.current.data).toEqual([milestone]);
@@ -75,7 +75,7 @@ describe("useIssues logic", () => {
 
     // Test caching - second render with same jobs should NOT call getIssues again
     (getIssues as any).mockClear();
-    rerender({ jobs: [["o", "r", "1"]] as any });
+    rerender({ jobs: [["o", "r", "1"]] as Job[] });
     
     // Actually useDeepCompareEffect will still run, but if cached, jobs passed to getIssues will be empty?
     // Let's check implementation. 
@@ -85,8 +85,8 @@ describe("useIssues logic", () => {
 
   it("handles fetching all milestones (no milestone number)", () => {
     const milestones: Milestone[] = [
-      { number: 1, title: "M1", openIssues: 1, closedIssues: 0, state: "open", created_at: "", updated_at: "", due_on: null, issues: [] },
-      { number: 2, title: "M2", openIssues: 1, closedIssues: 0, state: "open", created_at: "", updated_at: "", due_on: null, issues: [] }
+      { id: "1", owner: "o", repo: "r", number: 1, title: "M1", description: null, createdAt: "", dueOn: null, issues: [] },
+      { id: "2", owner: "o", repo: "r", number: 2, title: "M2", description: null, createdAt: "", dueOn: null, issues: [] }
     ];
     
     const mockRes = new Map([
@@ -94,7 +94,7 @@ describe("useIssues logic", () => {
       ["o/r/2", milestones[1]]
     ]);
     
-    (getIssues as any).mockImplementation((token, jobs, cb) => {
+    (getIssues as any).mockImplementation((_token: string, _jobs: any[], cb: (err: any, res: any) => void) => {
       cb(null, mockRes);
       return () => {};
     });
