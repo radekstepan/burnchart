@@ -40,7 +40,8 @@ const FORMATS = {
     // Force UTC parsing
     let d: Dayjs;
     if (typeof value === "string" && typeof format === "string") {
-      d = dayjs.utc(value, format);
+      // customParseFormat plugin required for format parsing
+      d = dayjs.utc(value, format, true);
     } else if (typeof value === "string") {
       d = dayjs.utc(value);
     } else if (value instanceof Date) {
